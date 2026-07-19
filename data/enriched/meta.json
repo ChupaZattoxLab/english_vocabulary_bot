@@ -1,0 +1,39 @@
+{
+  "priority": [
+    "1. Oxford wordlist (word/cefr/pos)",
+    "2. Oxford audio (voice_url -> data/audio/oxford)",
+    "3. Oxford definitions/examples/IPA (winterdl OLD extract + manual phrases)",
+    "4. Fallback Wiktionary (dictionaryapi/wiktapi) only for gaps"
+  ],
+  "oxford_entries": 5943,
+  "stats": {
+    "oxford_winterdl": 5899,
+    "oxford_manual": 3,
+    "fallback": 41
+  },
+  "coverage": {
+    "definition_pct": 100.0,
+    "example_pct": 99.6,
+    "phonetic_pct": 99.9,
+    "audio_pct": 100.0,
+    "oxford_definition_pct": 99.3
+  },
+  "sources": {
+    "oxford": 5902,
+    "fallback:dictionaryapi.dev": 37,
+    "fallback:dictionaryapi.dev+wiktapi": 4
+  },
+  "audio_sources": {
+    "oxford": 5942,
+    "previous": 1
+  },
+  "example_fill": {
+    "stats": {
+      "cambridge": 23,
+      "oxford_page": 1,
+      "still_empty": 0
+    },
+    "still_missing_examples": [],
+    "example_coverage_pct": 100.0
+  }
+}
