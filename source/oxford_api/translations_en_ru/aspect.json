@@ -1,0 +1,223 @@
+{
+  "query": "aspect",
+  "resolved": "aspect",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aspect",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aspect",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aspect_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaspɛkt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aspect_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæspɛkt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aspect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051760.010"
+                      }
+                    ],
+                    "id": "b-en-ru0001544.002",
+                    "notes": [
+                      {
+                        "text": "look, appearance; expression",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вид"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "выраже́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aspect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051760.006"
+                      },
+                      {
+                        "entry_id": "aspect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051760.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "have you considered the question in all its aspects?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы рассмотре́ли вопро́с со всех то́чек зре́ния?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001544.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "facet; mode of presentation",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "аспе́кт"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "facet; mode of presentation",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "сторона́"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "point of view",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "то́чка зре́ния"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aspect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051760.010"
+                      },
+                      {
+                        "entry_id": "aspect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051760.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "my house has a north aspect",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мой дом смо́трит на се́вер"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001544.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "outlook",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вид"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "side facing a certain direction",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "сторона́"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aspect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051760.016"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "linguistics",
+                        "text": "Linguistics"
+                      }
+                    ],
+                    "id": "b-en-ru0001544.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вид"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "aspect"
+          }
+        ],
+        "type": "headword",
+        "word": "aspect"
+      }
+    ],
+    "word": "aspect"
+  }
+}

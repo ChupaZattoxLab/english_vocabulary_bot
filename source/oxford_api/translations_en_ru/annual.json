@@ -1,0 +1,255 @@
+{
+  "query": "annual",
+  "resolved": "annual",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "annual",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "annual",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/annual_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈanjʊəl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/annual_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænj(u)əl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "annual",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035230.011"
+                      }
+                    ],
+                    "id": "b-en-ru0001031.002",
+                    "notes": [
+                      {
+                        "text": "publication",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ежего́дник"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "annual",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035230.016"
+                      }
+                    ],
+                    "id": "b-en-ru0001031.003",
+                    "notes": [
+                      {
+                        "text": "plant",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "одноле́тнее расте́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "одноле́тник"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "annual"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/annual_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈanjʊəl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/annual_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænj(u)əl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "annual",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035230.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "annual fair",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ежего́дная я́рмарка"
+                          }
+                        ]
+                      },
+                      {
+                        "regions": [
+                          {
+                            "id": "british",
+                            "text": "British"
+                          }
+                        ],
+                        "text": "annual general meeting",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ежего́дное о́бщее собра́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001031.005",
+                    "notes": [
+                      {
+                        "text": "happening once a year",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ежего́дный"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "annual",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035230.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "annual income",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "годово́й дохо́д"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "annual report",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "годово́й отчёт"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001031.006",
+                    "notes": [
+                      {
+                        "text": "pertaining to whole year",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "годово́й"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "annual",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035230.008"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "botany",
+                        "text": "Botany"
+                      }
+                    ],
+                    "id": "b-en-ru0001031.007",
+                    "notes": [
+                      {
+                        "text": "lasting for one year",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "одноле́тний"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "annual"
+          }
+        ],
+        "type": "headword",
+        "word": "annual"
+      }
+    ],
+    "word": "annual"
+  }
+}

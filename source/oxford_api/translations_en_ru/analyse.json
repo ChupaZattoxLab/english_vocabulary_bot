@@ -1,0 +1,164 @@
+{
+  "query": "analyse",
+  "resolved": "analyse",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "analyse",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "analyse",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/analyse_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈan(ə)lʌɪz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/analyze_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænlˌaɪz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "analyse",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0030920.024"
+                      },
+                      {
+                        "entry_id": "analyse",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0030920.026"
+                      }
+                    ],
+                    "id": "b-en-ru0000918.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "анализи́ровать (impf, pf) ((pf also) про-)"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "linguistics",
+                            "text": "Linguistics"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "разбира́ть"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "linguistics",
+                            "text": "Linguistics"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "разобра́ть"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "psychology",
+                            "text": "Psychology"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подверга́ть психоана́лизу"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "psychology",
+                            "text": "Psychology"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подве́ргнуть психоана́лизу"
+                      }
+                    ]
+                  }
+                ],
+                "variantForms": [
+                  {
+                    "regions": [
+                      {
+                        "id": "us",
+                        "text": "Us"
+                      }
+                    ],
+                    "text": "analyze"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "analyse"
+          }
+        ],
+        "type": "headword",
+        "word": "analyse"
+      }
+    ],
+    "word": "analyse"
+  }
+}

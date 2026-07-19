@@ -1,0 +1,267 @@
+{
+  "query": "art",
+  "resolved": "art",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "art",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "art",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/art_gb_4.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/art_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "art",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048940.016"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the art of war",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вое́нное иску́сство"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "a work of art",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "произведе́ние иску́сства"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "mechanical, useful arts",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "neuter",
+                                "text": "Neuter",
+                                "type": "Gender"
+                              },
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "ремёсла"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "black art",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "чёрная ма́гия"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001467.002",
+                    "notes": [
+                      {
+                        "text": "skill, craft",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "иску́сство"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "there's an art to making an omelette",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пригото́вить омле́т — то́же иску́сство"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001467.003",
+                    "notes": [
+                      {
+                        "text": "device, trick",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          },
+                          {
+                            "id": "plural",
+                            "text": "Plural",
+                            "type": "Number"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "уло́вки"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "art",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048940.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "fine arts",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "изя́щные/изобрази́тельные иску́сства"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "applied arts",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прикладны́е иску́сства"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he prefers art to music",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он предпочита́ет изобрази́тельное иску́сство му́зыке"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001467.004",
+                    "notes": [
+                      {
+                        "text": "decorative",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "иску́сство"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "art",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048940.014"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "Bachelor of Arts",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бакала́вр гуманита́рных нау́к"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001467.005",
+                    "notes": [
+                      {
+                        "text": "arts",
+                        "type": "wordFormNote"
+                      },
+                      {
+                        "text": "humanities",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          },
+                          {
+                            "id": "plural",
+                            "text": "Plural",
+                            "type": "Number"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "гуманита́рные нау́ки"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "art"
+          }
+        ],
+        "type": "headword",
+        "word": "art"
+      }
+    ],
+    "word": "art"
+  }
+}

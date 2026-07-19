@@ -1,0 +1,224 @@
+{
+  "query": "assure",
+  "resolved": "assure",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "assure",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "assure",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assure_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃʊə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assure_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃɔː"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assure_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃʊr"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assure",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0053320.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "assure oneself of sth",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "обеспе́чивать себе́ что-н."
+                          },
+                          {
+                            "language": "ru",
+                            "text": "обеспечить себе́ что-н."
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is assured of a steady income",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ему́ обеспе́чен постоя́нный дохо́д"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001613.002",
+                    "notes": [
+                      {
+                        "text": "ensure",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "обеспе́чивать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "обеспе́чить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assure",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0053320.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I can assure you of this",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "(я) могу́ вас в э́том уве́рить"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you may rest assured that …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мо́жете быть уве́рены, что…"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001613.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "assert confidently",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уверя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "assert confidently",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уве́рить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "заверя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "заве́рить"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "assure"
+          }
+        ],
+        "type": "headword",
+        "word": "assure"
+      }
+    ],
+    "word": "assure"
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "query": "able",
+  "resolved": "able",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "able",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "able",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "inflections": [
+                  {
+                    "inflectedForm": "abler"
+                  },
+                  {
+                    "inflectedForm": "ablest"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/able_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪb(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/able_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪbəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "able",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0001960.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "be able to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мочь"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "смочь"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "быть в состоя́нии"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "will you be able to come?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы смо́жете прийти́?"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "have the strength or power to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he was not able to walk any further",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он был не в си́лах (или не в состоя́нии) идти́ да́льше"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is able to swim",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он уме́ет пла́вать"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000051.002",
+                    "notes": [
+                      {
+                        "text": "know how to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "уме́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "able",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0001960.008"
+                      },
+                      {
+                        "entry_id": "able",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0001960.011"
+                      }
+                    ],
+                    "id": "b-en-ru0000051.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "skilful",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уме́лый"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "capable",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "спосо́бный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "able"
+          }
+        ],
+        "type": "headword",
+        "word": "able"
+      }
+    ],
+    "word": "able"
+  }
+}

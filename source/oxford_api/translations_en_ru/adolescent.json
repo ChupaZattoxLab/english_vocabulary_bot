@@ -1,0 +1,107 @@
+{
+  "query": "adolescent",
+  "resolved": "adolescent",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "adolescent",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "adolescent",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adolescent_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "adəˈlɛs(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adolescent_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌædəˈlɛs(ə)nt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000385.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "подро́сток"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "adolescent"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adolescent_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "adəˈlɛs(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adolescent_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌædəˈlɛs(ə)nt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000385.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "подростко́вый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "adolescent"
+          }
+        ],
+        "type": "headword",
+        "word": "adolescent"
+      }
+    ],
+    "word": "adolescent"
+  }
+}

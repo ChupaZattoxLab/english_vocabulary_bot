@@ -1,0 +1,1083 @@
+{
+  "query": "all",
+  "resolved": "all",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "all",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "all",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "he staked his all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он поста́вил на ка́рту всё"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000692.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "all"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "all",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0023060.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "all of us",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы все"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it cost all of £10",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то сто́ило це́лых 10 фу́нтов"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the score is 2 all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "счёт 2:2"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it was all I could do not to …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я едва́ сдержа́лся, что́бы не…"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "almost",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "all but",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "почти́, чуть не"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he all but died",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он чуть бы́ло не у́мер"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all but a few died",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "почти́ все у́мерли"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all in the day's work",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́ло привы́чное"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all in good time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё в своё вре́мя"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "in general",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "all in all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в о́бщем и це́лом"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it's all one to me",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мне всё равно́"
+                          }
+                        ]
+                      },
+                      {
+                        "crossReferenceMarkers": [
+                          "see alsowell"
+                        ],
+                        "crossReferences": [
+                          {
+                            "id": "well",
+                            "text": "well",
+                            "type": "see also"
+                          }
+                        ],
+                        "text": "that's all very well, but …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё э́то прекра́сно, но…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "above all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пре́жде всего́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "after all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в конце́ концо́в"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "в коне́чном счёте"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "after all, I did warn you!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я ведь предупрежда́л вас"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he came after all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он всё же пришёл"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "any card at all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "люба́я ка́рта"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "not at all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "совсе́м/во́все не"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "ниско́лько, ничу́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "‘Thank you.’ — ‘Not at all!’",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "«Спаси́бо». — «Не́ за что!»"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he has no money at all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у него́ совсе́м нет де́нег"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you have eaten nothing at all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы ничего́ не е́ли"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for all I care, he may drown",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по мне, пусть хоть уто́нет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for all I know he may be dead",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отку́да/почём я зна́ю, мо́жет, он и у́мер"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "once and for all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "раз и навсегда́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in all; all told",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в це́лом"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "всего́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000692.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "everybody",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "все"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "everything",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "всё"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "pronoun",
+              "text": "Pronoun"
+            },
+            "text": "all"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "all his life",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всю свою́ жизнь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all day long",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "весь день"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all the time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё вре́мя"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "at all times",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в любо́е вре́мя"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "всегда́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "at all costs",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "любо́й цено́й"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "во что бы то ни ста́ло"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "beyond all doubt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "без/вне вся́кого сомне́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "by all accounts",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "су́дя по всему́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for all his wealth",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "несмотря́ на всё его́ бога́тство"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for all that",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё-таки"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for all time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "навсегда́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "of all the cheek!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "кака́я на́глость!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you of all people",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "кто́-кто, а уж вы́-то"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "on all fours",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на четвере́ньках"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "with all respect",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "при всём уваже́нии"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "… and all that",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "и так да́лее"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "и про́чее"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it's not all that hard (informal) (or it's not as hard as all that)",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то не так уж тру́дно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he's very clever and all that, but …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он о́чень умён и всё тако́е, но…"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000692.006",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "весь"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "every",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вся́кий"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "all"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/all_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "all",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0023060.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "all dressed up",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наряди́вшись"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "разряди́вшись в пух и прах"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she was (dressed) all in black",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ была́ оде́та во всё чёрное"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I got all excited",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я разволнова́лся"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was all ready to go",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он был гото́в идти́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all along the road",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всю доро́гу"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "на всём пути́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I knew it all along",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я всегда́ э́то знал"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "повсю́ду, круго́м"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all at once",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "соверше́нно внеза́пно"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "вдруг"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she lived all by herself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ жила́ совсе́м одна́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she did it all by herself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ сде́лала э́то сама́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I am all ears",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "masculine",
+                                "text": "Masculine",
+                                "type": "Gender"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "я весь внима́ние"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "feminine",
+                                "text": "Feminine",
+                                "type": "Gender"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "я вся внима́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I'm all for it",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я целико́м и по́лностью за"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all in",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "exhausted",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "вы́бившийся из сил"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "inclusive of everything",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "включа́я всё"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he went all out to win",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сде́лал всё для побе́ды"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all over the room",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по все́й ко́мнате"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all the world over",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по всему́ ми́ру"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it's all over now",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё ко́нчено"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "с э́тим поко́нчено"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all over again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "(всё) сно́ва"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "he was all over her",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он ей прохо́ду не дава́л"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "that's him all over",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то так на него́ похо́же"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all the rage",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "после́дний крик мо́ды"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all right!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ла́дно!, хорошо́!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "how are you? — all right!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как дела́? — норма́льно!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "is the coffee all right?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ну, как ко́фе, ничего́?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the film was all right",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "фильм был неплохо́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "are you all right?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "с ва́ми всё в поря́дке?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I'm all right now",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сейча́с у меня́ всё хорошо́"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "safe",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "we got back all right",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы верну́лись благополу́чно"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "implying threat",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "all right, you wait!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ну хорошо́ же, погоди́те!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all the better",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "тем лу́чше"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "however",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "all the same",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё-таки"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "if it's all the same to you",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "е́сли вам всё равно́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he's not all there",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у него́ не все до́ма"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all too soon",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сли́шком ско́ро"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you're all wrong",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы соверше́нно не пра́вы"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000692.008",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "quite",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "совсе́м"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "quite",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "соверше́нно"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "целико́м"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in good order",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в поря́дке"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "all"
+          }
+        ],
+        "type": "headword",
+        "word": "all"
+      }
+    ],
+    "word": "all"
+  }
+}

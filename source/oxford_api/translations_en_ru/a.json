@@ -1,0 +1,522 @@
+{
+  "query": "a",
+  "resolved": "a",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "a",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "A",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "from A to Z",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "от нача́ла до конца́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he knows the subject from A to Z",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он зна́ет э́тот предме́т доскона́льно"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "adj",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "A1",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "первокла́ссный"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000002.002",
+                    "notes": [
+                      {
+                        "text": "letter",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "первая буква английского алфавита",
+                        "type": "gloss"
+                      }
+                    ]
+                  }
+                ],
+                "variantForms": [
+                  {
+                    "text": "a"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "A"
+          }
+        ],
+        "type": "headword",
+        "word": "A"
+      },
+      {
+        "id": "A",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "a",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0000340.030"
+                      },
+                      {
+                        "entry_id": "a",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0000340.031"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "music",
+                        "text": "Music"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "she reached top A",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ взяла́ ве́рхнее ля"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000003.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "neuter",
+                            "text": "Neuter",
+                            "type": "Gender"
+                          },
+                          {
+                            "id": "indeclinable",
+                            "text": "Indeclinable",
+                            "type": "Case"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "ля"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "a",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0000340.016"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he got an A in physics",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он получи́л «отли́чно» (или пятёрку) по фи́зике"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000003.003",
+                    "notes": [
+                      {
+                        "text": "academic mark",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "«отли́чно»"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "пятёрка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "A"
+          }
+        ],
+        "type": "headword",
+        "word": "A"
+      },
+      {
+        "id": "a",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "indefinite",
+                    "text": "Indefinite",
+                    "type": "Definiteness"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_gb_4.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_us_3.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/a_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ə"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "it's an elephant",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то слон"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000001.002",
+                    "notes": [
+                      {
+                        "text": "not usu translated",
+                        "type": "grammaticalNote"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "a",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0000330.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "a Mr Smith rang",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "звони́л не́кий господи́н Смит"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in a sense",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в како́м-то смы́сле"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an old friend of mine",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "оди́н мой ста́рый знако́мый"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000001.003",
+                    "notes": [
+                      {
+                        "text": "a certain",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "all of a size",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "все одного́ разме́ра"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "все одина́ковой величины́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000001.004",
+                    "notes": [
+                      {
+                        "text": "one; the same",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "a",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0000330.021"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "twice a week",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "два ра́за в неде́лю"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "10 miles an hour",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́сять миль в час"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "10p a pound",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "10 пе́нсов за фунт"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "to each",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he gave out £5 a person",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он вы́дал ка́ждому по пять фу́нтов"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they charged £1 a head",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ взя́ли по фу́нту с челове́ка"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000001.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "distributive, in each",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "for each",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "за"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "from each",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "с"
+                      }
+                    ]
+                  }
+                ],
+                "variantForms": [
+                  {
+                    "pronunciations": [
+                      {
+                        "phoneticNotation": "IPA",
+                        "phoneticSpelling": "æn"
+                      },
+                      {
+                        "phoneticNotation": "IPA",
+                        "phoneticSpelling": "ən"
+                      }
+                    ],
+                    "text": "an"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "article",
+              "text": "Article"
+            },
+            "text": "a"
+          }
+        ],
+        "type": "headword",
+        "word": "a"
+      }
+    ],
+    "word": "A"
+  }
+}

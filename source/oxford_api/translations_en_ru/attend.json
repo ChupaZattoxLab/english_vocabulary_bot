@@ -1,0 +1,610 @@
+{
+  "query": "attend",
+  "resolved": "attend",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attend",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attend",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attend_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛnd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attend_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛnd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056310.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the concert was well attended",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "конце́рт собра́л большо́е коли́чество зри́телей"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "attend school",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "посеща́ть шко́лу"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001700.002",
+                    "notes": [
+                      {
+                        "text": "be present at",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "прису́тствовать на"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "he attended the queen",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сопровожда́л короле́ву"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the venture was attended with risk",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "предприя́тие бы́ло сопряжено́ с ри́ском"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001700.003",
+                    "notes": [
+                      {
+                        "text": "accompany",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "literal",
+                        "text": "Literal"
+                      },
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "сопровожда́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056310.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "three nurses attended him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "за ним уха́живали три медсестры́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was attended by Dr Smith",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ лечи́л до́ктор Смит"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001700.004",
+                    "notes": [
+                      {
+                        "text": "serve professionally",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "уха́живать за"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attend_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛnd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attend_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛnd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056310.006"
+                      }
+                    ],
+                    "id": "b-en-ru0001700.006",
+                    "notes": [
+                      {
+                        "text": "be present",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "прису́тствовать"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056310.016"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "listen carefully",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "attend to what I am saying",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "слу́шайте меня́ внима́тельно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you are not attending",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы не слу́шаете"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001700.007",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "direct one's mind",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уделя́ть внима́ние"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "direct one's mind",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "удели́ть внима́ние"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "обраща́ть внима́ние на"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "обрати́ть внима́ние на"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056310.014"
+                      },
+                      {
+                        "entry_id": "attend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056310.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he attends to the education of his own children",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сам занима́ется образова́нием свои́х дете́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she attended to the children",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ присма́тривала за детьми́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "attend to one's duties",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "исполня́ть свои́ обя́занности"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "attend to one's correspondence",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "занима́ться свое́й перепи́ской"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "attend to sb's needs",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "забо́титься, по- о чьих-н. ну́ждах"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "in shop",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "are you being attended to?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вас (уже́) обслу́живают?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I have things to attend to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у меня́ есть дела́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001700.008",
+                    "notes": [
+                      {
+                        "text": "+ to",
+                        "type": "grammaticalNote"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "take care of, look after",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "следи́ть за"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "забо́титься о"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "позабо́титься о"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "deal with",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "занима́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "deal with",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "заня́ться"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "attend"
+          }
+        ],
+        "type": "headword",
+        "word": "attend"
+      }
+    ],
+    "word": "attend"
+  }
+}

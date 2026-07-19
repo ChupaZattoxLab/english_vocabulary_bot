@@ -1,0 +1,79 @@
+{
+  "query": "authentic",
+  "resolved": "authentic",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "authentic",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "authentic",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/authentic_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːˈθɛntɪk"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/authentic_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔˈθɛn(t)ɪk"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "authentic",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0059060.007"
+                      }
+                    ],
+                    "id": "b-en-ru0001783.002",
+                    "notes": [
+                      {
+                        "text": "genuine",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "по́длинный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "authentic"
+          }
+        ],
+        "type": "headword",
+        "word": "authentic"
+      }
+    ],
+    "word": "authentic"
+  }
+}

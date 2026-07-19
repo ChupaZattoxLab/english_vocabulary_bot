@@ -1,0 +1,110 @@
+{
+  "query": "advertisement",
+  "resolved": "advertisement",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "advertisement",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "advertisement",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertisement_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvəːtɪzm(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertisement_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvəːtɪsm(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertisement_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædvərˌtaɪzmənt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertisement_us_3_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvərdɪzmənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advertisement",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012240.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "his behaviour is a poor advertisement for the school",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ поведе́ние — плоха́я рекла́ма для шко́лы"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000434.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "рекла́ма"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "classified advertisement",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "объявле́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "advertisement"
+          }
+        ],
+        "type": "headword",
+        "word": "advertisement"
+      }
+    ],
+    "word": "advertisement"
+  }
+}

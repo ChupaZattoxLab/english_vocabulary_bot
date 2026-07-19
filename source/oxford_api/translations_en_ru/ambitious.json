@@ -1,0 +1,106 @@
+{
+  "query": "ambitious",
+  "resolved": "ambitious",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ambitious",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ambitious",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ambitious_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "amˈbɪʃəs"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ambitious_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æmˈbɪʃəs"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ambitious",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027530.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he is too ambitious",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сли́шком мно́гого хо́чет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an ambitious attempt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сме́лая попы́тка"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an ambitious plan",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "грандио́зный план"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000813.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "честолюби́вый"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "амбицио́зный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "ambitious"
+          }
+        ],
+        "type": "headword",
+        "word": "ambitious"
+      }
+    ],
+    "word": "ambitious"
+  }
+}

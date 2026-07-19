@@ -1,0 +1,139 @@
+{
+  "query": "anniversary",
+  "resolved": "anniversary",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "anniversary",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "anniversary",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anniversary_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "anɪˈvəːs(ə)ri"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anniversary_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌænəˈvərs(ə)ri"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anniversary",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035100.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "on his fifth wedding anniversary",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в пя́тую годовщи́ну его́ сва́дьбы"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "40th anniversary",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сорокова́я годовщи́на, сорокале́тие"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001021.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "годовщи́на"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "anniversary"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anniversary_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "anɪˈvəːs(ə)ri"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anniversary_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌænəˈvərs(ə)ri"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "anniversary edition",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "юбиле́йное изда́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001021.004"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "anniversary"
+          }
+        ],
+        "type": "headword",
+        "word": "anniversary"
+      }
+    ],
+    "word": "anniversary"
+  }
+}

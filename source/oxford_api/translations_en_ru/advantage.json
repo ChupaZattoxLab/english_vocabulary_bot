@@ -1,0 +1,467 @@
+{
+  "query": "advantage",
+  "resolved": "advantage",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "advantage",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "advantage",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advantage_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɑːntɪdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advantage_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvæn(t)ɪdʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advantage",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011910.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "this method has the advantage that…",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "преиму́щество э́того ме́тода состои́т в том,что…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "have an advantage over, have the advantage of",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "име́ть преиму́щество пе́ред"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "gain, win an advantage over",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "брать, взять верх над"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000415.002",
+                    "notes": [
+                      {
+                        "text": "superiority; more favourable or superior position",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "преиму́щество"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "досто́инство"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advantage",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011910.009"
+                      },
+                      {
+                        "entry_id": "advantage",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011910.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "it is to your advantage to sell",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вам бу́дет вы́годно прода́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "gain advantage from",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "извлека́ть, -е́чь вы́году (или по́льзу) из"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "turn sth to advantage",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "обраща́ть что-н. себе́ на по́льзу"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "обрати́ть что-н. себе́ на по́льзу"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take advantage of sth",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "воспо́льзоваться чем-н."
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "abuse",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "злоупотребля́ть чем-н."
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "abuse",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "злоупотреби́ть чем-н."
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take advantage of sb",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "эксплуати́ровать"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "use to advantage",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              },
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "вы́годно испо́льзовать"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you may learn sth to your advantage",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы мо́жете узна́ть/почерпну́ть для себя́ что́-то поле́зное"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the picture can be seen to better advantage from here",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отсю́да карти́на смо́трится лу́чше"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000415.003",
+                    "notes": [
+                      {
+                        "text": "profit, benefit",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вы́года"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "по́льза"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advantage",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011910.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advantage Henman",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "«бо́льше» у Хэ́нмена"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000415.004",
+                    "notes": [
+                      {
+                        "text": "in tennis",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "advantage"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advantage_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɑːntɪdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advantage_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvæn(t)ɪdʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advantage",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011910.014"
+                      }
+                    ],
+                    "id": "b-en-ru0000415.006",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "favour",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "благоприя́тствовать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "give advantage to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дава́ть преиму́щество"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "give advantage to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дать преиму́щество"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "further",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "продвига́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "further",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "продви́нуть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "advantage"
+          }
+        ],
+        "type": "headword",
+        "word": "advantage"
+      }
+    ],
+    "word": "advantage"
+  }
+}

@@ -1,0 +1,426 @@
+{
+  "query": "allow",
+  "resolved": "allow",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "allow",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "allow",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "derivatives": [
+              {
+                "id": "allow_for",
+                "text": "allow for"
+              },
+              {
+                "id": "allow_of",
+                "text": "allow of"
+              }
+            ],
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allow_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlaʊ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allow_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlaʊ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allow",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024410.006"
+                      },
+                      {
+                        "entry_id": "allow",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024410.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "allow me!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "разреши́те!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was allowed to smoke",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ему́ позво́лили кури́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I will not allow you to be deceived",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я не допущу́, что́бы вас обману́ли"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "allow no discussion",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "запреща́ть вся́кое обсужде́ние"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "запрети́ть вся́кое обсужде́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "smoking is not allowed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "кури́ть воспреща́ется"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "no dogs allowed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вход с соба́ками воспрещён"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000719.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "permit",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "позволя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "permit",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "позво́лить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "разреша́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "разреши́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allow",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024410.006"
+                      },
+                      {
+                        "entry_id": "allow",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024410.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I allowed him a free hand",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я предоста́вил ему́ свобо́ду де́йствий"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "at the end of the 6 months allowed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в конце́ предоста́вленных шести́ ме́сяцев"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "allow discount",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "предоставля́ть ски́дку"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "предоста́вить ски́дку"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000719.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "grant, provide",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дава́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "grant, provide",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "предоставля́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "предоста́вить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "допуска́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "допусти́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allow",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024410.023"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "his claim was allowed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ тре́бование бы́ло при́нято"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000719.004",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "admit",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "допуска́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "admit",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "допусти́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "recognize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "признава́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "recognize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "призна́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "allow"
+          }
+        ],
+        "type": "headword",
+        "word": "allow"
+      }
+    ],
+    "word": "allow"
+  }
+}

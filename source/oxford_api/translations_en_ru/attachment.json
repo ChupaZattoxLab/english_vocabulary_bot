@@ -1,0 +1,243 @@
+{
+  "query": "attachment",
+  "resolved": "attachment",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attachment",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attachment",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attachment_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtatʃm(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attachment_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtætʃmənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attachment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056130.007"
+                      },
+                      {
+                        "entry_id": "attachment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056130.010"
+                      },
+                      {
+                        "entry_id": "attachment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056130.018"
+                      }
+                    ],
+                    "id": "b-en-ru0001692.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "action",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прикрепле́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "action",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "привя́зывание"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "action",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прикле́ивание"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "part attached",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приста́вка"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "computing",
+                            "text": "Computing"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "document",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вложе́ние"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "computing",
+                            "text": "Computing"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "document",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вло́женный файл"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "computing",
+                            "text": "Computing"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "document",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ат(т)а́чмент"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attachment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056130.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "form an attachment for",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "привя́зываться, привяза́ться к"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001692.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "affection",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "привя́занность"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "devotion",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "пре́данность"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attachment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056130.019"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "law",
+                        "text": "Law"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "attachment of property",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наложе́ние аре́ста на иму́щество"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001692.004"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "attachment"
+          }
+        ],
+        "type": "headword",
+        "word": "attachment"
+      }
+    ],
+    "word": "attachment"
+  }
+}

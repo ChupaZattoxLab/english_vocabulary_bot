@@ -1,0 +1,329 @@
+{
+  "query": "away",
+  "resolved": "away",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "away",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "away",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/away_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈweɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/away_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈweɪ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "away",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061570.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the shops are ten minutes' walk away",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "магази́ны нахо́дятся в десяти́ мину́тах ходьбы́ отсю́да"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the sea is only 5 miles away from our villa",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мо́ре всего́ в пяти́ ми́лях от на́шей ви́ллы"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "her mother lived half an hour away by bus",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "её мать жила́ в получа́се езды́ на авто́бусе"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.002",
+                    "notes": [
+                      {
+                        "text": "at a distance",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "away",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061570.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he is away",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он в отъе́зде"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was away on leave",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он был в о́тпуске"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "how long have you been away?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ско́лько (вре́мени) вас не́ было?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "we shall be away in July",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в ию́ле нас не бу́дет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "our team are playing away (from home)",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на́ша кома́нда игра́ет на вы́езде (или на чужо́м по́ле или в гостя́х)"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "hold it away from the light",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "держи́те э́то пода́льше от све́та"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.003",
+                    "notes": [
+                      {
+                        "text": "not present or near",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "away",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061570.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the wedding is three weeks away",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "до сва́дьбы (оста́лось) три неде́ли"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "far and away the best",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наилу́чший"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.004",
+                    "notes": [
+                      {
+                        "text": "of time or degree",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "away",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061570.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he works away",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он рабо́тает не перестава́я"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was talking away to himself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он всё вре́мя сам с собо́й разгова́ривал"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "all the time the clock was ticking away",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "всё э́то вре́мя часы́ ти́кали, не перестава́я"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.005",
+                    "notes": [
+                      {
+                        "text": "expressing continuance",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "away",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061570.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "You have some questions? Ask away, then!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "У вас есть вопро́сы? Ну, спра́шивайте!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.006",
+                    "notes": [
+                      {
+                        "text": "with imperative",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "right, straight away",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сейча́с"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "неме́дленно"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.007"
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "away with him!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "доло́й его́!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "away with you!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "убира́йтесь!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001866.008"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "away"
+          }
+        ],
+        "type": "headword",
+        "word": "away"
+      }
+    ],
+    "word": "away"
+  }
+}

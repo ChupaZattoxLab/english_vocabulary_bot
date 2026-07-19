@@ -1,0 +1,389 @@
+{
+  "query": "around",
+  "resolved": "around",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "around",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "around",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "crossReferenceMarkers": [
+                  "see alsoround"
+                ],
+                "crossReferences": [
+                  {
+                    "id": "round",
+                    "text": "round",
+                    "type": "see also"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/around_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈraʊnd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/around_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈraʊnd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "around",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048020.030"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "all around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "повсю́ду"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "from all around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отовсю́ду"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for miles around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на ми́ли вокру́г"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they were standing around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ стоя́ли побли́зости"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "hang around",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "болта́ться"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he's been around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "registers": [
+                              {
+                                "id": "informal",
+                                "text": "Informal"
+                              }
+                            ],
+                            "text": "он вида́л ви́ды"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "он челове́к быва́лый"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he travels around",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он мно́го путеше́ствует"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "computers have been around for quite a long time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "компью́теры изве́стны дово́льно до́лгое вре́мя"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "this singer has been around for 30 years",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́тот певе́ц уже́ 30 лет поёт"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001437.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вокру́г"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "круго́м"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "around"
+          },
+          {
+            "entries": [
+              {
+                "crossReferenceMarkers": [
+                  "see alsoround"
+                ],
+                "crossReferences": [
+                  {
+                    "id": "round",
+                    "text": "round",
+                    "type": "see also"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/around_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈraʊnd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/around_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈraʊnd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "they stood around the table",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ стоя́ли вокру́г стола́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the path goes around the garden",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "доро́жка огиба́ет сад"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "his arm was around her waist",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он обнима́л её за та́лию"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001437.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "encircling",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вокру́г"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "круго́м"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "he walked around the town",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он броди́л по го́роду"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he looked around the house",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он осмотре́л дом"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001437.005",
+                    "notes": [
+                      {
+                        "text": "over",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b-en-ru0001437.006",
+                    "notes": [
+                      {
+                        "text": "in the vicinity of",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "о́коло"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "the child played around the house",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ребёнок игра́л по всему́ до́му"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he stayed around the house",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он не выходи́л и́з дому"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001437.007",
+                    "notes": [
+                      {
+                        "text": "in various parts of",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b-en-ru0001437.008",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "approximately",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "о́коло"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "приблизи́тельно"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "preposition",
+              "text": "Preposition"
+            },
+            "text": "around"
+          }
+        ],
+        "type": "headword",
+        "word": "around"
+      }
+    ],
+    "word": "around"
+  }
+}

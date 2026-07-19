@@ -1,0 +1,141 @@
+{
+  "query": "alcoholic",
+  "resolved": "alcoholic",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "alcoholic",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "alcoholic",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcoholic_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "alkəˈhɒlɪk"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcoholic_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌælkəˈhɔlɪk"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000651.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "алкого́лик"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "alcoholic"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcoholic_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "alkəˈhɒlɪk"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcoholic_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌælkəˈhɔlɪk"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alcoholic",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0021090.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "alcoholic beverages",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "спиртно́е"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "masculine",
+                                "text": "Masculine",
+                                "type": "Gender"
+                              },
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "спиртны́е напи́тки"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000651.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "алкого́льный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "alcoholic"
+          }
+        ],
+        "type": "headword",
+        "word": "alcoholic"
+      }
+    ],
+    "word": "alcoholic"
+  }
+}

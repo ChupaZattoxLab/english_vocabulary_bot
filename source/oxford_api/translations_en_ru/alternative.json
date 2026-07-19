@@ -1,0 +1,175 @@
+{
+  "query": "alternative",
+  "resolved": "alternative",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "alternative",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "alternative",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alternative_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːlˈtəːnətɪv"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɒlˈtəːnətɪv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alternative_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔlˈtərnədɪv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alternative",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0026180.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "there is no alternative",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "друго́го вы́бора нет"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000771.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "альтернати́ва"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "alternative"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alternative_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːlˈtəːnətɪv"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɒlˈtəːnətɪv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alternative_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔlˈtərnədɪv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alternative",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0026180.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "we have several alternative plans",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у нас есть не́сколько альтернати́вных пла́нов"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an alternative proposal",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "встре́чное предложе́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "alternative technology",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "техноло́гия безотхо́дного произво́дства"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000771.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "альтернати́вный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "alternative"
+          }
+        ],
+        "type": "headword",
+        "word": "alternative"
+      }
+    ],
+    "word": "alternative"
+  }
+}

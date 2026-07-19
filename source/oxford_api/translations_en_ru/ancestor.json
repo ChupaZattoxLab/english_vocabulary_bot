@@ -1,0 +1,66 @@
+{
+  "query": "ancestor",
+  "resolved": "ancestor",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ancestor",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ancestor",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ancestor_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈansɛstə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ancestor_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænˌsɛstər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000936.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "пре́док"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ancestor"
+          }
+        ],
+        "type": "headword",
+        "word": "ancestor"
+      }
+    ],
+    "word": "ancestor"
+  }
+}

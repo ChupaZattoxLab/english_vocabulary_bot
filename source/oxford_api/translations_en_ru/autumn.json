@@ -1,0 +1,103 @@
+{
+  "query": "autumn",
+  "resolved": "autumn",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "autumn",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "autumn",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/autumn_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔːtəm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/autumn_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔdəm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "autumn",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0060420.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "in autumn",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "о́сенью"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "autumn crocus",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "лугово́й шафра́н"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001823.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "о́сень"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "attr",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "осе́нний"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "autumn"
+          }
+        ],
+        "type": "headword",
+        "word": "autumn"
+      }
+    ],
+    "word": "autumn"
+  }
+}

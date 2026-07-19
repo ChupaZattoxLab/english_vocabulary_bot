@@ -1,0 +1,125 @@
+{
+  "query": "allege",
+  "resolved": "allege",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "allege",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "allege",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allege_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlɛdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allege_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlɛdʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allege",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0023330.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he alleged ill health",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сосла́лся на нездоро́вье"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "words alleged to have been spoken by him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "слова́, припи́сываемые ему́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is alleged to have died",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ счита́ют уме́ршим"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an alleged murderer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "подозрева́емый в уби́йстве"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000696.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "утвержда́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "allege"
+          }
+        ],
+        "type": "headword",
+        "word": "allege"
+      }
+    ],
+    "word": "allege"
+  }
+}

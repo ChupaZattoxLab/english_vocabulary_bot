@@ -1,0 +1,188 @@
+{
+  "query": "assignment",
+  "resolved": "assignment",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "assignment",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "assignment",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assignment_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsʌɪnm(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assignment_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsaɪnmənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assignment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0052750.009"
+                      }
+                    ],
+                    "id": "b-en-ru0001596.002",
+                    "notes": [
+                      {
+                        "text": "allotment",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "назначе́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of resources",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "предназначе́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of task",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "поруче́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assignment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0052750.006"
+                      }
+                    ],
+                    "id": "b-en-ru0001596.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "task, duty",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "поруче́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "зада́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "involving journey",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "командиро́вка"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "schoolwork",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "зада́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assignment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0052750.013"
+                      },
+                      {
+                        "entry_id": "assignment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0052750.015"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "finance",
+                        "text": "Finance"
+                      }
+                    ],
+                    "id": "b-en-ru0001596.004",
+                    "notes": [
+                      {
+                        "text": "transfer",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "переда́ча"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "переусту́пка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "assignment"
+          }
+        ],
+        "type": "headword",
+        "word": "assignment"
+      }
+    ],
+    "word": "assignment"
+  }
+}

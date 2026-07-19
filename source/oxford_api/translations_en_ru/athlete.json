@@ -1,0 +1,95 @@
+{
+  "query": "athlete",
+  "resolved": "athlete",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "athlete",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "athlete",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/athlete_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaθliːt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/athlete_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæθˌlit"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "athlete's foot",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "грибко́вое заболева́ние ног"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001662.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "спортсме́н"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "спортсме́нка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "athlete"
+          }
+        ],
+        "type": "headword",
+        "word": "athlete"
+      }
+    ],
+    "word": "athlete"
+  }
+}

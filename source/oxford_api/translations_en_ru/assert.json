@@ -1,0 +1,200 @@
+{
+  "query": "assert",
+  "resolved": "assert",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "assert",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "assert",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assert_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsəːt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assert_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsərt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assert",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0052520.005"
+                      }
+                    ],
+                    "id": "b-en-ru0001581.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "declare; affirm",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "утвержда́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "declare; affirm",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "утверди́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "заявля́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "заяви́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assert",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0052520.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "assert one's rights",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отста́ивать свои́ права́"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отстоя́ть свои́ права́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "assert oneself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "самоутвержда́ться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "самоутверди́ться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001581.003",
+                    "notes": [
+                      {
+                        "text": "stand up for",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "отста́ивать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "отстоя́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "assert"
+          }
+        ],
+        "type": "headword",
+        "word": "assert"
+      }
+    ],
+    "word": "assert"
+  }
+}

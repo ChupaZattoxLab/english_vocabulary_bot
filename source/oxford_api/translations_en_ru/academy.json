@@ -1,0 +1,109 @@
+{
+  "query": "academy",
+  "resolved": "academy",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "academy",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "academy",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/academy_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkadəmi"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/academy_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkædəmi"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "academy",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004110.006"
+                      },
+                      {
+                        "entry_id": "academy",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004110.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "academy of fine arts",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "акаде́мия изя́щных иску́сств"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000142.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "акаде́мия"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "police, military, etc.",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "учи́лище"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in Scotland",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "сре́дняя шко́ла"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "academy"
+          }
+        ],
+        "type": "headword",
+        "word": "academy"
+      }
+    ],
+    "word": "academy"
+  }
+}

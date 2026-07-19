@@ -1,0 +1,70 @@
+{
+  "query": "ankle",
+  "resolved": "ankle",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ankle",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ankle",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ankle_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaŋk(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ankle_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæŋk(ə)l"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001008.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "лоды́жка"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "щи́колотка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ankle"
+          }
+        ],
+        "type": "headword",
+        "word": "ankle"
+      }
+    ],
+    "word": "ankle"
+  }
+}

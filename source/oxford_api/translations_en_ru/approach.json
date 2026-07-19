@@ -1,0 +1,694 @@
+{
+  "query": "approach",
+  "resolved": "approach",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "approach",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "approach",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approach_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈprəʊtʃ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approach_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈproʊtʃ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.032"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "at our approach",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "при на́шем приближе́нии"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "как/когда́ мы подошли́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "drawing near; advance",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приближе́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "наступле́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.024"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "his approach to the subject",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ подхо́д к предме́ту"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.003",
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "подхо́д"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.024"
+                      },
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.036"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the approach to the river",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "подхо́д к реке́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.004",
+                    "notes": [
+                      {
+                        "text": "way, passage",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "подхо́д"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.036"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the approaches to the town",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по́дступы к го́роду"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          },
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "easy of approach",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "(легко)досту́пный"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.005",
+                    "notes": [
+                      {
+                        "text": "access",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "по́дступ"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.028"
+                      },
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.029"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "they made unofficial approaches",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ де́лали неофициа́льные предложе́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.006",
+                    "notes": [
+                      {
+                        "text": "overture",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "предложе́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "approach"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approach_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈprəʊtʃ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approach_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈproʊtʃ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "he approached the subject in a light-hearted way",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он подошёл к вопро́су несерьёзно/легкомы́сленно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is difficult to approach",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "к нему́ тру́дно подступи́ться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.008",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "come near to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приближа́ться к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "come near to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прибли́зиться к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "come up to — on foot",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подходи́ть к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "come up to — on foot",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подойти́ к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "come up to — by riding",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подъезжа́ть к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "come up to — by riding",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подъе́хать к"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the beggar approached him for money",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ни́щий попроси́л у него́ де́нег"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.009",
+                    "notes": [
+                      {
+                        "text": "make overtures to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "обраща́ться к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "обрати́ться к"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042490.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "no one can approach him for style",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по сти́лю никто́ не мо́жет с ним сравни́ться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001271.010",
+                    "notes": [
+                      {
+                        "text": "approximate to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "приближа́ться к"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "прибли́зиться к"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approach_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈprəʊtʃ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approach_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈproʊtʃ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001271.012",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "приближа́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "прибли́зиться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подходи́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подойти́"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подъезжа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подъе́хать"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "approach"
+          }
+        ],
+        "type": "headword",
+        "word": "approach"
+      }
+    ],
+    "word": "approach"
+  }
+}

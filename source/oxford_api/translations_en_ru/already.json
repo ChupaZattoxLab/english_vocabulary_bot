@@ -1,0 +1,66 @@
+{
+  "query": "already",
+  "resolved": "already",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "already",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "already",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/already_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːlˈrɛdi"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/already_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌɔlˈrɛdi"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000758.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "уже́"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "already"
+          }
+        ],
+        "type": "headword",
+        "word": "already"
+      }
+    ],
+    "word": "already"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "query": "affordable",
+  "resolved": "affordable",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "affordable",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "affordable",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affordable_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɔːdəbəl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affordable_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɔrdəb(ə)l"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affordable",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0014240.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "affordable homes",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "досту́пное жильё"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0040554.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "досту́пный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "бюдже́тный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "affordable"
+          }
+        ],
+        "type": "headword",
+        "word": "affordable"
+      }
+    ],
+    "word": "affordable"
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "query": "accident",
+  "resolved": "accident",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "accident",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "accident",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accident_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaksɪd(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accident_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæksədənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "accident",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004750.012"
+                      },
+                      {
+                        "entry_id": "accident",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004750.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "by accident",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "случа́йно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "by (sheer) accident",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "(чи́сто) случа́йно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it was no accident that he was present",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ прису́тствие не́ было случа́йным"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000163.002",
+                    "notes": [
+                      {
+                        "text": "chance",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "слу́чай"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "случа́йность"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "accident",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004750.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I'm sorry, it was an accident",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прости́те, я неча́янно"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000163.003",
+                    "notes": [
+                      {
+                        "text": "unintentional action",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "accident",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004750.006"
+                      },
+                      {
+                        "entry_id": "accident",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0004750.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "road accident",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "доро́жно-тра́нспортное происше́ствие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "accidents in the home",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бытовы́е несча́стные слу́чаи"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "accident insurance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "страхова́ние от несча́стных слу́чаев"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he had an accident",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он попа́л в ава́рию"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000163.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "mishap",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "несча́стный слу́чай"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "rail accident",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "круше́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "rail accident",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ава́рия"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "car accident",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "автомоби́льная катастро́фа"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "car accident",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "автокатастро́фа"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "car accident",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ава́рия"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "accident"
+          }
+        ],
+        "type": "headword",
+        "word": "accident"
+      }
+    ],
+    "word": "accident"
+  }
+}

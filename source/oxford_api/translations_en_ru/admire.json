@@ -1,0 +1,213 @@
+{
+  "query": "admire",
+  "resolved": "admire",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "admire",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "admire",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/admire_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmʌɪə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/admire_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmaɪ(ə)r"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "admire",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010810.005"
+                      },
+                      {
+                        "entry_id": "admire",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010810.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "she was admiring the sunrise",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ любова́лась восхо́дом со́лнца"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he admired himself in the mirror",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он любова́лся собо́й (или на себя́) в зе́ркало"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "speak or think highly of",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "I forgot to admire her dress",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я забы́л похвали́ть её пла́тье"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "admiring glances",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "восхищённые взгля́ды"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000369.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "view with pleasure",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "любова́ться or на"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "respect",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "восхища́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "respect",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "восхити́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "respect",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "восторга́ться"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "admire"
+          }
+        ],
+        "type": "headword",
+        "word": "admire"
+      }
+    ],
+    "word": "admire"
+  }
+}

@@ -1,0 +1,622 @@
+{
+  "query": "argue",
+  "resolved": "argue",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "argue",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "argue",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "derivatives": [
+              {
+                "id": "argue_away",
+                "text": "argue away"
+              },
+              {
+                "id": "argue_out",
+                "text": "argue out"
+              }
+            ],
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "inflections": [
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "transitive",
+                        "text": "Transitive",
+                        "type": "Subcategorization"
+                      }
+                    ],
+                    "inflectedForm": "argues"
+                  },
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "transitive",
+                        "text": "Transitive",
+                        "type": "Subcategorization"
+                      }
+                    ],
+                    "inflectedForm": "argued"
+                  },
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "transitive",
+                        "text": "Transitive",
+                        "type": "Subcategorization"
+                      }
+                    ],
+                    "inflectedForm": "arguing"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/argue_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːɡjuː"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/argue_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑrɡju"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "argue",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046280.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "let's not argue the point",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "дава́йте об э́том не спо́рить"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001391.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "discuss",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "обсужда́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "discuss",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "обсуди́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "debate",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дебати́ровать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "спо́рить о"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "argue",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046280.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he argued that the money should be shared",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он дока́зывал, что де́ньги сле́дует раздели́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it was argued that …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "утвержда́лось, что…"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001391.003",
+                    "notes": [
+                      {
+                        "text": "contend",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "дока́зывать"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "argue",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046280.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he argued his case eloquently",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он красноречи́во отста́ивал свою́ то́чку зре́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001391.004",
+                    "notes": [
+                      {
+                        "text": "speak in support of",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "дока́зывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "отста́ивать"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "argue sb into sth",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "кого в чём-н",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "убежда́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "кого в чём-н",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "убеди́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he argued me into accepting the decision",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он убеди́л меня́ приня́ть реше́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "argue sb out of sth",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "кого от чего-н",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "отгова́ривать"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "кого от чего-н",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "отговори́ть"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001391.005"
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/argue_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːɡjuː"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/argue_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑrɡju"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "argue",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046280.010"
+                      },
+                      {
+                        "entry_id": "argue",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046280.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "get dressed and don't argue!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "одева́йся — и не спорь!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they argued over who should drive",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ спо́рили, кому́ вести́ маши́ну"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001391.007",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "debate; disagree; quarrel",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "спо́рить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "препира́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "object",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "возража́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "argue",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046280.010"
+                      }
+                    ],
+                    "id": "b-en-ru0001391.008",
+                    "notes": [
+                      {
+                        "text": "give reasons",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "against",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "про́тив + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "for, in favour of",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "в защи́ту + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "за + a",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "приводи́ть до́воды"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "against",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "про́тив + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "for, in favour of",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "в защи́ту + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "за + a",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "привести́ до́воды"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "against",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "про́тив + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "for, in favour of",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "в защи́ту + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "за + a",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "выступа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "against",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "про́тив + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "for, in favour of",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "в защи́ту + g",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "за + a",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "вы́ступить"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "argue"
+          }
+        ],
+        "type": "headword",
+        "word": "argue"
+      }
+    ],
+    "word": "argue"
+  }
+}

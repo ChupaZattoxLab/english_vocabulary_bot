@@ -1,0 +1,234 @@
+{
+  "query": "award",
+  "resolved": "award",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "award",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "award",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/award_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈwɔːd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/award_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈwɔrd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "award",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061490.013"
+                      },
+                      {
+                        "entry_id": "award",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061490.017"
+                      }
+                    ],
+                    "id": "b-en-ru0001862.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "act of awarding",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "присужде́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "prize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "награ́да"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "prize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приз"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "award"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/award_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈwɔːd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/award_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈwɔrd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "award",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061490.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he was awarded a medal",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ награди́ли меда́лью"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001862.004",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "что кому",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "присужда́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "что кому",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "присуди́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "кого чем",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "награжда́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "кого чем",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "награди́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "award"
+          }
+        ],
+        "type": "headword",
+        "word": "award"
+      }
+    ],
+    "word": "award"
+  }
+}

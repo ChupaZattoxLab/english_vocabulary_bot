@@ -1,0 +1,48 @@
+{
+  "query": "airport",
+  "resolved": "airport",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "airport",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "airport",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "senses": [
+                  {
+                    "id": "b-en-ru0031962.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "аэропо́рт"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "airport"
+          }
+        ],
+        "type": "headword",
+        "word": "airport"
+      }
+    ],
+    "word": "airport"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "query": "awful",
+  "resolved": "awful",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "awful",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "awful",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/awful_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔːf(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/awful_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔfəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "awful",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061690.007"
+                      },
+                      {
+                        "entry_id": "awful",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061690.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "it's an awful shame",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ужа́сно доса́дно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an awful lot",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ужа́сно мно́го"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001869.002",
+                    "notes": [
+                      {
+                        "text": "terrible",
+                        "type": "indicator"
+                      },
+                      {
+                        "text": "very bad, great, etc.",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "informal",
+                        "text": "Informal"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ужа́сный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "стра́шный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "awful"
+          }
+        ],
+        "type": "headword",
+        "word": "awful"
+      }
+    ],
+    "word": "awful"
+  }
+}

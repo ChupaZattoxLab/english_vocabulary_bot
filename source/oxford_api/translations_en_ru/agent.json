@@ -1,0 +1,183 @@
+{
+  "query": "agent",
+  "resolved": "agent",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "agent",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "agent",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/agent_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪdʒ(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/agent_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪdʒənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "agent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015800.006"
+                      },
+                      {
+                        "entry_id": "agent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015800.009"
+                      },
+                      {
+                        "entry_id": "agent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015800.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "forwarding agent",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "экспеди́тор"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000547.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "person acting for others; spy",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "аге́нт"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "representative",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "представи́тель"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "agent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015800.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "chemical agent",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "реакти́в, реаге́нт"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000547.003",
+                    "translations": [
+                      {
+                        "domains": [
+                          {
+                            "id": "chemistry",
+                            "text": "Chemistry"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "аге́нт"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "сре́дство"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "agent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015800.015"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "linguistics",
+                        "text": "Linguistics"
+                      }
+                    ],
+                    "id": "b-en-ru0000547.004",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "де́ятель"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "agent"
+          }
+        ],
+        "type": "headword",
+        "word": "agent"
+      }
+    ],
+    "word": "agent"
+  }
+}

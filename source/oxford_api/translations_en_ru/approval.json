@@ -1,0 +1,127 @@
+{
+  "query": "approval",
+  "resolved": "approval",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "approval",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "approval",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approval_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpruːv(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approval_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpruvəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approval",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042620.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "meet with approval",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "получа́ть одобре́ние"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "получи́ть одобре́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "on approval",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на про́бу"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001279.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "одобре́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "confirmation",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "утвержде́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "consent",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "согла́сие"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "sanction",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "апроба́ция"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "approval"
+          }
+        ],
+        "type": "headword",
+        "word": "approval"
+      }
+    ],
+    "word": "approval"
+  }
+}

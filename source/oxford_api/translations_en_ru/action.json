@@ -1,0 +1,417 @@
+{
+  "query": "action",
+  "resolved": "action",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "action",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "action",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/action_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈakʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/action_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈækʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.006"
+                      },
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "in action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в де́йствии"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "come into action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вступа́ть в де́йствие"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "вступи́ть в де́йствие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "bring into action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вводи́ть в де́йствие"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "ввести́ в де́йствие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "put out of action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "выводи́ть, вы́вести из стро́я"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "out of action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "него́дный к употребле́нию"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "принима́ть ме́ры"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "приня́ть ме́ры"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what we need is some action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "нам ну́жно де́йствовать"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.002",
+                    "notes": [
+                      {
+                        "text": "acting; activity; effect",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "де́йствие"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "a man of action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "челове́к де́ла"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "actions speak louder than words",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "дела́ говоря́т са́ми за себя́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.003",
+                    "notes": [
+                      {
+                        "text": "deed",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "посту́пок"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "line of action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ли́ния поведе́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.004",
+                    "notes": [
+                      {
+                        "text": "conduct",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "поведе́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.021"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the action of the heart",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́ятельность се́рдца"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.005",
+                    "notes": [
+                      {
+                        "text": "functioning",
+                        "type": "indicator"
+                      },
+                      {
+                        "text": "of a piano",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "меха́ника"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b-en-ru0000277.006",
+                    "notes": [
+                      {
+                        "text": "physical movement",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "движе́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.010"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "theatre",
+                        "text": "Theatre"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the action takes place in London",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́йствие происхо́дит в Ло́ндоне"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.007"
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.026"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "law",
+                        "text": "Law"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "action for damages",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "иск о взыска́нии убы́тков"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "bring an action against",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "предъявля́ть, -и́ть иск к"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.008",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "иск"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "суде́бное де́ло"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "action",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007780.020"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "military",
+                        "text": "Military"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "killed in action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "па́вший/поги́бший в бою́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "go into action",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вступа́ть в бой"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "вступи́ть в бой"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000277.009",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "бой"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "де́йствие"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "action"
+          }
+        ],
+        "type": "headword",
+        "word": "action"
+      }
+    ],
+    "word": "action"
+  }
+}

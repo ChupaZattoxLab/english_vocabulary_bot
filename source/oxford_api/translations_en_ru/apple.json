@@ -1,0 +1,77 @@
+{
+  "query": "apple",
+  "resolved": "apple",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "apple",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "apple",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/apple_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈap(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/apple_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæpəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "she was the apple of her father's eye",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "оте́ц души́ в ней не ча́ял"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001242.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "я́блоко"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "apple"
+          }
+        ],
+        "type": "headword",
+        "word": "apple"
+      }
+    ],
+    "word": "apple"
+  }
+}

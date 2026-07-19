@@ -1,0 +1,247 @@
+{
+  "query": "acknowledge",
+  "resolved": "acknowledge",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "acknowledge",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "acknowledge",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acknowledge_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əkˈnɒlɪdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acknowledge_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əkˈnɑlədʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "acknowledge",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0006870.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he refused to acknowledge defeat",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он отказа́лся призна́ть пораже́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was acknowledged as (or to be) the champion",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ призна́ли чемпио́ном"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000237.002",
+                    "notes": [
+                      {
+                        "text": "recognize; admit",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "признава́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "призна́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "acknowledge",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0006870.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "acknowledge a letter",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "подтвержда́ть получе́ние письма́"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "подтверди́ть получе́ние письма́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "acknowledge a greeting",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отвеча́ть на приве́тствие"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отве́тить на приве́тствие"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000237.003",
+                    "notes": [
+                      {
+                        "text": "confirm receipt of; reply to",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "acknowledge",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0006870.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he did not even acknowledge me as we passed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он прошёл ми́мо и да́же не поздоро́вался"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000237.004",
+                    "notes": [
+                      {
+                        "text": "indicate recognition of",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "acknowledge",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0006870.014"
+                      }
+                    ],
+                    "id": "b-en-ru0000237.005",
+                    "notes": [
+                      {
+                        "text": "express thanks for",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "выража́ть призна́тельность за"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "вы́разить призна́тельность за"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "acknowledge"
+          }
+        ],
+        "type": "headword",
+        "word": "acknowledge"
+      }
+    ],
+    "word": "acknowledge"
+  }
+}

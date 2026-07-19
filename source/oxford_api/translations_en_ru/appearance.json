@@ -1,0 +1,341 @@
+{
+  "query": "appearance",
+  "resolved": "appearance",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "appearance",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "appearance",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/appearance_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɪər(ə)ns"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/appearance_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɪrəns"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appearance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041470.015"
+                      },
+                      {
+                        "entry_id": "appearance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041470.017"
+                      },
+                      {
+                        "entry_id": "appearance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041470.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "make (or put in) an appearance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пока́зываться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "показа́ться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "появля́ться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "появи́ться"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "his appearance as Hamlet",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ выступле́ние в ро́ли Га́млета"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "make one's first appearance",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              },
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "дебюти́ровать"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "appearance in court",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я́вка в суд"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001224.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "act of appearing",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "появле́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in public",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "выступле́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of a book",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вы́ход в свет"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "появле́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appearance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041470.006"
+                      },
+                      {
+                        "entry_id": "appearance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041470.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "a pleasing appearance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прия́тный вид"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "appearances are deceptive",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "нару́жность обма́нчива"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "judge by appearance(s)",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "суди́ть по вне́шнему ви́ду"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in appearance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на вид"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "по ви́ду"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "to, by all appearances",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по всем при́знакам"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "су́дя по всему́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001224.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "look, aspect of thing",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вид"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "нару́жность"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вне́шность"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appearance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041470.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "keep up appearances",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "соблюда́ть ви́димость прили́чия"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "for appearance's sake",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "для ви́димости"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "напока́з"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001224.004",
+                    "notes": [
+                      {
+                        "text": "semblance",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вид"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "ви́димость"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "appearance"
+          }
+        ],
+        "type": "headword",
+        "word": "appearance"
+      }
+    ],
+    "word": "appearance"
+  }
+}

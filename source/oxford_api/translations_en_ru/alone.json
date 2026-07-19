@@ -1,0 +1,267 @@
+{
+  "query": "alone",
+  "resolved": "alone",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "alone",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "alone",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alone_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈləʊn"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alone_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈloʊn"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alone",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0025250.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he came alone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он пришёл оди́н"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you can't move the piano alone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы оди́н не смо́жете сдви́нуть роя́ль"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "not by bread alone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не хле́бом еди́ным"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000743.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "by oneself, itself",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "оди́н"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "еди́нственный"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alone",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0025250.044"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "in the month of June alone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "то́лько в ию́не ме́сяце"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she and I are alone (together)",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы с ней вдвоём/одни́"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "pred",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "the only one(s)",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he was alone opposing the suggestion",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он оди́н был про́тив предложе́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "we are not alone in thinking so",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не то́лько мы так ду́маем"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000743.003",
+                    "notes": [
+                      {
+                        "text": "… and no other(s)",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "alone"
+          },
+          {
+            "entries": [
+              {
+                "notes": [
+                  {
+                    "text": "\"let alone\" \"leave alone\"",
+                    "type": "wordFormNote"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alone_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈləʊn"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alone_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈloʊn"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "his parents left him alone all day",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "роди́тели оста́вили его́ на це́лый день одного́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I should leave the dog alone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я бы оста́вил соба́ку в поко́е"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "let well alone!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "от добра́ добра́ не и́щут!"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "let alone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ p",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "не говоря́ уже́ о"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000743.005"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "other",
+              "text": "Other"
+            },
+            "text": "alone"
+          }
+        ],
+        "type": "headword",
+        "word": "alone"
+      }
+    ],
+    "word": "alone"
+  }
+}

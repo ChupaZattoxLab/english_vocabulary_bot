@@ -1,0 +1,98 @@
+{
+  "query": "armed",
+  "resolved": "armed",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "armed",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "armed",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/armed_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːmd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/armed_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrmd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "armed",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047230.006"
+                      },
+                      {
+                        "entry_id": "armed",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047230.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "armed forces",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вооружённые си́лы"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "armed robbery",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вооружённый разбо́й"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0040559.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вооружённый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "armed"
+          }
+        ],
+        "type": "headword",
+        "word": "armed"
+      }
+    ],
+    "word": "armed"
+  }
+}

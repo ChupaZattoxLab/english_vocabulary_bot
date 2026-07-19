@@ -1,0 +1,478 @@
+{
+  "query": "affect",
+  "resolved": "affect",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "affect",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "affect",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affect_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɛkt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affect_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɛkt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0013760.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the climate affected his health",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "кли́мат повлия́л на его́ здоро́вье"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000480.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "act on",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "де́йствовать на"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "act on",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "поде́йствовать на"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "влия́ть на"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "повлия́ть на"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0013760.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "everyone is affected by the rise in prices",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "повыше́ние цен затра́гивает всех"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000480.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "concern",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "каса́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "concern",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "косну́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "затра́гивать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "затро́нуть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0013760.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he was affected by the news",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то изве́стие на него́ о́чень поде́йствовало"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an affecting sight",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "волну́ющее зре́лище"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000480.004",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "touch emotionally",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "тро́гать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "touch emotionally",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "тро́нуть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "волнова́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "взволнова́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0013760.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the lung is affected",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "лёгкое поражено́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "several hundred cattle were affected",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пострада́ло не́сколько сот голо́в скота́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000480.005",
+                    "notes": [
+                      {
+                        "text": "of disease",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "affect"
+          }
+        ],
+        "type": "headword",
+        "word": "affect"
+      },
+      {
+        "id": "affect",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affect_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɛkt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affect_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɛkt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affect",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0013770.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "assume pretentiously",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he affects a northern accent",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он говори́т с де́ланным се́верным акце́нтом"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "affect indifference",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прики́дываться равноду́шным"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "прикинуться равноду́шным"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he affected not to hear me",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он притвори́лся, что не слы́шит меня́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000481.002",
+                    "notes": [
+                      {
+                        "text": "pretend",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "affect"
+          }
+        ],
+        "type": "headword",
+        "word": "affect"
+      }
+    ],
+    "word": "affect"
+  }
+}

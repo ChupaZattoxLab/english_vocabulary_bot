@@ -1,0 +1,234 @@
+{
+  "query": "allowance",
+  "resolved": "allowance",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "allowance",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "allowance",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allowance_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlaʊəns"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allowance_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlaʊəns"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allowance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024430.006"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "military",
+                        "text": "Military"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "monthly allowance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ме́сячное посо́бие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "make sb an allowance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "назнача́ть, назна́чить содержа́ние кому́-н."
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000721.002",
+                    "notes": [
+                      {
+                        "text": "amount provided",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "дово́льствие"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allowance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024430.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "allowance for cash",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ски́дка за платёж нали́чными"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000721.003",
+                    "notes": [
+                      {
+                        "text": "discount",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ски́дка"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allowance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024430.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "we will make an allowance in your case",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы сде́лаем для вас исключе́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "make allowance(s) for",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "учи́тывать"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "уче́сть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "принима́ть во внима́ние"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "приня́ть во внима́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000721.004",
+                    "notes": [
+                      {
+                        "text": "concession",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "allowance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024430.009"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "technology",
+                        "text": "Technology"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "shrinkage allowance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "до́пуск на уса́дку"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "correction",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "allowance for wind",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "попра́вка на ве́тер"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000721.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "до́пуск"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "allowance"
+          }
+        ],
+        "type": "headword",
+        "word": "allowance"
+      }
+    ],
+    "word": "allowance"
+  }
+}

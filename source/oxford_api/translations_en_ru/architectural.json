@@ -1,0 +1,70 @@
+{
+  "query": "architectural",
+  "resolved": "architectural",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "architectural",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "architectural",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/architectural_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːkɪˈtɛktʃ(ə)r(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/architectural_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrkɪˈtɛktʃərəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001369.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "архитекту́рный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "строи́тельный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "architectural"
+          }
+        ],
+        "type": "headword",
+        "word": "architectural"
+      }
+    ],
+    "word": "architectural"
+  }
+}

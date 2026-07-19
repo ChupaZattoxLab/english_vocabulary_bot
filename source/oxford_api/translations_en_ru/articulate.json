@@ -1,0 +1,366 @@
+{
+  "query": "articulate",
+  "resolved": "articulate",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "articulate",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "articulate",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/articulate_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːˈtɪkjʊlət"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/articulate_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrˈtɪkjələt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "articulate",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0049510.007"
+                      }
+                    ],
+                    "id": "b-en-ru0001481.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of speech",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "членоразде́льный"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of thoughts",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отчётливый"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "чётко выража́ющий свои́ мы́сли"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "articulate"
+          }
+        ],
+        "type": "headword",
+        "word": "articulate"
+      },
+      {
+        "id": "articulate",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/articulate_gb_2_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːˈtɪkjʊleɪt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/articulate_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrˈtɪkjəˌleɪt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "articulate",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0049510.016"
+                      },
+                      {
+                        "entry_id": "articulate",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0049510.022"
+                      }
+                    ],
+                    "id": "b-en-ru0001482.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "ideas",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "я́сно выража́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "ideas",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "я́сно вы́разить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "speech",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отчётливо произноси́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "speech",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отчётливо произнести́"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "articulate",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0049510.025"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "articulated lorry",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "regions": [
+                              {
+                                "id": "british",
+                                "text": "British"
+                              }
+                            ],
+                            "text": "грузови́к с прице́пом"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "автопо́езд"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001482.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "connect by joints",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "свя́зывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "connect by joints",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "связа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "соединя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "соедини́ть"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "201",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/articulate_gb_2_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːˈtɪkjʊleɪt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/articulate_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrˈtɪkjəˌleɪt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "he articulates well",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у него́ хоро́шая артикуля́ция"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001482.005"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "articulate"
+          }
+        ],
+        "type": "headword",
+        "word": "articulate"
+      }
+    ],
+    "word": "articulate"
+  }
+}

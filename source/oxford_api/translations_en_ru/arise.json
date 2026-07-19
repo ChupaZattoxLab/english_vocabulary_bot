@@ -1,0 +1,328 @@
+{
+  "query": "arise",
+  "resolved": "arise",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "arise",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "arise",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "inflections": [
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "intransitive",
+                        "text": "Intransitive",
+                        "type": "Subcategorization"
+                      },
+                      {
+                        "id": "past",
+                        "text": "Past",
+                        "type": "Tense"
+                      }
+                    ],
+                    "inflectedForm": "arose"
+                  },
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "intransitive",
+                        "text": "Intransitive",
+                        "type": "Subcategorization"
+                      },
+                      {
+                        "id": "pastParticiple",
+                        "text": "Past Participle",
+                        "type": "Non Finiteness"
+                      }
+                    ],
+                    "inflectedForm": "arisen",
+                    "pronunciations": [
+                      {
+                        "phoneticNotation": "IPA",
+                        "phoneticSpelling": "əˈrɪz(ə)n"
+                      }
+                    ]
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arise_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈrʌɪz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arise_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈraɪz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046630.021"
+                      }
+                    ],
+                    "id": "b-en-ru0001401.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "get up; stand up",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "встава́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "get up; stand up",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "встать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "rise",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          },
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "восстава́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "rise",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          },
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "восста́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "from the dead",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "воскреса́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "from the dead",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "воскре́снуть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046630.012"
+                      },
+                      {
+                        "entry_id": "arise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0046630.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "if the need should arise",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "е́сли возни́кнет необходи́мость"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the question arose",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "возни́к вопро́с"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "a shout arose from the crowd",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "из толпы́ разда́лся крик"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001401.003",
+                    "notes": [
+                      {
+                        "text": "come into being",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "возника́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "возни́кнуть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "arise"
+          }
+        ],
+        "type": "headword",
+        "word": "arise"
+      }
+    ],
+    "word": "arise"
+  }
+}

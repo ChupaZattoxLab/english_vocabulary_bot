@@ -1,0 +1,129 @@
+{
+  "query": "adverse",
+  "resolved": "adverse",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "adverse",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "adverse",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adverse_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈadvəːs"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adverse_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ædˈvərs"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adverse_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædˌvərs"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adverse",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012170.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "it is adverse to our interests",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то противоре́чит на́шим интере́сам"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "adverse winds",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "masculine",
+                                "text": "Masculine",
+                                "type": "Gender"
+                              },
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "встре́чные, проти́вные ве́тры"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000430.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "unfavourable",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "неблагоприя́тный"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "harmful",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вре́дный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "adverse"
+          }
+        ],
+        "type": "headword",
+        "word": "adverse"
+      }
+    ],
+    "word": "adverse"
+  }
+}

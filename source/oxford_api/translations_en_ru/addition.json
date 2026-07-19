@@ -1,0 +1,175 @@
+{
+  "query": "addition",
+  "resolved": "addition",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "addition",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "addition",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/addition_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdɪʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/addition_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdɪʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "addition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0009320.007"
+                      },
+                      {
+                        "entry_id": "addition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0009320.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "an addition to the family",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прибавле́ние семе́йства"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "a useful addition to the staff",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "поле́зное пополне́ние шта́та"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in addition to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "в дополне́ние к"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in addition",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "as well",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "вдоба́вок"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "moreover",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "к тому́ же"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000320.002",
+                    "notes": [
+                      {
+                        "text": "act of adding; thing added",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "прибавле́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "добавле́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "addition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0009320.013"
+                      },
+                      {
+                        "entry_id": "addition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0009320.015"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "mathematics",
+                        "text": "Mathematics"
+                      }
+                    ],
+                    "id": "b-en-ru0000320.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "сложе́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "addition"
+          }
+        ],
+        "type": "headword",
+        "word": "addition"
+      }
+    ],
+    "word": "addition"
+  }
+}

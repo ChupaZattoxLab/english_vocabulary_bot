@@ -1,0 +1,231 @@
+{
+  "query": "angry",
+  "resolved": "angry",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "angry",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "angry",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "inflections": [
+                  {
+                    "inflectedForm": "angrier"
+                  },
+                  {
+                    "inflectedForm": "angriest"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/angry_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaŋɡri"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/angry_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæŋɡri"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "angry",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0033890.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "be angry with",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "over, about sth",
+                                "type": "prepositionNote"
+                              },
+                              {
+                                "text": "за что-н.",
+                                "type": "prepositionNote"
+                              }
+                            ],
+                            "text": "серди́ться на"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "over, about sth",
+                                "type": "prepositionNote"
+                              },
+                              {
+                                "text": "за что-н.",
+                                "type": "prepositionNote"
+                              }
+                            ],
+                            "text": "гне́ваться на"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "get angry with",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "рассерди́ться на"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "разгне́ваться на"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "make angry",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "серди́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "рассерди́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I was angry with him for going",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я рассерди́лся на него́ за то, что он пошёл"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "annoyed",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he is angry about the delay",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он раздражён опозда́нием"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she got extremely angry",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ была́ в гне́ве"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "она́ была́ о́чень серди́та"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000989.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "серди́тый"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "разгне́ванный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "angry"
+          }
+        ],
+        "type": "headword",
+        "word": "angry"
+      }
+    ],
+    "word": "angry"
+  }
+}

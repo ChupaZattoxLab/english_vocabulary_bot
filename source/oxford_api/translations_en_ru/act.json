@@ -1,0 +1,821 @@
+{
+  "query": "act",
+  "resolved": "act",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "act",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "act",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "derivatives": [
+              {
+                "id": "act_out",
+                "text": "act out"
+              },
+              {
+                "id": "act_up",
+                "text": "act up"
+              }
+            ],
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/act_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "akt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/act_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ækt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.032"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "act of God",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "стихи́йное бе́дствие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "catch in the act",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "пойма́ть на ме́сте преступле́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was in the act of putting on his hat",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он как раз надева́л шля́пу"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an act of kindness",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "до́брое де́ло"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "action",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "посту́пок"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "feat",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "по́двиг"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.049"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "act of sale",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "акт о прода́же"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "proof",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "act of confidence",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "зало́г/проявле́ние дове́рия"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.003",
+                    "notes": [
+                      {
+                        "text": "document",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "акт"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "докуме́нт"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.044"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "law",
+                        "text": "Law"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "Act of Parliament",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "акт парла́мента, парла́ментский акт"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was prosecuted under the act",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ привлекли́ к суду́ в соотве́тствии с э́тим зако́ном"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "акт"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "зако́н"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.053"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "a 3-act play",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пье́са в трёх де́йствиях"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.005",
+                    "notes": [
+                      {
+                        "text": "of drama",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "де́йствие"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.054"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "circus act",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "цирково́й но́мер"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          },
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "put on an act",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "притворя́ться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "притвори́ться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.006",
+                    "notes": [
+                      {
+                        "text": "performance",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "но́мер"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "act"
+          },
+          {
+            "derivatives": [
+              {
+                "id": "act_out",
+                "text": "act out"
+              },
+              {
+                "id": "act_up",
+                "text": "act up"
+              }
+            ],
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/act_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "akt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/act_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ækt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          },
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "act a part",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "игра́ть роль"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "act Hamlet",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "игра́ть Га́млета"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "act the fool",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "валя́ть дурака́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "act a play",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "игра́ть, разыгра́ть (или дава́ть, -ть) пье́су"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.008",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "игра́ть"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/act_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "akt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/act_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ækt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.006"
+                      },
+                      {
+                        "entry_id": "act_on",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.012"
+                      },
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "act on advice",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сле́довать, по- сове́ту"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "act (up)on an order",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "де́йствовать по прика́зу"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it is time to act",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пора́ де́йствовать"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "he acts rich",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он разы́грывает из себя́ богача́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.010",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "behave",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "поступа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "behave",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "поступи́ть"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "det",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "вести́ себя́"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "take action, intervene",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "принима́ть ме́ры"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "take action, intervene",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приня́ть ме́ры"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "act for sb",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́йствовать от и́мени кого́-либо"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "act against sb",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "выступа́ть, вы́ступить про́тив кого́-н."
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is acting as interpreter",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он выступа́ет в ро́ли перево́дчика"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.011",
+                    "notes": [
+                      {
+                        "text": "serve, function",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "де́йствовать"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.023"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the medicine will act immediately",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "лека́рство поде́йствует сра́зу"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.012",
+                    "notes": [
+                      {
+                        "text": "have or take effect",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "on",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "на + a",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "де́йствовать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "on",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "на + a",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "поде́йствовать"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "act",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007610.025"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "theatre",
+                        "text": "Theatre"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he wants to act",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он хо́чет игра́ть на сце́не"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000273.013",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "игра́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "act"
+          }
+        ],
+        "type": "headword",
+        "word": "act"
+      },
+      {
+        "id": "ACT",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "senses": [
+                  {
+                    "crossReferenceMarkers": [
+                      "ACT — American College Test"
+                    ],
+                    "crossReferences": [
+                      {
+                        "id": "ACT_%E2%80%94_American_College_Test",
+                        "text": "ACT — American College Test",
+                        "type": "see also"
+                      }
+                    ],
+                    "id": "b-en-ru0000274.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ACT"
+          }
+        ],
+        "type": "headword",
+        "word": "ACT"
+      }
+    ],
+    "word": "act"
+  }
+}

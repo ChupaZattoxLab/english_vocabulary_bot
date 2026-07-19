@@ -1,0 +1,115 @@
+{
+  "query": "ambition",
+  "resolved": "ambition",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ambition",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ambition",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ambition_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "amˈbɪʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ambition_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æmˈbɪʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ambition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027520.005"
+                      },
+                      {
+                        "entry_id": "ambition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027520.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "her great ambition is to be a dancer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "её заве́тная мечта́ — стать танцо́вщицей"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000812.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "desire for distinction",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "честолю́бие"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "desire for distinction",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "амби́ция"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "aspiration",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "стремле́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ambition"
+          }
+        ],
+        "type": "headword",
+        "word": "ambition"
+      }
+    ],
+    "word": "ambition"
+  }
+}

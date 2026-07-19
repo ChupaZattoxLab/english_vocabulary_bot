@@ -1,0 +1,240 @@
+{
+  "query": "anxiety",
+  "resolved": "anxiety",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "anxiety",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "anxiety",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anxiety_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "aŋˈzʌɪəti"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anxiety_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æŋˈzaɪədi"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anxiety",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039230.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "cause anxiety to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "трево́жить"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "встрево́жить"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "be full of anxiety",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "беспоко́иться"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "трево́житься"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "feel anxiety for, over",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ p",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "беспоко́иться о"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "трево́житься за"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001149.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "uneasiness",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "беспоко́йство"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "alarm",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "трево́га"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anxiety",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039230.012"
+                      }
+                    ],
+                    "id": "b-en-ru0001149.003",
+                    "notes": [
+                      {
+                        "text": "desire; keenness",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "жела́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ inf",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "стремле́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anxiety",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039230.006"
+                      }
+                    ],
+                    "id": "b-en-ru0001149.004",
+                    "notes": [
+                      {
+                        "text": "anxieties",
+                        "type": "wordFormNote"
+                      },
+                      {
+                        "text": "cares, worries",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          },
+                          {
+                            "id": "plural",
+                            "text": "Plural",
+                            "type": "Number"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "забо́ты"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "anxiety"
+          }
+        ],
+        "type": "headword",
+        "word": "anxiety"
+      }
+    ],
+    "word": "anxiety"
+  }
+}

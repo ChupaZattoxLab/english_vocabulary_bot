@@ -1,0 +1,182 @@
+{
+  "query": "ability",
+  "resolved": "ability",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ability",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ability",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ability_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbɪlɪti"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ability_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbɪlədi"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ability",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0001780.006"
+                      },
+                      {
+                        "entry_id": "ability",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0001780.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "to the best of one's ability",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по ме́ре спосо́бностей"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he shows an ability for music",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он проявля́ет музыка́льные спосо́бности"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "a man of ability",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "спосо́бный челове́к"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000044.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "capacity in general",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "спосо́бность"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "knowing how",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уме́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "mental competence",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "спосо́бность"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ability",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0001780.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "natural ability",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "врождённые спосо́бности"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000044.003",
+                    "notes": [
+                      {
+                        "text": "abilities",
+                        "type": "wordFormNote"
+                      },
+                      {
+                        "text": "gifts",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          },
+                          {
+                            "id": "plural",
+                            "text": "Plural",
+                            "type": "Number"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "спосо́бности"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ability"
+          }
+        ],
+        "type": "headword",
+        "word": "ability"
+      }
+    ],
+    "word": "ability"
+  }
+}

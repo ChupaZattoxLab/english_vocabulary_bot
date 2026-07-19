@@ -1,0 +1,245 @@
+{
+  "query": "absorb",
+  "resolved": "absorb",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "absorb",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "absorb",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absorb_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əbˈzɔːb"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absorb_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əbˈsɔːb"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absorb_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əbˈzɔrb"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absorb_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əbˈsɔrb"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absorb",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0003270.005"
+                      }
+                    ],
+                    "id": "b-en-ru0000102.002",
+                    "notes": [
+                      {
+                        "text": "soak up",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "впи́тывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "впита́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absorb",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0003270.020"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "absorb knowledge",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "впи́тывать зна́ния"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "впита́ть зна́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000102.003",
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absorb",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0003270.020"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "his business absorbs him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он поглощён свои́ми дела́ми"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was absorbed in reading",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он был погружён в чте́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000102.004",
+                    "notes": [
+                      {
+                        "text": "engross",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "поглоща́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "поглоти́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absorb",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0003270.018"
+                      }
+                    ],
+                    "id": "b-en-ru0000102.005",
+                    "notes": [
+                      {
+                        "text": "shock, vibration etc.",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          },
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "амортизи́ровать"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "absorb"
+          }
+        ],
+        "type": "headword",
+        "word": "absorb"
+      }
+    ],
+    "word": "absorb"
+  }
+}

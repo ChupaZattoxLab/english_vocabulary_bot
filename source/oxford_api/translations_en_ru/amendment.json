@@ -1,0 +1,118 @@
+{
+  "query": "amendment",
+  "resolved": "amendment",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "amendment",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "amendment",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amendment_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmɛn(d)m(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amendment_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmɛn(d)mənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amendment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027920.007"
+                      }
+                    ],
+                    "id": "b-en-ru0000828.002",
+                    "notes": [
+                      {
+                        "text": "reform",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "исправле́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amendment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027920.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "make an amendment to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "вноси́ть, -ести́ попра́вку в"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000828.003",
+                    "notes": [
+                      {
+                        "text": "of document etc.",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "попра́вка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "amendment"
+          }
+        ],
+        "type": "headword",
+        "word": "amendment"
+      }
+    ],
+    "word": "amendment"
+  }
+}

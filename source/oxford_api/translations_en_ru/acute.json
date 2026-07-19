@@ -1,0 +1,131 @@
+{
+  "query": "acute",
+  "resolved": "acute",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "acute",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "acute",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "inflections": [
+                  {
+                    "inflectedForm": "acuter"
+                  },
+                  {
+                    "inflectedForm": "acutest"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acute_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkjuːt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acute_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkjut"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "acute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008500.006"
+                      },
+                      {
+                        "entry_id": "acute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008500.010"
+                      },
+                      {
+                        "entry_id": "acute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008500.014"
+                      },
+                      {
+                        "entry_id": "acute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008500.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "acute angle",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "о́стрый у́гол"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "acute shortage",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "о́страя нехва́тка"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "acute sense of smell",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "то́нкое обоня́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000298.002",
+                    "notes": [
+                      {
+                        "text": "in various senses",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "о́стрый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "acute"
+          }
+        ],
+        "type": "headword",
+        "word": "acute"
+      }
+    ],
+    "word": "acute"
+  }
+}

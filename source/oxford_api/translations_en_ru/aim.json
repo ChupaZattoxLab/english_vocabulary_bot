@@ -1,0 +1,482 @@
+{
+  "query": "aim",
+  "resolved": "aim",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aim",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aim",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aim_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aim_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aim",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0017840.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "with the aim of",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "с це́лью"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what is the aim of these questions?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "к чему́ э́ти вопро́сы?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000611.002",
+                    "notes": [
+                      {
+                        "text": "purpose",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "цель"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aim",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0017840.022"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "take aim at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "прице́ливаться, -иться в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "miss one's aim",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не попада́ть в цель"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "не попа́сть в цель"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "is your aim good?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у вас хоро́ший глаз?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000611.003",
+                    "notes": [
+                      {
+                        "text": "of a gun, etc.",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "прице́л"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "aim"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aim_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aim_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aim",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0017840.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "aim a rifle at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "наводи́ть, -ести́ (или направля́ть, -а́вить) винто́вку на"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "aim a stone at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "це́литься, на- ка́мнем в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "aim a blow at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "зама́хиваться, -ну́ться на"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "aim one's remarks at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "предназнача́ть, -а́чить свои́ замеча́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000611.005",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "наводи́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "навести́"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aim_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aim_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aim",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0017840.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "with rifle",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "aim at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "прице́ливаться, -иться в"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "aim at",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "aspire to",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "це́литься, на- на"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "стреми́ться к"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he aimed at becoming (or to become) a doctor",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он поста́вил себе́ це́лью стать врачо́м"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "aim high",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "высоко́ ме́тить"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what are you aiming at?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "что вы име́ете в виду́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "aim for",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "направля́ться, -а́виться в/на"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he aimed for the tree",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он напра́вился к де́реву"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000611.007",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "це́лить"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "aim"
+          }
+        ],
+        "type": "headword",
+        "word": "aim"
+      }
+    ],
+    "word": "aim"
+  }
+}

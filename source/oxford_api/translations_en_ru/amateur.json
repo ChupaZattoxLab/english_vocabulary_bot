@@ -1,0 +1,158 @@
+{
+  "query": "amateur",
+  "resolved": "amateur",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "amateur",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "amateur",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amateur_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈamətə"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈamətʃə"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈamətʃʊə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amateur_gb_3.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌaməˈtəː"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amateur_us_7.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæmədər"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amateur_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæməˌtər"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amateur_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæmətʃər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amateur",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027090.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "amateur theatricals",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "театра́льная самоде́ятельность, люби́тельский теа́тр"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "amateur sport",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "люби́тельский спорт"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000795.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "люби́тель"
+                      },
+                      {
+                        "language": "ru",
+                        "registers": [
+                          {
+                            "id": "derogatory",
+                            "text": "Derogatory"
+                          }
+                        ],
+                        "text": "дилета́нт"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "attr",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "люби́тельский"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "amateur"
+          }
+        ],
+        "type": "headword",
+        "word": "amateur"
+      }
+    ],
+    "word": "amateur"
+  }
+}

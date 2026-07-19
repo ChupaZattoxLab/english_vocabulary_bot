@@ -1,0 +1,163 @@
+{
+  "query": "april",
+  "resolved": "april",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "april",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "April",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/april_1_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪpr(ɪ)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/april_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪprəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "this April",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в апре́ле э́того го́да"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "April Fool",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "первоапре́льский дурачо́к"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "April Fool!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пе́рвое апре́ля — никому́ не ве́рю!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "April Fool's day",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пе́рвое апре́ля"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001287.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "апре́ль"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "April"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/april_1_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪpr(ɪ)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/april_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪprəl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "April shower",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "внеза́пный дождь"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001287.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "апре́льский"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "April"
+          }
+        ],
+        "type": "headword",
+        "word": "April"
+      }
+    ],
+    "word": "April"
+  }
+}

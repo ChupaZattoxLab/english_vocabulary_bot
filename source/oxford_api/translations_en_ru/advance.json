@@ -1,0 +1,961 @@
+{
+  "query": "advance",
+  "resolved": "advance",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "advance",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "advance",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advance_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɑːns"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advance_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvæns"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.028"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "we made an advance of 10 miles",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы продви́нулись на 10 миль"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "approach, onset",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "the advance of old age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наступле́ние ста́рости"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "forward move",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "продвиже́ние"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "military",
+                            "text": "Military"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "наступле́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "make advances to",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "заи́грывать с"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.018",
+                    "notes": [
+                      {
+                        "text": "advances",
+                        "type": "wordFormNote"
+                      },
+                      {
+                        "text": "overtures to a person",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.033"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advances of science",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прогре́сс нау́ки"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "advances of civilization",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "neuter",
+                                "text": "Neuter",
+                                "type": "Gender"
+                              },
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "достиже́ния цивилиза́ции"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the country has made great advances",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "страна́ доби́лась больши́х успе́хов"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "progress",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прогре́сс"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in rank, social position etc.",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "продвиже́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.034"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "an advance on his original offer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "надба́вка к первонача́льному предложе́нию"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "any advance on £5?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "5 фу́нтов — кто бо́льше?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.004",
+                    "notes": [
+                      {
+                        "text": "increase",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "повыше́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.036"
+                      },
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.037"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "an advance on salary",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ава́нс под зарпла́ту"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the bank made me an advance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "банк вы́дал мне ава́нс"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "loan",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ссу́да"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "payment beforehand",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ава́нс"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "in advance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "in front",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "вперёд"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "beforehand",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "зара́нее"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in advance of",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "впереди́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he expects to be paid in advance",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он ожида́ет, что ему́ запла́тят вперёд"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.006"
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "advance booking",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "предвари́тельный зака́з"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "of book",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "advance copy",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сигна́льный экземпля́р"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "advance copy of a speech",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "предвари́тельный текст ре́чи"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "advance guard",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "аванга́рд"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I had advance knowledge of this",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я знал об э́том зара́нее"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "advance payment",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ава́нсовый платёж"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.007",
+                    "notes": [
+                      {
+                        "text": "attr",
+                        "type": "grammaticalNote"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "advance"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advance_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɑːns"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advance_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvæns"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he advanced his troops to the frontier",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он продви́нул войска́ к грани́це"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.009",
+                    "notes": [
+                      {
+                        "text": "move forward",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "продвига́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "продви́нуть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.022"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advance an opinion",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "выска́зывать, вы́сказать мне́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "advance a proposal",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "выдвига́ть, вы́двинуть предложе́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.010",
+                    "notes": [
+                      {
+                        "text": "put forward",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.006"
+                      },
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advance sb's interests",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "отста́ивать чьи-н. интере́сы"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "служи́ть, по- чьим-н. интере́сам"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he did this to advance his own interests",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сде́лал э́то ра́ди со́бственной вы́годы"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.011",
+                    "notes": [
+                      {
+                        "text": "further",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.024"
+                      },
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.025"
+                      }
+                    ],
+                    "id": "b-en-ru0000412.012",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of payment",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "плати́ть ава́нсом"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of payment",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "заплати́ть ава́нсом"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "lend",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ссужа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "lend",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ссуди́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advance the date of",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "переноси́ть, перенести́ на бо́лее ра́нний срок"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.013",
+                    "notes": [
+                      {
+                        "text": "bring forward; make earlier",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advance_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɑːns"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advance_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvæns"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advance on",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "наступа́ть на"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.015",
+                    "notes": [
+                      {
+                        "text": "move forward",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "продвига́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "продви́нуться"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advance in knowledge",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "углубля́ть зна́ния"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "углуби́ть зна́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000412.016",
+                    "notes": [
+                      {
+                        "text": "progress",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "развива́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "разви́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "де́лать успе́хи"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "сде́лать успе́хи"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011780.020"
+                      }
+                    ],
+                    "id": "b-en-ru0000412.017",
+                    "notes": [
+                      {
+                        "text": "increase",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "повыша́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "повы́ситься"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "advance"
+          }
+        ],
+        "type": "headword",
+        "word": "advance"
+      }
+    ],
+    "word": "advance"
+  }
+}

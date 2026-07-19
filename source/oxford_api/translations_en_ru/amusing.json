@@ -1,0 +1,96 @@
+{
+  "query": "amusing",
+  "resolved": "amusing",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "amusing",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "amusing",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amusing_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmjuːzɪŋ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amusing_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmjuzɪŋ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "an amusing little hat",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "заба́вная шля́пка"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I don't find that amusing",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я не ви́жу в э́том ничего́ смешно́го"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000896.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "заба́вный"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "funny",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "смешно́й"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "amusing"
+          }
+        ],
+        "type": "headword",
+        "word": "amusing"
+      }
+    ],
+    "word": "amusing"
+  }
+}

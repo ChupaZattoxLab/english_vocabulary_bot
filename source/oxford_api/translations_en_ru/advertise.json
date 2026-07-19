@@ -1,0 +1,250 @@
+{
+  "query": "advertise",
+  "resolved": "advertise",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "advertise",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "advertise",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertise_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈadvətʌɪz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertise_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædvərˌtaɪz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advertise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012230.005"
+                      },
+                      {
+                        "entry_id": "advertise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012230.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I shall advertise my house for sale in the Times",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я дам объявле́ние о прода́же до́ма в ́«Таймс»"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "even if you don't like him you needn't advertise the fact",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "да́же е́сли он вам неприя́тен, не сле́дует э́то афиши́ровать"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000433.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          },
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "boost, publicize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "реклами́ровать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "in newspaper",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дава́ть объявле́ние о"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "in newspaper",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "дать объявле́ние о"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "in newspaper",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "помеща́ть объявле́ние о"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "in newspaper",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "помести́ть объявле́ние о"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertise_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈadvətʌɪz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertise_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædvərˌtaɪz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "she advertised for a secretary",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ дала́ объявле́ние о вака́нсии секретаря́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000433.004"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "advertise"
+          }
+        ],
+        "type": "headword",
+        "word": "advertise"
+      }
+    ],
+    "word": "advertise"
+  }
+}

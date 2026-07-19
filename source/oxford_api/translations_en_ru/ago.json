@@ -1,0 +1,95 @@
+{
+  "query": "ago",
+  "resolved": "ago",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ago",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ago",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ago_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡəʊ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ago_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡoʊ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "long ago",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "давно́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "not long ago",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "неда́вно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it was longer ago than I thought",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то бы́ло (ещё) ра́ньше, чем я ду́мал"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000576.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "тому́ наза́д"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "ago"
+          }
+        ],
+        "type": "headword",
+        "word": "ago"
+      }
+    ],
+    "word": "ago"
+  }
+}

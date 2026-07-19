@@ -1,0 +1,176 @@
+{
+  "query": "admission",
+  "resolved": "admission",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "admission",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "admission",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/admission_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmɪʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/admission_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmɪʃən"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "admission",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010850.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "admission by ticket",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вход по биле́там"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "admission free",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вход беспла́тный"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "no admission",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вход воспреща́ется"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "нет вхо́да"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was refused admission",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ не впусти́ли"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "admission charge",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "входна́я пла́та"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000373.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "permitted entry or access",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вход"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "до́ступ"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "admission",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010850.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he made an admission of guilt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он призна́л свою́ вину́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "on his own admission",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по его́ со́бственному призна́нию"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000373.003",
+                    "notes": [
+                      {
+                        "text": "acknowledgement",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "призна́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "admission"
+          }
+        ],
+        "type": "headword",
+        "word": "admission"
+      }
+    ],
+    "word": "admission"
+  }
+}

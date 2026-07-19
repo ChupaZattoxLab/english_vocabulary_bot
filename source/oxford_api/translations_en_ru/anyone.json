@@ -1,0 +1,70 @@
+{
+  "query": "anyone",
+  "resolved": "anyone",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "anyone",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "anyone",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anyone_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛnɪwʌn"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anyone_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛniˌwən"
+                  }
+                ],
+                "senses": [
+                  {
+                    "crossReferenceMarkers": [
+                      "= anybody"
+                    ],
+                    "crossReferences": [
+                      {
+                        "id": "anybody",
+                        "text": "anybody",
+                        "type": "see also"
+                      }
+                    ],
+                    "id": "b-en-ru0001154.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "other",
+              "text": "Other"
+            },
+            "text": "anyone"
+          }
+        ],
+        "type": "headword",
+        "word": "anyone"
+      }
+    ],
+    "word": "anyone"
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "query": "ally",
+  "resolved": "ally",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ally",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ally",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ally_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈalʌɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ally_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈælaɪ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000731.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "сою́зник"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ally"
+          }
+        ],
+        "type": "headword",
+        "word": "ally"
+      },
+      {
+        "id": "ally",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ally_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈalʌɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ally_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlʌɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ally_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlaɪ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ally",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0024860.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "of things",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "allied to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "соединённый с"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "свя́занный с"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "of nations",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "to be allied to, with",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "быть в сою́зе с"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "ally oneself with",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "вступа́ть, -и́ть в сою́з с"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000732.002",
+                    "notes": [
+                      {
+                        "text": "connect",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "соединя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "соедини́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "ally"
+          }
+        ],
+        "type": "headword",
+        "word": "ally"
+      }
+    ],
+    "word": "ally"
+  }
+}

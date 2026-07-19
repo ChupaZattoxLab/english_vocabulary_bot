@@ -1,0 +1,126 @@
+{
+  "query": "apparently",
+  "resolved": "apparently",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "apparently",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "apparently",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/apparently_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈparəntli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/apparently_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɛrəntli"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001219.002",
+                    "notes": [
+                      {
+                        "text": "clearly",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "очеви́дно"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "я́вно"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "apparently",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041350.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "apparently he's the local doctor",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он, по-ви́димому/вероя́тно, зде́шний врач"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "apparently he was here yesterday",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по-ви́димому/вероя́тно, он был здесь вчера́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001219.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "seemingly",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "по-ви́димому"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "вероя́тно"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "(как) бу́дто"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "apparently"
+          }
+        ],
+        "type": "headword",
+        "word": "apparently"
+      }
+    ],
+    "word": "apparently"
+  }
+}

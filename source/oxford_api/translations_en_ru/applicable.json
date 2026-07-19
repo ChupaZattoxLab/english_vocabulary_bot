@@ -1,0 +1,109 @@
+{
+  "query": "applicable",
+  "resolved": "applicable",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "applicable",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "applicable",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/applicable_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈplɪkəb(ə)l"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaplɪkəb(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/applicable_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæpləkəb(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/applicable_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈplɪkəb(ə)l"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "applicable",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042040.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the rule is not applicable to this case",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пра́вило непримени́мо к э́тому слу́чаю"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001244.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "примени́мый"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "appropriate",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подходя́щий"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "applicable"
+          }
+        ],
+        "type": "headword",
+        "word": "applicable"
+      }
+    ],
+    "word": "applicable"
+  }
+}

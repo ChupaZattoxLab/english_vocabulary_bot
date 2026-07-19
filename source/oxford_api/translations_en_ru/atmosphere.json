@@ -1,0 +1,108 @@
+{
+  "query": "atmosphere",
+  "resolved": "atmosphere",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "atmosphere",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "atmosphere",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/atmosphere_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈatməsfɪə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/atmosphere_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈætməsˌfɪr"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "atmosphere",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0055500.006"
+                      },
+                      {
+                        "entry_id": "atmosphere",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0055500.009"
+                      },
+                      {
+                        "entry_id": "atmosphere",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0055500.014"
+                      },
+                      {
+                        "entry_id": "atmosphere",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0055500.015"
+                      }
+                    ],
+                    "id": "b-en-ru0001670.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          },
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "атмосфе́ра"
+                      },
+                      {
+                        "language": "ru",
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "обстано́вка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "atmosphere"
+          }
+        ],
+        "type": "headword",
+        "word": "atmosphere"
+      }
+    ],
+    "word": "atmosphere"
+  }
+}

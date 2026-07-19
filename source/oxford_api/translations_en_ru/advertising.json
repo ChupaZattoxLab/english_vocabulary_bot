@@ -1,0 +1,97 @@
+{
+  "query": "advertising",
+  "resolved": "advertising",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "advertising",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "advertising",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertising_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈadvətʌɪzɪŋ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advertising_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædvərˌtaɪzɪŋ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advertising",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012260.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "advertising agent",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "рекла́мный аге́нт"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "Smith is in the advertising business",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "Смит рабо́тает в рекла́мном би́знесе"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000436.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "реклами́рование"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "рекла́мный би́знес"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "advertising"
+          }
+        ],
+        "type": "headword",
+        "word": "advertising"
+      }
+    ],
+    "word": "advertising"
+  }
+}

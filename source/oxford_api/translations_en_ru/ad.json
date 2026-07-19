@@ -1,0 +1,116 @@
+{
+  "query": "ad",
+  "resolved": "ad",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ad",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ad",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ad_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ad"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ad_1_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "crossReferenceMarkers": [
+                      "= advertisement"
+                    ],
+                    "crossReferences": [
+                      {
+                        "id": "advertisement",
+                        "text": "advertisement",
+                        "type": "see also"
+                      }
+                    ],
+                    "id": "b-en-ru0000300.002",
+                    "registers": [
+                      {
+                        "id": "informal",
+                        "text": "Informal"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "other",
+              "text": "Other"
+            },
+            "text": "ad"
+          }
+        ],
+        "type": "headword",
+        "word": "ad"
+      },
+      {
+        "id": "AD",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "senses": [
+                  {
+                    "definitions": [
+                      "Anno Domini"
+                    ],
+                    "id": "b-en-ru0000301.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "на́шей э́ры",
+                            "type": "glossarialNote"
+                          }
+                        ],
+                        "text": "н. э"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "AD"
+          }
+        ],
+        "type": "headword",
+        "word": "AD"
+      }
+    ],
+    "word": "ad"
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "query": "active",
+  "resolved": "active",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "active",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "active",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/active_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaktɪv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/active_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæktɪv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "active",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007990.006"
+                      },
+                      {
+                        "entry_id": "active",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007990.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he is old but still active",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "несмотря́ на во́зраст, он всё ещё акти́вен/бодр"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take an active interest in",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "проявля́ть, -и́ть живо́й интере́с к"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an active brain",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "живо́й/де́ятельный ум"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an active volcano",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́йствующий вулка́н"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000281.002",
+                    "notes": [
+                      {
+                        "text": "lively; energetic; displaying activity",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "акти́вный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "де́ятельный"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "active",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007990.023"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "linguistics",
+                        "text": "Linguistics"
+                      }
+                    ],
+                    "id": "b-en-ru0000281.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "действи́тельный"
+                      }
+                    ]
+                  },
+                  {
+                    "domains": [
+                      {
+                        "id": "physics",
+                        "text": "Physics"
+                      },
+                      {
+                        "id": "chemistry",
+                        "text": "Chemistry"
+                      }
+                    ],
+                    "id": "b-en-ru0000281.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "акти́вный"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "active",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007990.013"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "military",
+                        "text": "Military"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "on active service",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на действи́тельной слу́жбе"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "active division",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "боева́я диви́зия"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000281.005"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "active"
+          }
+        ],
+        "type": "headword",
+        "word": "active"
+      }
+    ],
+    "word": "active"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "query": "ambassador",
+  "resolved": "ambassador",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ambassador",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ambassador",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ambassador_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "amˈbasədə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ambassador_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æmˈbæsədər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ambassador",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027300.008"
+                      }
+                    ],
+                    "id": "b-en-ru0000801.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "посо́л"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "representative",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "представи́тель"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ambassador"
+          }
+        ],
+        "type": "headword",
+        "word": "ambassador"
+      }
+    ],
+    "word": "ambassador"
+  }
+}

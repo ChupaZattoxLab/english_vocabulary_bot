@@ -1,0 +1,70 @@
+{
+  "query": "additional",
+  "resolved": "additional",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "additional",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "additional",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/additional_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdɪʃ(ə)n(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/additional_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdɪʃ(ə)n(ə)l"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000321.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "доба́вочный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "дополни́тельный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "additional"
+          }
+        ],
+        "type": "headword",
+        "word": "additional"
+      }
+    ],
+    "word": "additional"
+  }
+}

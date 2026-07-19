@@ -1,0 +1,252 @@
+{
+  "query": "ash",
+  "resolved": "ash",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ash",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ash",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ash_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "aʃ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ash_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æʃ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ash",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050780.006"
+                      },
+                      {
+                        "entry_id": "ash",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050780.022"
+                      }
+                    ],
+                    "id": "b-en-ru0001520.002",
+                    "translations": [
+                      {
+                        "domains": [
+                          {
+                            "id": "botany",
+                            "text": "Botany"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "я́сень"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "attr",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "я́сеневый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ash"
+          }
+        ],
+        "type": "headword",
+        "word": "ash"
+      },
+      {
+        "id": "ash",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ash_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "aʃ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ash_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æʃ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ash",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050770.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he took the ashes out of the stove",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он вы́греб золу́ из пе́чки"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "this coal makes a lot of ash",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "от э́того угля́ мно́го золы́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "cigarette ash",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пе́пел"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they burnt the town to ashes",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ сожгли́ го́род дотла́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001521.002",
+                    "notes": [
+                      {
+                        "text": "also \"ashes\"",
+                        "type": "wordFormNote"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "зола́"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "пе́пел"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ash",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050770.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "his hopes turned to ashes",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ наде́жды ру́хнули"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001521.003",
+                    "notes": [
+                      {
+                        "text": "ashes",
+                        "type": "wordFormNote"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "human remains",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прах"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "ash"
+          }
+        ],
+        "type": "headword",
+        "word": "ash"
+      }
+    ],
+    "word": "ash"
+  }
+}

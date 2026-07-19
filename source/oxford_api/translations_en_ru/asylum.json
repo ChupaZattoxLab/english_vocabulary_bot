@@ -1,0 +1,116 @@
+{
+  "query": "asylum",
+  "resolved": "asylum",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "asylum",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "asylum",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/asylum_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsʌɪləm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/asylum_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsaɪləm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "asylum",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0054330.006"
+                      },
+                      {
+                        "entry_id": "asylum",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0054330.009"
+                      }
+                    ],
+                    "id": "b-en-ru0001649.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "sanctuary",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прию́т"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "place of refuge",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "убе́жище"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "asylum",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0054330.011"
+                      }
+                    ],
+                    "id": "b-en-ru0001649.003",
+                    "notes": [
+                      {
+                        "text": "mental home",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "сумасше́дший дом"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "asylum"
+          }
+        ],
+        "type": "headword",
+        "word": "asylum"
+      }
+    ],
+    "word": "asylum"
+  }
+}

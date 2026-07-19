@@ -1,0 +1,89 @@
+{
+  "query": "administrative",
+  "resolved": "administrative",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "administrative",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "administrative",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/administrative_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmɪnɪstrətɪv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/administrative_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmɪnəˌstreɪdɪv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/administrative_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈmɪnɪˌstrədɪv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "administrative ability",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "администрати́вные спосо́бности"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000363.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "администрати́вный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "организацио́нный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "administrative"
+          }
+        ],
+        "type": "headword",
+        "word": "administrative"
+      }
+    ],
+    "word": "administrative"
+  }
+}

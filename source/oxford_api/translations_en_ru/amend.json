@@ -1,0 +1,246 @@
+{
+  "query": "amend",
+  "resolved": "amend",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "amend",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "amend",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amend_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmɛnd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amend_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmɛnd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027900.006"
+                      },
+                      {
+                        "entry_id": "amend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027900.013"
+                      }
+                    ],
+                    "id": "b-en-ru0000827.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "correct",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "исправля́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "correct",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "испра́вить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "improve",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "улучша́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "improve",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "улу́чшить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amend",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0027900.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "an amended law",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "зако́н с (при́нятыми к нему́) попра́вками"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000827.003",
+                    "notes": [
+                      {
+                        "text": "make changes to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "вноси́ть попра́вки в"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "внести́ попра́вки в"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "вноси́ть измене́ния в"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "внести́ измене́ния в"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "amend"
+          }
+        ],
+        "type": "headword",
+        "word": "amend"
+      }
+    ],
+    "word": "amend"
+  }
+}

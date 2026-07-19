@@ -1,0 +1,246 @@
+{
+  "query": "attribute",
+  "resolved": "attribute",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attribute",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attribute",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attribute_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈatrɪbjuːt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attribute_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈætrəˌbjut"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attribute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056790.018"
+                      }
+                    ],
+                    "id": "b-en-ru0001721.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "quality",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "сво́йство"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "characteristic",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "при́знак"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "characteristic",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "характе́рная черта́"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attribute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056790.018"
+                      },
+                      {
+                        "entry_id": "attribute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056790.021"
+                      }
+                    ],
+                    "id": "b-en-ru0001721.003",
+                    "notes": [
+                      {
+                        "text": "accompanying feature, emblem",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "атрибу́т"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attribute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056790.025"
+                      }
+                    ],
+                    "id": "b-en-ru0001721.004",
+                    "translations": [
+                      {
+                        "domains": [
+                          {
+                            "id": "linguistics",
+                            "text": "Linguistics"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "определе́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "атрибу́т"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "attribute"
+          }
+        ],
+        "type": "headword",
+        "word": "attribute"
+      },
+      {
+        "id": "attribute",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attribute_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtrɪbjuːt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attribute_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtrɪˌbjut"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attribute",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056790.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "attribute sth to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "work of art, quality",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "припи́сывать, -а́ть что-н."
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "event, result",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "относи́ть, -ести́ что-н. к"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001722.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "attribute"
+          }
+        ],
+        "type": "headword",
+        "word": "attribute"
+      }
+    ],
+    "word": "attribute"
+  }
+}

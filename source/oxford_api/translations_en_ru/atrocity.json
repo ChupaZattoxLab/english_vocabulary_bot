@@ -1,0 +1,98 @@
+{
+  "query": "atrocity",
+  "resolved": "atrocity",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "atrocity",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "atrocity",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/atrocity_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtrɒsɪti"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/atrocity_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtrɑsədi"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "atrocity",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056000.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "many atrocities were committed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бы́ло совершено́ мно́го зверств"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001686.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "злодея́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "зве́рство"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "hideous object",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "у́жас"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "atrocity"
+          }
+        ],
+        "type": "headword",
+        "word": "atrocity"
+      }
+    ],
+    "word": "atrocity"
+  }
+}

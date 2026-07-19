@@ -1,0 +1,575 @@
+{
+  "query": "arrange",
+  "resolved": "arrange",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "arrange",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "arrange",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arrange_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈreɪn(d)ʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arrange_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈreɪndʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arrange",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048200.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "she was arranging flowers",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ расставля́ла цветы́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I must arrange my hair",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мне на́до сде́лать причёску"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001444.002",
+                    "notes": [
+                      {
+                        "text": "put in order",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "приводи́ть в поря́док"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "привести́ в поря́док"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arrange",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048200.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "arranged in alphabetical order",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "располо́женный в алфави́тном поря́дке"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he arranged books on the shelves",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он расста́вил кни́ги по по́лкам"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001444.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "put in a certain order; group",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "располага́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "put in a certain order; group",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "расположи́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "расставля́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "расста́вить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "draw up in line",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "выстра́ивать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "draw up in line",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вы́строить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arrange",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048200.014"
+                      }
+                    ],
+                    "id": "b-en-ru0001444.004",
+                    "notes": [
+                      {
+                        "text": "settle",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "ула́живать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "ула́дить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arrange",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048200.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "it was an arranged marriage",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "их сосва́тали"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001444.005",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "organize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "устра́ивать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "organize",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "устро́ить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "организо́вывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "организова́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "prepare; plan in advance",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подгота́вливать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "prepare; plan in advance",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подгото́вить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "организо́вывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "организова́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "нала́живать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "нала́дить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arrange",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0048200.017"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "music",
+                        "text": "Music"
+                      }
+                    ],
+                    "id": "b-en-ru0001444.006",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          },
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "аранжи́ровать"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arrange_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈreɪn(d)ʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arrange_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈreɪndʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "I arranged with my friend to go to a concert",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы с дру́гом договори́лись пойти́ на конце́рт"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I have arranged for somebody to meet him at the station",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я распоряди́лся, что́бы его́ встре́тили на ста́нции"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001444.008",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "догова́риваться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "договори́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "усла́вливаться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "усло́виться"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "arrange"
+          }
+        ],
+        "type": "headword",
+        "word": "arrange"
+      }
+    ],
+    "word": "arrange"
+  }
+}

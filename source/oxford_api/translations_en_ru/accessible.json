@@ -1,0 +1,66 @@
+{
+  "query": "accessible",
+  "resolved": "accessible",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "accessible",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "accessible",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accessible_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əkˈsɛsɪb(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accessible_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əkˈsɛsəb(ə)l"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000160.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "досту́пный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "accessible"
+          }
+        ],
+        "type": "headword",
+        "word": "accessible"
+      }
+    ],
+    "word": "accessible"
+  }
+}

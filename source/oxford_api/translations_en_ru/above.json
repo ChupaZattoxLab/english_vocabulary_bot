@@ -1,0 +1,462 @@
+{
+  "query": "above",
+  "resolved": "above",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "above",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "above",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbʌv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbəv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "the above",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вышеска́занное"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "вышеупомя́нутое"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000074.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "above"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbʌv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbəv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000074.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "above-mentioned",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вышеупомя́нутый"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "foregoing",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "предыду́щий"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "above"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbʌv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbəv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "above",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002570.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "we live in the flat above",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы живём в кварти́ре этажо́м вы́ше"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "from above",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "све́рху"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000074.006",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "overhead; upstairs",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "наверху́"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "expressing motion",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "наве́рх"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "above",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002570.019"
+                      }
+                    ],
+                    "id": "b-en-ru0000074.007",
+                    "notes": [
+                      {
+                        "text": "higher up",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вы́ше"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "above",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002570.023"
+                      }
+                    ],
+                    "id": "b-en-ru0000074.008",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in text, speech etc.",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вы́ше"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "ра́нее"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "above"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbʌv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/above_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbəv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "his voice was heard above the noise",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ го́лос перекрыва́л шум"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000074.010",
+                    "notes": [
+                      {
+                        "text": "over; higher than",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "над"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "above 30 tons",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "свы́ше 30 тонн"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000074.011",
+                    "notes": [
+                      {
+                        "text": "more than",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "свы́ше"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "above me in rank",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы́ше меня́ чи́ном"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "above all praise",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы́ше вся́ких похва́л"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is above such base actions",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он не спосо́бен на таки́е по́длости"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "above suspicion",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вне подозре́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is getting above himself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он начина́ет зазнава́ться"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is not above cheating at cards",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он позволя́ет себе́ жу́льничать в ка́ртах"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "above all",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пре́жде всего́"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "са́мое гла́вное"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "over and above",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "вдоба́вок к"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "this is above my head",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то вы́ше моего́ понима́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000074.012",
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "preposition",
+              "text": "Preposition"
+            },
+            "text": "above"
+          }
+        ],
+        "type": "headword",
+        "word": "above"
+      }
+    ],
+    "word": "above"
+  }
+}

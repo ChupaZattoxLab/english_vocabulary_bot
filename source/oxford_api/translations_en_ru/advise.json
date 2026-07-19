@@ -1,0 +1,360 @@
+{
+  "query": "advise",
+  "resolved": "advise",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "advise",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "advise",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advise_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvʌɪz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advise_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvaɪz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012330.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "what do you advise (me to do)?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "что вы мне посове́туете (предприня́ть)?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the doctor advised complete rest",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "врач рекомендова́л по́лный поко́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I have been advised not to smoke",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мне посове́товали не кури́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you would be well advised to go",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вам сто́ило бы пойти́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you would be better advised to stay at home",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "разу́мнее бы́ло бы оста́ться до́ма"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I advised him against going",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я посове́товал ему́ не ходи́ть туда́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an ill-advised move",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "необду́манный шаг"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000440.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "counsel",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "сове́товать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "counsel",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "посове́товать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          },
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "рекомендова́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "give professional advice to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "консульти́ровать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "give professional advice to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "проконсульти́ровать"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "advise",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012330.012"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "business",
+                        "text": "Business"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "please advise me of receipt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "уве́домите меня́ о получе́нии"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000440.003",
+                    "notes": [
+                      {
+                        "text": "notify",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "кого о чём",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "извеща́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "кого о чём",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "извести́ть"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advise_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvʌɪz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/advise_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvaɪz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "he advised against marriage",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сове́товал не вступа́ть в брак"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "doctors advise against smoking",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "врачи́ рекоменду́ют не кури́ть"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000440.005"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "advise"
+          }
+        ],
+        "type": "headword",
+        "word": "advise"
+      }
+    ],
+    "word": "advise"
+  }
+}

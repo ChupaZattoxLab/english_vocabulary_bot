@@ -1,0 +1,268 @@
+{
+  "query": "avoid",
+  "resolved": "avoid",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "avoid",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "avoid",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/avoid_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈvɔɪd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/avoid_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈvɔɪd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "avoid",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061260.006"
+                      },
+                      {
+                        "entry_id": "avoid",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061260.012"
+                      },
+                      {
+                        "entry_id": "avoid",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061260.014"
+                      },
+                      {
+                        "entry_id": "avoid",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0061260.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the car avoided a pedestrian",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "маши́на объе́хала пешехо́да"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I could not avoid meeting him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я не мог избежа́ть встре́чи с ним"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he avoids all his old friends",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сторо́нится всех свои́х ста́рых друзе́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she avoided a direct answer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ уклони́лась от прямо́го отве́та"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001852.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "drive round",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "объезжа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "drive round",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "объе́хать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "escape, evade",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "избега́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "escape, evade",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "избежа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "shun",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "сторони́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "refrain from",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уклоня́ться от"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "refrain from",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "уклони́ться от"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "avoid"
+          }
+        ],
+        "type": "headword",
+        "word": "avoid"
+      }
+    ],
+    "word": "avoid"
+  }
+}

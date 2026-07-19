@@ -1,0 +1,94 @@
+{
+  "query": "appealing",
+  "resolved": "appealing",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "appealing",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "appealing",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/appealing_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpiːlɪŋ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/appealing_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpilɪŋ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appealing",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041440.006"
+                      },
+                      {
+                        "entry_id": "appealing",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0041440.009"
+                      }
+                    ],
+                    "id": "b-en-ru0001222.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "imploring",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "умоля́ющий"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "attractive",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "привлека́тельный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "appealing"
+          }
+        ],
+        "type": "headword",
+        "word": "appealing"
+      }
+    ],
+    "word": "appealing"
+  }
+}

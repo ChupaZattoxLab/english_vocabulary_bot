@@ -1,0 +1,137 @@
+{
+  "query": "artist",
+  "resolved": "artist",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "artist",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "artist",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/artist_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːtɪst"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/artist_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑrdəst"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "artist",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0049770.009"
+                      }
+                    ],
+                    "id": "b-en-ru0001491.002",
+                    "notes": [
+                      {
+                        "text": "practiser of art",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "худо́жник"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "худо́жница"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "artist",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0049770.009"
+                      }
+                    ],
+                    "id": "b-en-ru0001491.003",
+                    "notes": [
+                      {
+                        "text": "performer",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "арти́ст"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "feminine",
+                            "text": "Feminine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "арти́стка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "artist"
+          }
+        ],
+        "type": "headword",
+        "word": "artist"
+      }
+    ],
+    "word": "artist"
+  }
+}

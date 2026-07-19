@@ -1,0 +1,66 @@
+{
+  "query": "acceptable",
+  "resolved": "acceptable",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "acceptable",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "acceptable",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acceptable_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əkˈsɛptəb(ə)l"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acceptable_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əkˈsɛptəb(ə)l"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000155.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "прие́млемый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "acceptable"
+          }
+        ],
+        "type": "headword",
+        "word": "acceptable"
+      }
+    ],
+    "word": "acceptable"
+  }
+}

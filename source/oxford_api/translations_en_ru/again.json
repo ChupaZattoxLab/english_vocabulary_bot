@@ -1,0 +1,460 @@
+{
+  "query": "again",
+  "resolved": "again",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "again",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "again",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/again_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡɛn"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/again_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡeɪn"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/again_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡɛn"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "again",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015390.006"
+                      },
+                      {
+                        "entry_id": "again",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015390.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "read again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "перечи́тывать"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "перечита́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "open again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вновь открыва́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "вновь откры́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "say again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "повторя́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "повтори́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "vt",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "start again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "возобновля́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "возобнови́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "vi",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "начина́ть сно́ва"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "vi",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "нача́ть сно́ва"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she married again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ сно́ва вы́шла за́муж"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what's his name again?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как, вы сказа́ли, его́ фами́лия?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "again and again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сно́ва и сно́ва"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "time and (time) again, over and over again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "то и де́ло"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "now and again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вре́мя от вре́мени"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "once again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ещё раз"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he did his work over again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он переде́лал рабо́ту"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000533.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "expressing repetition",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "опя́ть"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "expressing repetition",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "сно́ва"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "afresh, anew",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вновь"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "once more",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ещё раз"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "with certain verbs by use of prefix",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "пере…"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "again",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015390.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "never again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "никогда́ бо́льше"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "don't do it again!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бо́льше э́того не де́лай!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000533.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "with neg",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "any more",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "бо́льше"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "again",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015390.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "as far again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вдво́е да́льше"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as much again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ещё сто́лько же"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "half as much again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "(в) полтора́ ра́за бо́льше"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000533.004",
+                    "notes": [
+                      {
+                        "text": "in addition",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "again",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015390.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "back again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "обра́тно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "get sth back again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "получа́ть что-н. обра́тно"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "получи́ть что-н. обра́тно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you'll soon be well again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы ско́ро попра́витесь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is himself again",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он пришёл в себя́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000533.005",
+                    "notes": [
+                      {
+                        "text": "expressing return to original state or position",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "again",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015390.011"
+                      }
+                    ],
+                    "id": "b-en-ru0000533.006",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "moreover; besides",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "к тому́ же"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "кро́ме того́"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "on the other hand",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "с друго́й стороны́"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "again"
+          }
+        ],
+        "type": "headword",
+        "word": "again"
+      }
+    ],
+    "word": "again"
+  }
+}

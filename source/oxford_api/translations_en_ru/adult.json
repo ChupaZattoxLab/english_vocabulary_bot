@@ -1,0 +1,191 @@
+{
+  "query": "adult",
+  "resolved": "adult",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "adult",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "adult",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈadʌlt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdʌlt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdəlt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædˌəlt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adult",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011610.008"
+                      }
+                    ],
+                    "id": "b-en-ru0000403.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "взро́слый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "adult"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈadʌlt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdʌlt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdəlt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adult_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædˌəlt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adult",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011610.016"
+                      },
+                      {
+                        "entry_id": "adult",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011610.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "adult education",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "обуче́ние взро́слых"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000403.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "взро́слый"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adult",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0011610.020"
+                      }
+                    ],
+                    "id": "b-en-ru0000403.006",
+                    "notes": [
+                      {
+                        "text": "mature",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "зре́лый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "adult"
+          }
+        ],
+        "type": "headword",
+        "word": "adult"
+      }
+    ],
+    "word": "adult"
+  }
+}

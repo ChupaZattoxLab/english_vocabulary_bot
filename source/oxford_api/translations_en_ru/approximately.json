@@ -1,0 +1,77 @@
+{
+  "query": "approximately",
+  "resolved": "approximately",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "approximately",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "approximately",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approximately_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈprɒksɪmətli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/approximately_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈprɑksəmətli"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "approximately",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042710.005"
+                      }
+                    ],
+                    "id": "b-en-ru0040558.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "приблизи́тельно"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "приме́рно"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "approximately"
+          }
+        ],
+        "type": "headword",
+        "word": "approximately"
+      }
+    ],
+    "word": "approximately"
+  }
+}

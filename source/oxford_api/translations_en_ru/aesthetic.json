@@ -1,0 +1,84 @@
+{
+  "query": "aesthetic",
+  "resolved": "aesthetic",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aesthetic",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aesthetic",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aesthetic_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "iːsˈθɛtɪk"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɛsˈθɛtɪk"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aesthetic_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɛsˈθɛdɪk"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000472.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "эстети́ческий"
+                      }
+                    ]
+                  }
+                ],
+                "variantForms": [
+                  {
+                    "regions": [
+                      {
+                        "id": "us",
+                        "text": "Us"
+                      }
+                    ],
+                    "text": "esthetic"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "aesthetic"
+          }
+        ],
+        "type": "headword",
+        "word": "aesthetic"
+      }
+    ],
+    "word": "aesthetic"
+  }
+}

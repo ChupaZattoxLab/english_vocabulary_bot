@@ -1,0 +1,122 @@
+{
+  "query": "adventure",
+  "resolved": "adventure",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "adventure",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "adventure",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adventure_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɛntʃə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adventure_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ædˈvɛn(t)ʃər"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adventure_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈvɛn(t)ʃər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adventure",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012010.008"
+                      },
+                      {
+                        "entry_id": "adventure",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0012010.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "a life of adventure",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "жизнь, по́лная приключе́ний"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "adventure story",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "приключе́нческий рома́н"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000420.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "exciting incident or episode",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приключе́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "risky or irresponsible activity",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "авантю́ра"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "adventure"
+          }
+        ],
+        "type": "headword",
+        "word": "adventure"
+      }
+    ],
+    "word": "adventure"
+  }
+}

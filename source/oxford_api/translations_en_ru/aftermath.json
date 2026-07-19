@@ -1,0 +1,77 @@
+{
+  "query": "aftermath",
+  "resolved": "aftermath",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aftermath",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aftermath",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aftermath",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015110.007"
+                      }
+                    ],
+                    "id": "b-en-ru0031911.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ота́ва"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "neuter",
+                            "text": "Neuter",
+                            "type": "Gender"
+                          },
+                          {
+                            "id": "plural",
+                            "text": "Plural",
+                            "type": "Number"
+                          }
+                        ],
+                        "language": "ru",
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "после́дствия"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "aftermath"
+          }
+        ],
+        "type": "headword",
+        "word": "aftermath"
+      }
+    ],
+    "word": "aftermath"
+  }
+}

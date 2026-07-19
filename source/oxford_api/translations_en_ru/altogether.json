@@ -1,0 +1,160 @@
+{
+  "query": "altogether",
+  "resolved": "altogether",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "altogether",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "altogether",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/altogether_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːltəˈɡɛðə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/altogether_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌɔltəˈɡɛðər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "altogether",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0026440.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he is not altogether pleased with the result",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он не вполне́ дово́лен результа́том"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it is altogether out of the question",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то соверше́нно исключено́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000778.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "entirely",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вполне́"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "соверше́нно"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "completely",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "совсе́м"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "altogether",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0026440.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "how much is that altogether?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ско́лько всего́?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000778.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in all, in general; as a whole",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в це́лом"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in all, in general; as a whole",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в о́бщем"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "всего́"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "altogether"
+          }
+        ],
+        "type": "headword",
+        "word": "altogether"
+      }
+    ],
+    "word": "altogether"
+  }
+}

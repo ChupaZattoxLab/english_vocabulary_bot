@@ -1,0 +1,750 @@
+{
+  "query": "arm",
+  "resolved": "arm",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "arm",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "arm",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "with a book under his arm",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "с кни́гой под мы́шкой"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he offered her his arm",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он предложи́л ей ру́ку"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "within arm's reach",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "под руко́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he broke his arm",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он слома́л ру́ку"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he kept me at arm's length",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он держа́л меня́ на расстоя́нии"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "arm in arm",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по́д руку"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "coerce",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "twist sb's arm",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "выкру́чивать, вы́крутить ру́ки кому́-н."
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          },
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "with open arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "с распростёртыми объя́тиями"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "fold one's arms",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "perfective",
+                                "text": "Perfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "сложи́ть ру́ки"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "infant in arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "младе́нец"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take sb in one's arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "заключа́ть кого́-н. в объя́тия"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "заключи́ть кого́-н. в объя́тия"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he gathered the books (up) in his arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он собра́л кни́ги в оха́пку"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001408.002",
+                    "notes": [
+                      {
+                        "text": "of person",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "рука́"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.012"
+                      },
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.019"
+                      },
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.020"
+                      },
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "arm of a garment",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "рука́в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "arm of a chair",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ру́чка кре́сла"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "arm of the sea",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "зали́в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "arm of a crane",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "стрела́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001408.003",
+                    "notes": [
+                      {
+                        "text": "of object",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.022"
+                      }
+                    ],
+                    "id": "b-en-ru0001408.004",
+                    "notes": [
+                      {
+                        "text": "of organization",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "подразделе́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.016"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the (long) arm of the law",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "(кара́ющая) рука́ зако́на"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001408.005",
+                    "notes": [
+                      {
+                        "text": "reach",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "arm"
+          }
+        ],
+        "type": "headword",
+        "word": "arm"
+      },
+      {
+        "id": "arm",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047070.023"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "military",
+                        "text": "Military"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "air arm",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "feminine",
+                                "text": "Feminine",
+                                "type": "Gender"
+                              },
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "вое́нно-возду́шные си́лы"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001409.002",
+                    "notes": [
+                      {
+                        "text": "force",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "small arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "стрелко́вое ору́жие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "arms race",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "го́нка вооруже́ний"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "under arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "под ружьём"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take up arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бра́ться, взя́ться за ору́жие"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "bear arms",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "носи́ть ору́жие"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          },
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "lay down one's arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "скла́дывать, сложи́ть ору́жие"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "they were up in arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ взбунтова́лись"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001409.003",
+                    "notes": [
+                      {
+                        "text": "arms",
+                        "type": "wordFormNote"
+                      },
+                      {
+                        "text": "weapons",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ору́жие"
+                      }
+                    ]
+                  },
+                  {
+                    "domains": [
+                      {
+                        "id": "heraldry",
+                        "text": "Heraldry"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "(coat of) arms",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "герб"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001409.004"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "arm"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "201",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "arm",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0047080.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          },
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "arm oneself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вооружа́ться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "вооружи́ться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001409.006",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "вооружа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "вооружи́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "equip",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "снабжа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "equip",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "снабди́ть"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "202",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːm"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/arm_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑrm"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001409.008",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "вооружа́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "вооружи́ться"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "arm"
+          }
+        ],
+        "type": "headword",
+        "word": "arm"
+      }
+    ],
+    "word": "arm"
+  }
+}

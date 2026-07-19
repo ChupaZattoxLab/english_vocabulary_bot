@@ -1,0 +1,76 @@
+{
+  "query": "accountability",
+  "resolved": "accountability",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "accountability",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "accountability",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accountability_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˌkaʊntəˈbɪlɪti"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accountability_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˌkaʊn(t)əˈbɪlədi"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000191.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "отве́тственность"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "for money",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "подотчётность"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "accountability"
+          }
+        ],
+        "type": "headword",
+        "word": "accountability"
+      }
+    ],
+    "word": "accountability"
+  }
+}

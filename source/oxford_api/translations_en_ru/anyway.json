@@ -1,0 +1,70 @@
+{
+  "query": "anyway",
+  "resolved": "anyway",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "anyway",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "anyway",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anyway_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛnɪweɪ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anyway_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛniˌweɪ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "crossReferenceMarkers": [
+                      "= anyhow"
+                    ],
+                    "crossReferences": [
+                      {
+                        "id": "anyhow",
+                        "text": "anyhow",
+                        "type": "see also"
+                      }
+                    ],
+                    "id": "b-en-ru0001156.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "other",
+              "text": "Other"
+            },
+            "text": "anyway"
+          }
+        ],
+        "type": "headword",
+        "word": "anyway"
+      }
+    ],
+    "word": "anyway"
+  }
+}

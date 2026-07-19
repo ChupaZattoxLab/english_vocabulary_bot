@@ -1,0 +1,216 @@
+{
+  "query": "alive",
+  "resolved": "alive",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "alive",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "alive",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "notes": [
+                  {
+                    "text": "predicative",
+                    "type": "grammaticalNote"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alive_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlʌɪv"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alive_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈlaɪv"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alive",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0022830.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "who is the greatest man alive?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "кто са́мый вели́кий из живу́щих люде́й?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "buried alive",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "похоро́ненный за́живо"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "alive and kicking",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "registers": [
+                              {
+                                "id": "informal",
+                                "text": "Informal"
+                              }
+                            ],
+                            "text": "жив-здоро́в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "more dead than alive",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "е́ле живо́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was kept alive with drugs",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ подде́рживали лека́рствами"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000688.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "living",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "живо́й"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "в живы́х"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alive",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0022830.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "be alive to the danger",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "сознава́ть опа́сность"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "быть начеку́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "look alive!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "живе́е!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000688.003",
+                    "notes": [
+                      {
+                        "text": "alert",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alive",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0022830.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the bed was alive with fleas",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "крова́ть кише́ла бло́ха́ми"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000688.004",
+                    "notes": [
+                      {
+                        "text": "infested",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "alive"
+          }
+        ],
+        "type": "headword",
+        "word": "alive"
+      }
+    ],
+    "word": "alive"
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "query": "aged",
+  "resolved": "aged",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aged",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aged",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aged_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aged_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aged",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015670.003"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "aged six",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "шести́ лет"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000539.002",
+                    "notes": [
+                      {
+                        "text": "of/at the age of",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "aged"
+          }
+        ],
+        "type": "headword",
+        "word": "aged"
+      },
+      {
+        "id": "aged",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aged_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪdʒɪd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aged_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aged",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015670.011"
+                      }
+                    ],
+                    "id": "b-en-ru0000540.002",
+                    "notes": [
+                      {
+                        "text": "very old",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "престаре́лый"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "homographNumber": "201",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aged_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈeɪdʒɪd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aged_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "the aged",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "пожилы́е лю́ди, престаре́лые"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000540.004"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "aged"
+          }
+        ],
+        "type": "headword",
+        "word": "aged"
+      }
+    ],
+    "word": "aged"
+  }
+}

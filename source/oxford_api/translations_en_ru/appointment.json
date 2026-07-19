@@ -1,0 +1,265 @@
+{
+  "query": "appointment",
+  "resolved": "appointment",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "appointment",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "appointment",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/appointment_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɔɪntm(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/appointment_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɔɪntmənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appointment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042200.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "by appointment to Her Majesty the Queen",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "поставщи́к Её Вели́чества"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001252.002",
+                    "notes": [
+                      {
+                        "text": "act of appointing",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "назначе́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appointment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042200.006"
+                      },
+                      {
+                        "entry_id": "appointment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042200.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "permanent appointment",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "шта́тная до́лжность"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "hold an appointment",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "занима́ть до́лжность"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001252.003",
+                    "notes": [
+                      {
+                        "text": "office",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "до́лжность"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appointment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042200.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "to make an appointment with",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "запи́сываться, -а́ться на приём к"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "получа́ть, -и́ть назначе́ние к"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I have an appointment with my dentist for 4 o'clock",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я запи́сан на приём к зубно́му врачу́ в четы́ре часа́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she was late for the appointment",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ опозда́ла на встре́чу"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "make an appointment to meet sb",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "назнача́ть встре́чу с кем-н."
+                          },
+                          {
+                            "language": "ru",
+                            "text": "назна́чить встре́чу с кем-н."
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he could not keep his appointment",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он не смог прийти́ на встре́чу"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001252.004",
+                    "notes": [
+                      {
+                        "text": "at doctor's etc.",
+                        "type": "indicator"
+                      },
+                      {
+                        "text": "business",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "встре́ча"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "appointment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0042200.014"
+                      }
+                    ],
+                    "id": "b-en-ru0001252.005",
+                    "notes": [
+                      {
+                        "text": "appointments",
+                        "type": "wordFormNote"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "fittings",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "оснаще́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "appointment"
+          }
+        ],
+        "type": "headword",
+        "word": "appointment"
+      }
+    ],
+    "word": "appointment"
+  }
+}

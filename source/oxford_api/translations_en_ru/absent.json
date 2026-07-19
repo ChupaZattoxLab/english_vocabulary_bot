@@ -1,0 +1,211 @@
+{
+  "query": "absent",
+  "resolved": "absent",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "absent",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "absent",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "homographNumber": "100",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absent_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈabs(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absent_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæbsənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002980.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "absent without leave",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в самово́льной отлу́чке"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "be absent",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "отсу́тствовать"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was absent from school",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он отсу́тствовал в шко́ле"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000091.002",
+                    "notes": [
+                      {
+                        "text": "not present",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "отсу́тствующий"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002980.010"
+                      }
+                    ],
+                    "id": "b-en-ru0000091.003",
+                    "notes": [
+                      {
+                        "text": "abstracted",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "рассе́янный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "absent"
+          }
+        ],
+        "type": "headword",
+        "word": "absent"
+      },
+      {
+        "id": "absent",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "homographNumber": "200",
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absent_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "abˈsɛnt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absent_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æbˈsɛnt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absent",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002980.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "absent oneself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отлуча́ться"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отлучи́ться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000092.002"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "absent"
+          }
+        ],
+        "type": "headword",
+        "word": "absent"
+      }
+    ],
+    "word": "absent"
+  }
+}

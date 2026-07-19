@@ -1,0 +1,313 @@
+{
+  "query": "adjust",
+  "resolved": "adjust",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "adjust",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "adjust",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adjust_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdʒʌst"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adjust_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdʒəst"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adjust",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010420.006"
+                      },
+                      {
+                        "entry_id": "adjust",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010420.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he adjusted his tie",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он попра́вил га́лстук"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000355.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "arrange; put right or straight",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приводи́ть в поря́док"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "arrange; put right or straight",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "привести́ в поря́док"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "поправля́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "попра́вить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "mechanism",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "регули́ровать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "mechanism",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отрегули́ровать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "нала́живать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "нала́дить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adjust",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0010420.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "you must adjust your expenditure to your income",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы должны́ соразмеря́ть свои́ расхо́ды с дохо́дами"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "adjust (oneself) to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "приспособля́ться, -о́биться к"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "well adjusted",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "уравнове́шенный"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000355.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "fit, adapt",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "пригоня́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "fit, adapt",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "пригна́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подгоня́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "подогна́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "adjust"
+          }
+        ],
+        "type": "headword",
+        "word": "adjust"
+      }
+    ],
+    "word": "adjust"
+  }
+}

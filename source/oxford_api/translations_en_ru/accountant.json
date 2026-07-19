@@ -1,0 +1,70 @@
+{
+  "query": "accountant",
+  "resolved": "accountant",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "accountant",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "accountant",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accountant_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkaʊnt(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accountant_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkaʊnt(ə)nt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0000194.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "бухга́лтер"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "счетово́д"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "accountant"
+          }
+        ],
+        "type": "headword",
+        "word": "accountant"
+      }
+    ],
+    "word": "accountant"
+  }
+}

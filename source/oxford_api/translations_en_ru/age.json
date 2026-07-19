@@ -1,0 +1,774 @@
+{
+  "query": "age",
+  "resolved": "age",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "age",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "age",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/age_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/age_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "what age is he?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "како́го он во́зраста?"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "expecting exact answer",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "ско́лько ему́ лет?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is 40 years of age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ему́ со́рок лет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he and I are the same age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы с ним одного́ во́зраста (или рове́сники)"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "when I was your age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "когда́ я был в ва́шем во́зрасте"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "a man (of) your age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "челове́к ва́шего во́зраста"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "at his age he should be more careful",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в его́ во́зрасте/го́ды на́до быть бо́лее осторо́жным"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is at an age (orhas reached an age) when …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он дости́г во́зраста, когда́…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she doesn't look her age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ вы́глядит моло́же свои́х лет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "at an early age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в ра́ннем во́зрасте"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "a man in middle age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мужчи́на сре́дних лет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he took up tennis in middle age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он занялся́ те́ннисом в соли́дном во́зрасте"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "be your age!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "веди́те себя́ как взро́слый челове́к!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "over age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ста́рше поло́женного во́зраста"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "age of consent",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бра́чный во́зраст"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "age of discretion",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "во́зраст, с кото́рого челове́к счита́ется отве́тственным за свои́ посту́пки"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "of inanimate objects",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "what is the age of this house?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ско́лько лет э́тому до́му?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000538.002",
+                    "notes": [
+                      {
+                        "text": "time of life",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "во́зраст"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "be of age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "быть совершенноле́тним"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "come of age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "достига́ть совершенноле́тия"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "дости́чь совершенноле́тия"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is under age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он несовершенноле́тний"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000538.003",
+                    "notes": [
+                      {
+                        "text": "majority",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "his back was bent with age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он согну́лся от ста́рости"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he lived to a ripe (old) age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он до́жил до прекло́нных лет"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000538.004",
+                    "notes": [
+                      {
+                        "text": "old age",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ста́рость"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "Ice Age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "леднико́вый пери́од"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "Stone Age",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ка́менный век"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the Middle Ages",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "Сре́дние века́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the age we live in",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наш век"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "it took an age to get there",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы добира́лись туда́ це́лую ве́чность"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000538.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "period",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "пери́од"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "century",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "век"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "the bus left ages ago",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "авто́бус ушёл давны́м-давно́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "we have not seen each other for ages",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы не ви́делись сто лет (или це́лую ве́чность)"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000538.025",
+                    "notes": [
+                      {
+                        "text": "ages",
+                        "type": "wordFormNote"
+                      },
+                      {
+                        "text": "long time",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "informal",
+                        "text": "Informal"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "age"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "inflections": [
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "transitive",
+                        "text": "Transitive",
+                        "type": "Subcategorization"
+                      },
+                      {
+                        "id": "presentParticiple",
+                        "text": "Present Participle",
+                        "type": "Non Finiteness"
+                      }
+                    ],
+                    "inflectedForm": "ageing"
+                  },
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "transitive",
+                        "text": "Transitive",
+                        "type": "Subcategorization"
+                      },
+                      {
+                        "id": "presentParticiple",
+                        "text": "Present Participle",
+                        "type": "Non Finiteness"
+                      }
+                    ],
+                    "inflectedForm": "aging"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/age_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/age_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.028"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "worries have aged him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "забо́ты его́ соста́рили"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000538.007",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "ста́рить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "соста́рить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of wine",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "выде́рживать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of wine",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вы́держать"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "inflections": [
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "intransitive",
+                        "text": "Intransitive",
+                        "type": "Subcategorization"
+                      },
+                      {
+                        "id": "presentParticiple",
+                        "text": "Present Participle",
+                        "type": "Non Finiteness"
+                      }
+                    ],
+                    "inflectedForm": "ageing"
+                  },
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "intransitive",
+                        "text": "Intransitive",
+                        "type": "Subcategorization"
+                      },
+                      {
+                        "id": "presentParticiple",
+                        "text": "Present Participle",
+                        "type": "Non Finiteness"
+                      }
+                    ],
+                    "inflectedForm": "aging"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/age_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/age_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "eɪdʒ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.018"
+                      },
+                      {
+                        "entry_id": "age",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015640.028"
+                      }
+                    ],
+                    "id": "b-en-ru0000538.009",
+                    "notes": [
+                      {
+                        "text": "of person",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "старе́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "постаре́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "ста́риться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "соста́риться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of thing",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "старе́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of thing",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "устаре́ть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "age"
+          }
+        ],
+        "type": "headword",
+        "word": "age"
+      }
+    ],
+    "word": "age"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "query": "annually",
+  "resolved": "annually",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "annually",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "annually",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/annually_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈanjʊəli"
+                  },
+                  {
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈanjʊli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/annually_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænjuəli"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001032.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ежего́дно"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "annually"
+          }
+        ],
+        "type": "headword",
+        "word": "annually"
+      }
+    ],
+    "word": "annually"
+  }
+}

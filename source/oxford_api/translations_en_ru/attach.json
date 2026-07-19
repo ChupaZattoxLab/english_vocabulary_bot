@@ -1,0 +1,555 @@
+{
+  "query": "attach",
+  "resolved": "attach",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attach",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attach",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "derivatives": [
+              {
+                "id": "attach_to",
+                "text": "attach to"
+              }
+            ],
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attach_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtatʃ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attach_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtætʃ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056090.006"
+                      },
+                      {
+                        "entry_id": "attach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056090.012"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "attach a seal",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прилага́ть печа́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "приложи́ть печа́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the attached document",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "прилага́емый докуме́нт"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001690.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "fasten",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прикрепля́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "fasten",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прикрепи́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "by tying",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "привя́зывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "by tying",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "привяза́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "by sticking",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прикле́ивать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "by sticking",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прикле́ить"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "document, letter",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прилага́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "document, letter",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приложи́ть"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "computing",
+                            "text": "Computing"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "вкла́дывать"
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "computing",
+                            "text": "Computing"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "вложи́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "присоединя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "присоедини́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056090.015"
+                      }
+                    ],
+                    "id": "b-en-ru0001690.003",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "присоединя́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "of person",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "присоедини́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "appoint",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "назнача́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "appoint",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "назна́чить"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "attach oneself to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "присоединя́ться, -и́ться к"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001690.004"
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056090.015"
+                      },
+                      {
+                        "entry_id": "attach",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056090.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he attaches much importance to this visit",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он придаёт большо́е значе́ние э́тому визи́ту"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "attach blame to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "возлага́ть, -ожи́ть вину́ на"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001690.005",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "assign",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "придава́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "assign",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "прида́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "ascribe",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "припи́сывать"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "ascribe",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "приписа́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "she is very attached to her brother",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ о́чень привя́зана к своему́ бра́ту"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I am attached to this necklace",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то ожере́лье мне о́чень до́рого"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001690.006",
+                    "notes": [
+                      {
+                        "text": "of affection",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "attach"
+          }
+        ],
+        "type": "headword",
+        "word": "attach"
+      }
+    ],
+    "word": "attach"
+  }
+}

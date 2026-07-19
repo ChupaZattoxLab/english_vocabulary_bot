@@ -1,0 +1,94 @@
+{
+  "query": "addiction",
+  "resolved": "addiction",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "addiction",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "addiction",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/addiction_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdɪkʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/addiction_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈdɪkʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "addiction",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0009220.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "addiction to drugs",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наркома́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000317.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "to",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "к + d",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "пристра́стие"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "addiction"
+          }
+        ],
+        "type": "headword",
+        "word": "addiction"
+      }
+    ],
+    "word": "addiction"
+  }
+}

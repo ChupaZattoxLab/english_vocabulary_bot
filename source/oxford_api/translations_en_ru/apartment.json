@@ -1,0 +1,145 @@
+{
+  "query": "apartment",
+  "resolved": "apartment",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "apartment",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "apartment",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/apartment_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɑːtm(ə)nt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/apartment_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈpɑrtmənt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "apartment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039810.010"
+                      }
+                    ],
+                    "id": "b-en-ru0001165.002",
+                    "notes": [
+                      {
+                        "text": "room",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ко́мната"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "apartment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039810.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the royal apartments",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "masculine",
+                                "text": "Masculine",
+                                "type": "Gender"
+                              },
+                              {
+                                "id": "plural",
+                                "text": "Plural",
+                                "type": "Number"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "короле́вские апартаме́нты"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001165.003"
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "apartment",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039810.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "apartment block/house",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "многокварти́рный дом"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001165.004",
+                    "regions": [
+                      {
+                        "id": "us",
+                        "text": "Us"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "кварти́ра"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "apartment"
+          }
+        ],
+        "type": "headword",
+        "word": "apartment"
+      }
+    ],
+    "word": "apartment"
+  }
+}

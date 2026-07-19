@@ -1,0 +1,704 @@
+{
+  "query": "any",
+  "resolved": "any",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "any",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "any",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/any_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛni"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/any_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛni"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "any",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039300.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "if any of them should see him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "е́сли кто́-нибудь из них уви́дит его́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.002",
+                    "notes": [
+                      {
+                        "text": "in interrogative or conditional sentences",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "with animates",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "кто́-нибудь"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "with inanimates",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "что́-нибудь"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "any",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039300.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I don't like any of these actors",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "никто́ (или ни оди́н) из э́тих арти́стов мне не нра́вится"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he never spoke to any of our friends",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ни с кем из на́ших друзе́й он (никогда́) не говори́л"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I looked for the books but couldn't find any",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я иска́л кни́ги, но не нашёл ни одно́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I offered him food but he didn't want any",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я предложи́л ему́ пое́сть, но он ничего́ не хоте́л"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.003",
+                    "notes": [
+                      {
+                        "text": "in negative sentences",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "with animates",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "никто́"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "with inanimates",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "ничто́ ни оди́н"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "any",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039300.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "take any of these books",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "возьми́те любу́ю/любы́е из э́тих книг"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.004",
+                    "notes": [
+                      {
+                        "text": "in affirmative sentences",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "любо́й"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "he has little money, if any",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́нег у него́ ма́ло, е́сли (они́) вообще́ есть"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.005"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "pronoun",
+              "text": "Pronoun"
+            },
+            "text": "any"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/any_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛni"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/any_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛni"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "have you any children?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у вас есть де́ти?"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "request",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "have you any matches?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у вас не бу́дет спи́чек?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "were there any Russians there?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ру́сские там бы́ли?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "is there any news?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "есть каки́е-нибудь но́вости?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.007",
+                    "notes": [
+                      {
+                        "text": "in interrogative or conditional sentences untranslated",
+                        "type": "indicator"
+                      },
+                      {
+                        "text": "no matter what",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "любо́й"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "како́й уго́дно"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "we haven't any milk",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у нас нет молока́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "haven't you any cigarettes?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ра́зве у вас нет сигаре́т?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "there wasn't any hope",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "никако́й наде́жды не́ было"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "there isn't any man who would …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "нет тако́го челове́ка, кото́рый бы…"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "with hardly, verbs of prevention, etc.",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "there is hardly any doubt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "нет почти́ никако́го сомне́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "without any doubt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "без вся́кого сомне́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they stopped us from scoring any goals",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ не́ дали нам заби́ть ни одного́ го́ла"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.008",
+                    "notes": [
+                      {
+                        "text": "in negative sentences",
+                        "type": "indicator"
+                      },
+                      {
+                        "text": "not any at all, not a single",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "никако́й"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "ни оди́н"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "at any time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в любо́е вре́мя"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "any excuse will do",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "любо́й предло́г подойдёт"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in any case",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "во вся́ком слу́чае"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "any student knows this",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то зна́ет любо́й студе́нт"
+                          }
+                        ]
+                      },
+                      {
+                        "crossReferenceMarkers": [
+                          "seeamount"
+                        ],
+                        "crossReferences": [
+                          {
+                            "id": "amount",
+                            "text": "amount",
+                            "type": "see also"
+                          }
+                        ],
+                        "text": "any amount"
+                      },
+                      {
+                        "crossReferenceMarkers": [
+                          "= anybody anyone"
+                        ],
+                        "crossReferences": [
+                          {
+                            "id": "anybody",
+                            "text": "anybody",
+                            "type": "see also"
+                          },
+                          {
+                            "id": "anyone",
+                            "text": "anyone",
+                            "type": "see also"
+                          }
+                        ],
+                        "text": "any man, any person"
+                      }
+                    ],
+                    "id": "b-en-ru0001151.009",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "no matter which",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "любо́й"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "every",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "любо́й"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "every",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "вся́кий"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "any"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/any_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛni"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/any_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɛni"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "do you want any more tea?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "хоти́те ещё ча́ю?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "if you stay here any longer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "е́сли вы ещё хоть немно́го заде́ржитесь здесь"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.011",
+                    "notes": [
+                      {
+                        "text": "in interrogative or conditional sentences untranslated",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ско́лько-нибудь"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "any",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039300.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I can't go any further",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я не могу́ идти́ да́льше"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he doesn't live here any more, longer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он здесь бо́льше не живёт"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I am not any better",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мне ничу́ть не лу́чше"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he did not get any nearer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он ниско́лько не прибли́зился"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.012",
+                    "notes": [
+                      {
+                        "text": "in negative sentences untranslated",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ниско́лько"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "ничу́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "any",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039300.013"
+                      },
+                      {
+                        "entry_id": "any",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039300.015"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "it didn't snow any yesterday",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вчера́ сне́га во́все не́ было"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "that didn't help us any",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то нам ниско́лько не помогло́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001151.013",
+                    "notes": [
+                      {
+                        "text": "at all",
+                        "type": "indicator"
+                      }
+                    ],
+                    "regions": [
+                      {
+                        "id": "us",
+                        "text": "Us"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "any"
+          }
+        ],
+        "type": "headword",
+        "word": "any"
+      }
+    ],
+    "word": "any"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "query": "allegation",
+  "resolved": "allegation",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "allegation",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "allegation",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allegation_gb_1_8.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "alɪˈɡeɪʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/allegation_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌæləˈɡeɪʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "allegations of corruption were brought against him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ обвини́ли в корру́пции"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000695.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "заявле́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "утвержде́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "allegation"
+          }
+        ],
+        "type": "headword",
+        "word": "allegation"
+      }
+    ],
+    "word": "allegation"
+  }
+}

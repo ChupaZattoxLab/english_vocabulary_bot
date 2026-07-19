@@ -1,0 +1,164 @@
+{
+  "query": "assurance",
+  "resolved": "assurance",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "assurance",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "assurance",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assurance_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃʊər(ə)ns"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/assurance_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃʊrəns"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assurance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0053310.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "have I your assurance of this?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы мо́жете за э́то поручи́ться?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I give you my assurance that you will get the money",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "могу́ вас заве́рить, что вы полу́чите де́ньги"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001612.002",
+                    "notes": [
+                      {
+                        "text": "act of assuring; promise; guarantee",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "завере́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "увере́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assurance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0053310.013"
+                      }
+                    ],
+                    "id": "b-en-ru0001612.003",
+                    "notes": [
+                      {
+                        "text": "confidence",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "уве́ренность (в себе́)"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "assurance",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0053310.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "life assurance company",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "о́бщество по страхова́нию жи́зни"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001612.004",
+                    "notes": [
+                      {
+                        "text": "insurance",
+                        "type": "indicator"
+                      }
+                    ],
+                    "regions": [
+                      {
+                        "id": "british",
+                        "text": "British"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "страхова́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "assurance"
+          }
+        ],
+        "type": "headword",
+        "word": "assurance"
+      }
+    ],
+    "word": "assurance"
+  }
+}

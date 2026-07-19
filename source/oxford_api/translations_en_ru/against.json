@@ -1,0 +1,566 @@
+{
+  "query": "against",
+  "resolved": "against",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "against",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "against",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/against_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡɛnst"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/against_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡeɪnst"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/against_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈɡɛnst"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "I have nothing against it",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я не име́ю ничего́ про́тив"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I was against his going",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я был про́тив того́, что́бы он шёл туда́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I acted against my will",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я де́йствовал про́тив свое́й во́ли"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          },
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "swim against the current",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "плыть про́тив тече́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they were working against time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ рабо́тали наперегонки́ со вре́менем"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "against the rules",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не по пра́вилам"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "fight, struggle against",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "+ i",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "боро́ться про́тив (или с)"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the battle against drunkenness",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бо́рьба с пья́нством"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "oppose",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "speak against",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "выступа́ть, вы́ступить про́тив"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.002",
+                    "notes": [
+                      {
+                        "text": "in opposition to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "про́тив"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "against reason",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вопреки́ рассу́дку"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "against my better judgement",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вопреки́ го́лосу рассу́дка"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.003",
+                    "notes": [
+                      {
+                        "text": "in spite of",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "вопреки́"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "her age is against her",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "во́зраст её подво́дит"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.004",
+                    "notes": [
+                      {
+                        "text": "to the disfavour of",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "march against the enemy",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "наступа́ть на врага́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.005",
+                    "notes": [
+                      {
+                        "text": "to oppose or combat",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "на"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "a shelter against the storm",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "убе́жище от бу́ри"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "defend oneself against the enemy",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "защища́ться от врага́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.006",
+                    "notes": [
+                      {
+                        "text": "to withstand",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "от"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "against a rainy day",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на чёрный день"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they bought provisions against the winter",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ купи́ли прови́зию на́ зиму"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.007",
+                    "notes": [
+                      {
+                        "text": "in readiness for, anticipation of",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "3 deaths this year against 20 last year",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "три сме́рти в э́том году́ про́тив двадцати́ в про́шлом"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.008",
+                    "notes": [
+                      {
+                        "text": "compared with",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "it shows up against a dark background",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то выделя́ется на тёмном фо́не"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.009",
+                    "notes": [
+                      {
+                        "text": "in contrast with",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "knock against sth",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ударя́ться, уда́риться о что-н."
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he banged his head against a stone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он уда́рился голово́й о ка́мень"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.010",
+                    "notes": [
+                      {
+                        "text": "in collision with",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ a",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "о"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "he moved the chair against the wall",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он придви́нул стул к стене́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he stood leaning against the wall",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он стоя́л, прислони́вшись к стене́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.011",
+                    "notes": [
+                      {
+                        "text": "into contact with",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "к"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "over against the church",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "напро́тив це́ркви"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he held the photograph against the light",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он поднёс фотогра́фию к све́ту"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "we are up against strong competition",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у нас си́льная конкуре́нция"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is up against it",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ему́ прихо́дится тя́жко"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "он прижа́т к стене́",
+                            "type": "approximate"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000534.012",
+                    "notes": [
+                      {
+                        "text": "facing",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "preposition",
+              "text": "Preposition"
+            },
+            "text": "against"
+          }
+        ],
+        "type": "headword",
+        "word": "against"
+      }
+    ],
+    "word": "against"
+  }
+}

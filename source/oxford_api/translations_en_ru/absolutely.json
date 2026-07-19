@@ -1,0 +1,121 @@
+{
+  "query": "absolutely",
+  "resolved": "absolutely",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "absolutely",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "absolutely",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absolutely_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈabsəluːtli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absolutely_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæbsəˌl(j)utli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/absolutely_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌæbsəˈl(j)utli"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "absolutely",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0003110.008"
+                      }
+                    ],
+                    "id": "b-en-ru0000097.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "completely",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "абсолю́тно"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "соверше́нно"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "unquestionably",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "безусло́вно"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "expressing agreement",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "absolutely!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "безусло́вно/коне́чно!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000097.003"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "absolutely"
+          }
+        ],
+        "type": "headword",
+        "word": "absolutely"
+      }
+    ],
+    "word": "absolutely"
+  }
+}

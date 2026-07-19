@@ -1,0 +1,98 @@
+{
+  "query": "affection",
+  "resolved": "affection",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "affection",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "affection",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affection_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɛkʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/affection_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈfɛkʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "affection",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0013840.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I feel affection for him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я к нему́ привя́зан"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000484.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "for",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "к + d",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "привя́занность"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "любо́вь"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "affection"
+          }
+        ],
+        "type": "headword",
+        "word": "affection"
+      }
+    ],
+    "word": "affection"
+  }
+}

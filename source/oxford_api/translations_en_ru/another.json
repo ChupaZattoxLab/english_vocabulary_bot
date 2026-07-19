@@ -1,0 +1,366 @@
+{
+  "query": "another",
+  "resolved": "another",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "another",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "another",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/another_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈnʌðə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/another_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈnəðər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "another",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035780.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "will you have another (drink)?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "хоти́те ещё вы́пить?"
+                          }
+                        ]
+                      },
+                      {
+                        "registers": [
+                          {
+                            "id": "informal",
+                            "text": "Informal"
+                          }
+                        ],
+                        "text": "ask me another!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "почём я зна́ю?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001049.002",
+                    "notes": [
+                      {
+                        "text": "additional",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ещё"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "another",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035780.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "such another as I",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "подо́бный мне"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001049.003",
+                    "notes": [
+                      {
+                        "text": "similar",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "another",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035780.011"
+                      }
+                    ],
+                    "id": "b-en-ru0001049.004",
+                    "notes": [
+                      {
+                        "text": "different",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "друго́й"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "crossReferenceMarkers": [
+                          "seeone"
+                        ],
+                        "crossReferences": [
+                          {
+                            "id": "one",
+                            "text": "one",
+                            "type": "see also"
+                          }
+                        ],
+                        "notes": [
+                          {
+                            "text": "refl",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "one another"
+                      }
+                    ],
+                    "id": "b-en-ru0001049.005"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "pronoun",
+              "text": "Pronoun"
+            },
+            "text": "another"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/another_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈnʌðə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/another_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈnəðər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "another",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035780.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "another cup of tea?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ещё ча́шку ча́я?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "have another go!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "попыта́йтесь ещё раз!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in another 10 years",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ещё че́рез де́сять лет"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "and another thing",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "и вот ещё что"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "not another word!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ни сло́ва бо́льше!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "without another word",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не говоря́ бо́льше ни сло́ва"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001049.007",
+                    "notes": [
+                      {
+                        "text": "additional",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ещё"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "another",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035780.009"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "another Tolstoy",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "второ́й Толсто́й"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001049.008",
+                    "notes": [
+                      {
+                        "text": "similar",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "another",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035780.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "another time",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в друго́й раз"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "that's another matter altogether",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то совсе́м друго́е де́ло"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "one way or another",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "так и́ли ина́че"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001049.009",
+                    "notes": [
+                      {
+                        "text": "different",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "друго́й"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "another"
+          }
+        ],
+        "type": "headword",
+        "word": "another"
+      }
+    ],
+    "word": "another"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "query": "attitude",
+  "resolved": "attitude",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attitude",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attitude",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attitude_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈatɪtjuːd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attitude_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈædəˌt(j)ud"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attitude",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056600.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "strike an attitude",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "принима́ть по́зу"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "приня́ть по́зу"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001713.002",
+                    "notes": [
+                      {
+                        "text": "pose",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "по́за"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attitude",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056600.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "attitude of mind",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "склад ума́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what is your attitude to this book?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как вы отно́ситесь к э́той кни́ге?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "that is an odd attitude to take up",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то стра́нный подхо́д"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001713.003",
+                    "notes": [
+                      {
+                        "text": "disposition",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "отноше́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "attitude"
+          }
+        ],
+        "type": "headword",
+        "word": "attitude"
+      }
+    ],
+    "word": "attitude"
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "query": "anxious",
+  "resolved": "anxious",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "anxious",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "anxious",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anxious_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaŋ(k)ʃəs"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/anxious_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæŋ(k)ʃəs"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anxious",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039280.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "be anxious about, for, over",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "трево́житься за"
+                          },
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ p",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "беспоко́иться о"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I am anxious for his safety",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я беспоко́юсь, как бы с ним чего́ не случи́лось"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001150.002",
+                    "notes": [
+                      {
+                        "text": "worried, uneasy",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "озабо́ченный"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anxious",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039280.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he gave me some anxious moments",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он доста́вил мне не́сколько трево́жных мину́т"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001150.003",
+                    "notes": [
+                      {
+                        "text": "causing anxiety",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "трево́жный"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "беспоко́йный"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "anxious",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0039280.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I am anxious to see him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мне о́чень хо́чется повида́ться с ним"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001150.004",
+                    "notes": [
+                      {
+                        "text": "keen, desirous",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "anxious"
+          }
+        ],
+        "type": "headword",
+        "word": "anxious"
+      }
+    ],
+    "word": "anxious"
+  }
+}

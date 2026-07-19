@@ -1,0 +1,708 @@
+{
+  "query": "about",
+  "resolved": "about",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "about",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "about",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "notes": [
+                  {
+                    "text": "For phrasal verbs with 'about', see relevant verb entries",
+                    "type": "editorialNote"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/about_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbaʊt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/about_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbaʊt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "about",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002550.017"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "don't leave your clothes about",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не оставля́йте свою́ оде́жду где попа́ло"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.002",
+                    "notes": [
+                      {
+                        "text": "here and there",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "about",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002550.020"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "there are a lot of soldiers about",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "круго́м мно́го солда́т"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "is he anywhere about?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он где́-нибудь здесь?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "there are rumours about",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "хо́дят слу́хи"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "up and about",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на нога́х"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she is too ill to get about",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ так больна́, что не мо́жет выходи́ть"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.003",
+                    "notes": [
+                      {
+                        "text": "in the vicinity; in circulation",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вокру́г"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "круго́м"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "domains": [
+                          {
+                            "id": "military",
+                            "text": "Military"
+                          }
+                        ],
+                        "text": "about-turn!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "круго́м!"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "alternately",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "turn and turn about",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по о́череди"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.004",
+                    "notes": [
+                      {
+                        "text": "to face the other way",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "about",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002550.022"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "that's about right",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "приме́рно так"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "dinner is about ready",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "обе́д почти́ гото́в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it's about time we went",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "нам пора́ идти́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "and about time too!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "давно́ пора́!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.005",
+                    "notes": [
+                      {
+                        "text": "almost",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "почти́"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "about",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0002550.022"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "about 3 o'clock",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "о́коло трёх часо́в"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is about your height",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он приблизи́тельно ва́шего ро́ста"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it costs about 100 roubles",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то сто́ит о́коло ста рубле́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "about a kilogram in weight",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ве́сом о́коло килогра́мма"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in about half an hour",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "приме́рно че́рез полчаса́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.006",
+                    "notes": [
+                      {
+                        "text": "approximately",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "о́коло"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "приблизи́тельно"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "ready to, just going to",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "about to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он собира́лся уходи́ть, когда́ я пришёл"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was about to leave when I arrived",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он собира́лся уходи́ть, когда́ я пришёл"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I was about to say",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я собира́лся сказа́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the train is about to leave",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "по́езд сейча́с тро́нется"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I was just about to do so",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я как раз собира́лся э́то сде́лать"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.007"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "about"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/about_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbaʊt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/about_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈbaʊt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "the people about him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "окружа́ющие его́ лю́ди"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "somewhere about here",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "где́-то здесь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he looked about him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он огляде́лся вокру́г"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I have no money about me",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у меня́ нет при себе́ де́нег"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.010",
+                    "notes": [
+                      {
+                        "text": "around; near",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "вокру́г"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "walk about the streets",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "indet",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "ходи́ть по у́лицам"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.011",
+                    "notes": [
+                      {
+                        "text": "at or to various places in",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "по"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "there was no vanity about him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в нём не́ было тщесла́вия"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.012",
+                    "notes": [
+                      {
+                        "text": "in",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "в"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "what are you talking about?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "о чём вы говори́те?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what about dinner?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как насчёт обе́да?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "how about a game of cards?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не сыгра́ть ли нам в ка́рты?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "what is it all about?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в чём де́ло?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he has called about the rent",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он зашёл насчёт квартпла́ты"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "she is mad about him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "она́ без ума́ от него́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "much ado about nothing",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мно́го шу́ма из ничего́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "there is no doubt about it",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в э́том нет сомне́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.013",
+                    "notes": [
+                      {
+                        "text": "concerning",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ p",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "о"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "насчёт"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "относи́тельно"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "be about one's business",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "занима́ться свои́ми дела́ми"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000073.014",
+                    "notes": [
+                      {
+                        "text": "engaged in",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "preposition",
+              "text": "Preposition"
+            },
+            "text": "about"
+          }
+        ],
+        "type": "headword",
+        "word": "about"
+      }
+    ],
+    "word": "about"
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "query": "attention",
+  "resolved": "attention",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attention",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attention",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attention_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛnʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attention_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛn(t)ʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attention",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056370.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "pay/give attention to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "обраща́ть, -ти́ть внима́ние на"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "pay (ordevote) much/little attention to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "уделя́ть, -и́ть мно́го/ма́ло внима́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "pay attention!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бу́дьте внима́тельны!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "direct/draw attention to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ d",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "привлека́ть, -е́чь внима́ние к"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "on letters etc.",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "(for the) attention (of)",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "на рассмотре́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001704.002",
+                    "notes": [
+                      {
+                        "text": "heed",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "внима́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attention",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056370.016"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "posture",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "stand to attention",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "стоя́ть сми́рно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he came to attention",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он при́нял сто́йку сми́рно"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001704.003",
+                    "notes": [
+                      {
+                        "text": "mil command",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "сми́рно!"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attention",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056370.010"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he was given immediate medical attention",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ему́ была́ ока́зана неме́дленная медици́нская по́мощь"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001704.004",
+                    "notes": [
+                      {
+                        "text": "care",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ухо́д"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attention",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056370.012"
+                      }
+                    ],
+                    "id": "b-en-ru0001704.005",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "courtesy",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "внима́ние"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "courtesy",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "внима́тельность"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "thoughtfulness",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "забо́тливость"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "attention"
+          }
+        ],
+        "type": "headword",
+        "word": "attention"
+      }
+    ],
+    "word": "attention"
+  }
+}

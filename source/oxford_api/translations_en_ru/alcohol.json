@@ -1,0 +1,109 @@
+{
+  "query": "alcohol",
+  "resolved": "alcohol",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "alcohol",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "alcohol",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcohol_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈalkəhɒl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcohol_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈælkəˌhɔl"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alcohol_us_2.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈælkəˌhɑl"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "alcohol",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0021060.007"
+                      },
+                      {
+                        "entry_id": "alcohol",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0021060.014"
+                      }
+                    ],
+                    "id": "b-en-ru0000650.002",
+                    "translations": [
+                      {
+                        "domains": [
+                          {
+                            "id": "chemistry",
+                            "text": "Chemistry"
+                          }
+                        ],
+                        "grammaticalFeatures": [
+                          {
+                            "id": "masculine",
+                            "text": "Masculine",
+                            "type": "Gender"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "алкого́ль"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "spirit",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "спирт"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "alcohol"
+          }
+        ],
+        "type": "headword",
+        "word": "alcohol"
+      }
+    ],
+    "word": "alcohol"
+  }
+}

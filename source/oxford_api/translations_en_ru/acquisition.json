@@ -1,0 +1,102 @@
+{
+  "query": "acquisition",
+  "resolved": "acquisition",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "acquisition",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "acquisition",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acquisition_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌakwɪˈzɪʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/acquisition_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˌækwəˈzɪʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "acquisition",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0007250.013"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the acquisition of knowledge",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "приобрете́ние зна́ний"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the acquisition of language",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "овладе́ние языко́м"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the library's new acquisitions",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "но́вые библиоте́чные поступле́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000255.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "приобрете́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "acquisition"
+          }
+        ],
+        "type": "headword",
+        "word": "acquisition"
+      }
+    ],
+    "word": "acquisition"
+  }
+}

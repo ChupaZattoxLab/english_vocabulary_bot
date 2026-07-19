@@ -1,0 +1,125 @@
+{
+  "query": "august",
+  "resolved": "august",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "august",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "august",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/august_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔːˈɡʌst"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/august_us_3.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɔˈɡəst"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001755.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "вели́чественный"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "august"
+          }
+        ],
+        "type": "headword",
+        "word": "august"
+      },
+      {
+        "id": "August",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/august_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔːɡəst"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/august_us_7.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔɡəst"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001756.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "а́вгуст"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "attr",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "а́вгустовский"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "August"
+          }
+        ],
+        "type": "headword",
+        "word": "August"
+      }
+    ],
+    "word": "august"
+  }
+}

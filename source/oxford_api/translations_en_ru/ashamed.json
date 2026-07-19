@@ -1,0 +1,133 @@
+{
+  "query": "ashamed",
+  "resolved": "ashamed",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "ashamed",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "ashamed",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ashamed_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃeɪmd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/ashamed_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈʃeɪmd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "ashamed",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050790.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I am, feel ashamed",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мне сты́дно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "be ashamed of",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "стыди́ться"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "be, feel ashamed for sb",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "стыди́ться за кого́-н."
+                          }
+                        ]
+                      },
+                      {
+                        "text": "there's nothing to be ashamed of in that",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в э́том нет ничего́ посты́дного"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you ought to be ashamed of yourself",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как вам не сты́дно!"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001522.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "пристыжённый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adjective",
+              "text": "Adjective"
+            },
+            "text": "ashamed"
+          }
+        ],
+        "type": "headword",
+        "word": "ashamed"
+      }
+    ],
+    "word": "ashamed"
+  }
+}

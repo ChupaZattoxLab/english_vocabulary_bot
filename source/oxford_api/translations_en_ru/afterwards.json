@@ -1,0 +1,119 @@
+{
+  "query": "afterwards",
+  "resolved": "afterwards",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "afterwards",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "afterwards",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/afterwards_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːftəwədz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/afterwards_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæftərwərdz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "afterwards",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0015260.011"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "(a) long (time) afterwards",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "гора́здо по́зже"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I only heard of it afterwards",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я то́лько пото́м услы́шал об э́том"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000532.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "then",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "пото́м"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "subsequently",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "впосле́дствии"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "later",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "по́зже"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "afterwards"
+          }
+        ],
+        "type": "headword",
+        "word": "afterwards"
+      }
+    ],
+    "word": "afterwards"
+  }
+}

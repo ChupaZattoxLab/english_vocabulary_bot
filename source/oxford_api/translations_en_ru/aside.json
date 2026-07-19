@@ -1,0 +1,229 @@
+{
+  "query": "aside",
+  "resolved": "aside",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aside",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aside",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aside_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsʌɪd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aside_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsaɪd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001532.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "ре́плика в сто́рону"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "aside"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aside_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsʌɪd"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aside_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈsaɪd"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "aside",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051390.005"
+                      },
+                      {
+                        "entry_id": "aside",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0051390.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "joking aside",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "кро́ме шу́ток, шу́тки в сто́рону"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "aside from",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "regions": [
+                              {
+                                "id": "us",
+                                "text": "Us"
+                              }
+                            ],
+                            "text": "за исключе́нием"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "кро́ме"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "take sb aside",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отводи́ть кого́-н. в сто́рону"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отвести́ кого́-н. в сто́рону"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "reserve",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "set, put aside",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "откла́дывать"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отложи́ть"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001532.004",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "place",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в стороне́"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "motion",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в сто́рону"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in reserve",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отде́льно"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in reserve",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в резе́рве"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "aside"
+          }
+        ],
+        "type": "headword",
+        "word": "aside"
+      }
+    ],
+    "word": "aside"
+  }
+}

@@ -1,0 +1,337 @@
+{
+  "query": "amount",
+  "resolved": "amount",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "amount",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "amount",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amount_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmaʊnt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amount_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmaʊnt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amount",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0029330.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "to the amount of",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "на су́мму в"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000868.002",
+                    "notes": [
+                      {
+                        "text": "sum",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "су́мма"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amount",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0029330.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "he spent a huge amount of money",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он истра́тил ку́чу де́нег"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "we have any amount of books",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у нас полно́ книг"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "у нас ку́ча книг"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000868.003",
+                    "notes": [
+                      {
+                        "text": "quantity",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "коли́чество"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "amount"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amount_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmaʊnt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/amount_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmaʊnt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "amount",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0029330.016"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "amount to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              },
+                              {
+                                "text": "add up to",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "составля́ть, -а́вить"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "достига́ть, -и́чь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "his income does not amount to £20,000 a year",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ дохо́д не достига́ет двадцати́ ты́сяч фу́нтов в год"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the expenses amount to £600",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "расхо́ды составля́ют шестьсо́т фу́нтов"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an invoice amounting to £100",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "счёт на су́мму в сто фу́нтов"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "these conditions amount to a refusal",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́ти усло́вия равноси́льны отка́зу"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it amounts to the same thing",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́то сво́дится всё к тому́ же"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "amount to very little, not amount to much",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "быть незначи́тельным"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the difference does not amount to much",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ра́зница невелика́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he will never amount to much",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "из него́ никогда́ ничего́ пу́тного не вы́йдет"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "signify",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "what does it amount to?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "к чему́ э́то сво́дится?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000868.005",
+                    "notes": [
+                      {
+                        "text": "be equivalent to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "быть ра́вным"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "быть равноси́льным"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "amount"
+          }
+        ],
+        "type": "headword",
+        "word": "amount"
+      }
+    ],
+    "word": "amount"
+  }
+}

@@ -1,0 +1,1119 @@
+{
+  "query": "as",
+  "resolved": "as",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "as",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "as",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "az"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "such men as knew him",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "те, кото́рые зна́ли его́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "кото́рый"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "pronoun",
+              "text": "Pronoun"
+            },
+            "text": "as"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "az"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "as",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050180.008"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "as I was saying",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как я говори́л"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "do as follows",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́лайте сле́дующее"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "do it as follows",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "де́лайте э́то так (или вот как или сле́дующим о́бразом)"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "such countries as Spain",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "таки́е стра́ны, как Испа́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the same as …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "то же са́мое, что…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as heavy as lead",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "тяжёлый, как свине́ц"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is as clever as she",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он так же умён, как она́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is as kind as he is rich",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он и добр, и бога́т"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I am as tall as he",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы с ним одного́ ро́ста"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "walk as fast as you can",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "иди́те как мо́жно быстре́е"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as quickly as possible",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как мо́жно скоре́е"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "just as",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "так же, как"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as usual",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как всегда́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "we are late as it is",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "мы и так опа́здываем"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as things are, you cannot go",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "положе́ние дел таково́, что вы не мо́жете идти́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he is tall, as are his brothers",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как и его́ бра́тья, он высо́кого ро́ста"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he pictured the room as it would be",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он представля́л себе́, како́й бу́дет ко́мната"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as it were",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "так сказа́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "как бы"
+                          }
+                        ]
+                      },
+                      {
+                        "domains": [
+                          {
+                            "id": "military",
+                            "text": "Military"
+                          }
+                        ],
+                        "text": "as you were!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "отста́вить!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he arranged matters so as to suit everyone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он организова́л всё так, что́бы э́то всех устра́ивало"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as a man sows, so shall he reap",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "что посе́ешь, то и пожнёшь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was not so foolish as to say …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он был не так глуп, что́бы сказа́ть…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "so as to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "expressing purpose",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "что́бы"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "expressing manner",
+                                "type": "indicator"
+                              }
+                            ],
+                            "text": "так, что́бы"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "that's as may be",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "поло́жим"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "мо́жет быть и так"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as well as may be",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как мо́жно лу́чше"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.004",
+                    "notes": [
+                      {
+                        "text": "expressing comparison or conformity",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "как"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "as",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050180.023"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "young ((US) as young) as I am",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "хоть я и мо́лод"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "much as I should like to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как бы мне ни хоте́лось"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "try as he would",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как он ни стара́лся"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.006",
+                    "notes": [
+                      {
+                        "text": "concessive",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "as",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050180.014"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "(just) as I reached the door",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "когда́ я подошёл к две́ри"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as I was going",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пока́ я шёл"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.007",
+                    "notes": [
+                      {
+                        "text": "temporal",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "когда́"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "пока́"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "в то вре́мя как"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "as",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050180.021"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "as you are ready, let us begin",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "поско́льку вы уже́ гото́вы, дава́йте начнём"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.008",
+                    "notes": [
+                      {
+                        "text": "causative",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "так как"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "поско́льку"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b-en-ru0001500.009",
+                    "notes": [
+                      {
+                        "text": "in proportion as",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "по ме́ре того́"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "как"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "conjunction",
+              "text": "Conjunction"
+            },
+            "text": "as"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "az"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "as",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0050180.023"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I regard him as a fool",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я счита́ю его́ дурако́м"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "his appointment as colonel",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "присвое́ние ему́ зва́ния полко́вника"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as your guardian, I …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как ваш опеку́н, я…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he appeared as Hamlet",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он вы́ступил в ро́ли Га́млета"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as a rule",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как пра́вило"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I said it as a joke",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я сказа́л э́то в шу́тку"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I recognized him as the new tenant",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я узна́л в нём но́вого жильца́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.005",
+                    "notes": [
+                      {
+                        "text": "expressing capacity or category",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "как"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "preposition",
+              "text": "Preposition"
+            },
+            "text": "as"
+          },
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "az"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_2_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "æz"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/as_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əz"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "as far as I know",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "наско́лько мне изве́стно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he walked as far as the station",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он дошёл до ста́нции"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as far back as 1920",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ещё/уже́ в 1920 году́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as for you",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "что каса́ется вас"
+                          }
+                        ]
+                      },
+                      {
+                        "regions": [
+                          {
+                            "id": "british",
+                            "text": "British"
+                          }
+                        ],
+                        "text": "as from January",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "начина́я с января́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the work is as good as done",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "рабо́та всё равно́ что сде́лана"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was as good as his word",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он сдержа́л своё сло́во"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "be so good as to tell me",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бу́дьте добры́, скажи́те мне"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as if/though",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бу́дто (бы)"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "как бу́дто (бы)"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he talks as if he were the boss",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он говори́т, как бу́дто он нача́льник"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he made as if to go",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он собра́лся бы́ло уходи́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "crossReferenceMarkers": [
+                          "for further examples see alsoif"
+                        ],
+                        "crossReferences": [
+                          {
+                            "id": "if",
+                            "text": "if",
+                            "type": "see also"
+                          }
+                        ],
+                        "text": "it is not as if I was poor",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "не то, что́бы я был бе́ден"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I will stay as long as you want me",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я пробу́ду (сто́лько), ско́лько вы захоти́те"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "keep it as long as you like",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "держи́те э́то (сто́лько), ско́лько вам уго́дно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as much as …",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сто́лько, ско́лько…"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as much as to say",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как бы говоря́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I thought as much!",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "так я и ду́мал!"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "no one so much as looked at us",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на нас никто́ да́же не посмотре́л"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as of this moment",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в да́нный моме́нт"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as regards",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "что каса́ется"
+                          },
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "относи́тельно"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as soon as",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "как то́лько"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I would just as soon go",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я предпочёл бы пойти́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the drawings as such",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "рису́нки как таковы́е"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "рису́нки са́ми по себе́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as though",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "бу́дто (бы)"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "как бу́дто (бы)"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "regarding",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "as to",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ g",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "что каса́ется"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he enquired as to the date",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он спра́вился о да́те"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he said nothing as to when he would come",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он ничего́ не сказа́л насчёт того́, когда́ он придёт"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "in addition",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "as well",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "та́кже, то́же"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he came as well as John",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "и он, и Джон пришли́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "you might as well help me",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы могли́ бы мне помо́чь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "it is just as well you came",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "хорошо́, что вы пришли́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "as yet",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ещё"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "до сих пор"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001500.010",
+                    "notes": [
+                      {
+                        "text": "in phrases",
+                        "type": "grammaticalNote"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "other",
+              "text": "Other"
+            },
+            "text": "as"
+          }
+        ],
+        "type": "headword",
+        "word": "as"
+      }
+    ],
+    "word": "as"
+  }
+}

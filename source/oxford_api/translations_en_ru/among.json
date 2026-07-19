@@ -1,0 +1,245 @@
+{
+  "query": "among",
+  "resolved": "among",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "among",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "among",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/among_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈmʌŋ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/among_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈməŋ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "conversation among friends",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "разгово́р ме́жду друзья́ми"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "they hadn't £5 among them",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у них на всех не́ было и пяти́ фу́нтов"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000859.002",
+                    "notes": [
+                      {
+                        "text": "between",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ i",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "ме́жду"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "among the trees",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "среди́ дере́вьев"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "among those present",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "среди́ (или в числе́) прису́тствующих"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "into the midst of",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he fell among thieves",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он попа́лся разбо́йникам"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "there was a legend among the Greeks",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "у гре́ков существова́ла леге́нда"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "from the midst of",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "a great leader rose among them",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "из их среды́ вы́шел вели́кий ли́дер"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000859.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "in the midst of",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "среди́"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "ме́жду"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "shared by",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "у"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "Leeds is among the biggest towns in England",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "Лидс — один из са́мых больши́х городо́в А́нглии"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "Лидс вхо́дит в число́ са́мых больши́х городо́в А́нглии"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was numbered among the dead",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ включи́ли в число́ поги́бших"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000859.004",
+                    "notes": [
+                      {
+                        "text": "expressing one of a number",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ g",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "из"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "preposition",
+              "text": "Preposition"
+            },
+            "text": "among"
+          }
+        ],
+        "type": "headword",
+        "word": "among"
+      }
+    ],
+    "word": "among"
+  }
+}

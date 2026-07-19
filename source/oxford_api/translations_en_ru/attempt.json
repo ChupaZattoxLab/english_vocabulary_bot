@@ -1,0 +1,265 @@
+{
+  "query": "attempt",
+  "resolved": "attempt",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "attempt",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "attempt",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attempt_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛm(p)t"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attempt_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛm(p)t"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attempt",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056280.014"
+                      },
+                      {
+                        "entry_id": "attempt",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056280.019"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "they made no attempt to escape",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "они́ не сде́лали попы́тки убежа́ть"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "at the first attempt",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "с пе́рвой попы́тки"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001699.002",
+                    "notes": [
+                      {
+                        "text": "effort",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "попы́тка"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attempt",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056280.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "an attempt was made on his life",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на его́ жизнь покуша́лись"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "an attempt will be made on Everest this summer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "э́тим ле́том бу́дет сде́лана попы́тка подня́ться на Эвере́ст"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001699.003",
+                    "notes": [
+                      {
+                        "text": "assault",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "покуше́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "her attempt at producing a meal",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "плод её тще́тных кулина́рных стара́ний"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001699.004",
+                    "notes": [
+                      {
+                        "text": "+ at",
+                        "type": "grammaticalNote"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "attempt"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attempt_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛm(p)t"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/attempt_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈtɛm(p)t"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "attempt",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0056280.005"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "attempted theft",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "попы́тка воровства́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he was charged with attempted murder",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "его́ обвини́ли в покуше́нии на уби́йство"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001699.006",
+                    "notes": [
+                      {
+                        "text": "try; try to do",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "пыта́ться"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "попыта́ться"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "attempt"
+          }
+        ],
+        "type": "headword",
+        "word": "attempt"
+      }
+    ],
+    "word": "attempt"
+  }
+}

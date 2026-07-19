@@ -1,0 +1,183 @@
+{
+  "query": "adhere",
+  "resolved": "adhere",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "adhere",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "adhere",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adhere_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈhɪə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/adhere_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ədˈhɪr"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "adhere",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0009930.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          }
+                        ],
+                        "text": "adhere to an opinion",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "g sg",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "приде́рживаться мне́ния"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "adhere to a promise",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "сде́рживать обеща́ние"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "сдержа́ть обеща́ние"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "adhere to a programme",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "сле́довать програ́мме"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000333.002",
+                    "registers": [
+                      {
+                        "id": "literal",
+                        "text": "Literal"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "to",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "к + d",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "прилипа́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "to",
+                            "type": "prepositionNote"
+                          },
+                          {
+                            "text": "к + d",
+                            "type": "prepositionNote"
+                          }
+                        ],
+                        "text": "прили́пнуть"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "adhere"
+          }
+        ],
+        "type": "headword",
+        "word": "adhere"
+      }
+    ],
+    "word": "adhere"
+  }
+}

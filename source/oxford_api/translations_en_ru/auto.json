@@ -1,0 +1,97 @@
+{
+  "query": "auto",
+  "resolved": "auto",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "auto",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "auto",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "inflections": [
+                  {
+                    "grammaticalFeatures": [
+                      {
+                        "id": "plural",
+                        "text": "Plural",
+                        "type": "Number"
+                      }
+                    ],
+                    "inflectedForm": "autos"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/auto_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔːtəʊ"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/auto_1_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔdoʊ"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "auto",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0059320.005"
+                      }
+                    ],
+                    "id": "b-en-ru0001797.002",
+                    "notes": [
+                      {
+                        "text": "US",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "informal",
+                        "text": "Informal"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "авто́"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "auto"
+          }
+        ],
+        "type": "headword",
+        "word": "auto"
+      }
+    ],
+    "word": "auto"
+  }
+}

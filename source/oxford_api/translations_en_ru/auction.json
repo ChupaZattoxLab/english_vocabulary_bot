@@ -1,0 +1,182 @@
+{
+  "query": "auction",
+  "resolved": "auction",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "auction",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "auction",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/auction_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔːkʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/auction_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔkʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "auction",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0057120.006"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "auction sale",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "аукцио́н"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "put up for auction",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "выставля́ть, вы́ставить на аукцио́н"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "продава́ть с молотка́"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "прода́ть с молотка́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "the house is for sale by auction",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "дом продаётся с аукцио́на"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001731.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "аукцио́н"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "auction"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "notes": [
+                  {
+                    "text": "also \"auction off\"",
+                    "type": "wordFormNote"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/auction_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔːkʃ(ə)n"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/auction_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɔkʃ(ə)n"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001731.004",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "продава́ть с аукцио́на"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "прода́ть с аукцио́на"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "auction"
+          }
+        ],
+        "type": "headword",
+        "word": "auction"
+      }
+    ],
+    "word": "auction"
+  }
+}

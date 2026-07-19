@@ -1,0 +1,78 @@
+{
+  "query": "aunt",
+  "resolved": "aunt",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "aunt",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "aunt",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aunt_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑːnt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aunt_us_1_rr.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ænt"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/aunt_us_4.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ɑnt"
+                  }
+                ],
+                "senses": [
+                  {
+                    "id": "b-en-ru0001759.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "тётя"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "тётка"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "aunt"
+          }
+        ],
+        "type": "headword",
+        "word": "aunt"
+      }
+    ],
+    "word": "aunt"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "query": "actually",
+  "resolved": "actually",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "actually",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "actually",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/actually_gb_3.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaktʃəli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/actually_gb_2.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈaktʃʊəli"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/actually_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈæk(t)ʃ(u)əli"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "actually",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008340.006"
+                      },
+                      {
+                        "entry_id": "actually",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008340.011"
+                      }
+                    ],
+                    "id": "b-en-ru0000289.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "really; in fact",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "действи́тельно"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "на (са́мом) де́ле"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in expansion or correction of former statement",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "в са́мом де́ле"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in expansion or correction of former statement",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "на са́мом де́ле"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "in sense ʻto tell the truthʼ",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "со́бственно говоря́"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "actually",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0008340.009"
+                      }
+                    ],
+                    "id": "b-en-ru0000289.003",
+                    "notes": [
+                      {
+                        "text": "even",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "text": "да́же"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "adverb",
+              "text": "Adverb"
+            },
+            "text": "actually"
+          }
+        ],
+        "type": "headword",
+        "word": "actually"
+      }
+    ],
+    "word": "actually"
+  }
+}

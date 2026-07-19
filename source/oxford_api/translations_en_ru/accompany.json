@@ -1,0 +1,292 @@
+{
+  "query": "accompany",
+  "resolved": "accompany",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "accompany",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "accompany",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accompany_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkʌmpəni"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/accompany_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "əˈkəmp(ə)ni"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "accompany",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0005030.006"
+                      },
+                      {
+                        "entry_id": "accompany",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0005030.017"
+                      },
+                      {
+                        "entry_id": "accompany",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0005030.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "accompanied by friends",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в сопровожде́нии друзе́й"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "many illnesses are accompanied by fever",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "жар сопу́тствует мно́гим боле́зням"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "escort",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "may I accompany you home?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "разреши́те проводи́ть вас домо́й?"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000178.002",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "occur with",
+                            "type": "indicator"
+                          },
+                          {
+                            "text": "go or be with",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          },
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "сопровожда́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          },
+                          {
+                            "text": "attend",
+                            "type": "indicator"
+                          }
+                        ],
+                        "registers": [
+                          {
+                            "id": "figurative",
+                            "text": "Figurative"
+                          },
+                          {
+                            "id": "literal",
+                            "text": "Literal"
+                          }
+                        ],
+                        "text": "сопу́тствовать"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "accompany",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0005030.017"
+                      },
+                      {
+                        "entry_id": "accompany",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0005030.018"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "your offer must be accompanied by a letter",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "ва́ше предложе́ние необходи́мо сопроводи́ть письмо́м"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0000178.003",
+                    "notes": [
+                      {
+                        "text": "supplement",
+                        "type": "indicator"
+                      }
+                    ],
+                    "registers": [
+                      {
+                        "id": "figurative",
+                        "text": "Figurative"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "что чем",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "сопровожда́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "что чем",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "сопроводи́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "accompany",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0005030.020"
+                      }
+                    ],
+                    "domains": [
+                      {
+                        "id": "music",
+                        "text": "Music"
+                      }
+                    ],
+                    "id": "b-en-ru0000178.004",
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "+ d",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "аккомпани́ровать"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "accompany"
+          }
+        ],
+        "type": "headword",
+        "word": "accompany"
+      }
+    ],
+    "word": "accompany"
+  }
+}

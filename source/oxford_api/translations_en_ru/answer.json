@@ -1,0 +1,700 @@
+{
+  "query": "answer",
+  "resolved": "answer",
+  "status": 200,
+  "ok": true,
+  "data": {
+    "id": "answer",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "answer",
+        "language": "en",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/answer_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːnsə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/answer_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænsər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.007"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "what was his answer?",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "что он отве́тил?"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "in answer to your letter",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в отве́т на Ва́ше письмо́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "by way of answer",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "в отве́т"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "defence",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "he has a complete answer to the charges",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он мо́жет опрове́ргнуть все обвине́ния"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.002",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "reply",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отве́т"
+                      },
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "retort",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "возраже́ние"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.014"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "there is no simple answer to the problem",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "пробле́му реши́ть нелегко́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he thinks he knows all the answers",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он ду́мает, что он уже́ всё пости́г"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.003",
+                    "translations": [
+                      {
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "solution",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "отве́т"
+                      },
+                      {
+                        "language": "ru",
+                        "text": "реше́ние"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "noun",
+              "text": "Noun"
+            },
+            "text": "answer"
+          },
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "transitive",
+                    "text": "Transitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/answer_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːnsə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/answer_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænsər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.031"
+                      },
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.041"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the question was not answered",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вопро́с оста́лся без отве́та"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "answer the door",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "открыва́ть дверь"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "откры́ть дверь"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "answer the doorbell (or a knock at the door)",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "открыва́ть, -ы́ть (дверь) на звоно́к (или на стук)"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "answer the telephone",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "подходи́ть к телефо́ну"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "подойти́ к телефо́ну"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отвеча́ть на телефо́нные звонки́"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "отве́тить на телефо́нные звонки́"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.005",
+                    "notes": [
+                      {
+                        "text": "reply to",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "кому, на что",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "отвеча́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "notes": [
+                          {
+                            "text": "кому, на что",
+                            "type": "grammaticalNote"
+                          }
+                        ],
+                        "text": "отве́тить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.054"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "answer requirements",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "отвеча́ть тре́бованиям"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "answer the purpose",
+                        "translations": [
+                          {
+                            "grammaticalFeatures": [
+                              {
+                                "id": "imperfective",
+                                "text": "Imperfective",
+                                "type": "Aspect"
+                              }
+                            ],
+                            "language": "ru",
+                            "text": "соотве́тствовать це́ли"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.006",
+                    "notes": [
+                      {
+                        "text": "fulfil",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "he answers the description exactly",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он то́чно соотве́тствует описа́нию"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.007",
+                    "notes": [
+                      {
+                        "text": "correspond to",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "answer a charge",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "опроверга́ть обвине́ние"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "опрове́ргнуть обвине́ние"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.008",
+                    "notes": [
+                      {
+                        "text": "refute",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.041"
+                      },
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.054"
+                      }
+                    ],
+                    "id": "b-en-ru0001050.009",
+                    "notes": [
+                      {
+                        "text": "solve",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "реша́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "реши́ть"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.054"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "our prayers were answered",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "на́ши моли́твы бы́ли услы́шаны"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.010",
+                    "notes": [
+                      {
+                        "text": "satisfy, grant",
+                        "type": "indicator"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "intransitive",
+                    "text": "Intransitive",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "pronunciations": [
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/answer_gb_1.mp3",
+                    "dialects": [
+                      "British English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈɑːnsə"
+                  },
+                  {
+                    "audioFile": "https://audio.oxforddictionaries.com/en/mp3/answer_us_1.mp3",
+                    "dialects": [
+                      "American English"
+                    ],
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "ˈænsər"
+                  }
+                ],
+                "senses": [
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.031"
+                      }
+                    ],
+                    "id": "b-en-ru0001050.012",
+                    "notes": [
+                      {
+                        "text": "reply",
+                        "type": "indicator"
+                      }
+                    ],
+                    "translations": [
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "imperfective",
+                            "text": "Imperfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "отвеча́ть"
+                      },
+                      {
+                        "grammaticalFeatures": [
+                          {
+                            "id": "perfective",
+                            "text": "Perfective",
+                            "type": "Aspect"
+                          }
+                        ],
+                        "language": "ru",
+                        "text": "отве́тить"
+                      }
+                    ]
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.031"
+                      },
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.041"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "the dog answers to the name of Rex",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "соба́ка отзыва́ется на кли́чку Рекс"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.013",
+                    "notes": [
+                      {
+                        "text": "respond; react",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "notes": [
+                          {
+                            "text": "vouch, accept responsibility for",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "answer for",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "notes": [
+                              {
+                                "text": "+ a",
+                                "type": "grammaticalNote"
+                              }
+                            ],
+                            "text": "руча́ться, поручи́ться за"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "I will answer for his honesty",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я руча́юсь за его́ че́стность"
+                          }
+                        ]
+                      },
+                      {
+                        "notes": [
+                          {
+                            "text": "suffer, bear responsibility for",
+                            "type": "indicator"
+                          }
+                        ],
+                        "text": "you will answer for your words",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "вы отве́тите за э́ти слова́"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "he has much to answer for",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "он за мно́гое в отве́те"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.014"
+                  },
+                  {
+                    "datasetCrossLinks": [
+                      {
+                        "entry_id": "answer",
+                        "language": "en-gb",
+                        "sense_id": "m_en_gbus0035940.031"
+                      }
+                    ],
+                    "examples": [
+                      {
+                        "text": "I answer to no one",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "я никому́ не обя́зан отчи́тываться"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.015",
+                    "notes": [
+                      {
+                        "text": "give an account",
+                        "type": "indicator"
+                      }
+                    ]
+                  },
+                  {
+                    "examples": [
+                      {
+                        "text": "answer back",
+                        "translations": [
+                          {
+                            "language": "ru",
+                            "text": "дерзи́ть"
+                          },
+                          {
+                            "language": "ru",
+                            "text": "надерзи́ть"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-en-ru0001050.016"
+                  }
+                ]
+              }
+            ],
+            "language": "en",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "answer"
+          }
+        ],
+        "type": "headword",
+        "word": "answer"
+      }
+    ],
+    "word": "answer"
+  }
+}
