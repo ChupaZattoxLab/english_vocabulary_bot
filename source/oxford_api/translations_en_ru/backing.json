@@ -1,9 +1,0 @@
-{
-  "query": "backing",
-  "resolved": null,
-  "status": 404,
-  "ok": false,
-  "data": {
-    "error": "No entry matches the given source_lang, word, source_lang, and filters. Note: Sandbox access is limited to words starting with the first letter of the alphabet. Upgrade to a paid plan for full access."
-  }
-}

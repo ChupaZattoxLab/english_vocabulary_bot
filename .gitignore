@@ -1,5 +1,22 @@
-# Unpacked Oxford pronunciation files (use data/audio.zip instead)
-data/audio/
-
-# Secrets & API caches
+# Secrets
 .env
+
+# External word lists (nalgeon/words)
+source/nalgeon-words/
+
+# ESDB / SCOWL dumps
+source/esdb/
+
+# IPA dictionaries (open-dict-data/ipa-dict)
+source/ipa/
+
+# OALD definition-page HTML cache
+source/oald_html/
+
+# Cambridge Dictionary HTML cache
+source/cambridge_html/
+
+# Python
+scripts/__pycache__/
+__pycache__/
+*.pyc

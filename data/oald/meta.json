@@ -1,0 +1,40 @@
+{
+  "created_at": "2026-07-21T17:47:40.323684+00:00",
+  "source": "OALD definition pages via parse_oald_entry.py",
+  "wordlist": "source/nalgeon-words/data/oxford-5k.csv",
+  "schema": [
+    "word_us",
+    "word_gb",
+    "lexical_category",
+    "cefr",
+    "definition_url_oxford",
+    "definition_url_cambridge",
+    "ipa_us",
+    "ipa_gb",
+    "definition",
+    "example",
+    "audio_source_us",
+    "audio_source_gb"
+  ],
+  "note": "translations intentionally omitted; cefr from OALD sense/webtop",
+  "counts": {
+    "entries": 5906,
+    "with_definition": 5906,
+    "with_example": 5906,
+    "with_ipa_us": 5906,
+    "with_ipa_gb": 5906,
+    "with_cefr": 5906,
+    "with_definition_url_oxford": 5906,
+    "with_definition_url_cambridge": 5906,
+    "distinct_us_gb_spelling": 50,
+    "cefr_histogram": {
+      "a1": 1052,
+      "a2": 979,
+      "b1": 901,
+      "b2": 1570,
+      "c1": 1405
+    }
+  },
+  "html_cache": "source/oald_html",
+  "cambridge_cache": "source/cambridge_html"
+}
