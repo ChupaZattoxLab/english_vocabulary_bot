@@ -2,6 +2,7 @@ package com.vocabcheck.app.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,27 +19,38 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.SwapVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,13 +67,13 @@ fun ReviewTab(
     totalCount: Int,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
-    onSwap: (Int) -> Unit,
 ) {
     val current = pending.firstOrNull()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
@@ -79,8 +91,8 @@ fun ReviewTab(
         if (current == null) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
+                    .fillMaxWidth()
+                    .padding(vertical = 48.dp, horizontal = 24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -101,73 +113,73 @@ fun ReviewTab(
                 )
             }
         } else {
-            BoxWithCard(
-                word = current,
-                onApprove = { onApprove(current.id) },
-                onReject = { onReject(current.id) },
-            )
-            Spacer(Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
+            ) {
+                SwipeableWordCard(
+                    word = current,
+                    onSwipeLeft = { onReject(current.id) },
+                    onSwipeRight = { onApprove(current.id) },
+                )
+            }
+
+            Spacer(Modifier.height(28.dp))
+
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                FilledTonalButton(onClick = { onReject(current.id) }) {
-                    Icon(Icons.Default.Close, contentDescription = null)
-                    Spacer(Modifier.width(6.dp))
-                    Text("Правка")
+                FilledTonalButton(
+                    onClick = { onReject(current.id) },
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = null,
+                        modifier = Modifier.height(16.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Правка", style = MaterialTheme.typography.labelLarge)
                 }
-                OutlinedButton(onClick = { onSwap(current.id) }) {
-                    Icon(Icons.Default.SwapVert, contentDescription = null)
-                    Spacer(Modifier.width(6.dp))
-                    Text("Swap")
-                }
-                Button(onClick = { onApprove(current.id) }) {
-                    Icon(Icons.Default.Check, contentDescription = null)
-                    Spacer(Modifier.width(6.dp))
-                    Text("OK")
+                Button(
+                    onClick = { onApprove(current.id) },
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                ) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier.height(16.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("OK", style = MaterialTheme.typography.labelLarge)
                 }
             }
-            Spacer(Modifier.height(8.dp))
+
+            Spacer(Modifier.height(20.dp))
+
             Text(
-                text = "Вправо — OK · Влево — на правку · Swap — поменять main ↔ 1-й доп.",
+                text = "Вправо — OK · Влево — на правку",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f),
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                    .padding(bottom = 24.dp),
             )
         }
     }
 }
 
 @Composable
-private fun BoxWithCard(
-    word: WordEntry,
-    onApprove: () -> Unit,
-    onReject: () -> Unit,
-) {
-    androidx.compose.foundation.layout.Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(440.dp),
-    ) {
-        SwipeableWordCard(
-            word = word,
-            onSwipeLeft = onReject,
-            onSwipeRight = onApprove,
-        )
-    }
-}
-
-@Composable
-fun EditTab(
+fun EditListTab(
     needsEdit: List<WordEntry>,
-    selectedId: Int?,
-    onSelect: (Int?) -> Unit,
-    onSave: (id: Int, main: String, also: List<String>) -> Unit,
-    onSwap: (Int) -> Unit,
+    onOpen: (Int) -> Unit,
 ) {
-    val selected = needsEdit.firstOrNull { it.id == selectedId } ?: needsEdit.firstOrNull()
-
     if (needsEdit.isEmpty()) {
         Column(
             modifier = Modifier
@@ -191,59 +203,132 @@ fun EditTab(
         return
     }
 
-    if (selected == null) return
-
-    LaunchedEffect(selected.id) {
-        if (selectedId != selected.id) onSelect(selected.id)
-    }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(needsEdit, key = { it.id }) { word ->
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (word.id == selected.id) {
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                        } else {
-                            MaterialTheme.colorScheme.surface
-                        },
-                    ),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        item {
+            Text(
+                text = "К правке: ${needsEdit.size}",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+            )
+            Spacer(Modifier.height(4.dp))
+        }
+        items(needsEdit, key = { it.id }) { word ->
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onOpen(word.id) },
+            ) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onSelect(word.id) },
+                        .padding(horizontal = 14.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 14.dp, vertical = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(word.word, fontWeight = FontWeight.SemiBold)
-                        Text(
-                            text = word.main,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                            modifier = Modifier.padding(start = 12.dp),
-                        )
+                        if (word.main.isNotBlank()) {
+                            Text(
+                                text = word.main,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
                     }
+                    Icon(
+                        Icons.Default.ChevronRight,
+                        contentDescription = "Открыть правку",
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+                    )
                 }
             }
         }
+    }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditWordScreen(
+    word: WordEntry,
+    positionLabel: String,
+    canUndo: Boolean,
+    onBack: () -> Unit,
+    onUndo: () -> Unit,
+    onSave: (id: Int, main: String, also: List<String>) -> Unit,
+    onSwap: (Int) -> Unit,
+    snackbarHostState: SnackbarHostState,
+) {
+    var showUndoDialog by remember { mutableStateOf(false) }
+
+    BackHandler { onBack() }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text("Правка: ${word.word}", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = positionLabel,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { showUndoDialog = true },
+                        enabled = canUndo,
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = "Отменить")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { padding ->
         EditForm(
-            word = selected,
+            word = word,
             onSave = onSave,
             onSwap = onSwap,
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxSize()
+                .padding(padding),
+        )
+    }
+
+    if (showUndoDialog) {
+        AlertDialog(
+            onDismissRequest = { showUndoDialog = false },
+            title = { Text("Отменить последнее действие?") },
+            text = { Text("Будет восстановлено предыдущее состояние слова.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showUndoDialog = false
+                        onUndo()
+                    },
+                ) { Text("Отменить") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showUndoDialog = false }) { Text("Нет") }
+            },
         )
     }
 }
@@ -334,13 +419,13 @@ private fun EditForm(
         Spacer(Modifier.height(8.dp))
         OutlinedButton(
             onClick = {
-                onSwap(word.id)
                 val updatedMain = alsoFields.firstOrNull { it.isNotBlank() } ?: return@OutlinedButton
                 val rest = alsoFields.filter { it.isNotBlank() }.drop(1).toMutableList()
                 if (main.isNotBlank()) rest.add(0, main)
                 main = updatedMain
                 alsoFields.clear()
                 alsoFields.addAll(rest.ifEmpty { listOf("") })
+                onSwap(word.id)
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
@@ -364,6 +449,6 @@ private fun EditForm(
             Spacer(Modifier.width(8.dp))
             Text("Сохранить как OK")
         }
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(32.dp))
     }
 }

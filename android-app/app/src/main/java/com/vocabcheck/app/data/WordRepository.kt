@@ -55,6 +55,10 @@ class WordRepository(private val context: Context) {
 
     fun markNeedsEdit(id: Int) = updateWord(id) { it.copy(status = ReviewStatus.NEEDS_EDIT) }
 
+    fun findById(id: Int): WordEntry? = _words.value.firstOrNull { it.id == id }
+
+    fun restoreWord(word: WordEntry) = updateWord(word.id) { word }
+
     fun swapMainAndFirstAlso(id: Int) = updateWord(id) { word ->
         val firstAlso = word.also.firstOrNull() ?: return@updateWord word
         val remaining = word.also.drop(1).toMutableList()
@@ -100,6 +104,7 @@ class WordRepository(private val context: Context) {
             ExportWord(
                 word = word.word,
                 pos = word.pos,
+                status = word.status,
                 translations = ExportTranslations(
                     ru = ExportRu(
                         main = word.main,

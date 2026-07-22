@@ -24,6 +24,7 @@ data class UiState(
     val totalCount: Int = 0,
     val allOk: Boolean = false,
     val selectedEditId: Int? = null,
+    val canUndo: Boolean = false,
     val message: String? = null,
 )
 
@@ -34,13 +35,16 @@ class MainViewModel(
 
     private val selectedEditId = MutableStateFlow<Int?>(null)
     private val message = MutableStateFlow<String?>(null)
+    private val canUndo = MutableStateFlow(false)
+    private val undoStack = ArrayDeque<WordEntry>()
 
     val uiState: StateFlow<UiState> = combine(
         repository.words,
         repository.loaded,
         selectedEditId,
+        canUndo,
         message,
-    ) { words, loaded, editId, msg ->
+    ) { words, loaded, editId, undo, msg ->
         UiState(
             loaded = loaded,
             pending = words.filter { it.status == ReviewStatus.PENDING },
@@ -49,6 +53,7 @@ class MainViewModel(
             totalCount = words.size,
             allOk = words.isNotEmpty() && words.all { it.status == ReviewStatus.OK },
             selectedEditId = editId,
+            canUndo = undo,
             message = msg,
         )
     }.stateIn(
@@ -61,14 +66,20 @@ class MainViewModel(
         viewModelScope.launch { repository.load() }
     }
 
-    fun approve(id: Int) = repository.markOk(id)
-
-    fun reject(id: Int) {
-        repository.markNeedsEdit(id)
-        selectedEditId.value = id
+    fun approve(id: Int) {
+        pushUndo(id) ?: return
+        repository.markOk(id)
     }
 
-    fun swapOnCard(id: Int) = repository.swapMainAndFirstAlso(id)
+    fun reject(id: Int) {
+        pushUndo(id) ?: return
+        repository.markNeedsEdit(id)
+    }
+
+    fun swapOnCard(id: Int) {
+        pushUndo(id) ?: return
+        repository.swapMainAndFirstAlso(id)
+    }
 
     fun selectForEdit(id: Int?) {
         selectedEditId.value = id
@@ -79,14 +90,36 @@ class MainViewModel(
             message.value = "Основной перевод обязателен"
             return
         }
+        val queue = repository.needsEditWords()
+        val idx = queue.indexOfFirst { it.id == id }
+        val nextId = queue.getOrNull(idx + 1)?.id
+
+        pushUndo(id) ?: return
         repository.saveEdit(id, main, also, markOk = true)
-        selectedEditId.value = null
-        message.value = "Сохранено"
+
+        selectedEditId.value = nextId
+        message.value = if (nextId != null) {
+            "Сохранено · следующее слово"
+        } else {
+            "Сохранено · правок больше нет"
+        }
+    }
+
+    fun undo() {
+        val previous = undoStack.removeLastOrNull() ?: return
+        canUndo.value = undoStack.isNotEmpty()
+        repository.restoreWord(previous)
+        if (previous.status == ReviewStatus.NEEDS_EDIT) {
+            selectedEditId.value = previous.id
+        }
+        message.value = "Отменено: ${previous.word}"
     }
 
     fun resetProgress() {
         repository.resetAll()
         selectedEditId.value = null
+        undoStack.clear()
+        canUndo.value = false
         message.value = "Прогресс сброшен"
     }
 
@@ -95,11 +128,29 @@ class MainViewModel(
     }
 
     suspend fun exportFile(): File? {
-        if (!repository.allOk()) {
-            message.value = "Экспорт доступен, когда все слова со статусом OK"
+        if (repository.totalCount() == 0) {
+            message.value = "Нечего экспортировать"
             return null
         }
-        return repository.writeExportFile()
+        val file = repository.writeExportFile()
+        val ok = repository.okCount()
+        val total = repository.totalCount()
+        message.value = if (repository.allOk()) {
+            "Экспорт готов: все $total слов OK"
+        } else {
+            "Экспорт готов: $ok/$total OK (прогресс неполный)"
+        }
+        return file
+    }
+
+    private fun pushUndo(id: Int): WordEntry? {
+        val previous = repository.findById(id) ?: return null
+        undoStack.addLast(previous)
+        while (undoStack.size > 50) {
+            undoStack.removeFirst()
+        }
+        canUndo.value = true
+        return previous
     }
 
     companion object {

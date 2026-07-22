@@ -60,39 +60,20 @@ fun WordCardContent(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        if (word.pos.isNotBlank()) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = word.pos,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
-            )
-        }
         Spacer(Modifier.height(28.dp))
-        Text(
-            text = "Основной перевод",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(Modifier.height(8.dp))
         Text(
             text = word.main.ifBlank { "—" },
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold),
             textAlign = TextAlign.Center,
         )
         if (word.also.isNotEmpty()) {
-            Spacer(Modifier.height(24.dp))
-            Text(
-                text = "Дополнительно",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
-            )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(20.dp))
             word.also.forEach { alt ->
                 Text(
                     text = alt,
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
                     modifier = Modifier.padding(vertical = 2.dp),
                 )
             }

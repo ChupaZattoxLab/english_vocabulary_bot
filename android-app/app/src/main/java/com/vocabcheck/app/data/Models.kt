@@ -22,6 +22,7 @@ data class WordEntry(
 data class ExportWord(
     val word: String,
     val pos: String = "",
+    val status: ReviewStatus = ReviewStatus.PENDING,
     val translations: ExportTranslations,
 )
 
