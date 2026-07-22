@@ -1,6 +1,17 @@
 # Secrets
 .env
 
+# Android
+android-app/local.properties
+android-app/.gradle/
+android-app/**/build/
+android-app/.idea/
+android-app/captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+
 # External word lists (nalgeon/words)
 source/nalgeon-words/
 
