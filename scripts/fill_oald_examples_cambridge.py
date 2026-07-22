@@ -46,6 +46,7 @@ SCHEMA_COLS = [
     "example",
     "audio_source_us",
     "audio_source_gb",
+    "translations",
 ]
 
 USER_AGENT = (
@@ -137,6 +138,7 @@ def write_outputs(records: list[dict]) -> None:
                 "ipa_gb",
                 "audio_source_us",
                 "audio_source_gb",
+                "translations",
             ):
                 row[list_key] = json.dumps(row[list_key], ensure_ascii=False)
             w.writerow(row)

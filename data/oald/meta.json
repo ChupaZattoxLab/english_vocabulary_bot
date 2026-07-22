@@ -14,7 +14,8 @@
     "definition",
     "example",
     "audio_source_us",
-    "audio_source_gb"
+    "audio_source_gb",
+    "translations"
   ],
   "note": "translations intentionally omitted; cefr from OALD sense/webtop",
   "counts": {
@@ -33,8 +34,28 @@
       "b1": 901,
       "b2": 1570,
       "c1": 1405
-    }
+    },
+    "with_translations_ru": 5906
   },
   "html_cache": "source/oald_html",
-  "cambridge_cache": "source/cambridge_html"
+  "cambridge_cache": "source/cambridge_html",
+  "translations": {
+    "shape": {
+      "ru": {
+        "main": "string",
+        "also": [
+          "string",
+          "..."
+        ]
+      }
+    },
+    "policy": "student-friendly: 1 primary + ≤2 alternatives; Cyrillic-only; POS-matched; promote modern also over archaic main; promote also→main when also matches OALD definition sense; promote also→main when also matches English headword primary sense",
+    "with_main": 5906,
+    "empty_main": 0,
+    "curated": 646,
+    "promoted_also_to_main": 0,
+    "promoted_by_definition": 0,
+    "promoted_by_lexicon": 1,
+    "coverage_pct": 100.0
+  }
 }

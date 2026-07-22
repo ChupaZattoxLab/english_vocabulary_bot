@@ -50,6 +50,7 @@ SCHEMA = [
     "example",
     "audio_source_us",
     "audio_source_gb",
+    "translations",
 ]
 
 # Cambridge slug when it differs from naive lowercasing of word_gb
@@ -279,8 +280,14 @@ def write_outputs(rows: list[dict]) -> None:
         w.writeheader()
         for r in rows:
             row = {k: r.get(k) for k in SCHEMA}
-            for lk in ("ipa_us", "ipa_gb", "audio_source_us", "audio_source_gb"):
-                row[lk] = json.dumps(row[lk], ensure_ascii=False)
+            for lk in (
+                "ipa_us",
+                "ipa_gb",
+                "audio_source_us",
+                "audio_source_gb",
+                "translations",
+            ):
+                row[lk] = json.dumps(row.get(lk), ensure_ascii=False)
             w.writerow(row)
     clean = [{k: r.get(k) for k in SCHEMA} for r in rows]
     JSON_PATH.write_text(

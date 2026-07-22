@@ -74,6 +74,7 @@ SCHEMA_COLS = [
     "example",
     "audio_source_us",
     "audio_source_gb",
+    "translations",
 ]
 
 USER_AGENT = (
@@ -474,6 +475,7 @@ def entry_to_row(entry, source_url: str = "") -> dict:
         "example": entry.example,
         "audio_source_us": entry.audio_source_us,
         "audio_source_gb": entry.audio_source_gb,
+        "translations": entry.translations if getattr(entry, "translations", None) else {"ru": []},
         "_source_url": source_url or entry.source_url,
         "_entry_id": entry.entry_id,
     }
@@ -494,8 +496,9 @@ def write_outputs(records: list[dict], meta_extra: dict) -> None:
                 "ipa_gb",
                 "audio_source_us",
                 "audio_source_gb",
+                "translations",
             ):
-                row[list_key] = json.dumps(row[list_key], ensure_ascii=False)
+                row[list_key] = json.dumps(row.get(list_key), ensure_ascii=False)
             w.writerow(row)
 
     json_path = OUT_DIR / "words.json"

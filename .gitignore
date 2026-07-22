@@ -10,11 +10,17 @@ source/esdb/
 # IPA dictionaries (open-dict-data/ipa-dict)
 source/ipa/
 
-# OALD definition-page HTML cache
-source/oald_html/
+# Mueller EN–RU dictd dump (scripts/enrich_mueller_translations.py)
+source/mueller/
 
-# Cambridge Dictionary HTML cache
+# OALD / Cambridge definition-page HTML caches (and local archives)
+source/oald_html/
 source/cambridge_html/
+
+# Generated QA / intermediate translation artefacts (rebuild via scripts)
+data/oald/lex_promote_candidates.json
+data/oald/translation_quality_audit.json
+data/oald/translation_quality_slim.json
 
 # Python
 scripts/__pycache__/
