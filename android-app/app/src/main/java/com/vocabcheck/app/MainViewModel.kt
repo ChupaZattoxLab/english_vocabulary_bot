@@ -1,6 +1,7 @@
 package com.vocabcheck.app
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,18 +9,21 @@ import androidx.lifecycle.viewModelScope
 import com.vocabcheck.app.data.ReviewStatus
 import com.vocabcheck.app.data.WordEntry
 import com.vocabcheck.app.data.WordRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 data class UiState(
     val loaded: Boolean = false,
     val pending: List<WordEntry> = emptyList(),
     val needsEdit: List<WordEntry> = emptyList(),
+    val okWords: List<WordEntry> = emptyList(),
     val okCount: Int = 0,
     val totalCount: Int = 0,
     val allOk: Boolean = false,
@@ -45,11 +49,13 @@ class MainViewModel(
         canUndo,
         message,
     ) { words, loaded, editId, undo, msg ->
+        val okWords = words.filter { it.status == ReviewStatus.OK }
         UiState(
             loaded = loaded,
             pending = words.filter { it.status == ReviewStatus.PENDING },
             needsEdit = words.filter { it.status == ReviewStatus.NEEDS_EDIT },
-            okCount = words.count { it.status == ReviewStatus.OK },
+            okWords = okWords,
+            okCount = okWords.size,
             totalCount = words.size,
             allOk = words.isNotEmpty() && words.all { it.status == ReviewStatus.OK },
             selectedEditId = editId,
@@ -65,6 +71,8 @@ class MainViewModel(
     init {
         viewModelScope.launch { repository.load() }
     }
+
+    fun findWord(id: Int): WordEntry? = repository.findById(id)
 
     fun approve(id: Int) {
         pushUndo(id) ?: return
@@ -90,18 +98,24 @@ class MainViewModel(
             message.value = "Основной перевод обязателен"
             return
         }
-        val queue = repository.needsEditWords()
-        val idx = queue.indexOfFirst { it.id == id }
-        val nextId = queue.getOrNull(idx + 1)?.id
+        val current = repository.findById(id) ?: return
+        val wasNeedsEdit = current.status == ReviewStatus.NEEDS_EDIT
+        val nextId = if (wasNeedsEdit) {
+            val queue = repository.needsEditWords()
+            val idx = queue.indexOfFirst { it.id == id }
+            queue.getOrNull(idx + 1)?.id
+        } else {
+            null
+        }
 
         pushUndo(id) ?: return
         repository.saveEdit(id, main, also, markOk = true)
 
         selectedEditId.value = nextId
-        message.value = if (nextId != null) {
-            "Сохранено · следующее слово"
-        } else {
-            "Сохранено · правок больше нет"
+        message.value = when {
+            nextId != null -> "Сохранено · следующее слово"
+            wasNeedsEdit -> "Сохранено · правок больше нет"
+            else -> "Сохранено"
         }
     }
 
@@ -109,7 +123,7 @@ class MainViewModel(
         val previous = undoStack.removeLastOrNull() ?: return
         canUndo.value = undoStack.isNotEmpty()
         repository.restoreWord(previous)
-        if (previous.status == ReviewStatus.NEEDS_EDIT) {
+        if (previous.status == ReviewStatus.NEEDS_EDIT || previous.status == ReviewStatus.OK) {
             selectedEditId.value = previous.id
         }
         message.value = "Отменено: ${previous.word}"
@@ -141,6 +155,30 @@ class MainViewModel(
             "Экспорт готов: $ok/$total OK (прогресс неполный)"
         }
         return file
+    }
+
+    fun importFromUri(uri: Uri) {
+        viewModelScope.launch {
+            val result = runCatching {
+                val raw = withContext(Dispatchers.IO) {
+                    getApplication<Application>().contentResolver
+                        .openInputStream(uri)
+                        ?.bufferedReader()
+                        ?.use { it.readText() }
+                        ?: error("Не удалось прочитать файл")
+                }
+                repository.importExportJson(raw)
+            }
+            result.onSuccess { imported ->
+                selectedEditId.value = null
+                undoStack.clear()
+                canUndo.value = false
+                message.value =
+                    "Импорт: обновлено ${imported.updated} из ${imported.importedCount} · OK ${imported.okCount}"
+            }.onFailure {
+                message.value = "Ошибка импорта: ${it.message ?: "неверный JSON"}"
+            }
+        }
     }
 
     private fun pushUndo(id: Int): WordEntry? {

@@ -203,6 +203,90 @@ fun EditListTab(
         return
     }
 
+    WordList(
+        words = needsEdit,
+        header = "К правке: ${needsEdit.size}",
+        onOpen = onOpen,
+    )
+}
+
+@Composable
+fun OkListTab(
+    okWords: List<WordEntry>,
+    onOpen: (Int) -> Unit,
+) {
+    var query by remember { mutableStateOf("") }
+    val filtered = remember(okWords, query) {
+        val q = query.trim()
+        if (q.isEmpty()) {
+            okWords
+        } else {
+            okWords.filter { word ->
+                word.word.contains(q, ignoreCase = true) ||
+                    word.main.contains(q, ignoreCase = true) ||
+                    word.also.any { it.contains(q, ignoreCase = true) }
+            }
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            label = { Text("Поиск по слову или переводу") },
+            singleLine = true,
+            shape = RoundedCornerShape(14.dp),
+        )
+
+        if (okWords.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "Пока нет OK-слов",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Свайпни вправо на проверке или сохрани правку.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                )
+            }
+        } else if (filtered.isEmpty()) {
+            Text(
+                text = "Ничего не найдено",
+                modifier = Modifier.padding(24.dp),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
+            )
+        } else {
+            WordList(
+                words = filtered,
+                header = if (query.isBlank()) {
+                    "OK: ${okWords.size}"
+                } else {
+                    "Найдено: ${filtered.size} из ${okWords.size}"
+                },
+                onOpen = onOpen,
+            )
+        }
+    }
+}
+
+@Composable
+private fun WordList(
+    words: List<WordEntry>,
+    header: String,
+    onOpen: (Int) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
@@ -210,14 +294,14 @@ fun EditListTab(
     ) {
         item {
             Text(
-                text = "К правке: ${needsEdit.size}",
+                text = header,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
             )
             Spacer(Modifier.height(4.dp))
         }
-        items(needsEdit, key = { it.id }) { word ->
+        items(words, key = { it.id }) { word ->
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface,
@@ -246,7 +330,7 @@ fun EditListTab(
                     }
                     Icon(
                         Icons.Default.ChevronRight,
-                        contentDescription = "Открыть правку",
+                        contentDescription = "Открыть",
                         tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
                     )
                 }

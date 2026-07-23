@@ -123,6 +123,45 @@ class WordRepository(private val context: Context) {
         }
     }
 
+    suspend fun importExportJson(raw: String): ImportResult = withContext(Dispatchers.IO) {
+        val imported = json.decodeFromString<List<ExportWord>>(raw)
+        val byWordPos = LinkedHashMap<Pair<String, String>, ExportWord>()
+        val byWord = LinkedHashMap<String, MutableList<ExportWord>>()
+        for (item in imported) {
+            val wordKey = item.word.trim().lowercase()
+            val posKey = item.pos.trim().lowercase()
+            byWordPos[wordKey to posKey] = item
+            byWord.getOrPut(wordKey) { mutableListOf() }.add(item)
+        }
+
+        var updated = 0
+        _words.update { list ->
+            list.map { word ->
+                val wordKey = word.word.trim().lowercase()
+                val posKey = word.pos.trim().lowercase()
+                val match = byWordPos[wordKey to posKey]
+                    ?: byWord[wordKey]?.singleOrNull()
+                    ?: byWord[wordKey]?.firstOrNull { it.pos.isBlank() || word.pos.isBlank() }
+                if (match == null) {
+                    word
+                } else {
+                    updated++
+                    word.copy(
+                        main = match.translations.ru.main,
+                        also = match.translations.ru.also,
+                        status = match.status,
+                    )
+                }
+            }
+        }
+        persist()
+        ImportResult(
+            updated = updated,
+            importedCount = imported.size,
+            okCount = _words.value.count { it.status == ReviewStatus.OK },
+        )
+    }
+
     private fun updateWord(id: Int, transform: (WordEntry) -> WordEntry) {
         _words.update { list ->
             list.map { if (it.id == id) transform(it) else it }

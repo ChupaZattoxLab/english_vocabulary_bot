@@ -41,3 +41,9 @@ data class ExportRu(
 data class ProgressSnapshot(
     val words: List<WordEntry>,
 )
+
+data class ImportResult(
+    val updated: Int,
+    val importedCount: Int,
+    val okCount: Int,
+)

@@ -1,11 +1,14 @@
 package com.vocabcheck.app.ui
 
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.material3.AlertDialog
@@ -14,10 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vocabcheck.app.MainViewModel
+import com.vocabcheck.app.data.ReviewStatus
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,9 +51,24 @@ fun MainScreen(viewModel: MainViewModel) {
     var showResetDialog by remember { mutableStateOf(false) }
     var showUndoDialog by remember { mutableStateOf(false) }
     var showExportDialog by remember { mutableStateOf(false) }
+    var showImportDialog by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }
+            viewModel.importFromUri(uri)
+        }
+    }
 
     fun shareExport() {
         scope.launch {
@@ -76,13 +95,19 @@ fun MainScreen(viewModel: MainViewModel) {
         viewModel.clearMessage()
     }
 
-    val editingWord = state.needsEdit.firstOrNull { it.id == state.selectedEditId }
+    val editingWord = state.selectedEditId?.let { viewModel.findWord(it) }
 
     if (editingWord != null) {
-        val index = state.needsEdit.indexOfFirst { it.id == editingWord.id }
+        val inNeedsEdit = editingWord.status == ReviewStatus.NEEDS_EDIT
+        val list = if (inNeedsEdit) state.needsEdit else state.okWords
+        val index = list.indexOfFirst { it.id == editingWord.id }.coerceAtLeast(0)
         EditWordScreen(
             word = editingWord,
-            positionLabel = "Слово ${index + 1} из ${state.needsEdit.size}",
+            positionLabel = if (inNeedsEdit) {
+                "Правка · слово ${index + 1} из ${list.size}"
+            } else {
+                "OK · повторная проверка"
+            },
             canUndo = state.canUndo,
             onBack = { viewModel.selectForEdit(null) },
             onUndo = viewModel::undo,
@@ -115,6 +140,12 @@ fun MainScreen(viewModel: MainViewModel) {
                         Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = "Отменить")
                     }
                     IconButton(
+                        onClick = { showImportDialog = true },
+                        enabled = state.loaded,
+                    ) {
+                        Icon(Icons.Default.FileDownload, contentDescription = "Импорт")
+                    }
+                    IconButton(
                         onClick = { showExportDialog = true },
                         enabled = state.loaded && state.totalCount > 0,
                     ) {
@@ -136,7 +167,10 @@ fun MainScreen(viewModel: MainViewModel) {
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            TabRow(selectedTabIndex = tabIndex) {
+            ScrollableTabRow(
+                selectedTabIndex = tabIndex,
+                edgePadding = 12.dp,
+            ) {
                 Tab(
                     selected = tabIndex == 0,
                     onClick = { tabIndex = 0 },
@@ -146,6 +180,11 @@ fun MainScreen(viewModel: MainViewModel) {
                     selected = tabIndex == 1,
                     onClick = { tabIndex = 1 },
                     text = { Text("Правки (${state.needsEdit.size})") },
+                )
+                Tab(
+                    selected = tabIndex == 2,
+                    onClick = { tabIndex = 2 },
+                    text = { Text("OK (${state.okCount})") },
                 )
             }
 
@@ -162,12 +201,40 @@ fun MainScreen(viewModel: MainViewModel) {
                     onApprove = viewModel::approve,
                     onReject = viewModel::reject,
                 )
-                else -> EditListTab(
+                1 -> EditListTab(
                     needsEdit = state.needsEdit,
+                    onOpen = viewModel::selectForEdit,
+                )
+                else -> OkListTab(
+                    okWords = state.okWords,
                     onOpen = viewModel::selectForEdit,
                 )
             }
         }
+    }
+
+    if (showImportDialog) {
+        AlertDialog(
+            onDismissRequest = { showImportDialog = false },
+            title = { Text("Импорт словаря") },
+            text = {
+                Text(
+                    "Выбери JSON из экспорта (vocab_checked.json). " +
+                        "Переводы и статусы совпавших слов будут обновлены поверх текущего прогресса.",
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showImportDialog = false
+                        importLauncher.launch(arrayOf("application/json", "text/*", "*/*"))
+                    },
+                ) { Text("Выбрать файл") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showImportDialog = false }) { Text("Отмена") }
+            },
+        )
     }
 
     if (showExportDialog) {
