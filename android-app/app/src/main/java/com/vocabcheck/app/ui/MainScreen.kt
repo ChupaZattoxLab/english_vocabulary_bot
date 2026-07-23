@@ -52,6 +52,7 @@ fun MainScreen(viewModel: MainViewModel) {
     var showUndoDialog by remember { mutableStateOf(false) }
     var showExportDialog by remember { mutableStateOf(false) }
     var showImportDialog by remember { mutableStateOf(false) }
+    var showPendingPicker by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -116,6 +117,19 @@ fun MainScreen(viewModel: MainViewModel) {
             },
             onSwap = viewModel::swapOnCard,
             snackbarHostState = snackbar,
+        )
+        return
+    }
+
+    if (showPendingPicker) {
+        PendingPickerScreen(
+            pending = state.pending,
+            onBack = { showPendingPicker = false },
+            onSelect = { id ->
+                viewModel.jumpToPending(id)
+                showPendingPicker = false
+                tabIndex = 0
+            },
         )
         return
     }
@@ -195,11 +209,13 @@ fun MainScreen(viewModel: MainViewModel) {
                 )
             } else when (tabIndex) {
                 0 -> ReviewTab(
-                    pending = state.pending,
+                    current = state.currentPending,
+                    pendingCount = state.pending.size,
                     okCount = state.okCount,
                     totalCount = state.totalCount,
                     onApprove = viewModel::approve,
                     onReject = viewModel::reject,
+                    onPickWord = { showPendingPicker = true },
                 )
                 1 -> EditListTab(
                     needsEdit = state.needsEdit,

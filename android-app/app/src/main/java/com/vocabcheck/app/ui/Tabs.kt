@@ -1,5 +1,6 @@
 package com.vocabcheck.app.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,12 +46,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,14 +62,14 @@ import com.vocabcheck.app.data.WordEntry
 
 @Composable
 fun ReviewTab(
-    pending: List<WordEntry>,
+    current: WordEntry?,
+    pendingCount: Int,
     okCount: Int,
     totalCount: Int,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
+    onPickWord: () -> Unit,
 ) {
-    val current = pending.firstOrNull()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,10 +82,18 @@ fun ReviewTab(
             fontWeight = FontWeight.SemiBold,
         )
         Text(
-            text = "В очереди: ${pending.size}",
+            text = "В очереди: $pendingCount",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
         )
+        Spacer(Modifier.height(8.dp))
+        OutlinedButton(
+            onClick = onPickWord,
+            enabled = pendingCount > 0,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("Выбрать слово из непроверенных")
+        }
         Spacer(Modifier.height(12.dp))
 
         if (current == null) {
@@ -171,6 +179,129 @@ fun ReviewTab(
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 24.dp),
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PendingPickerScreen(
+    pending: List<WordEntry>,
+    onBack: () -> Unit,
+    onSelect: (Int) -> Unit,
+) {
+    var query by remember { mutableStateOf("") }
+    val filtered = remember(pending, query) {
+        val q = query.trim()
+        if (q.isEmpty()) {
+            pending
+        } else {
+            pending.filter { word ->
+                word.word.contains(q, ignoreCase = true) ||
+                    word.main.contains(q, ignoreCase = true) ||
+                    word.also.any { it.contains(q, ignoreCase = true) }
+            }
+        }
+    }
+
+    BackHandler { onBack() }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text("Непроверенные", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Выбери слово — проверка продолжится с него",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
+            )
+        },
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                label = { Text("Поиск") },
+                singleLine = true,
+                shape = RoundedCornerShape(14.dp),
+            )
+
+            if (filtered.isEmpty()) {
+                Text(
+                    text = if (pending.isEmpty()) "Нет непроверенных слов" else "Ничего не найдено",
+                    modifier = Modifier.padding(24.dp),
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    item {
+                        Text(
+                            text = "Найдено: ${filtered.size}",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                        )
+                    }
+                    items(filtered, key = { it.id }) { word ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSelect(word.id) },
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 14.dp, vertical = 14.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(word.word, fontWeight = FontWeight.SemiBold)
+                                    if (word.main.isNotBlank()) {
+                                        Text(
+                                            text = word.main,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                            style = MaterialTheme.typography.bodyMedium,
+                                        )
+                                    }
+                                }
+                                Icon(
+                                    Icons.Default.ChevronRight,
+                                    contentDescription = "Выбрать",
+                                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

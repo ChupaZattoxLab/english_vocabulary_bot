@@ -24,6 +24,7 @@ data class UiState(
     val pending: List<WordEntry> = emptyList(),
     val needsEdit: List<WordEntry> = emptyList(),
     val okWords: List<WordEntry> = emptyList(),
+    val currentPending: WordEntry? = null,
     val okCount: Int = 0,
     val totalCount: Int = 0,
     val allOk: Boolean = false,
@@ -38,27 +39,35 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
     private val selectedEditId = MutableStateFlow<Int?>(null)
+    private val reviewCursorId = MutableStateFlow<Int?>(null)
     private val message = MutableStateFlow<String?>(null)
     private val canUndo = MutableStateFlow(false)
     private val undoStack = ArrayDeque<WordEntry>()
 
     val uiState: StateFlow<UiState> = combine(
-        repository.words,
-        repository.loaded,
-        selectedEditId,
+        combine(
+            repository.words,
+            repository.loaded,
+            selectedEditId,
+            reviewCursorId,
+        ) { words, loaded, editId, cursor ->
+            ReviewSlice(words, loaded, editId, cursor)
+        },
         canUndo,
         message,
-    ) { words, loaded, editId, undo, msg ->
-        val okWords = words.filter { it.status == ReviewStatus.OK }
+    ) { slice, undo, msg ->
+        val pending = slice.words.filter { it.status == ReviewStatus.PENDING }
+        val okWords = slice.words.filter { it.status == ReviewStatus.OK }
         UiState(
-            loaded = loaded,
-            pending = words.filter { it.status == ReviewStatus.PENDING },
-            needsEdit = words.filter { it.status == ReviewStatus.NEEDS_EDIT },
+            loaded = slice.loaded,
+            pending = pending,
+            needsEdit = slice.words.filter { it.status == ReviewStatus.NEEDS_EDIT },
             okWords = okWords,
+            currentPending = resolveCurrentPending(pending, slice.cursor),
             okCount = okWords.size,
-            totalCount = words.size,
-            allOk = words.isNotEmpty() && words.all { it.status == ReviewStatus.OK },
-            selectedEditId = editId,
+            totalCount = slice.words.size,
+            allOk = slice.words.isNotEmpty() && slice.words.all { it.status == ReviewStatus.OK },
+            selectedEditId = slice.editId,
             canUndo = undo,
             message = msg,
         )
@@ -74,13 +83,21 @@ class MainViewModel(
 
     fun findWord(id: Int): WordEntry? = repository.findById(id)
 
+    fun jumpToPending(id: Int) {
+        val word = repository.findById(id) ?: return
+        if (word.status != ReviewStatus.PENDING) return
+        reviewCursorId.value = id
+    }
+
     fun approve(id: Int) {
         pushUndo(id) ?: return
+        advanceCursorAfter(id)
         repository.markOk(id)
     }
 
     fun reject(id: Int) {
         pushUndo(id) ?: return
+        advanceCursorAfter(id)
         repository.markNeedsEdit(id)
     }
 
@@ -123,7 +140,10 @@ class MainViewModel(
         val previous = undoStack.removeLastOrNull() ?: return
         canUndo.value = undoStack.isNotEmpty()
         repository.restoreWord(previous)
-        if (previous.status == ReviewStatus.NEEDS_EDIT || previous.status == ReviewStatus.OK) {
+        if (previous.status == ReviewStatus.PENDING) {
+            reviewCursorId.value = previous.id
+            selectedEditId.value = null
+        } else if (previous.status == ReviewStatus.NEEDS_EDIT || previous.status == ReviewStatus.OK) {
             selectedEditId.value = previous.id
         }
         message.value = "Отменено: ${previous.word}"
@@ -132,6 +152,7 @@ class MainViewModel(
     fun resetProgress() {
         repository.resetAll()
         selectedEditId.value = null
+        reviewCursorId.value = null
         undoStack.clear()
         canUndo.value = false
         message.value = "Прогресс сброшен"
@@ -171,6 +192,7 @@ class MainViewModel(
             }
             result.onSuccess { imported ->
                 selectedEditId.value = null
+                reviewCursorId.value = null
                 undoStack.clear()
                 canUndo.value = false
                 message.value =
@@ -179,6 +201,13 @@ class MainViewModel(
                 message.value = "Ошибка импорта: ${it.message ?: "неверный JSON"}"
             }
         }
+    }
+
+    private fun advanceCursorAfter(id: Int) {
+        val before = repository.pendingWords()
+        val idx = before.indexOfFirst { it.id == id }
+        val nextId = before.getOrNull(idx + 1)?.id
+        reviewCursorId.value = nextId
     }
 
     private fun pushUndo(id: Int): WordEntry? {
@@ -192,6 +221,14 @@ class MainViewModel(
     }
 
     companion object {
+        fun resolveCurrentPending(pending: List<WordEntry>, cursor: Int?): WordEntry? {
+            if (pending.isEmpty()) return null
+            if (cursor == null) return pending.first()
+            val atCursor = pending.firstOrNull { it.id == cursor }
+            if (atCursor != null) return atCursor
+            return pending.firstOrNull { it.id > cursor } ?: pending.first()
+        }
+
         fun factory(application: Application): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
@@ -201,3 +238,10 @@ class MainViewModel(
             }
     }
 }
+
+private data class ReviewSlice(
+    val words: List<WordEntry>,
+    val loaded: Boolean,
+    val editId: Int?,
+    val cursor: Int?,
+)
