@@ -9,20 +9,50 @@ enum class ReviewStatus {
 }
 
 @Serializable
+data class SensePair(
+    val definition: String = "",
+    val example: String = "",
+)
+
+@Serializable
 data class WordEntry(
     val id: Int,
-    val word: String,
+    val word: String = "",
+    val wordUs: String = "",
+    val wordGb: String = "",
     val pos: String = "",
+    val cefr: String = "",
+    val definitionUrlOxford: String = "",
+    val definitionUrlCambridge: String = "",
+    val ipaUs: List<String> = emptyList(),
+    val ipaGb: List<String> = emptyList(),
+    val definition: String = "",
+    val example: String = "",
+    val extraSenses: List<SensePair> = emptyList(),
+    val audioUs: List<String> = emptyList(),
+    val audioGb: List<String> = emptyList(),
     val main: String = "",
     val also: List<String> = emptyList(),
     val status: ReviewStatus = ReviewStatus.PENDING,
-)
+) {
+    fun headword(): String = wordUs.ifBlank { word.ifBlank { wordGb } }
+}
 
 @Serializable
 data class ExportWord(
     val word: String,
+    val wordUs: String = "",
+    val wordGb: String = "",
     val pos: String = "",
+    val cefr: String = "",
     val status: ReviewStatus = ReviewStatus.PENDING,
+    val definitionUrlOxford: String = "",
+    val definitionUrlCambridge: String = "",
+    val ipaUs: List<String> = emptyList(),
+    val ipaGb: List<String> = emptyList(),
+    val definition: String = "",
+    val example: String = "",
+    val extraSenses: List<SensePair> = emptyList(),
     val translations: ExportTranslations,
 )
 
@@ -46,4 +76,12 @@ data class ImportResult(
     val updated: Int,
     val importedCount: Int,
     val okCount: Int,
+)
+
+data class WordEditPayload(
+    val main: String,
+    val also: List<String>,
+    val definition: String,
+    val example: String,
+    val extraSenses: List<SensePair>,
 )

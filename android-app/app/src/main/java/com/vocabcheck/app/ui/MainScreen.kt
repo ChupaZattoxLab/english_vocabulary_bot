@@ -112,8 +112,8 @@ fun MainScreen(viewModel: MainViewModel) {
             canUndo = state.canUndo,
             onBack = { viewModel.selectForEdit(null) },
             onUndo = viewModel::undo,
-            onSave = { id, main, also ->
-                viewModel.saveEdit(id, main, also)
+            onSave = { id, payload ->
+                viewModel.saveEdit(id, payload)
             },
             onSwap = viewModel::swapOnCard,
             snackbarHostState = snackbar,

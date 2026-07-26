@@ -58,6 +58,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.vocabcheck.app.data.SensePair
+import com.vocabcheck.app.data.WordEditPayload
 import com.vocabcheck.app.data.WordEntry
 
 @Composable
@@ -124,7 +126,7 @@ fun ReviewTab(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp),
+                    .height(520.dp),
             ) {
                 SwipeableWordCard(
                     word = current,
@@ -197,7 +199,7 @@ fun PendingPickerScreen(
             pending
         } else {
             pending.filter { word ->
-                word.word.contains(q, ignoreCase = true) ||
+                word.headword().contains(q, ignoreCase = true) ||
                     word.main.contains(q, ignoreCase = true) ||
                     word.also.any { it.contains(q, ignoreCase = true) }
             }
@@ -281,7 +283,7 @@ fun PendingPickerScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(word.word, fontWeight = FontWeight.SemiBold)
+                                    Text(word.headword(), fontWeight = FontWeight.SemiBold)
                                     if (word.main.isNotBlank()) {
                                         Text(
                                             text = word.main,
@@ -353,7 +355,7 @@ fun OkListTab(
             okWords
         } else {
             okWords.filter { word ->
-                word.word.contains(q, ignoreCase = true) ||
+                word.headword().contains(q, ignoreCase = true) ||
                     word.main.contains(q, ignoreCase = true) ||
                     word.also.any { it.contains(q, ignoreCase = true) }
             }
@@ -448,7 +450,7 @@ private fun WordList(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(word.word, fontWeight = FontWeight.SemiBold)
+                        Text(word.headword(), fontWeight = FontWeight.SemiBold)
                         if (word.main.isNotBlank()) {
                             Text(
                                 text = word.main,
@@ -478,7 +480,7 @@ fun EditWordScreen(
     canUndo: Boolean,
     onBack: () -> Unit,
     onUndo: () -> Unit,
-    onSave: (id: Int, main: String, also: List<String>) -> Unit,
+    onSave: (id: Int, payload: WordEditPayload) -> Unit,
     onSwap: (Int) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
@@ -491,7 +493,7 @@ fun EditWordScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Правка: ${word.word}", fontWeight = FontWeight.Bold)
+                        Text("Правка: ${word.headword()}", fontWeight = FontWeight.Bold)
                         Text(
                             text = positionLabel,
                             style = MaterialTheme.typography.bodySmall,
@@ -551,7 +553,7 @@ fun EditWordScreen(
 @Composable
 private fun EditForm(
     word: WordEntry,
-    onSave: (id: Int, main: String, also: List<String>) -> Unit,
+    onSave: (id: Int, payload: WordEditPayload) -> Unit,
     onSwap: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -561,6 +563,13 @@ private fun EditForm(
             addAll(word.also.ifEmpty { listOf("") })
         }
     }
+    var definition by remember(word.id) { mutableStateOf(word.definition) }
+    var example by remember(word.id) { mutableStateOf(word.example) }
+    val extraSenses = remember(word.id) {
+        mutableStateListOf<SensePair>().apply {
+            addAll(word.extraSenses)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -568,13 +577,17 @@ private fun EditForm(
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
-            text = word.word,
+            text = word.headword(),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
         )
-        if (word.pos.isNotBlank()) {
+        val meta = listOfNotNull(
+            word.pos.takeIf { it.isNotBlank() },
+            word.cefr.takeIf { it.isNotBlank() }?.uppercase(),
+        ).joinToString(" · ")
+        if (meta.isNotBlank()) {
             Text(
-                text = word.pos,
+                text = meta,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f),
             )
@@ -649,13 +662,83 @@ private fun EditForm(
             Text("Поменять основной и первый доп.")
         }
 
+        Spacer(Modifier.height(20.dp))
+        Text("Definition / Example", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = definition,
+            onValueChange = { definition = it },
+            label = { Text("Definition") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2,
+            shape = RoundedCornerShape(14.dp),
+        )
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = example,
+            onValueChange = { example = it },
+            label = { Text("Example") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2,
+            shape = RoundedCornerShape(14.dp),
+        )
+
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("Доп. definition + example", fontWeight = FontWeight.SemiBold)
+            IconButton(onClick = { extraSenses.add(SensePair()) }) {
+                Icon(Icons.Default.Add, contentDescription = "Добавить sense")
+            }
+        }
+
+        extraSenses.forEachIndexed { index, sense ->
+            Text(
+                text = "Доп. ${index + 1}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(Modifier.height(6.dp))
+            OutlinedTextField(
+                value = sense.definition,
+                onValueChange = { extraSenses[index] = sense.copy(definition = it) },
+                label = { Text("Definition ${index + 1}") },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 2,
+                shape = RoundedCornerShape(14.dp),
+            )
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(
+                value = sense.example,
+                onValueChange = { extraSenses[index] = sense.copy(example = it) },
+                label = { Text("Example ${index + 1}") },
+                modifier = Modifier.fillMaxWidth(),
+                minLines = 2,
+                shape = RoundedCornerShape(14.dp),
+            )
+            TextButton(onClick = { extraSenses.removeAt(index) }) {
+                Icon(Icons.Default.Delete, contentDescription = null)
+                Spacer(Modifier.width(6.dp))
+                Text("Удалить доп. ${index + 1}")
+            }
+            Spacer(Modifier.height(8.dp))
+        }
+
         Spacer(Modifier.height(12.dp))
         Button(
             onClick = {
                 onSave(
                     word.id,
-                    main,
-                    alsoFields.filter { it.isNotBlank() },
+                    WordEditPayload(
+                        main = main,
+                        also = alsoFields.filter { it.isNotBlank() },
+                        definition = definition,
+                        example = example,
+                        extraSenses = extraSenses.toList(),
+                    ),
                 )
             },
             modifier = Modifier.fillMaxWidth(),

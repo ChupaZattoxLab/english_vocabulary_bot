@@ -29,8 +29,9 @@ class WordRepository(private val context: Context) {
 
     suspend fun load() = withContext(Dispatchers.IO) {
         if (_loaded.value) return@withContext
+        val bundled = loadBundled()
         val restored = restoreProgress()
-        _words.value = restored ?: loadBundled()
+        _words.value = if (restored != null) mergeProgress(bundled, restored) else bundled
         _loaded.value = true
     }
 
@@ -44,6 +45,21 @@ class WordRepository(private val context: Context) {
         return runCatching {
             json.decodeFromString<ProgressSnapshot>(progressFile.readText()).words
         }.getOrNull()
+    }
+
+    private fun mergeProgress(bundled: List<WordEntry>, saved: List<WordEntry>): List<WordEntry> {
+        val savedById = saved.associateBy { it.id }
+        return bundled.map { base ->
+            val s = savedById[base.id] ?: return@map base
+            base.copy(
+                main = s.main,
+                also = s.also,
+                status = s.status,
+                definition = s.definition.ifBlank { base.definition },
+                example = s.example.ifBlank { base.example },
+                extraSenses = s.extraSenses,
+            )
+        }
     }
 
     private fun persist() {
@@ -68,10 +84,15 @@ class WordRepository(private val context: Context) {
         word.copy(main = firstAlso, also = remaining)
     }
 
-    fun saveEdit(id: Int, main: String, also: List<String>, markOk: Boolean) = updateWord(id) { word ->
+    fun saveEdit(id: Int, payload: WordEditPayload, markOk: Boolean) = updateWord(id) { word ->
         word.copy(
-            main = main.trim(),
-            also = also.map { it.trim() }.filter { it.isNotEmpty() },
+            main = payload.main.trim(),
+            also = payload.also.map { it.trim() }.filter { it.isNotEmpty() },
+            definition = payload.definition.trim(),
+            example = payload.example.trim(),
+            extraSenses = payload.extraSenses
+                .map { SensePair(it.definition.trim(), it.example.trim()) }
+                .filter { it.definition.isNotEmpty() || it.example.isNotEmpty() },
             status = if (markOk) ReviewStatus.OK else ReviewStatus.NEEDS_EDIT,
         )
     }
@@ -102,9 +123,19 @@ class WordRepository(private val context: Context) {
     fun buildExportJson(): String {
         val payload = _words.value.map { word ->
             ExportWord(
-                word = word.word,
+                word = word.headword(),
+                wordUs = word.wordUs.ifBlank { word.word },
+                wordGb = word.wordGb.ifBlank { word.word },
                 pos = word.pos,
+                cefr = word.cefr,
                 status = word.status,
+                definitionUrlOxford = word.definitionUrlOxford,
+                definitionUrlCambridge = word.definitionUrlCambridge,
+                ipaUs = word.ipaUs,
+                ipaGb = word.ipaGb,
+                definition = word.definition,
+                example = word.example,
+                extraSenses = word.extraSenses,
                 translations = ExportTranslations(
                     ru = ExportRu(
                         main = word.main,
@@ -123,6 +154,25 @@ class WordRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Snapshot in app files (same JSON shape as export).
+     * Skips if this milestone file already exists.
+     */
+    suspend fun writeAutoBackupIfNeeded(okMilestone: Int): File? = withContext(Dispatchers.IO) {
+        if (okMilestone < 100 || okMilestone % 100 != 0) return@withContext null
+        val dir = File(context.filesDir, "auto_backups").apply { mkdirs() }
+        val file = File(dir, "vocab_backup_${okMilestone}ok.json")
+        if (file.exists()) return@withContext null
+        file.writeText(buildExportJson())
+        // Keep only the latest few milestones to limit disk use
+        dir.listFiles()
+            ?.filter { it.name.startsWith("vocab_backup_") && it.name.endsWith("ok.json") }
+            ?.sortedByDescending { it.lastModified() }
+            ?.drop(5)
+            ?.forEach { it.delete() }
+        file
+    }
+
     suspend fun importExportJson(raw: String): ImportResult = withContext(Dispatchers.IO) {
         val imported = json.decodeFromString<List<ExportWord>>(raw)
         val byWordPos = LinkedHashMap<Pair<String, String>, ExportWord>()
@@ -137,7 +187,7 @@ class WordRepository(private val context: Context) {
         var updated = 0
         _words.update { list ->
             list.map { word ->
-                val wordKey = word.word.trim().lowercase()
+                val wordKey = word.headword().trim().lowercase()
                 val posKey = word.pos.trim().lowercase()
                 val match = byWordPos[wordKey to posKey]
                     ?: byWord[wordKey]?.singleOrNull()
@@ -150,6 +200,9 @@ class WordRepository(private val context: Context) {
                         main = match.translations.ru.main,
                         also = match.translations.ru.also,
                         status = match.status,
+                        definition = match.definition.ifBlank { word.definition },
+                        example = match.example.ifBlank { word.example },
+                        extraSenses = match.extraSenses.ifEmpty { word.extraSenses },
                     )
                 }
             }

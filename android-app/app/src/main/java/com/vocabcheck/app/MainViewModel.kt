@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.vocabcheck.app.data.ReviewStatus
+import com.vocabcheck.app.data.WordEditPayload
 import com.vocabcheck.app.data.WordEntry
 import com.vocabcheck.app.data.WordRepository
 import kotlinx.coroutines.Dispatchers
@@ -93,6 +94,7 @@ class MainViewModel(
         pushUndo(id) ?: return
         advanceCursorAfter(id)
         repository.markOk(id)
+        maybeAutoBackup()
     }
 
     fun reject(id: Int) {
@@ -110,8 +112,8 @@ class MainViewModel(
         selectedEditId.value = id
     }
 
-    fun saveEdit(id: Int, main: String, also: List<String>) {
-        if (main.isBlank()) {
+    fun saveEdit(id: Int, payload: WordEditPayload) {
+        if (payload.main.isBlank()) {
             message.value = "Основной перевод обязателен"
             return
         }
@@ -126,7 +128,7 @@ class MainViewModel(
         }
 
         pushUndo(id) ?: return
-        repository.saveEdit(id, main, also, markOk = true)
+        repository.saveEdit(id, payload, markOk = true)
 
         selectedEditId.value = nextId
         message.value = when {
@@ -134,6 +136,7 @@ class MainViewModel(
             wasNeedsEdit -> "Сохранено · правок больше нет"
             else -> "Сохранено"
         }
+        maybeAutoBackup()
     }
 
     fun undo() {
@@ -200,6 +203,16 @@ class MainViewModel(
             }.onFailure {
                 message.value = "Ошибка импорта: ${it.message ?: "неверный JSON"}"
             }
+        }
+    }
+
+    private fun maybeAutoBackup() {
+        val ok = repository.okCount()
+        val milestone = (ok / 100) * 100
+        if (milestone < 100) return
+        viewModelScope.launch {
+            val file = repository.writeAutoBackupIfNeeded(milestone) ?: return@launch
+            message.value = "Автобэкап: $milestone OK → ${file.name}"
         }
     }
 
