@@ -1,0 +1,32 @@
+# Secrets
+.env
+
+# External word lists (nalgeon/words)
+source/nalgeon-words/
+
+# ESDB / SCOWL dumps
+source/esdb/
+
+# IPA dictionaries (open-dict-data/ipa-dict)
+source/ipa/
+
+# Mueller EN–RU dictd dump (scripts/enrich_mueller_translations.py)
+source/mueller/
+
+# OALD / Cambridge definition-page HTML caches (and local archives)
+source/oald_html/
+source/cambridge_html/
+
+# Generated QA / intermediate translation artefacts (rebuild via scripts)
+data/oald/lex_promote_candidates.json
+data/oald/translation_quality_audit.json
+data/oald/translation_quality_slim.json
+
+# Full local PostgreSQL dumps exceed GitHub's per-file limit. The split seed
+# parts under data/backups/*.dump.parts/ are intentionally versioned.
+data/backups/*.dump
+
+# Python
+scripts/__pycache__/
+__pycache__/
+*.pyc
