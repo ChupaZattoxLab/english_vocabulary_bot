@@ -22,6 +22,10 @@ data/oald/lex_promote_candidates.json
 data/oald/translation_quality_audit.json
 data/oald/translation_quality_slim.json
 
+# Full local PostgreSQL dumps exceed GitHub's per-file limit. The split seed
+# parts under data/backups/*.dump.parts/ are intentionally versioned.
+data/backups/*.dump
+
 # Python
 scripts/__pycache__/
 __pycache__/

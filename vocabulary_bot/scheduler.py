@@ -1,0 +1,154 @@
+"""Three-times-daily, restart-safe card scheduling."""
+
+from __future__ import annotations
+
+import asyncio
+import logging
+from collections import Counter
+from datetime import date, datetime, time, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+from aiogram import Bot
+
+from vocabulary_bot.config import BotConfig
+from vocabulary_bot.database import ActiveUser, Database
+from vocabulary_bot.delivery import CardDeliveryService
+
+
+LOGGER = logging.getLogger("vocabulary.bot.scheduler")
+
+
+def due_schedule_slots(
+    now: datetime,
+    *,
+    timezone_value: ZoneInfo,
+    send_times: tuple[time, ...],
+    grace_minutes: int,
+) -> tuple[datetime, ...]:
+    """Return due UTC slots inside the grace window, including yesterday."""
+    local_now = now.astimezone(timezone_value)
+    grace = timedelta(minutes=grace_minutes)
+    candidate_dates = (local_now.date() - timedelta(days=1), local_now.date())
+    slots: list[datetime] = []
+    for candidate_date in candidate_dates:
+        for send_time in send_times:
+            local_slot = datetime.combine(
+                candidate_date,
+                send_time,
+                tzinfo=timezone_value,
+            )
+            if local_slot <= local_now <= local_slot + grace:
+                slots.append(local_slot.astimezone(timezone.utc))
+    return tuple(sorted(slots))
+
+
+class CardScheduler:
+    def __init__(
+        self,
+        *,
+        database: Database,
+        delivery: CardDeliveryService,
+        config: BotConfig,
+    ):
+        self.database = database
+        self.delivery = delivery
+        self.config = config
+        self._stop_event = asyncio.Event()
+
+    def stop(self) -> None:
+        self._stop_event.set()
+
+    async def _deliver_to_user(
+        self,
+        bot: Bot,
+        user: ActiveUser,
+        scheduled_slot: datetime,
+        semaphore: asyncio.Semaphore,
+    ) -> str:
+        async with semaphore:
+            try:
+                outcome = await self.delivery.deliver(
+                    bot,
+                    telegram_user_id=user.telegram_user_id,
+                    chat_id=user.chat_id,
+                    scheduled_slot=scheduled_slot,
+                )
+                return outcome.status
+            except Exception:  # noqa: BLE001
+                LOGGER.exception(
+                    "Unexpected scheduled delivery error for user %s",
+                    user.telegram_user_id,
+                )
+                return "failed"
+
+    async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
+        claimed = await self.database.claim_scheduler_run(scheduled_slot)
+        if not claimed:
+            return
+        LOGGER.info("Starting scheduled delivery slot %s", scheduled_slot.isoformat())
+        attempted = delivered = failed = skipped = 0
+        error_message = ""
+        try:
+            users = await self.database.active_users()
+            attempted = len(users)
+            semaphore = asyncio.Semaphore(self.config.delivery_concurrency)
+            statuses = await asyncio.gather(
+                *(
+                    self._deliver_to_user(
+                        bot,
+                        user,
+                        scheduled_slot,
+                        semaphore,
+                    )
+                    for user in users
+                )
+            )
+            counts = Counter(statuses)
+            delivered = counts["delivered"]
+            failed = counts["failed"]
+            skipped = counts["skipped"]
+        except Exception as exc:  # noqa: BLE001
+            error_message = str(exc)
+            LOGGER.exception("Scheduled slot %s failed", scheduled_slot.isoformat())
+        finally:
+            await self.database.finish_scheduler_run(
+                scheduled_slot,
+                attempted=attempted,
+                delivered=delivered,
+                failed=failed,
+                skipped=skipped,
+                error_message=error_message,
+            )
+        LOGGER.info(
+            "Scheduled slot complete: attempted=%s delivered=%s failed=%s skipped=%s",
+            attempted,
+            delivered,
+            failed,
+            skipped,
+        )
+
+    async def run(self, bot: Bot) -> None:
+        LOGGER.info(
+            "Scheduler started: %s",
+            self.config.schedule_text,
+        )
+        while not self._stop_event.is_set():
+            try:
+                now = datetime.now(timezone.utc)
+                for scheduled_slot in due_schedule_slots(
+                    now,
+                    timezone_value=self.config.timezone,
+                    send_times=self.config.send_times,
+                    grace_minutes=self.config.schedule_grace_minutes,
+                ):
+                    await self.run_slot(bot, scheduled_slot)
+            except Exception:  # noqa: BLE001
+                LOGGER.exception("Scheduler iteration failed; it will retry")
+            try:
+                await asyncio.wait_for(
+                    self._stop_event.wait(),
+                    timeout=self.config.scheduler_poll_seconds,
+                )
+            except TimeoutError:
+                continue
+        LOGGER.info("Scheduler stopped")
