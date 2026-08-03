@@ -34,8 +34,6 @@ ADMIN_COMMANDS = (
     BotCommand(command="admin", description="Открыть админ-панель"),
     BotCommand(command="users", description="Статистика пользователей"),
     BotCommand(command="user", description="Пользователь по Telegram ID"),
-    BotCommand(command="delivery", description="Статистика рассылок"),
-    BotCommand(command="delivery_failed", description="Ошибки доставки"),
     BotCommand(command="content", description="Качество контента"),
     BotCommand(command="missing_fields", description="Пустые поля"),
     BotCommand(command="missing_audio", description="Карточки без аудио"),

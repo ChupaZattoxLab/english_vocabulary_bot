@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import html
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -38,6 +39,15 @@ def dialect_caption(dialect: str) -> str:
         "US": "🇺🇸 US",
         "GB": "🇬🇧 GB",
     }.get(dialect.upper(), dialect.upper())
+
+def voice_caption(dialect: str, ipa: str) -> str:
+    label = dialect_caption(dialect)
+    transcription = ipa.strip()
+
+    if not transcription:
+        return label
+
+    return f"{label} · <code>{html.escape(transcription)}</code>"
 
 
 def classify_delivery_error(exc: Exception) -> str:
@@ -182,7 +192,10 @@ class CardDeliveryService:
             source_url=card.source_url,
             audio_data=card.audio_data,
             filename=card.filename or f"{card.word}.voice.ogg",
-            caption=dialect_caption(primary_dialect),
+            caption=voice_caption(
+                primary_dialect,
+                card.ipa_us if card.dialect == "BOTH" else card.ipa,
+            ),
         )
         if card.secondary_audio:
             secondary: ReservedAudio = card.secondary_audio
@@ -192,7 +205,10 @@ class CardDeliveryService:
                 source_url=secondary.source_url,
                 audio_data=secondary.audio_data,
                 filename=secondary.filename or f"{card.word}.gb.voice.ogg",
-                caption=dialect_caption(secondary.dialect),
+                caption=voice_caption(
+                    secondary.dialect,
+                    card.ipa_gb,
+                ),
             )
         return message
 

@@ -15,7 +15,6 @@ from aiogram.types import CallbackQuery, Message
 from vocabulary_bot.admin_keyboards import (
     admin_audio_keyboard,
     admin_content_keyboard,
-    admin_delivery_keyboard,
     admin_errors_keyboard,
     admin_health_keyboard,
     admin_list_keyboard,
@@ -116,8 +115,7 @@ async def _render_overview(database: Database, config: BotConfig) -> str:
         "<b>🛠 Vocabulary Bot — Admin Panel</b>\n\n"
         f"👥 Пользователей: {_number(users['total_users'])}\n"
         f"📨 Получают карточки: {_number(users['active_users'])}\n"
-        f"📚 Готовых карточек: {_number(content['ready_entries'])}\n"
-        f"⚠️ Ошибок за 24 часа: {_number(system['errors'])}\n\n"
+        f"📚 Готовых карточек: {_number(content['ready_entries'])}\n\n"
         f"<b>Последняя рассылка</b>\n{last_delivery}\n\n"
         f"Сегодня отправлено карточек: {_number(delivery_stats['cards_sent'])}"
     )
@@ -150,43 +148,6 @@ async def _render_users(database: Database, config: BotConfig) -> str:
         f"За 30 дней: {_number(stats['new_month'])}\n\n"
         f"<b>По уровням</b>\n{levels}\n\n"
         f"<b>По произношению</b>\n{dialects}"
-    )
-
-
-async def _render_delivery(
-    database: Database,
-    config: BotConfig,
-    *,
-    period: str,
-) -> str:
-    local_now, today_start, today_end = _local_day_bounds(config)
-    if period == "7d":
-        start = (local_now - timedelta(days=7)).astimezone(timezone.utc)
-        end, title = datetime.now(timezone.utc), "последние 7 дней"
-    else:
-        start, end, title = today_start, today_end, f"{local_now:%d.%m.%Y}"
-    stats = await database.admin_delivery_summary(start=start, end=end)
-    reasons = "\n".join(
-        f"{ERROR_LABELS.get(key, html.escape(key))}: {_number(value)}"
-        for key, value in stats["error_reasons"].items()
-    ) or "нет"
-    started = stats.get("started_at")
-    completed = stats.get("completed_at")
-    started_text = started.astimezone(config.timezone).strftime("%H:%M:%S") if started else "—"
-    completed_text = completed.astimezone(config.timezone).strftime("%H:%M:%S") if completed else "—"
-    average_text = f"{float(stats['average_card_seconds']):.2f} s"
-    return (
-        f"<b>📨 Рассылки — {title}</b>\n\n"
-        f"Пользователей запланировано: {_number(stats['scheduled_users'])}\n"
-        f"Успешно: {_number(stats['successful_users'])}\n"
-        f"Неуспешно: {_number(stats['failed_users'])}\n"
-        f"Пропущено: {_number(stats['skipped_users'])}\n\n"
-        f"Карточек отправлено: {_number(stats['cards_sent'])}\n"
-        f"Голосовых отправлено: {_number(stats['voices_sent'])}\n\n"
-        f"<b>Ошибки</b>\n{reasons}\n\n"
-        f"Первый запуск: {started_text}\n"
-        f"Последнее завершение: {completed_text}\n"
-        f"Среднее на карточку: {average_text}"
     )
 
 
@@ -417,68 +378,6 @@ def create_admin_router(
             f"Последняя отправка: {last_text}\n"
             f"Ошибок доставки: {_number(user['failed_cards'])}"
         )
-
-    @router.message(Command("delivery"))
-    async def delivery_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-        argument = _arguments(message).lower() or "today"
-        local_now, today_start, today_end = _local_day_bounds(config)
-        if argument == "today":
-            start, end, title = today_start, today_end, f"{local_now:%d.%m.%Y}"
-        elif argument == "7d":
-            start = (local_now - timedelta(days=7)).astimezone(timezone.utc)
-            end, title = datetime.now(timezone.utc), "последние 7 дней"
-        else:
-            await message.answer("Использование: <code>/delivery</code> или <code>/delivery 7d</code>")
-            return
-        stats = await database.admin_delivery_summary(start=start, end=end)
-        reasons = "\n".join(
-            f"{ERROR_LABELS.get(key, html.escape(key))}: {_number(value)}"
-            for key, value in stats["error_reasons"].items()
-        ) or "нет"
-        started = stats.get("started_at")
-        completed = stats.get("completed_at")
-        started_text = started.astimezone(config.timezone).strftime("%H:%M:%S") if started else "—"
-        completed_text = completed.astimezone(config.timezone).strftime("%H:%M:%S") if completed else "—"
-        duration_text = "—"
-        if started and completed:
-            duration_text = str(completed - started).split(".", 1)[0]
-        average_text = f"{float(stats['average_card_seconds']):.2f} s"
-        await message.answer(
-            f"<b>📨 Delivery — {title}</b>\n\n"
-            f"Пользователей запланировано: {_number(stats['scheduled_users'])}\n"
-            f"Успешно: {_number(stats['successful_users'])}\n"
-            f"Неуспешно: {_number(stats['failed_users'])}\n"
-            f"Пропущено: {_number(stats['skipped_users'])}\n\n"
-            f"Карточек отправлено: {_number(stats['cards_sent'])}\n"
-            f"Голосовых отправлено: {_number(stats['voices_sent'])}\n\n"
-            f"<b>Ошибки</b>\n{reasons}\n\n"
-            f"Начало: {started_text}\n"
-            f"Завершение: {completed_text}\n"
-            f"Период между первым стартом и последним завершением: {duration_text}\n"
-            f"Среднее на успешно отправленную карточку: {average_text}"
-        )
-
-    @router.message(Command("delivery_failed"))
-    async def delivery_failed_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-        rows = await database.admin_failed_deliveries(
-            start=datetime.now(timezone.utc) - timedelta(days=7)
-        )
-        if not rows:
-            await message.answer("За последние 7 дней ошибок доставки нет.")
-            return
-        lines = []
-        for row in rows:
-            occurred = row["scheduled_slot"].astimezone(config.timezone)
-            reason = ERROR_LABELS.get(row["error_type"] or "unknown", row["error_type"] or "Unknown")
-            lines.append(
-                f"#{row['id']} · {occurred:%d.%m %H:%M} · user {row['telegram_user_id']} · "
-                f"word {row['entry_id']} ({html.escape(row['word_us'])}) · {html.escape(reason)}"
-            )
-        await message.answer("<b>❌ Ошибки доставки за 7 дней</b>\n\n" + "\n".join(lines))
 
     @router.message(Command("content"))
     async def content_handler(message: Message) -> None:
@@ -794,15 +693,6 @@ def create_admin_router(
             elif action == "users":
                 text = await _render_users(database, config)
                 keyboard = admin_users_keyboard()
-            elif action in {"delivery", "delivery_today"}:
-                text = await _render_delivery(database, config, period="today")
-                keyboard = admin_delivery_keyboard()
-            elif action == "delivery_7d":
-                text = await _render_delivery(database, config, period="7d")
-                keyboard = admin_delivery_keyboard()
-            elif action == "delivery_failed":
-                text = await _render_failed(database, config)
-                keyboard = admin_list_keyboard("delivery")
             elif action == "errors_failed":
                 text = await _render_failed(database, config)
                 keyboard = admin_list_keyboard("errors")
