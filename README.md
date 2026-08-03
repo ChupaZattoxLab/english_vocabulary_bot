@@ -564,9 +564,7 @@ Administrator commands:
 /content                       content completeness and send readiness
 /missing_fields                missing IPA/definition/example/translation
 /missing_audio                 entries without prepared Telegram voice audio
-/word WORD                     find all matching lexical entries
-/word_id ID                    inspect one lexical entry
-/preview_word ID [us|gb|both]  send the real card only to the administrator
+/word WORD                     send a US+GB card; asks for part of speech if needed
 /send_test                     send a random real card only to the administrator
 /errors                        persisted delivery and scheduler errors for 24h
 /health                        PostgreSQL, scheduler, and Telegram API checks

@@ -8,11 +8,10 @@ from unittest.mock import AsyncMock
 from zoneinfo import ZoneInfo
 
 from vocabulary_bot.card_template import CardTemplate, CardTemplateError
-from vocabulary_bot.admin import _delivery_state, _translation_exists
+from vocabulary_bot.admin import _delivery_state
 from vocabulary_bot.admin_keyboards import (
-    admin_content_keyboard,
-    admin_delivery_keyboard,
     admin_main_keyboard,
+    word_categories_keyboard,
 )
 from vocabulary_bot.config import BotConfig, ConfigError
 from vocabulary_bot.database import ReservedAudio, ReservedCard
@@ -147,10 +146,6 @@ class AdminHelperTests(unittest.TestCase):
             "бот заблокирован",
         )
 
-    def test_translation_can_exist_only_in_also_array(self) -> None:
-        self.assertTrue(_translation_exists({"ru": {"main": "", "also": ["тест"]}}))
-        self.assertFalse(_translation_exists({"ru": {"main": "", "also": []}}))
-
     def test_delivery_errors_have_stable_categories(self) -> None:
         self.assertEqual(classify_delivery_error(TimeoutError("timeout")), "telegram_timeout")
         self.assertEqual(
@@ -161,8 +156,12 @@ class AdminHelperTests(unittest.TestCase):
     def test_admin_keyboards_use_short_namespaced_callbacks(self) -> None:
         keyboards = (
             admin_main_keyboard(),
-            admin_delivery_keyboard(),
-            admin_content_keyboard(),
+            word_categories_keyboard(
+                (
+                    {"id": 10, "lexical_category": "noun", "cefr": "a1"},
+                    {"id": 11, "lexical_category": "verb", "cefr": "b1"},
+                )
+            ),
         )
         callback_values = [
             button.callback_data
@@ -181,17 +180,27 @@ class AdminHelperTests(unittest.TestCase):
             for row in admin_main_keyboard().inline_keyboard
             for button in row
         }
-        self.assertTrue(
+        self.assertEqual(
+            values,
             {
                 "admin:overview",
                 "admin:users",
-                "admin:delivery",
-                "admin:content",
-                "admin:audio",
-                "admin:errors",
                 "admin:test_card",
-                "admin:health",
-            }.issubset(values)
+            },
+        )
+
+    def test_word_categories_keyboard_uses_entry_ids(self) -> None:
+        keyboard = word_categories_keyboard(
+            (
+                {"id": 10, "lexical_category": "noun", "cefr": "a1"},
+                {"id": 11, "lexical_category": "verb", "cefr": "b1"},
+            )
+        )
+        buttons = [button for row in keyboard.inline_keyboard for button in row]
+        self.assertEqual([button.text for button in buttons], ["noun", "verb"])
+        self.assertEqual(
+            [button.callback_data for button in buttons],
+            ["admin:word:10", "admin:word:11"],
         )
 
 
@@ -278,7 +287,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             )
             self.assertEqual(
                 bot.send_voice.await_args.kwargs["caption"],
-                "🇺🇸 US",
+                "🇺🇸 US · <code>/test/</code>",
             )
             database.cache_audio_file_id.assert_awaited_once_with(
                 card.source_url,
@@ -346,8 +355,14 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             self.assertIn("COLOR", card_text)
             self.assertIn("COLOUR", card_text)
             first_call, second_call = bot.send_voice.await_args_list
-            self.assertEqual(first_call.kwargs["caption"], "🇺🇸 US")
-            self.assertEqual(second_call.kwargs["caption"], "🇬🇧 GB")
+            self.assertEqual(
+                first_call.kwargs["caption"],
+                "🇺🇸 US · <code>/us/</code>",
+            )
+            self.assertEqual(
+                second_call.kwargs["caption"],
+                "🇬🇧 GB · <code>/gb/</code>",
+            )
             self.assertEqual(database.cache_audio_file_id.await_count, 2)
 
 

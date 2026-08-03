@@ -34,15 +34,8 @@ ADMIN_COMMANDS = (
     BotCommand(command="admin", description="Открыть админ-панель"),
     BotCommand(command="users", description="Статистика пользователей"),
     BotCommand(command="user", description="Пользователь по Telegram ID"),
-    BotCommand(command="word", description="Найти слово"),
-    BotCommand(command="word_id", description="Слово по ID"),
-    BotCommand(command="preview_word", description="Предпросмотр карточки"),
+    BotCommand(command="word", description="Карточка слова"),
     BotCommand(command="send_test", description="Тестовая карточка"),
-    BotCommand(command="errors", description="Технические ошибки"),
-    BotCommand(command="health", description="Состояние системы"),
-    BotCommand(command="disable_word", description="Отключить слово"),
-    BotCommand(command="enable_word", description="Включить слово"),
-    BotCommand(command="retry_failed", description="Повторить ошибки доставки"),
     BotCommand(command="reload_templates", description="Перезагрузить шаблоны"),
 )
 

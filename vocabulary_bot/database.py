@@ -1435,40 +1435,10 @@ class Database:
                 await connection.execute(
                     """
                     SELECT entries.id, entries.word_us, entries.word_gb,
-                           entries.lexical_category, entries.cefr,
-                           entries.ipa_us, entries.ipa_gb,
-                           entries.definition, entries.example,
-                           entries.translations, entries.is_active,
-                           count(cards.id) FILTER (
-                               WHERE cards.status = 'delivered'
-                           ) AS delivered_count,
-                           max(cards.delivered_at) AS last_delivered_at,
-                           EXISTS (
-                               SELECT 1
-                               FROM oald_entry_audio_sources AS links
-                               JOIN oald_audio_files AS files
-                                 ON files.source_url = links.source_url
-                               JOIN oald_audio_variants AS variants
-                                 ON variants.source_url = files.source_url
-                                AND variants.variant_type = 'telegram_voice_opus'
-                                AND variants.conversion_status = 'prepared'
-                                AND variants.audio_data IS NOT NULL
-                                AND variants.source_sha256 = files.sha256
-                               WHERE links.entry_id = entries.id
-                           ) AS has_audio,
-                           EXISTS (
-                               SELECT 1 FROM bot_telegram_audio_cache AS cache
-                               JOIN oald_entry_audio_sources AS links
-                                 ON links.source_url = cache.source_url
-                               WHERE links.entry_id = entries.id
-                                 AND cache.send_method = 'voice'
-                           ) AS has_telegram_file_id
+                           entries.lexical_category, entries.cefr
                     FROM oald_entries AS entries
-                    LEFT JOIN bot_user_cards AS cards
-                      ON cards.entry_id = entries.id
                     WHERE lower(entries.word_us) = lower(%s)
                        OR lower(entries.word_gb) = lower(%s)
-                    GROUP BY entries.id
                     ORDER BY entries.lexical_category, entries.id
                     LIMIT %s
                     """,
@@ -1476,64 +1446,6 @@ class Database:
                 )
             ).fetchall()
         return tuple(dict(row) for row in rows)
-
-    async def admin_entry(self, entry_id: int) -> dict[str, Any] | None:
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    """
-                    SELECT entries.id, entries.word_us, entries.word_gb,
-                           entries.lexical_category, entries.cefr,
-                           entries.ipa_us, entries.ipa_gb,
-                           entries.definition, entries.example,
-                           entries.translations, entries.is_active,
-                           count(cards.id) FILTER (
-                               WHERE cards.status = 'delivered'
-                           ) AS delivered_count,
-                           max(cards.delivered_at) AS last_delivered_at,
-                           EXISTS (
-                               SELECT 1
-                               FROM oald_entry_audio_sources AS links
-                               JOIN oald_audio_files AS files
-                                 ON files.source_url = links.source_url
-                               JOIN oald_audio_variants AS variants
-                                 ON variants.source_url = files.source_url
-                                AND variants.variant_type = 'telegram_voice_opus'
-                                AND variants.conversion_status = 'prepared'
-                                AND variants.audio_data IS NOT NULL
-                                AND variants.source_sha256 = files.sha256
-                               WHERE links.entry_id = entries.id
-                           ) AS has_audio,
-                           EXISTS (
-                               SELECT 1 FROM bot_telegram_audio_cache AS cache
-                               JOIN oald_entry_audio_sources AS links
-                                 ON links.source_url = cache.source_url
-                               WHERE links.entry_id = entries.id
-                                 AND cache.send_method = 'voice'
-                           ) AS has_telegram_file_id
-                    FROM oald_entries AS entries
-                    LEFT JOIN bot_user_cards AS cards
-                      ON cards.entry_id = entries.id
-                    WHERE entries.id = %s
-                    GROUP BY entries.id
-                    """,
-                    (entry_id,),
-                )
-            ).fetchone()
-        return dict(row) if row else None
-
-    async def admin_set_entry_active(self, entry_id: int, active: bool) -> bool:
-        async with self.pool.connection() as connection:
-            result = await connection.execute(
-                """
-                UPDATE oald_entries
-                SET is_active = %s,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = %s
-                """,
-                (active, entry_id),
-            )
-        return result.rowcount > 0
 
     async def admin_preview_card(
         self,
