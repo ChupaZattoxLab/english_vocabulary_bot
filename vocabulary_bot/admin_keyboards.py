@@ -10,7 +10,6 @@ def admin_main_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     buttons = (
         ("👥 Пользователи", "admin:users"),
-        ("📚 Контент", "admin:content"),
         ("🔊 Аудио", "admin:audio"),
         ("⚠️ Ошибки", "admin:errors"),
         ("🧪 Тест-карта", "admin:test_card"),
@@ -19,24 +18,12 @@ def admin_main_keyboard() -> InlineKeyboardMarkup:
     )
     for text, callback_data in buttons:
         builder.button(text=text, callback_data=callback_data)
-    builder.adjust(2, 2, 2, 1)
+    builder.adjust(2, 2, 2)
     return builder.as_markup()
 
 
 def admin_users_keyboard() -> InlineKeyboardMarkup:
     return _back_and_refresh("users")
-
-
-def admin_content_keyboard() -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
-    builder.button(text="🔍 Проблемные карточки", callback_data="admin:missing_fields")
-    builder.button(text="🔊 Без аудио", callback_data="admin:missing_audio")
-    builder.button(text="🏷 Без CEFR", callback_data="admin:missing_cefr")
-    builder.button(text="👁 Случайный preview", callback_data="admin:preview_card")
-    builder.button(text="⬅️ Назад", callback_data="admin:overview")
-    builder.button(text="🔄 Обновить", callback_data="admin:content")
-    builder.adjust(1, 2, 1, 2)
-    return builder.as_markup()
 
 
 def admin_audio_keyboard() -> InlineKeyboardMarkup:

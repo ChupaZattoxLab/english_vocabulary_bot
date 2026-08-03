@@ -14,7 +14,6 @@ from aiogram.types import CallbackQuery, Message
 
 from vocabulary_bot.admin_keyboards import (
     admin_audio_keyboard,
-    admin_content_keyboard,
     admin_errors_keyboard,
     admin_health_keyboard,
     admin_list_keyboard,
@@ -151,23 +150,6 @@ async def _render_users(database: Database, config: BotConfig) -> str:
     )
 
 
-async def _render_content(database: Database) -> str:
-    stats = await database.admin_content_summary()
-    return (
-        "<b>📚 Контент</b>\n\n"
-        f"Всего записей: {_number(stats['total_entries'])}\n"
-        f"Готовы: {_number(stats['ready_entries'])}\n"
-        f"Отключены: {_number(stats['disabled_entries'])}\n\n"
-        "<b>Проблемы</b>\n"
-        f"Без CEFR: {_number(stats['missing_cefr'])}\n"
-        f"Без аудио: {_number(stats['missing_audio'])}\n"
-        f"Без IPA: {_number(stats['missing_ipa'])}\n"
-        f"Без перевода: {_number(stats['missing_translation'])}\n"
-        f"Без примера: {_number(stats['missing_example'])}\n"
-        f"Без определения: {_number(stats['missing_definition'])}"
-    )
-
-
 async def _render_audio(database: Database) -> str:
     stats = await database.admin_audio_summary(
         since=datetime.now(timezone.utc) - timedelta(hours=24)
@@ -219,24 +201,6 @@ async def _render_errors(database: Database) -> str:
         "<b>⚠️ Ошибки — 24 часа</b>\n\n"
         f"Всего: {_number(system['errors'])}\n\n"
         f"<b>Последние ошибки доставки</b>\n{lines}"
-    )
-
-
-async def _render_missing_fields(database: Database) -> str:
-    stats = await database.admin_content_summary()
-    rows = await database.admin_missing_entries()
-    samples = "\n".join(
-        f"#{row['id']} · {html.escape(row['word_us'])} · {html.escape(row['lexical_category'])}"
-        for row in rows
-    ) or "нет"
-    return (
-        "<b>🔍 Проблемные карточки</b>\n\n"
-        f"IPA: {_number(stats['missing_ipa'])}\n"
-        f"Definition: {_number(stats['missing_definition'])}\n"
-        f"Example: {_number(stats['missing_example'])}\n"
-        f"Translation: {_number(stats['missing_translation'])}\n"
-        f"CEFR: {_number(stats['missing_cefr'])}\n\n"
-        f"<b>Первые {len(rows)} записей</b>\n{samples}"
     )
 
 
@@ -377,65 +341,6 @@ def create_admin_router(
             f"Отправлено карточек: {_number(user['delivered_cards'])}\n"
             f"Последняя отправка: {last_text}\n"
             f"Ошибок доставки: {_number(user['failed_cards'])}"
-        )
-
-    @router.message(Command("content"))
-    async def content_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-        stats = await database.admin_content_summary()
-        await message.answer(
-            "<b>📚 Content</b>\n\n"
-            f"Всего словарных записей: {_number(stats['total_entries'])}\n"
-            f"Активных: {_number(stats['active_entries'])}\n"
-            f"Готовы к отправке: {_number(stats['ready_entries'])}\n"
-            f"Отключены: {_number(stats['disabled_entries'])}\n\n"
-            "<b>Проблемы</b>\n"
-            f"Без IPA: {_number(stats['missing_ipa'])}\n"
-            f"Без US audio: {_number(stats['missing_us_audio'])}\n"
-            f"Без UK audio: {_number(stats['missing_gb_audio'])}\n"
-            f"Без определения: {_number(stats['missing_definition'])}\n"
-            f"Без примера: {_number(stats['missing_example'])}\n"
-            f"Без перевода: {_number(stats['missing_translation'])}\n"
-            f"Без CEFR: {_number(stats['missing_cefr'])}"
-        )
-
-    @router.message(Command("missing_fields"))
-    async def missing_fields_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-        stats = await database.admin_content_summary()
-        rows = await database.admin_missing_entries()
-        samples = "\n".join(
-            f"#{row['id']} · {html.escape(row['word_us'])} · {html.escape(row['lexical_category'])}"
-            for row in rows
-        ) or "нет"
-        await message.answer(
-            "<b>⚠️ Missing fields</b>\n"
-            f"IPA: {_number(stats['missing_ipa'])}\n"
-            f"Definition: {_number(stats['missing_definition'])}\n"
-            f"Example: {_number(stats['missing_example'])}\n"
-            f"Translation: {_number(stats['missing_translation'])}\n"
-            f"CEFR: {_number(stats['missing_cefr'])}\n\n"
-            f"<b>Первые {len(rows)} записей</b>\n{samples}"
-        )
-
-    @router.message(Command("missing_audio"))
-    async def missing_audio_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-        stats = await database.admin_content_summary()
-        rows = await database.admin_missing_entries(audio_only=True)
-        samples = "\n".join(
-            f"#{row['id']} · {html.escape(row['word_us'])} · {html.escape(row['lexical_category'])}"
-            for row in rows
-        ) or "нет"
-        await message.answer(
-            "<b>🔇 Missing audio</b>\n"
-            f"Без US audio: {_number(stats['missing_us_audio'])}\n"
-            f"Без UK audio: {_number(stats['missing_gb_audio'])}\n"
-            f"Без обоих вариантов: {_number(stats['missing_audio'])}\n\n"
-            f"<b>Первые {len(rows)} записей без готового аудио</b>\n{samples}"
         )
 
     async def send_word_details(message: Message, rows: tuple[dict[str, Any], ...]) -> None:
@@ -671,7 +576,7 @@ def create_admin_router(
         action = (callback.data or "admin:overview").split(":", 1)[1]
         answered = False
         try:
-            if action in {"test_card", "preview_card"}:
+            if action in "test_card":
                 await callback.answer("Отправляю тестовую карточку…")
                 answered = True
                 card = await database.admin_preview_card(random_card=True)
@@ -696,27 +601,9 @@ def create_admin_router(
             elif action == "errors_failed":
                 text = await _render_failed(database, config)
                 keyboard = admin_list_keyboard("errors")
-            elif action == "content":
-                text = await _render_content(database)
-                keyboard = admin_content_keyboard()
-            elif action == "missing_fields":
-                text = await _render_missing_fields(database)
-                keyboard = admin_list_keyboard("content")
-            elif action == "missing_audio":
-                text = await _render_missing_audio(database)
-                keyboard = admin_list_keyboard("content")
             elif action == "audio_missing":
                 text = await _render_missing_audio(database)
                 keyboard = admin_list_keyboard("audio")
-            elif action == "missing_cefr":
-                stats = await database.admin_content_summary()
-                text = (
-                    "<b>🏷 Карточки без CEFR</b>\n\n"
-                    f"Найдено: {_number(stats['missing_cefr'])}\n\n"
-                    "Поле CEFR защищено ограничением PostgreSQL, поэтому "
-                    "некорректные или пустые значения не должны попадать в таблицу."
-                )
-                keyboard = admin_list_keyboard("content")
             elif action == "audio":
                 text = await _render_audio(database)
                 keyboard = admin_audio_keyboard()
