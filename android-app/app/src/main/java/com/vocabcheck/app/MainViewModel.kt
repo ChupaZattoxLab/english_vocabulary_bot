@@ -25,11 +25,14 @@ data class UiState(
     val pending: List<WordEntry> = emptyList(),
     val needsEdit: List<WordEntry> = emptyList(),
     val okWords: List<WordEntry> = emptyList(),
+    val deletedWords: List<WordEntry> = emptyList(),
     val currentPending: WordEntry? = null,
     val okCount: Int = 0,
     val totalCount: Int = 0,
+    val activeCount: Int = 0,
     val allOk: Boolean = false,
     val selectedEditId: Int? = null,
+    val selectedDeletedId: Int? = null,
     val canUndo: Boolean = false,
     val message: String? = null,
 )
@@ -40,6 +43,7 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
     private val selectedEditId = MutableStateFlow<Int?>(null)
+    private val selectedDeletedId = MutableStateFlow<Int?>(null)
     private val reviewCursorId = MutableStateFlow<Int?>(null)
     private val message = MutableStateFlow<String?>(null)
     private val canUndo = MutableStateFlow(false)
@@ -54,23 +58,29 @@ class MainViewModel(
         ) { words, loaded, editId, cursor ->
             ReviewSlice(words, loaded, editId, cursor)
         },
-        canUndo,
-        message,
-    ) { slice, undo, msg ->
+        combine(canUndo, message, selectedDeletedId) { undo, msg, deletedId ->
+            Triple(undo, msg, deletedId)
+        },
+    ) { slice, extras ->
         val pending = slice.words.filter { it.status == ReviewStatus.PENDING }
         val okWords = slice.words.filter { it.status == ReviewStatus.OK }
+        val deletedWords = slice.words.filter { it.status == ReviewStatus.DELETED }
+        val active = slice.words.filter { it.status != ReviewStatus.DELETED }
         UiState(
             loaded = slice.loaded,
             pending = pending,
             needsEdit = slice.words.filter { it.status == ReviewStatus.NEEDS_EDIT },
             okWords = okWords,
+            deletedWords = deletedWords,
             currentPending = resolveCurrentPending(pending, slice.cursor),
             okCount = okWords.size,
             totalCount = slice.words.size,
-            allOk = slice.words.isNotEmpty() && slice.words.all { it.status == ReviewStatus.OK },
+            activeCount = active.size,
+            allOk = active.isNotEmpty() && active.all { it.status == ReviewStatus.OK },
             selectedEditId = slice.editId,
-            canUndo = undo,
-            message = msg,
+            selectedDeletedId = extras.third,
+            canUndo = extras.first,
+            message = extras.second,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -101,6 +111,34 @@ class MainViewModel(
         pushUndo(id) ?: return
         advanceCursorAfter(id)
         repository.markNeedsEdit(id)
+    }
+
+    fun deleteWord(id: Int) {
+        val current = repository.findById(id) ?: return
+        if (current.status == ReviewStatus.OK || current.status == ReviewStatus.DELETED) return
+        pushUndo(id) ?: return
+        if (current.status == ReviewStatus.PENDING) {
+            advanceCursorAfter(id)
+        }
+        if (selectedEditId.value == id) {
+            selectedEditId.value = null
+        }
+        repository.markDeleted(id)
+        message.value = "Удалено: ${current.headword()}"
+    }
+
+    fun restoreDeleted(id: Int) {
+        val current = repository.findById(id) ?: return
+        if (current.status != ReviewStatus.DELETED) return
+        pushUndo(id) ?: return
+        repository.markPending(id)
+        selectedDeletedId.value = null
+        reviewCursorId.value = id
+        message.value = "Возвращено на проверку: ${current.headword()}"
+    }
+
+    fun selectDeleted(id: Int?) {
+        selectedDeletedId.value = id
     }
 
     fun swapOnCard(id: Int) {
@@ -143,18 +181,27 @@ class MainViewModel(
         val previous = undoStack.removeLastOrNull() ?: return
         canUndo.value = undoStack.isNotEmpty()
         repository.restoreWord(previous)
-        if (previous.status == ReviewStatus.PENDING) {
-            reviewCursorId.value = previous.id
-            selectedEditId.value = null
-        } else if (previous.status == ReviewStatus.NEEDS_EDIT || previous.status == ReviewStatus.OK) {
-            selectedEditId.value = previous.id
+        selectedDeletedId.value = null
+        when (previous.status) {
+            ReviewStatus.PENDING -> {
+                reviewCursorId.value = previous.id
+                selectedEditId.value = null
+            }
+            ReviewStatus.NEEDS_EDIT, ReviewStatus.OK -> {
+                selectedEditId.value = previous.id
+            }
+            ReviewStatus.DELETED -> {
+                selectedEditId.value = null
+                selectedDeletedId.value = previous.id
+            }
         }
-        message.value = "Отменено: ${previous.word}"
+        message.value = "Отменено: ${previous.headword()}"
     }
 
     fun resetProgress() {
         repository.resetAll()
         selectedEditId.value = null
+        selectedDeletedId.value = null
         reviewCursorId.value = null
         undoStack.clear()
         canUndo.value = false
@@ -174,7 +221,7 @@ class MainViewModel(
         val ok = repository.okCount()
         val total = repository.totalCount()
         message.value = if (repository.allOk()) {
-            "Экспорт готов: все $total слов OK"
+            "Экспорт готов: все активные слова OK ($ok/$total)"
         } else {
             "Экспорт готов: $ok/$total OK (прогресс неполный)"
         }
@@ -195,6 +242,7 @@ class MainViewModel(
             }
             result.onSuccess { imported ->
                 selectedEditId.value = null
+                selectedDeletedId.value = null
                 reviewCursorId.value = null
                 undoStack.clear()
                 canUndo.value = false

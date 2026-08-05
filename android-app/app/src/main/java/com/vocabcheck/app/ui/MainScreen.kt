@@ -97,8 +97,7 @@ fun MainScreen(viewModel: MainViewModel) {
     }
 
     val editingWord = state.selectedEditId?.let { viewModel.findWord(it) }
-
-    if (editingWord != null) {
+    if (editingWord != null && editingWord.status != ReviewStatus.DELETED) {
         val inNeedsEdit = editingWord.status == ReviewStatus.NEEDS_EDIT
         val list = if (inNeedsEdit) state.needsEdit else state.okWords
         val index = list.indexOfFirst { it.id == editingWord.id }.coerceAtLeast(0)
@@ -110,12 +109,27 @@ fun MainScreen(viewModel: MainViewModel) {
                 "OK · повторная проверка"
             },
             canUndo = state.canUndo,
+            canDelete = inNeedsEdit,
             onBack = { viewModel.selectForEdit(null) },
             onUndo = viewModel::undo,
+            onDelete = viewModel::deleteWord,
             onSave = { id, payload ->
                 viewModel.saveEdit(id, payload)
             },
             onSwap = viewModel::swapOnCard,
+            snackbarHostState = snackbar,
+        )
+        return
+    }
+
+    val deletedWord = state.selectedDeletedId?.let { viewModel.findWord(it) }
+    if (deletedWord != null && deletedWord.status == ReviewStatus.DELETED) {
+        DeletedWordScreen(
+            word = deletedWord,
+            canUndo = state.canUndo,
+            onBack = { viewModel.selectDeleted(null) },
+            onUndo = viewModel::undo,
+            onRestore = viewModel::restoreDeleted,
             snackbarHostState = snackbar,
         )
         return
@@ -141,7 +155,8 @@ fun MainScreen(viewModel: MainViewModel) {
                     Column {
                         Text("Vocab Check", fontWeight = FontWeight.Bold)
                         Text(
-                            text = "${state.okCount}/${state.totalCount} OK · ${state.needsEdit.size} правок",
+                            text = "${state.okCount}/${state.activeCount} OK · " +
+                                "${state.needsEdit.size} правок · ${state.deletedWords.size} удал.",
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -200,6 +215,11 @@ fun MainScreen(viewModel: MainViewModel) {
                     onClick = { tabIndex = 2 },
                     text = { Text("OK (${state.okCount})") },
                 )
+                Tab(
+                    selected = tabIndex == 3,
+                    onClick = { tabIndex = 3 },
+                    text = { Text("Удалённые (${state.deletedWords.size})") },
+                )
             }
 
             if (!state.loaded) {
@@ -212,18 +232,23 @@ fun MainScreen(viewModel: MainViewModel) {
                     current = state.currentPending,
                     pendingCount = state.pending.size,
                     okCount = state.okCount,
-                    totalCount = state.totalCount,
+                    activeCount = state.activeCount,
                     onApprove = viewModel::approve,
                     onReject = viewModel::reject,
+                    onDelete = viewModel::deleteWord,
                     onPickWord = { showPendingPicker = true },
                 )
                 1 -> EditListTab(
                     needsEdit = state.needsEdit,
                     onOpen = viewModel::selectForEdit,
                 )
-                else -> OkListTab(
+                2 -> OkListTab(
                     okWords = state.okWords,
                     onOpen = viewModel::selectForEdit,
+                )
+                else -> DeletedListTab(
+                    deletedWords = state.deletedWords,
+                    onOpen = viewModel::selectDeleted,
                 )
             }
         }
@@ -236,7 +261,8 @@ fun MainScreen(viewModel: MainViewModel) {
             text = {
                 Text(
                     "Выбери JSON из экспорта (vocab_checked.json). " +
-                        "Переводы и статусы совпавших слов будут обновлены поверх текущего прогресса.",
+                        "Переводы, поля карточки и статусы (включая «удалённые») " +
+                        "совпавших слов будут обновлены поверх текущего прогресса.",
                 )
             },
             confirmButton = {
@@ -256,11 +282,19 @@ fun MainScreen(viewModel: MainViewModel) {
     if (showExportDialog) {
         val pending = state.pending.size
         val edits = state.needsEdit.size
+        val deleted = state.deletedWords.size
         val exportHint = when {
-            state.allOk -> "Все ${state.totalCount} слов проверены. Экспортировать словарь?"
-            else -> "Проверено ${state.okCount}/${state.totalCount}. " +
-                "Ещё не готово: $pending в очереди, $edits на правке. " +
-                "Экспортировать текущий прогресс?"
+            state.allOk -> buildString {
+                append("Все активные слова проверены (${state.okCount} OK")
+                if (deleted > 0) append(", $deleted удалено")
+                append("). Экспортировать словарь?")
+            }
+            else -> buildString {
+                append("Проверено ${state.okCount}/${state.activeCount}. ")
+                append("Ещё не готово: $pending в очереди, $edits на правке")
+                if (deleted > 0) append(", $deleted удалено")
+                append(". Экспортировать текущий прогресс?")
+            }
         }
         AlertDialog(
             onDismissRequest = { showExportDialog = false },

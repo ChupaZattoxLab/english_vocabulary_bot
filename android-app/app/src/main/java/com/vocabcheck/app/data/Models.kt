@@ -6,6 +6,7 @@ enum class ReviewStatus {
     PENDING,
     OK,
     NEEDS_EDIT,
+    DELETED,
 }
 
 @Serializable
@@ -84,4 +85,35 @@ data class WordEditPayload(
     val definition: String,
     val example: String,
     val extraSenses: List<SensePair>,
+    val wordUs: String = "",
+    val wordGb: String = "",
+    val pos: String = "",
+    val cefr: String = "",
+    val ipaUs: List<String> = emptyList(),
+    val ipaGb: List<String> = emptyList(),
 )
+
+object CardFieldOptions {
+    val CEFR: List<String> = listOf("a1", "a2", "b1", "b2", "c1", "c2")
+
+    /** One POS per card — no compound labels like "adjective , adverb". */
+    val POS: List<String> = listOf(
+        "adjective",
+        "adverb",
+        "auxiliary verb",
+        "conjunction",
+        "definite article",
+        "determiner",
+        "exclamation",
+        "indefinite article",
+        "infinitive marker",
+        "linking verb",
+        "modal verb",
+        "noun",
+        "number",
+        "ordinal number",
+        "preposition",
+        "pronoun",
+        "verb",
+    )
+}

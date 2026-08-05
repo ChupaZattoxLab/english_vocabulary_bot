@@ -27,12 +27,17 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.material.icons.filled.SwapVert
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,6 +63,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.vocabcheck.app.audio.rememberPronunciationPlayer
+import com.vocabcheck.app.data.CardFieldOptions
 import com.vocabcheck.app.data.SensePair
 import com.vocabcheck.app.data.WordEditPayload
 import com.vocabcheck.app.data.WordEntry
@@ -67,11 +74,14 @@ fun ReviewTab(
     current: WordEntry?,
     pendingCount: Int,
     okCount: Int,
-    totalCount: Int,
+    activeCount: Int,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
+    onDelete: (Int) -> Unit,
     onPickWord: () -> Unit,
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +89,7 @@ fun ReviewTab(
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
-            text = "Проверено: $okCount / $totalCount",
+            text = "Проверено: $okCount / $activeCount",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
         )
@@ -107,7 +117,7 @@ fun ReviewTab(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = if (totalCount > 0 && okCount == totalCount) {
+                    text = if (activeCount > 0 && okCount == activeCount) {
                         "Все слова проверены"
                     } else {
                         "Очередь пуста"
@@ -141,12 +151,12 @@ fun ReviewTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 FilledTonalButton(
                     onClick = { onReject(current.id) },
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                 ) {
                     Icon(
                         Icons.Default.Close,
@@ -158,7 +168,7 @@ fun ReviewTab(
                 }
                 Button(
                     onClick = { onApprove(current.id) },
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
                 ) {
                     Icon(
                         Icons.Default.Check,
@@ -167,6 +177,18 @@ fun ReviewTab(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text("OK", style = MaterialTheme.typography.labelLarge)
+                }
+                OutlinedButton(
+                    onClick = { showDeleteDialog = true },
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = null,
+                        modifier = Modifier.height(16.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text("Удалить", style = MaterialTheme.typography.labelLarge)
                 }
             }
 
@@ -182,6 +204,17 @@ fun ReviewTab(
                     .padding(bottom = 24.dp),
             )
         }
+    }
+
+    if (showDeleteDialog && current != null) {
+        DeleteCardDialog(
+            headword = current.headword(),
+            onDismiss = { showDeleteDialog = false },
+            onConfirm = {
+                showDeleteDialog = false
+                onDelete(current.id)
+            },
+        )
     }
 }
 
@@ -313,34 +346,71 @@ fun EditListTab(
     needsEdit: List<WordEntry>,
     onOpen: (Int) -> Unit,
 ) {
-    if (needsEdit.isEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = "Нет слов на правку",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = "Свайпни влево на вкладке «Проверка», если перевод не подходит.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            )
+    var query by remember { mutableStateOf("") }
+    val filtered = remember(needsEdit, query) {
+        val q = query.trim()
+        if (q.isEmpty()) {
+            needsEdit
+        } else {
+            needsEdit.filter { word ->
+                word.headword().contains(q, ignoreCase = true) ||
+                    word.main.contains(q, ignoreCase = true) ||
+                    word.pos.contains(q, ignoreCase = true) ||
+                    word.also.any { it.contains(q, ignoreCase = true) }
+            }
         }
-        return
     }
 
-    WordList(
-        words = needsEdit,
-        header = "К правке: ${needsEdit.size}",
-        onOpen = onOpen,
-    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            label = { Text("Поиск по слову или переводу") },
+            singleLine = true,
+            shape = RoundedCornerShape(14.dp),
+        )
+
+        if (needsEdit.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "Нет слов на правку",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Свайпни влево на вкладке «Проверка», если перевод не подходит.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                )
+            }
+        } else if (filtered.isEmpty()) {
+            Text(
+                text = "Ничего не найдено",
+                modifier = Modifier.padding(24.dp),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
+            )
+        } else {
+            WordList(
+                words = filtered,
+                header = if (query.isBlank()) {
+                    "К правке: ${needsEdit.size}"
+                } else {
+                    "Найдено: ${filtered.size} из ${needsEdit.size}"
+                },
+                onOpen = onOpen,
+            )
+        }
+    }
 }
 
 @Composable
@@ -415,6 +485,78 @@ fun OkListTab(
 }
 
 @Composable
+fun DeletedListTab(
+    deletedWords: List<WordEntry>,
+    onOpen: (Int) -> Unit,
+) {
+    var query by remember { mutableStateOf("") }
+    val filtered = remember(deletedWords, query) {
+        val q = query.trim()
+        if (q.isEmpty()) {
+            deletedWords
+        } else {
+            deletedWords.filter { word ->
+                word.headword().contains(q, ignoreCase = true) ||
+                    word.main.contains(q, ignoreCase = true) ||
+                    word.pos.contains(q, ignoreCase = true) ||
+                    word.also.any { it.contains(q, ignoreCase = true) }
+            }
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            label = { Text("Поиск по слову или переводу") },
+            singleLine = true,
+            shape = RoundedCornerShape(14.dp),
+        )
+
+        if (deletedWords.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "Нет удалённых карточек",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Удалённые с проверки или правок появятся здесь — их можно вернуть.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                )
+            }
+        } else if (filtered.isEmpty()) {
+            Text(
+                text = "Ничего не найдено",
+                modifier = Modifier.padding(24.dp),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
+            )
+        } else {
+            WordList(
+                words = filtered,
+                header = if (query.isBlank()) {
+                    "Удалено: ${deletedWords.size}"
+                } else {
+                    "Найдено: ${filtered.size} из ${deletedWords.size}"
+                },
+                onOpen = onOpen,
+            )
+        }
+    }
+}
+
+@Composable
 private fun WordList(
     words: List<WordEntry>,
     header: String,
@@ -451,6 +593,19 @@ private fun WordList(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(word.headword(), fontWeight = FontWeight.SemiBold)
+                        val meta = listOfNotNull(
+                            word.pos.takeIf { it.isNotBlank() },
+                            word.cefr.takeIf { it.isNotBlank() }?.uppercase(),
+                        ).joinToString(" · ")
+                        if (meta.isNotBlank()) {
+                            Text(
+                                text = meta,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                         if (word.main.isNotBlank()) {
                             Text(
                                 text = word.main,
@@ -472,19 +627,136 @@ private fun WordList(
     }
 }
 
+@Composable
+fun DeleteCardDialog(
+    headword: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Удалить карточку?") },
+        text = {
+            Text(
+                "«$headword» попадёт во вкладку «Удалённые». " +
+                    "Позже её можно вернуть на проверку.",
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) { Text("Удалить") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Отмена") }
+        },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeletedWordScreen(
+    word: WordEntry,
+    canUndo: Boolean,
+    onBack: () -> Unit,
+    onUndo: () -> Unit,
+    onRestore: (Int) -> Unit,
+    snackbarHostState: SnackbarHostState,
+) {
+    var showUndoDialog by remember { mutableStateOf(false) }
+
+    BackHandler { onBack() }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text("Удалено: ${word.headword()}", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Только просмотр · можно вернуть на проверку",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { showUndoDialog = true },
+                        enabled = canUndo,
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = "Отменить")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
+            WordCardContent(
+                word = word,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            )
+            Button(
+                onClick = { onRestore(word.id) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+            ) {
+                Icon(Icons.Default.RestoreFromTrash, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Вернуть на проверку")
+            }
+        }
+    }
+
+    if (showUndoDialog) {
+        AlertDialog(
+            onDismissRequest = { showUndoDialog = false },
+            title = { Text("Отменить последнее действие?") },
+            text = { Text("Будет восстановлено предыдущее состояние слова.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showUndoDialog = false
+                        onUndo()
+                    },
+                ) { Text("Отменить") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showUndoDialog = false }) { Text("Нет") }
+            },
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditWordScreen(
     word: WordEntry,
     positionLabel: String,
     canUndo: Boolean,
+    canDelete: Boolean,
     onBack: () -> Unit,
     onUndo: () -> Unit,
+    onDelete: (Int) -> Unit,
     onSave: (id: Int, payload: WordEditPayload) -> Unit,
     onSwap: (Int) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
     var showUndoDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     BackHandler { onBack() }
 
@@ -506,6 +778,11 @@ fun EditWordScreen(
                     }
                 },
                 actions = {
+                    if (canDelete) {
+                        IconButton(onClick = { showDeleteDialog = true }) {
+                            Icon(Icons.Default.Delete, contentDescription = "Удалить")
+                        }
+                    }
                     IconButton(
                         onClick = { showUndoDialog = true },
                         enabled = canUndo,
@@ -548,8 +825,20 @@ fun EditWordScreen(
             },
         )
     }
+
+    if (showDeleteDialog) {
+        DeleteCardDialog(
+            headword = word.headword(),
+            onDismiss = { showDeleteDialog = false },
+            onConfirm = {
+                showDeleteDialog = false
+                onDelete(word.id)
+            },
+        )
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditForm(
     word: WordEntry,
@@ -557,6 +846,15 @@ private fun EditForm(
     onSwap: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val player = rememberPronunciationPlayer()
+
+    var wordUs by remember(word.id) { mutableStateOf(word.wordUs.ifBlank { word.word }) }
+    var wordGb by remember(word.id) { mutableStateOf(word.wordGb.ifBlank { word.word }) }
+    val posOptions = CardFieldOptions.POS
+    var pos by remember(word.id) { mutableStateOf(normalizePos(word.pos)) }
+    var cefr by remember(word.id) { mutableStateOf(word.cefr.lowercase()) }
+    var ipaUsText by remember(word.id) { mutableStateOf(word.ipaUs.joinToString(" ")) }
+    var ipaGbText by remember(word.id) { mutableStateOf(word.ipaGb.joinToString(" ")) }
     var main by remember(word.id) { mutableStateOf(word.main) }
     val alsoFields = remember(word.id) {
         mutableStateListOf<String>().apply {
@@ -571,29 +869,86 @@ private fun EditForm(
         }
     }
 
+    val cefrOptions = remember(word.cefr) {
+        val current = word.cefr.lowercase()
+        if (current.isNotBlank() && current !in CardFieldOptions.CEFR) {
+            listOf(current) + CardFieldOptions.CEFR
+        } else {
+            CardFieldOptions.CEFR
+        }
+    }
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        Text(
-            text = word.headword(),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
+        Text("Написание", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = wordUs,
+            onValueChange = { wordUs = it },
+            label = { Text("US (американское)") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
         )
-        val meta = listOfNotNull(
-            word.pos.takeIf { it.isNotBlank() },
-            word.cefr.takeIf { it.isNotBlank() }?.uppercase(),
-        ).joinToString(" · ")
-        if (meta.isNotBlank()) {
-            Text(
-                text = meta,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f),
-            )
-        }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = wordGb,
+            onValueChange = { wordGb = it },
+            label = { Text("GB (британское)") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+        )
 
+        Spacer(Modifier.height(16.dp))
+        Text("Часть речи и уровень", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(8.dp))
+        OptionDropdown(
+            label = "Часть речи (POS)",
+            value = pos,
+            options = posOptions,
+            onSelect = { pos = it },
+        )
+        Spacer(Modifier.height(8.dp))
+        OptionDropdown(
+            label = "Уровень (CEFR)",
+            value = cefr,
+            options = cefrOptions,
+            onSelect = { cefr = it },
+            displayTransform = { it.uppercase() },
+        )
+
+        Spacer(Modifier.height(16.dp))
+        Text("Произношение (IPA)", fontWeight = FontWeight.SemiBold)
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = ipaUsText,
+            onValueChange = { ipaUsText = it },
+            label = { Text("IPA US") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+        )
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = ipaGbText,
+            onValueChange = { ipaGbText = it },
+            label = { Text("IPA GB") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+        )
+
+        if (word.audioUs.isNotEmpty() || word.audioGb.isNotEmpty()) {
+            Spacer(Modifier.height(12.dp))
+            Text("Аудио (только прослушивание)", fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(6.dp))
+            AudioPlayRow(label = "US", urls = word.audioUs, onPlay = player::play)
+            AudioPlayRow(label = "GB", urls = word.audioGb, onPlay = player::play)
+        }
+
+        Spacer(Modifier.height(16.dp))
         OutlinedTextField(
             value = main,
             onValueChange = { main = it },
@@ -738,6 +1093,12 @@ private fun EditForm(
                         definition = definition,
                         example = example,
                         extraSenses = extraSenses.toList(),
+                        wordUs = wordUs,
+                        wordGb = wordGb,
+                        pos = pos,
+                        cefr = cefr,
+                        ipaUs = splitIpa(ipaUsText),
+                        ipaGb = splitIpa(ipaGbText),
                     ),
                 )
             },
@@ -748,5 +1109,102 @@ private fun EditForm(
             Text("Сохранить как OK")
         }
         Spacer(Modifier.height(32.dp))
+    }
+}
+
+private fun splitIpa(raw: String): List<String> =
+    raw.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
+
+/** Keep a single POS: take the first known atomic label from compound OALD tags. */
+private fun normalizePos(raw: String): String {
+    val trimmed = raw.trim()
+    if (trimmed.isEmpty()) return ""
+    if (trimmed in CardFieldOptions.POS) return trimmed
+    val parts = trimmed.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+    return parts.firstOrNull { it in CardFieldOptions.POS } ?: parts.firstOrNull().orEmpty()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun OptionDropdown(
+    label: String,
+    value: String,
+    options: List<String>,
+    onSelect: (String) -> Unit,
+    displayTransform: (String) -> String = { it },
+) {
+    var expanded by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+    ) {
+        OutlinedTextField(
+            value = if (value.isBlank()) "" else displayTransform(value),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(displayTransform(option)) },
+                    onClick = {
+                        onSelect(option)
+                        expanded = false
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AudioPlayRow(
+    label: String,
+    urls: List<String>,
+    onPlay: (String) -> Unit,
+) {
+    if (urls.isEmpty()) return
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(label, fontWeight = FontWeight.SemiBold, modifier = Modifier.width(36.dp))
+        urls.forEachIndexed { index, url ->
+            AssistChipLikeButton(
+                text = if (urls.size == 1) "Слушать" else "Слушать ${index + 1}",
+                onClick = { onPlay(url) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun AssistChipLikeButton(
+    text: String,
+    onClick: () -> Unit,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+    ) {
+        Icon(
+            Icons.Default.VolumeUp,
+            contentDescription = null,
+            modifier = Modifier.height(16.dp),
+        )
+        Spacer(Modifier.width(4.dp))
+        Text(text, style = MaterialTheme.typography.labelLarge)
     }
 }

@@ -12,13 +12,29 @@ android {
         applicationId = "com.vocabcheck.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 4
+        versionName = "1.1.2"
+    }
+
+    // Stable project keystore so debug/release APKs update over each other
+    // without "conflicts with another package" (signature mismatch).
+    signingConfigs {
+        create("vocabcheck") {
+            val store = rootProject.file("vocabcheck.jks")
+            storeFile = store
+            storePassword = "vocabcheck"
+            keyAlias = "vocabcheck"
+            keyPassword = "vocabcheck"
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("vocabcheck")
+        }
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("vocabcheck")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

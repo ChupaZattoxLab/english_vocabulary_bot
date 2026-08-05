@@ -55,6 +55,12 @@ class WordRepository(private val context: Context) {
                 main = s.main,
                 also = s.also,
                 status = s.status,
+                wordUs = s.wordUs.ifBlank { base.wordUs },
+                wordGb = s.wordGb.ifBlank { base.wordGb },
+                pos = s.pos.ifBlank { base.pos },
+                cefr = s.cefr.ifBlank { base.cefr },
+                ipaUs = s.ipaUs.ifEmpty { base.ipaUs },
+                ipaGb = s.ipaGb.ifEmpty { base.ipaGb },
                 definition = s.definition.ifBlank { base.definition },
                 example = s.example.ifBlank { base.example },
                 extraSenses = s.extraSenses,
@@ -71,6 +77,10 @@ class WordRepository(private val context: Context) {
 
     fun markNeedsEdit(id: Int) = updateWord(id) { it.copy(status = ReviewStatus.NEEDS_EDIT) }
 
+    fun markDeleted(id: Int) = updateWord(id) { it.copy(status = ReviewStatus.DELETED) }
+
+    fun markPending(id: Int) = updateWord(id) { it.copy(status = ReviewStatus.PENDING) }
+
     fun findById(id: Int): WordEntry? = _words.value.firstOrNull { it.id == id }
 
     fun restoreWord(word: WordEntry) = updateWord(word.id) { word }
@@ -85,7 +95,16 @@ class WordRepository(private val context: Context) {
     }
 
     fun saveEdit(id: Int, payload: WordEditPayload, markOk: Boolean) = updateWord(id) { word ->
+        val nextUs = payload.wordUs.trim()
+        val nextGb = payload.wordGb.trim()
         word.copy(
+            wordUs = nextUs,
+            wordGb = nextGb,
+            word = nextUs.ifBlank { nextGb.ifBlank { word.word } },
+            pos = payload.pos.trim(),
+            cefr = payload.cefr.trim().lowercase(),
+            ipaUs = payload.ipaUs.map { it.trim() }.filter { it.isNotEmpty() },
+            ipaGb = payload.ipaGb.map { it.trim() }.filter { it.isNotEmpty() },
             main = payload.main.trim(),
             also = payload.also.map { it.trim() }.filter { it.isNotEmpty() },
             definition = payload.definition.trim(),
@@ -112,8 +131,10 @@ class WordRepository(private val context: Context) {
 
     fun totalCount(): Int = _words.value.size
 
-    fun allOk(): Boolean =
-        _words.value.isNotEmpty() && _words.value.all { it.status == ReviewStatus.OK }
+    fun allOk(): Boolean {
+        val active = _words.value.filter { it.status != ReviewStatus.DELETED }
+        return active.isNotEmpty() && active.all { it.status == ReviewStatus.OK }
+    }
 
     private val exportJson = Json {
         prettyPrint = true
@@ -196,7 +217,16 @@ class WordRepository(private val context: Context) {
                     word
                 } else {
                     updated++
+                    val nextUs = match.wordUs.ifBlank { word.wordUs }
+                    val nextGb = match.wordGb.ifBlank { word.wordGb }
                     word.copy(
+                        wordUs = nextUs,
+                        wordGb = nextGb,
+                        word = nextUs.ifBlank { nextGb.ifBlank { word.word } },
+                        pos = match.pos.ifBlank { word.pos },
+                        cefr = match.cefr.ifBlank { word.cefr },
+                        ipaUs = match.ipaUs.ifEmpty { word.ipaUs },
+                        ipaGb = match.ipaGb.ifEmpty { word.ipaGb },
                         main = match.translations.ru.main,
                         also = match.translations.ru.also,
                         status = match.status,
