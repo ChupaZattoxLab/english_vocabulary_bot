@@ -24,6 +24,7 @@ android-app/captures/
 
 # Python
 .venv/
+.bot.pid
 scripts/__pycache__/
 __pycache__/
 *.pyc

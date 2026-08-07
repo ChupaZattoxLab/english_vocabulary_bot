@@ -12,9 +12,17 @@ imageio-ffmpeg = ">=0.6,<1"
 psycopg = { version = ">=3,<4", extras = ["binary", "pool"] }
 alembic = "^1.19.0"
 sqlalchemy = "^2.0.51"
+psutil = "^7.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
+
+[tool.poetry.scripts]
+start = "vocabulary_bot.commands:start"
+stop = "vocabulary_bot.commands:stop"
+migrate = "vocabulary_bot.commands:migrate"
+check = "vocabulary_bot.commands:check"
+test = "vocabulary_bot.commands:test"
 
 [build-system]
 requires = ["poetry-core"]
