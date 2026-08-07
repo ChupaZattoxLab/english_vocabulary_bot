@@ -16,15 +16,9 @@ from typing import Any
 from urllib.parse import urlparse
 
 try:
-    from .oald_audio_schema import (
-        CREATE_AUDIO_VARIANT_INDEX_SQL,
-        CREATE_AUDIO_VARIANT_TABLE_SQL,
-    )
+    from .oald_audio_schema import require_oald_schema
 except ImportError:
-    from oald_audio_schema import (  # type: ignore[no-redef]
-        CREATE_AUDIO_VARIANT_INDEX_SQL,
-        CREATE_AUDIO_VARIANT_TABLE_SQL,
-    )
+    from oald_audio_schema import require_oald_schema  # type: ignore[no-redef]
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -49,113 +43,6 @@ EXPECTED_FIELDS = {
 }
 
 LOGGER = logging.getLogger("vocabulary.oald_import")
-
-CREATE_ENTRY_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS oald_entries (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    word_us TEXT NOT NULL,
-    word_gb TEXT NOT NULL,
-    lexical_category TEXT NOT NULL,
-    cefr VARCHAR(2) NOT NULL,
-    definition_url_oxford TEXT NOT NULL UNIQUE,
-    definition_url_cambridge TEXT NOT NULL DEFAULT '',
-    ipa_us TEXT[] NOT NULL DEFAULT '{}',
-    ipa_gb TEXT[] NOT NULL DEFAULT '{}',
-    definition TEXT NOT NULL,
-    example TEXT NOT NULL,
-    audio_source_us TEXT[] NOT NULL DEFAULT '{}',
-    audio_source_gb TEXT[] NOT NULL DEFAULT '{}',
-    translations JSONB NOT NULL DEFAULT '{}',
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT oald_entries_cefr_check
-        CHECK (cefr IN ('a1', 'a2', 'b1', 'b2', 'c1', 'c2')),
-    CONSTRAINT oald_entries_word_us_check CHECK (btrim(word_us) <> ''),
-    CONSTRAINT oald_entries_word_gb_check CHECK (btrim(word_gb) <> ''),
-    CONSTRAINT oald_entries_category_check CHECK (btrim(lexical_category) <> ''),
-    CONSTRAINT oald_entries_definition_url_check
-        CHECK (btrim(definition_url_oxford) <> '')
-)
-"""
-
-CREATE_AUDIO_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS oald_audio_files (
-    source_url TEXT PRIMARY KEY,
-    audio_data BYTEA,
-    content_type TEXT NOT NULL DEFAULT '',
-    filename TEXT NOT NULL DEFAULT '',
-    size_bytes BIGINT,
-    sha256 CHAR(64) NOT NULL DEFAULT '',
-    download_status TEXT NOT NULL DEFAULT 'pending',
-    last_http_status INTEGER,
-    last_error TEXT NOT NULL DEFAULT '',
-    attempt_count INTEGER NOT NULL DEFAULT 0,
-    last_attempted_at TIMESTAMPTZ,
-    downloaded_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT oald_audio_status_check
-        CHECK (download_status IN ('pending', 'downloaded', 'failed')),
-    CONSTRAINT oald_audio_attempt_count_check CHECK (attempt_count >= 0),
-    CONSTRAINT oald_audio_size_check CHECK (size_bytes IS NULL OR size_bytes >= 0)
-)
-"""
-
-CREATE_AUDIO_LINK_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS oald_entry_audio_sources (
-    entry_id BIGINT NOT NULL
-        REFERENCES oald_entries(id) ON DELETE CASCADE,
-    dialect VARCHAR(2) NOT NULL,
-    source_position INTEGER NOT NULL,
-    source_url TEXT NOT NULL
-        REFERENCES oald_audio_files(source_url),
-    PRIMARY KEY (entry_id, dialect, source_position),
-    CONSTRAINT oald_entry_audio_dialect_check
-        CHECK (dialect IN ('us', 'gb')),
-    CONSTRAINT oald_entry_audio_position_check CHECK (source_position >= 0)
-)
-"""
-
-CREATE_INDEX_SQL = (
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_word_us_idx
-    ON oald_entries (word_us)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_word_gb_idx
-    ON oald_entries (word_gb)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_category_idx
-    ON oald_entries (lexical_category)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_cefr_idx
-    ON oald_entries (cefr)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_word_us_category_idx
-    ON oald_entries (word_us, lexical_category)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_translations_idx
-    ON oald_entries USING GIN (translations)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entry_audio_source_url_idx
-    ON oald_entry_audio_sources (source_url)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entry_audio_dialect_idx
-    ON oald_entry_audio_sources (dialect)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_audio_sha256_idx
-    ON oald_audio_files (sha256)
-    WHERE sha256 <> ''
-    """,
-)
 
 UPSERT_ENTRY_SQL = """
 INSERT INTO oald_entries (
@@ -482,26 +369,12 @@ def iter_batches(
         yield batch
 
 
-def ensure_schema(cursor: Any) -> None:
-    cursor.execute(CREATE_ENTRY_TABLE_SQL)
-    cursor.execute(
-        "ALTER TABLE oald_entries "
-        "ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE"
-    )
-    cursor.execute(CREATE_AUDIO_TABLE_SQL)
-    cursor.execute(CREATE_AUDIO_VARIANT_TABLE_SQL)
-    cursor.execute(CREATE_AUDIO_LINK_TABLE_SQL)
-    for statement in CREATE_INDEX_SQL:
-        cursor.execute(statement)
-    cursor.execute(CREATE_AUDIO_VARIANT_INDEX_SQL)
-
-
 def _load_psycopg() -> Any:
     try:
         import psycopg
     except ImportError as exc:
         raise OaldDatabaseError(
-            "psycopg is not installed; run: python -m pip install -r requirements.txt"
+            "psycopg is not installed; run: poetry install"
         ) from exc
     return psycopg
 
@@ -596,8 +469,8 @@ def import_entries(
             **connection_options(database_url),
         ) as connection:
             with connection.cursor() as cursor:
-                ensure_schema(cursor)
-                LOGGER.info("OALD PostgreSQL tables and indexes are ready")
+                require_oald_schema(cursor)
+                LOGGER.info("Alembic-managed OALD schema is ready")
                 for batch in iter_batches(entries, batch_size):
                     imported_ids: list[int] = []
                     links: list[tuple[int, str, int, str]] = []

@@ -20,15 +20,9 @@ from typing import Any
 from urllib.parse import unquote, urlparse
 
 try:
-    from .oald_audio_schema import (
-        CREATE_AUDIO_VARIANT_INDEX_SQL,
-        CREATE_AUDIO_VARIANT_TABLE_SQL,
-    )
+    from .oald_audio_schema import require_oald_schema
 except ImportError:
-    from oald_audio_schema import (  # type: ignore[no-redef]
-        CREATE_AUDIO_VARIANT_INDEX_SQL,
-        CREATE_AUDIO_VARIANT_TABLE_SQL,
-    )
+    from oald_audio_schema import require_oald_schema  # type: ignore[no-redef]
 
 
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
@@ -383,8 +377,7 @@ def _ffmpeg_executable() -> str:
         import imageio_ffmpeg
     except ImportError as exc:
         raise AudioConversionError(
-            "imageio-ffmpeg is not installed; run: "
-            "python -m pip install -r requirements.txt"
+            "imageio-ffmpeg is not installed; run: poetry install"
         ) from exc
     try:
         return str(imageio_ffmpeg.get_ffmpeg_exe())
@@ -573,7 +566,7 @@ def _load_psycopg() -> Any:
         import psycopg
     except ImportError as exc:
         raise OaldAudioDatabaseError(
-            "psycopg is not installed; run: python -m pip install -r requirements.txt"
+            "psycopg is not installed; run: poetry install"
         ) from exc
     return psycopg
 
@@ -727,8 +720,7 @@ def download_audio_to_postgres(
             **connection_options(database_url),
         ) as connection:
             with connection.cursor() as cursor:
-                cursor.execute(CREATE_AUDIO_VARIANT_TABLE_SQL)
-                cursor.execute(CREATE_AUDIO_VARIANT_INDEX_SQL)
+                require_oald_schema(cursor)
                 cursor.execute(
                     "SELECT to_regclass('public.bot_telegram_audio_cache')"
                 )

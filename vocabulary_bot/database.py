@@ -4,241 +4,35 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from functools import lru_cache
 from typing import Any
 from urllib.parse import urlparse
 
+from alembic.config import Config as AlembicConfig
+from alembic.script import ScriptDirectory
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
+from vocabulary_bot.config import PROJECT_ROOT
+
 
 VALID_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
-
-SCHEMA_SQL = (
-    """
-    CREATE TABLE IF NOT EXISTS oald_audio_variants (
-        source_url TEXT NOT NULL
-            REFERENCES oald_audio_files(source_url) ON DELETE CASCADE,
-        variant_type TEXT NOT NULL,
-        source_sha256 CHAR(64) NOT NULL DEFAULT '',
-        audio_data BYTEA,
-        content_type TEXT NOT NULL DEFAULT '',
-        filename TEXT NOT NULL DEFAULT '',
-        size_bytes BIGINT,
-        sha256 CHAR(64) NOT NULL DEFAULT '',
-        conversion_status TEXT NOT NULL DEFAULT 'pending',
-        last_error TEXT NOT NULL DEFAULT '',
-        attempt_count INTEGER NOT NULL DEFAULT 0,
-        converted_at TIMESTAMPTZ,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (source_url, variant_type),
-        CONSTRAINT oald_audio_variant_type_check
-            CHECK (variant_type IN ('telegram_voice_opus')),
-        CONSTRAINT oald_audio_variant_status_check
-            CHECK (conversion_status IN ('pending', 'prepared', 'failed'))
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS bot_users (
-        telegram_user_id BIGINT PRIMARY KEY,
-        chat_id BIGINT NOT NULL,
-        username TEXT NOT NULL DEFAULT '',
-        first_name TEXT NOT NULL DEFAULT '',
-        selected_levels TEXT[] NOT NULL DEFAULT '{}',
-        pronunciation VARCHAR(4),
-        onboarding_completed BOOLEAN NOT NULL DEFAULT FALSE,
-        is_active BOOLEAN NOT NULL DEFAULT TRUE,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        last_delivery_at TIMESTAMPTZ,
-        paused_at TIMESTAMPTZ,
-        blocked_at TIMESTAMPTZ,
-        CONSTRAINT bot_users_pronunciation_check
-            CHECK (
-                pronunciation IS NULL
-                OR pronunciation IN ('us', 'gb', 'both')
-            ),
-        CONSTRAINT bot_users_levels_check
-            CHECK (selected_levels <@ ARRAY['a1','a2','b1','b2','c1','c2']::TEXT[])
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS bot_user_cards (
-        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-        telegram_user_id BIGINT NOT NULL
-            REFERENCES bot_users(telegram_user_id) ON DELETE CASCADE,
-        entry_id BIGINT NOT NULL REFERENCES oald_entries(id),
-        dialect VARCHAR(4) NOT NULL,
-        source_url TEXT NOT NULL REFERENCES oald_audio_files(source_url),
-        source_url_gb TEXT REFERENCES oald_audio_files(source_url),
-        scheduled_slot TIMESTAMPTZ NOT NULL,
-        status TEXT NOT NULL DEFAULT 'reserved',
-        telegram_message_id BIGINT,
-        error_type TEXT NOT NULL DEFAULT '',
-        error_message TEXT NOT NULL DEFAULT '',
-        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        delivered_at TIMESTAMPTZ,
-        CONSTRAINT bot_user_cards_dialect_check
-            CHECK (dialect IN ('us', 'gb', 'both')),
-        CONSTRAINT bot_user_cards_status_check
-            CHECK (status IN ('reserved', 'delivered', 'failed')),
-        UNIQUE (telegram_user_id, entry_id),
-        UNIQUE (telegram_user_id, scheduled_slot)
-    )
-    """,
-    """
-    ALTER TABLE bot_users
-        ALTER COLUMN pronunciation TYPE VARCHAR(4)
-    """,
-    """
-    ALTER TABLE bot_user_cards
-        ALTER COLUMN dialect TYPE VARCHAR(4)
-    """,
-    """
-    ALTER TABLE bot_user_cards
-        ADD COLUMN IF NOT EXISTS source_url_gb TEXT
-            REFERENCES oald_audio_files(source_url)
-    """,
-    """
-    ALTER TABLE bot_users
-        ADD COLUMN IF NOT EXISTS paused_at TIMESTAMPTZ
-    """,
-    """
-    ALTER TABLE bot_users
-        ADD COLUMN IF NOT EXISTS blocked_at TIMESTAMPTZ
-    """,
-    """
-    ALTER TABLE bot_user_cards
-        ADD COLUMN IF NOT EXISTS error_type TEXT NOT NULL DEFAULT ''
-    """,
-    """
-    ALTER TABLE oald_entries
-        ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE
-    """,
-    """
-    UPDATE bot_users
-    SET paused_at = COALESCE(paused_at, updated_at)
-    WHERE NOT is_active
-      AND paused_at IS NULL
-      AND blocked_at IS NULL
-    """,
-    """
-    DO $$
-    BEGIN
-        IF EXISTS (
-            SELECT 1 FROM pg_constraint
-            WHERE conrelid = 'bot_users'::regclass
-              AND conname = 'bot_users_pronunciation_check'
-              AND pg_get_constraintdef(oid) NOT ILIKE '%both%'
-        ) THEN
-            ALTER TABLE bot_users
-                DROP CONSTRAINT bot_users_pronunciation_check;
-            ALTER TABLE bot_users
-                ADD CONSTRAINT bot_users_pronunciation_check
-                CHECK (
-                    pronunciation IS NULL
-                    OR pronunciation IN ('us', 'gb', 'both')
-                );
-        END IF;
-
-        IF EXISTS (
-            SELECT 1 FROM pg_constraint
-            WHERE conrelid = 'bot_user_cards'::regclass
-              AND conname = 'bot_user_cards_dialect_check'
-              AND pg_get_constraintdef(oid) NOT ILIKE '%both%'
-        ) THEN
-            ALTER TABLE bot_user_cards
-                DROP CONSTRAINT bot_user_cards_dialect_check;
-            ALTER TABLE bot_user_cards
-                ADD CONSTRAINT bot_user_cards_dialect_check
-                CHECK (dialect IN ('us', 'gb', 'both'));
-        END IF;
-    END $$
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS bot_scheduler_runs (
-        scheduled_slot TIMESTAMPTZ PRIMARY KEY,
-        status TEXT NOT NULL DEFAULT 'running',
-        attempted_users INTEGER NOT NULL DEFAULT 0,
-        delivered_cards INTEGER NOT NULL DEFAULT 0,
-        failed_cards INTEGER NOT NULL DEFAULT 0,
-        skipped_users INTEGER NOT NULL DEFAULT 0,
-        started_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        completed_at TIMESTAMPTZ,
-        error_message TEXT NOT NULL DEFAULT '',
-        CONSTRAINT bot_scheduler_runs_status_check
-            CHECK (status IN ('running', 'completed', 'failed'))
-    )
-    """,
-    """
-    CREATE TABLE IF NOT EXISTS bot_telegram_audio_cache (
-        source_url TEXT NOT NULL REFERENCES oald_audio_files(source_url),
-        send_method TEXT NOT NULL,
-        telegram_file_id TEXT NOT NULL,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (source_url, send_method),
-        CONSTRAINT bot_audio_cache_method_check
-            CHECK (send_method IN ('voice', 'audio', 'document'))
-    )
-    """,
-    """
-    DO $$
-    BEGIN
-        IF EXISTS (
-            SELECT 1
-            FROM pg_constraint
-            WHERE conrelid = 'bot_telegram_audio_cache'::regclass
-              AND conname = 'bot_telegram_audio_cache_pkey'
-              AND pg_get_constraintdef(oid) NOT ILIKE '%send_method%'
-        ) THEN
-            ALTER TABLE bot_telegram_audio_cache
-                DROP CONSTRAINT bot_telegram_audio_cache_pkey;
-            ALTER TABLE bot_telegram_audio_cache
-                ADD CONSTRAINT bot_telegram_audio_cache_pkey
-                PRIMARY KEY (source_url, send_method);
-        END IF;
-
-        IF EXISTS (
-            SELECT 1
-            FROM pg_constraint
-            WHERE conrelid = 'bot_telegram_audio_cache'::regclass
-              AND conname = 'bot_audio_cache_method_check'
-              AND pg_get_constraintdef(oid) NOT ILIKE '%voice%'
-        ) THEN
-            ALTER TABLE bot_telegram_audio_cache
-                DROP CONSTRAINT bot_audio_cache_method_check;
-            ALTER TABLE bot_telegram_audio_cache
-                ADD CONSTRAINT bot_audio_cache_method_check
-                CHECK (send_method IN ('voice', 'audio', 'document'));
-        END IF;
-    END $$
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS bot_users_active_idx
-    ON bot_users (is_active, onboarding_completed)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS bot_user_cards_user_status_idx
-    ON bot_user_cards (telegram_user_id, status)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS bot_user_cards_delivered_at_idx
-    ON bot_user_cards (delivered_at)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS bot_user_cards_entry_idx
-    ON bot_user_cards (entry_id)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS bot_user_cards_error_idx
-    ON bot_user_cards (status, error_type, created_at)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oald_entries_active_idx
-    ON oald_entries (is_active, cefr)
-    """,
+REQUIRED_TABLES = (
+    "oald_entries",
+    "oald_audio_files",
+    "oald_entry_audio_sources",
+    "oald_audio_variants",
+    "bot_users",
+    "bot_user_cards",
+    "bot_scheduler_runs",
+    "bot_telegram_audio_cache",
 )
 
+
+@lru_cache(maxsize=1)
+def migration_head() -> str:
+    config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
+    return ScriptDirectory.from_config(config).get_current_head()
 
 CARD_CONTENT_SQL = """
 SELECT
@@ -471,7 +265,11 @@ class Database:
 
     async def open(self) -> None:
         await self.pool.open(wait=True, timeout=30)
-        await self.ensure_schema()
+        try:
+            await self.verify_schema()
+        except Exception:
+            await self.pool.close()
+            raise
 
     async def close(self) -> None:
         await self.pool.close()
@@ -480,24 +278,50 @@ class Database:
         async with self.pool.connection() as connection:
             await connection.execute("SELECT 1")
 
-    async def ensure_schema(self) -> None:
+    async def verify_schema(self) -> None:
         async with self.pool.connection() as connection:
-            row = await (
+            rows = await (
                 await connection.execute(
                     """
-                    SELECT to_regclass('public.oald_entries') AS entries,
-                           to_regclass('public.oald_audio_files') AS audio_files,
-                           to_regclass('public.oald_entry_audio_sources') AS links
-                    """
+                    SELECT table_name
+                    FROM information_schema.tables
+                    WHERE table_schema = 'public'
+                      AND table_name = ANY(%s)
+                    """,
+                    (list(REQUIRED_TABLES),),
+                )
+            ).fetchall()
+            existing = {str(row["table_name"]) for row in rows}
+            missing = set(REQUIRED_TABLES) - existing
+            if missing:
+                raise DatabaseError(
+                    "Database schema is incomplete; missing tables: "
+                    f"{', '.join(sorted(missing))}. Run "
+                    "`poetry run alembic upgrade head`."
+                )
+
+            version_table = await (
+                await connection.execute(
+                    "SELECT to_regclass('public.alembic_version') AS name"
                 )
             ).fetchone()
-            if not row or not all(row.values()):
+            if not version_table or version_table["name"] is None:
                 raise DatabaseError(
-                    "OALD tables are missing; run "
-                    "scripts/build_database/import_oald_postgres.py first"
+                    "Database is not managed by Alembic. Run "
+                    "`poetry run alembic upgrade head`."
                 )
-            for statement in SCHEMA_SQL:
-                await connection.execute(statement)
+            version = await (
+                await connection.execute(
+                    "SELECT version_num FROM alembic_version"
+                )
+            ).fetchone()
+            expected = migration_head()
+            current = str(version["version_num"]) if version else "<none>"
+            if current != expected:
+                raise DatabaseError(
+                    f"Database migration is {current}, expected {expected}. "
+                    "Run `poetry run alembic upgrade head`."
+                )
 
     async def upsert_user(
         self,

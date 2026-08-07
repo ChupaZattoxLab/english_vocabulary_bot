@@ -176,10 +176,10 @@ class OaldJsonTests(unittest.TestCase):
             load_entries(self.json_path, strict=True)
 
     def test_current_dataset_matches_expected_counts(self) -> None:
-        entries, stats = load_entries(
-            ROOT / "data" / "oald" / "words.json",
-            strict=True,
-        )
+        dataset_path = ROOT / "data" / "oald" / "words.json"
+        if not dataset_path.exists():
+            self.skipTest("private OALD dataset is not available")
+        entries, stats = load_entries(dataset_path, strict=True)
 
         self.assertEqual(len(entries), 5906)
         self.assertEqual(stats["audio_references_us"], 6120)
