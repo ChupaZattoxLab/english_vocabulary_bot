@@ -9,7 +9,7 @@ services:
       - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - vocabulary_postgres_data:/var/lib/postgresql/data
-      - ./database/init/10-restore-oald-seed.sh:/docker-entrypoint-initdb.d/10-restore-oald-seed.sh:ro
+      - ./scripts/database/10-restore-oald-seed.sh:/docker-entrypoint-initdb.d/10-restore-oald-seed.sh:ro
       - ./data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts:/database-seed:ro
     healthcheck:
       test:

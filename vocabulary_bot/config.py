@@ -11,8 +11,9 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TEMPLATE_PATH = PROJECT_ROOT / "config" / "card_template.html"
-DEFAULT_BOTH_TEMPLATE_PATH = PROJECT_ROOT / "config" / "card_template_both.html"
+PACKAGE_ROOT = Path(__file__).resolve().parent
+DEFAULT_TEMPLATE_PATH = PACKAGE_ROOT / "templates" / "card_template.html"
+DEFAULT_BOTH_TEMPLATE_PATH = PACKAGE_ROOT / "templates" / "card_template_both.html"
 
 
 class ConfigError(ValueError):
