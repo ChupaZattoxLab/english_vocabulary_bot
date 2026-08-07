@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "english-vocabulary-bot"
+version = "0.1.0"
+description = "Telegram bot that sends OALD-backed vocabulary cards from PostgreSQL"
+readme = "README.md"
+packages = [{ include = "vocabulary_bot" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.15"
+aiogram = ">=3.20,<4"
+imageio-ffmpeg = ">=0.6,<1"
+psycopg = { version = ">=3,<4", extras = ["binary", "pool"] }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["scripts/build_database", "."]

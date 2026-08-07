@@ -23,6 +23,10 @@ android-app/captures/
 *.dex
 
 # Python
+.venv/
 scripts/__pycache__/
 __pycache__/
 *.pyc
+.pytest_cache/
+dist/
+*.egg-info/

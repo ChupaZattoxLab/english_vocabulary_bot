@@ -50,16 +50,24 @@ POSTGRES_PORT=5433
 OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5433/english_vocabulary_oald
 ```
 
-5. Install and run the bot:
+5. Install Poetry (once), then install deps and run the bot:
 
 ```powershell
-python -m pip install -r requirements.txt
-python -m vocabulary_bot
+python -m pip install poetry
+poetry install
+poetry run python -m vocabulary_bot
 ```
 
 Admin UI: `/admin` (only for IDs in `TELEGRAM_ADMIN_IDS`).
 
 Only one process may poll the same bot token. Stop the server instance before running locally.
+
+Tests:
+
+```powershell
+poetry run pytest
+```
+
 
 ### Server (systemd)
 
