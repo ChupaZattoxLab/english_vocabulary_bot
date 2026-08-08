@@ -70,16 +70,17 @@ ERROR_MESSAGE_MAX_LEN = 2000
 TELEGRAM_MESSAGE_MAX_LEN = 4096
 
 # ---------------------------------------------------------------------------
-# Schedule: cards per day and default BotConfig when env vars are omitted
+# Schedule and delivery (not env-configurable; change here, not in .env)
 # ---------------------------------------------------------------------------
 
 CARDS_PER_DAY = 3
-DEFAULT_SEND_TIMES = "09:00,14:00,20:00"
-DEFAULT_TIMEZONE = "Europe/Moscow"
-DEFAULT_SCHEDULE_GRACE_MINUTES = 60
-DEFAULT_SCHEDULER_POLL_SECONDS = 20
-DEFAULT_DELIVERY_CONCURRENCY = 5
-DEFAULT_DATABASE_POOL_SIZE = 5
+# Local wall-clock times; must stay unique and length == CARDS_PER_DAY.
+SEND_TIMES = "09:00,14:00,20:00"
+TIMEZONE = "Europe/Moscow"
+SCHEDULE_GRACE_MINUTES = 60
+SCHEDULER_POLL_SECONDS = 20
+DELIVERY_CONCURRENCY = 5
+DATABASE_POOL_SIZE = 5
 
 # ---------------------------------------------------------------------------
 # Database pool connection settings

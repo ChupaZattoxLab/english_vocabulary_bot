@@ -15,7 +15,7 @@ from tgbot.constants import (
     DATABASE_CONNECT_TIMEOUT_SECONDS,
     DATABASE_POOL_MIN_SIZE,
     DATABASE_POOL_OPEN_TIMEOUT_SECONDS,
-    DEFAULT_DATABASE_POOL_SIZE,
+    DATABASE_POOL_SIZE,
 )
 from tgbot.db.mixins import (
     AdminMixin,
@@ -57,7 +57,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
         self,
         database_url: str,
         *,
-        pool_size: int = DEFAULT_DATABASE_POOL_SIZE,
+        pool_size: int = DATABASE_POOL_SIZE,
     ):
         self.pool = AsyncConnectionPool(
             conninfo=database_url,

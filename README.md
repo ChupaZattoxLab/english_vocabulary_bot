@@ -49,14 +49,17 @@ cd english_vocabulary_bot
 Copy-Item .env.example .env
 ```
 
-Edit `.env` and set at least:
+Edit `.env` with secrets only:
 
 ```env
 TELEGRAM_BOT_TOKEN=...your token...
 TELEGRAM_ADMIN_IDS=123456789
+OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5432/english_vocabulary_oald
 ```
 
-`OALD_DATABASE_URL` in `.env.example` already matches the Compose defaults
+Schedule, card templates, and pool sizes live in `tgbot/constants.py` (not `.env`).
+
+`OALD_DATABASE_URL` in `.env.example` matches Compose defaults
 (`vocab_app` / `vocab_dev_password` / `english_vocabulary_oald` on port `5432`).
 
 If host port **5432** is already taken (common when a local Postgres is installed),
@@ -66,6 +69,8 @@ set **both** of these in `.env` **before** starting Compose:
 POSTGRES_PORT=5433
 OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5433/english_vocabulary_oald
 ```
+
+`POSTGRES_PORT` is read by Docker Compose only; the bot uses `OALD_DATABASE_URL`.
 
 ### 2. Optional: place the OALD seed
 

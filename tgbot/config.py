@@ -11,18 +11,18 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from tgbot.constants import (
     CARDS_PER_DAY,
-    DEFAULT_DATABASE_POOL_SIZE,
-    DEFAULT_DELIVERY_CONCURRENCY,
-    DEFAULT_SCHEDULE_GRACE_MINUTES,
-    DEFAULT_SCHEDULER_POLL_SECONDS,
-    DEFAULT_SEND_TIMES,
-    DEFAULT_TIMEZONE,
+    DATABASE_POOL_SIZE,
+    DELIVERY_CONCURRENCY,
+    SCHEDULE_GRACE_MINUTES,
+    SCHEDULER_POLL_SECONDS,
+    SEND_TIMES,
+    TIMEZONE,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = Path(__file__).resolve().parent
-DEFAULT_TEMPLATE_PATH = PACKAGE_ROOT / "delivery" / "templates" / "card_template.html"
-DEFAULT_BOTH_TEMPLATE_PATH = (
+CARD_TEMPLATE_PATH = PACKAGE_ROOT / "delivery" / "templates" / "card_template.html"
+BOTH_CARD_TEMPLATE_PATH = (
     PACKAGE_ROOT / "delivery" / "templates" / "card_template_both.html"
 )
 
@@ -79,31 +79,14 @@ def parse_send_times(value: str) -> tuple[time, ...]:
             parsed_time = time(hour=int(hour_text), minute=int(minute_text))
         except (TypeError, ValueError) as exc:
             raise ConfigError(
-                "BOT_SEND_TIMES must contain HH:MM values separated by commas"
+                "SEND_TIMES must contain HH:MM values separated by commas"
             ) from exc
         parsed.append(parsed_time)
     if len(parsed) != CARDS_PER_DAY or len(set(parsed)) != CARDS_PER_DAY:
         raise ConfigError(
-            f"BOT_SEND_TIMES must contain exactly {CARDS_PER_DAY} unique times"
+            f"SEND_TIMES must contain exactly {CARDS_PER_DAY} unique times"
         )
     return tuple(sorted(parsed))
-
-
-def positive_int(values: Mapping[str, str], name: str, default: int) -> int:
-    try:
-        result = int(values.get(name, str(default)))
-    except ValueError as exc:
-        raise ConfigError(f"{name} must be an integer") from exc
-    if result <= 0:
-        raise ConfigError(f"{name} must be greater than zero")
-    return result
-
-
-def resolve_path(value: str, default: Path) -> Path:
-    path = Path(value).expanduser() if value else default
-    if not path.is_absolute():
-        path = PROJECT_ROOT / path
-    return path
 
 
 @dataclass(frozen=True)
@@ -133,6 +116,7 @@ class BotConfig:
         *,
         require_token: bool = True,
     ) -> BotConfig:
+        """Load secrets from env/.env; schedule and paths come from constants."""
         source = os.environ if values is None else values
         token = source.get("TELEGRAM_BOT_TOKEN", "").strip()
         if require_token and not token:
@@ -141,50 +125,22 @@ class BotConfig:
         if not database_url:
             raise ConfigError("OALD_DATABASE_URL is required")
 
-        timezone_name = source.get("BOT_TIMEZONE", DEFAULT_TIMEZONE).strip()
         try:
-            timezone = ZoneInfo(timezone_name)
+            timezone = ZoneInfo(TIMEZONE)
         except ZoneInfoNotFoundError as exc:
-            raise ConfigError(f"unknown BOT_TIMEZONE {timezone_name!r}") from exc
-
-        template_path = resolve_path(
-            source.get("BOT_CARD_TEMPLATE_PATH", "").strip(),
-            DEFAULT_TEMPLATE_PATH,
-        )
-        both_template_path = resolve_path(
-            source.get("BOT_CARD_TEMPLATE_BOTH_PATH", "").strip(),
-            DEFAULT_BOTH_TEMPLATE_PATH,
-        )
+            raise ConfigError(f"unknown TIMEZONE {TIMEZONE!r}") from exc
 
         return cls(
             bot_token=token,
             database_url=database_url,
             admin_ids=parse_admin_ids(source.get("TELEGRAM_ADMIN_IDS", "")),
             timezone=timezone,
-            timezone_name=timezone_name,
-            send_times=parse_send_times(
-                source.get("BOT_SEND_TIMES", DEFAULT_SEND_TIMES)
-            ),
-            card_template_path=template_path,
-            both_card_template_path=both_template_path,
-            schedule_grace_minutes=positive_int(
-                source,
-                "BOT_SCHEDULE_GRACE_MINUTES",
-                DEFAULT_SCHEDULE_GRACE_MINUTES,
-            ),
-            scheduler_poll_seconds=positive_int(
-                source,
-                "BOT_SCHEDULER_POLL_SECONDS",
-                DEFAULT_SCHEDULER_POLL_SECONDS,
-            ),
-            delivery_concurrency=positive_int(
-                source,
-                "BOT_DELIVERY_CONCURRENCY",
-                DEFAULT_DELIVERY_CONCURRENCY,
-            ),
-            database_pool_size=positive_int(
-                source,
-                "BOT_DATABASE_POOL_SIZE",
-                DEFAULT_DATABASE_POOL_SIZE,
-            ),
+            timezone_name=TIMEZONE,
+            send_times=parse_send_times(SEND_TIMES),
+            card_template_path=CARD_TEMPLATE_PATH,
+            both_card_template_path=BOTH_CARD_TEMPLATE_PATH,
+            schedule_grace_minutes=SCHEDULE_GRACE_MINUTES,
+            scheduler_poll_seconds=SCHEDULER_POLL_SECONDS,
+            delivery_concurrency=DELIVERY_CONCURRENCY,
+            database_pool_size=DATABASE_POOL_SIZE,
         )

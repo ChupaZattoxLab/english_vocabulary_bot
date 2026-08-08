@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import Any, cast
 
 from tgbot.constants import (
-    DEFAULT_SCHEDULE_GRACE_MINUTES,
     ERROR_MESSAGE_MAX_LEN,
+    SCHEDULE_GRACE_MINUTES,
     SCHEDULER_RETRY_COOLDOWN_MINUTES,
     SCHEDULER_STALE_RUNNING_MINUTES,
     SCHEDULER_STATUS_COMPLETED,
@@ -22,7 +22,7 @@ class SchedulerMixin(PoolBound):
         self,
         scheduled_slot: datetime,
         *,
-        grace_minutes: int = DEFAULT_SCHEDULE_GRACE_MINUTES,
+        grace_minutes: int = SCHEDULE_GRACE_MINUTES,
     ) -> bool:
         """Claim a slot, or reclaim it for retries within the grace window."""
         async with self.pool.connection() as connection:

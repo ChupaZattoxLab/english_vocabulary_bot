@@ -92,8 +92,6 @@ class BotConfigTests(unittest.TestCase):
                 "TELEGRAM_BOT_TOKEN": "token",
                 "TELEGRAM_ADMIN_IDS": "123, 456",
                 "OALD_DATABASE_URL": "postgresql://localhost/test",
-                "BOT_TIMEZONE": "Europe/Amsterdam",
-                "BOT_SEND_TIMES": "20:00,09:00,14:00",
             }
         )
 
@@ -102,21 +100,17 @@ class BotConfigTests(unittest.TestCase):
             config.send_times,
             (time(9, 0), time(14, 0), time(20, 0)),
         )
-        self.assertEqual(config.schedule_text, "09:00, 14:00, 20:00 (Europe/Amsterdam)")
+        self.assertEqual(config.schedule_text, "09:00, 14:00, 20:00 (Europe/Moscow)")
         self.assertEqual(
             config.both_card_template_path.name,
             "card_template_both.html",
         )
 
-    def test_exactly_three_unique_times_are_required(self) -> None:
+    def test_send_times_constant_must_match_cards_per_day(self) -> None:
+        from tgbot.config import parse_send_times
+
         with self.assertRaises(ConfigError):
-            BotConfig.from_env(
-                {
-                    "TELEGRAM_BOT_TOKEN": "token",
-                    "OALD_DATABASE_URL": "postgresql://localhost/test",
-                    "BOT_SEND_TIMES": "09:00,14:00",
-                }
-            )
+            parse_send_times("09:00,14:00")
 
 
 class CardTemplateTests(unittest.TestCase):
