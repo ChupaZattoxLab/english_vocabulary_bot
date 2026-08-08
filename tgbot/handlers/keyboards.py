@@ -13,8 +13,10 @@ LEVELS = tuple(level.upper() for level in VALID_LEVELS)
 def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:
     selected = {level.lower() for level in selected_levels}
     rows: list[list[InlineKeyboardButton]] = []
+
     for start in range(0, len(LEVELS), 3):
         row: list[InlineKeyboardButton] = []
+
         for level in LEVELS[start : start + 3]:
             marker = (
                 locale.keyboard.level_selected_prefix
@@ -28,6 +30,7 @@ def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:
                 )
             )
         rows.append(row)
+
     rows.append(
         [
             InlineKeyboardButton(
@@ -36,6 +39,7 @@ def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:
             )
         ]
     )
+
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 

@@ -54,16 +54,19 @@ class CardTemplate:
 
     def render(self, values: Mapping[str, str]) -> str:
         self._load_if_changed()
+
         escaped = {
             field: html.escape(str(values.get(field, "")), quote=False)
             for field in ALLOWED_FIELDS
         }
         rendered = self._template.format_map(escaped)
+
         if len(rendered) > TELEGRAM_MESSAGE_MAX_LEN:
             raise CardTemplateError(
                 "rendered card exceeds Telegram's "
                 f"{TELEGRAM_MESSAGE_MAX_LEN}-character text limit"
             )
+
         return rendered
 
     def reload(self) -> None:
@@ -78,13 +81,17 @@ class CardTemplate:
             raise CardTemplateError(
                 f"could not read card template {self.path}: {exc}"
             ) from exc
+
         if stat.st_mtime_ns == self._mtime_ns:
             return
+
         template = self.path.read_text(encoding="utf-8").strip()
+
         if not template:
             raise CardTemplateError("card template must not be empty")
 
         fields: set[str] = set()
+
         try:
             parts = string.Formatter().parse(template)
             for _, field_name, format_spec, conversion in parts:
@@ -101,11 +108,14 @@ class CardTemplate:
                 fields.add(field_name)
         except ValueError as exc:
             raise CardTemplateError(f"invalid card template: {exc}") from exc
+
         missing = sorted(REQUIRED_FIELDS - fields)
+
         if missing:
             raise CardTemplateError(
                 f"card template is missing required fields: {', '.join(missing)}"
             )
+
         if not fields.intersection(
             {
                 "word",
@@ -119,9 +129,11 @@ class CardTemplate:
             raise CardTemplateError(
                 "card template must contain at least one word field"
             )
+
         if "ipa" not in fields and not {"ipa_us", "ipa_gb"}.issubset(fields):
             raise CardTemplateError(
                 "card template must contain {ipa}, or both {ipa_us} and {ipa_gb}"
             )
+
         self._template = template
         self._mtime_ns = stat.st_mtime_ns

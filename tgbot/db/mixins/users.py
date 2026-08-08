@@ -47,6 +47,7 @@ class UsersMixin(PoolBound):
                     (telegram_user_id, chat_id, username, first_name),
                 )
             ).fetchone()
+
         return user_from_row(row)
 
     async def get_user(self, telegram_user_id: int) -> BotUser | None:
@@ -57,12 +58,14 @@ class UsersMixin(PoolBound):
                     (telegram_user_id,),
                 )
             ).fetchone()
+
         return user_from_row(row) if row else None
 
     async def toggle_level(self, telegram_user_id: int, level: str) -> BotUser:
         normalized = level.lower()
         if normalized not in VALID_LEVELS:
             raise ValueError(f"unsupported CEFR level {level!r}")
+
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
@@ -80,8 +83,10 @@ class UsersMixin(PoolBound):
                     (normalized, normalized, normalized, telegram_user_id),
                 )
             ).fetchone()
+
         if not row:
             raise DatabaseError("bot user does not exist")
+
         return user_from_row(row)
 
     async def set_pronunciation(
@@ -92,6 +97,7 @@ class UsersMixin(PoolBound):
         normalized = dialect.lower()
         if normalized not in VALID_PRONUNCIATIONS:
             raise ValueError(f"unsupported pronunciation {dialect!r}")
+
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
@@ -111,8 +117,10 @@ class UsersMixin(PoolBound):
                     (normalized, telegram_user_id),
                 )
             ).fetchone()
+
         if not row:
             raise DatabaseError("bot user does not exist")
+
         return user_from_row(row)
 
     async def clear_blocked_marker(self, telegram_user_id: int) -> None:
@@ -146,6 +154,7 @@ class UsersMixin(PoolBound):
                 """,
                 (active, active, active, telegram_user_id),
             )
+
         return result.rowcount > 0
 
     async def active_users(self) -> list[ActiveUser]:
@@ -163,6 +172,7 @@ class UsersMixin(PoolBound):
                     """
                 )
             ).fetchall()
+
         return [
             ActiveUser(
                 telegram_user_id=row_int(row, "telegram_user_id"),

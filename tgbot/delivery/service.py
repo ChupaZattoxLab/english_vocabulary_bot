@@ -75,10 +75,12 @@ class CardDeliveryService:
             return DeliveryOutcome(DELIVERY_STATUS_SKIPPED)
 
         text_sent = False
+
         try:
             rendered = self.render_card(card)
             await self._send_card_text(bot, chat_id=chat_id, text=rendered)
             text_sent = True
+
             message = await self._send_reserved_voices(
                 bot,
                 chat_id=chat_id,
@@ -90,6 +92,7 @@ class CardDeliveryService:
                 telegram_message_id=message.message_id,
             )
             return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
+
         except TelegramForbiddenError as exc:
             if text_sent:
                 await self.database.finish_delivery(
@@ -103,12 +106,15 @@ class CardDeliveryService:
                     error_type=classify_delivery_error(exc),
                     error_message=str(exc),
                 )
+
             await self.database.deactivate_user(telegram_user_id)
             LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
+
             return DeliveryOutcome(
                 DELIVERY_STATUS_DELIVERED if text_sent else DELIVERY_STATUS_FAILED,
                 card,
             )
+
         except Exception as exc:  # noqa: BLE001
             if text_sent:
                 await self.database.finish_delivery(
@@ -121,6 +127,7 @@ class CardDeliveryService:
                     telegram_user_id,
                 )
                 return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
+
             await self.database.finish_delivery(
                 card.history_id,
                 delivered=False,
@@ -174,7 +181,9 @@ class CardDeliveryService:
         card: ReservedCard,
     ) -> Message:
         rendered = self.render_card(card)
+
         await self._send_card_text(bot, chat_id=chat_id, text=rendered)
+
         return await self._send_reserved_voices(bot, chat_id=chat_id, card=card)
 
     async def _send_reserved_voices(
@@ -184,6 +193,7 @@ class CardDeliveryService:
         card: ReservedCard,
     ) -> Message:
         primary_dialect = "US" if card.dialect == "BOTH" else card.dialect
+
         message = await self._send_voice_attachment(
             bot,
             chat_id=chat_id,
@@ -195,8 +205,10 @@ class CardDeliveryService:
                 card.ipa_us if card.dialect == "BOTH" else card.ipa,
             ),
         )
+
         if card.secondary_audio:
             secondary: ReservedAudio = card.secondary_audio
+
             message = await self._send_voice_attachment(
                 bot,
                 chat_id=chat_id,
@@ -208,6 +220,7 @@ class CardDeliveryService:
                     card.ipa_gb,
                 ),
             )
+
         return message
 
     async def _send_card_text(self, bot: Bot, chat_id: int, text: str) -> None:
@@ -236,10 +249,12 @@ class CardDeliveryService:
             )
 
         method = SEND_METHOD_VOICE
+
         cached_file_id = await self.database.cached_audio_file_id(
             source_url,
             method,
         )
+
         if cached_file_id:
             try:
                 return await send(cached_file_id)
@@ -252,12 +267,14 @@ class CardDeliveryService:
 
         upload = BufferedInputFile(audio_data, filename=filename)
         message = await send(upload)
+
         if message.voice:
             await self.database.cache_audio_file_id(
                 source_url,
                 method,
                 message.voice.file_id,
             )
+
         return message
 
 
@@ -275,16 +292,22 @@ def classify_delivery_error(exc: Exception) -> str:
     """Return a stable, queryable category for a delivery exception."""
     if isinstance(exc, TelegramForbiddenError):
         return ERROR_TYPE_BOT_BLOCKED
+
     if isinstance(exc, CardTemplateError):
         return ERROR_TYPE_TEMPLATE_ERROR
+
     name = type(exc).__name__.lower()
     message = str(exc).lower()
+
     if "timeout" in name or "timeout" in message:
         return ERROR_TYPE_TELEGRAM_TIMEOUT
+
     if "audio" in message or "voice" in message:
         return ERROR_TYPE_AUDIO_UNAVAILABLE
+
     if name.startswith("telegram"):
         return ERROR_TYPE_TELEGRAM_ERROR
+
     return ERROR_TYPE_TECHNICAL
 
 
@@ -294,6 +317,7 @@ async def _call_with_retry_after(
 ) -> T:
     try:
         return await operation()
+
     except TelegramRetryAfter as exc:
         LOGGER.warning(
             "Telegram %s rate limit; retrying in %s seconds",

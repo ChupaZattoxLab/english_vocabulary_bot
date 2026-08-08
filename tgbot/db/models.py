@@ -119,6 +119,7 @@ class AdminWordMatch:
 
 def user_from_row(row: object) -> BotUser:
     data = as_db_row(row)
+
     return BotUser(
         telegram_user_id=row_int(data, "telegram_user_id"),
         chat_id=row_int(data, "chat_id"),
@@ -140,6 +141,7 @@ def card_from_row(
     normalized = dialect.lower()
     if normalized not in VALID_PRONUNCIATIONS:
         raise ValueError(f"unsupported pronunciation {dialect!r}")
+
     ipa_us_values = row_str_sequence(data, "ipa_us") if data["ipa_us"] else ()
     ipa_gb_values = row_str_sequence(data, "ipa_gb") if data["ipa_gb"] else ()
     us_position = data["us_source_position"]
@@ -152,6 +154,7 @@ def card_from_row(
         ipa_gb_values,
         gb_position if isinstance(gb_position, int) else None,
     )
+
     primary_prefix = "gb" if normalized == "gb" else "us"
     card_dialect = cast(CardDialect, normalized.upper())
     translations = data["translations"]
@@ -160,6 +163,7 @@ def card_from_row(
         if isinstance(translations, Mapping)
         else None
     )
+
     return ReservedCard(
         history_id=history_id,
         entry_id=row_int(data, "entry_id"),
@@ -195,6 +199,7 @@ def card_from_row(
 
 def admin_user_detail_from_row(row: object) -> AdminUserDetail:
     data = as_db_row(row)
+
     return AdminUserDetail(
         telegram_user_id=row_int(data, "telegram_user_id"),
         chat_id=row_int(data, "chat_id"),
@@ -221,6 +226,7 @@ def admin_user_detail_from_row(row: object) -> AdminUserDetail:
 
 def admin_word_match_from_row(row: object) -> AdminWordMatch:
     data = as_db_row(row)
+
     return AdminWordMatch(
         id=row_int(data, "id"),
         word_us=row_str(data, "word_us"),
@@ -233,18 +239,23 @@ def admin_word_match_from_row(row: object) -> AdminWordMatch:
 def selected_ipa(values: Sequence[str], position: int | None) -> str:
     if not values:
         return ""
+
     if position is not None and 0 <= position < len(values):
         return str(values[position])
+
     return str(values[0])
 
 
 def translation_text(translations: Mapping[str, object] | None) -> str:
     russian_raw = (translations or {}).get("ru")
     russian = russian_raw if isinstance(russian_raw, Mapping) else {}
+
     values = [str(russian.get("main") or "").strip()]
     also = russian.get("also") or []
+
     if isinstance(also, Sequence) and not isinstance(also, (str, bytes)):
         values.extend(str(value).strip() for value in also)
+
     return ", ".join(value for value in dict.fromkeys(values) if value)
 
 
@@ -259,24 +270,31 @@ def as_db_rows(rows: object) -> tuple[DbRow, ...]:
 
 def row_int(row: DbRow, key: str) -> int:
     value = row[key]
+
     if isinstance(value, bool) or value is None:
         raise TypeError(f"row[{key!r}] is not an int: {value!r}")
+
     if isinstance(value, int):
         return value
+
     if isinstance(value, (str, float)):
         return int(value)
+
     raise TypeError(f"row[{key!r}] is not an int: {type(value)!r}")
 
 
 def row_str(row: DbRow, key: str) -> str:
     value = row[key]
+
     if value is None:
         return ""
+
     return str(value)
 
 
 def row_optional_str(row: DbRow, key: str) -> str | None:
     value = row[key]
+
     return None if value is None else str(value)
 
 
@@ -286,31 +304,41 @@ def row_bool(row: DbRow, key: str) -> bool:
 
 def row_bytes(row: DbRow, key: str) -> bytes:
     value = row[key]
+
     if isinstance(value, memoryview):
         return value.tobytes()
+
     if isinstance(value, (bytes, bytearray)):
         return bytes(value)
+
     raise TypeError(f"row[{key!r}] is not bytes: {type(value)!r}")
 
 
 def row_datetime(row: DbRow, key: str) -> datetime:
     value = row[key]
+
     if not isinstance(value, datetime):
         raise TypeError(f"row[{key!r}] is not datetime: {type(value)!r}")
+
     return value
 
 
 def row_optional_datetime(row: DbRow, key: str) -> datetime | None:
     value = row[key]
+
     if value is None:
         return None
+
     if not isinstance(value, datetime):
         raise TypeError(f"row[{key!r}] is not datetime: {type(value)!r}")
+
     return value
 
 
 def row_str_sequence(row: DbRow, key: str) -> tuple[str, ...]:
     value = row[key] or ()
+
     if isinstance(value, str) or not isinstance(value, Sequence):
         raise TypeError(f"row[{key!r}] is not a string sequence: {type(value)!r}")
+
     return tuple(str(item) for item in value)

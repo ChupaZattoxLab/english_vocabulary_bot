@@ -111,6 +111,7 @@ class CardsMixin(PoolBound):
                     "SELECT pg_advisory_xact_lock(%s)",
                     (telegram_user_id,),
                 )
+
                 await connection.execute(
                     cast(
                         Any,
@@ -127,6 +128,7 @@ class CardsMixin(PoolBound):
                     ),
                     (telegram_user_id,),
                 )
+
                 user = await (
                     await connection.execute(
                         """
@@ -140,8 +142,10 @@ class CardsMixin(PoolBound):
                 ).fetchone()
                 if not user:
                     return None
+
                 user_row = as_db_row(user)
                 pronunciation = row_optional_str(user_row, "pronunciation")
+
                 if (
                     not row_bool(user_row, "onboarding_completed")
                     or not user_row["selected_levels"]
@@ -203,6 +207,7 @@ class CardsMixin(PoolBound):
                 ).fetchone()
                 if not row:
                     return None
+
                 card_row = as_db_row(row)
 
                 history = await (
@@ -274,6 +279,7 @@ class CardsMixin(PoolBound):
                         ),
                     )
                 ).fetchone()
+
                 if delivered and row:
                     await connection.execute(
                         """
@@ -301,6 +307,7 @@ class CardsMixin(PoolBound):
                     (source_url, send_method),
                 )
             ).fetchone()
+
         return row_str(as_db_row(row), "telegram_file_id") if row else None
 
     async def cache_audio_file_id(

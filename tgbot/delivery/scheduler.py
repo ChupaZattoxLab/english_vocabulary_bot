@@ -52,8 +52,10 @@ class CardScheduler:
                     grace_minutes=self.config.schedule_grace_minutes,
                 ):
                     await self.run_slot(bot, scheduled_slot)
+
             except Exception:  # noqa: BLE001
                 LOGGER.exception("Scheduler iteration failed; it will retry")
+
             try:
                 await asyncio.wait_for(
                     self._stop_event.wait(),
@@ -61,6 +63,7 @@ class CardScheduler:
                 )
             except TimeoutError:
                 continue
+
         LOGGER.info("Scheduler stopped")
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
@@ -70,9 +73,11 @@ class CardScheduler:
         )
         if not claimed:
             return
+
         LOGGER.info("Starting scheduled delivery slot %s", scheduled_slot.isoformat())
         attempted = delivered = failed = skipped = 0
         error_message = ""
+
         try:
             users = await self.database.active_users()
             attempted = len(users)
@@ -92,9 +97,11 @@ class CardScheduler:
             delivered = counts[DELIVERY_STATUS_DELIVERED]
             failed = counts[DELIVERY_STATUS_FAILED]
             skipped = counts[DELIVERY_STATUS_SKIPPED]
+
         except Exception as exc:  # noqa: BLE001
             error_message = str(exc)
             LOGGER.exception("Scheduled slot %s failed", scheduled_slot.isoformat())
+
         finally:
             await self.database.finish_scheduler_run(
                 scheduled_slot,
@@ -104,6 +111,7 @@ class CardScheduler:
                 skipped=skipped,
                 error_message=error_message,
             )
+
         LOGGER.info(
             "Scheduled slot complete: attempted=%s delivered=%s failed=%s skipped=%s",
             attempted,
@@ -128,6 +136,7 @@ class CardScheduler:
                     scheduled_slot=scheduled_slot,
                 )
                 return outcome.status
+
             except Exception:  # noqa: BLE001
                 LOGGER.exception(
                     "Unexpected scheduled delivery error for user %s",
@@ -147,6 +156,7 @@ def due_schedule_slots(
     grace = timedelta(minutes=grace_minutes)
     candidate_dates = (local_now.date() - timedelta(days=1), local_now.date())
     slots: list[datetime] = []
+
     for candidate_date in candidate_dates:
         for send_time in send_times:
             local_slot = datetime.combine(
@@ -156,4 +166,5 @@ def due_schedule_slots(
             )
             if local_slot <= local_now <= local_slot + grace:
                 slots.append(local_slot.astimezone(UTC))
+
     return tuple(sorted(slots))

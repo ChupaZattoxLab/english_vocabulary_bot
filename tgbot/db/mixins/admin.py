@@ -83,10 +83,12 @@ class AdminMixin(PoolBound):
                     """
                 )
             ).fetchall()
+
         assert totals is not None
         totals_row = as_db_row(totals)
         level_rows = as_db_rows(levels)
         dialect_rows = as_db_rows(dialects)
+
         return AdminUsersSummary(
             total_users=row_int(totals_row, "total_users"),
             active_users=row_int(totals_row, "active_users"),
@@ -131,6 +133,7 @@ class AdminMixin(PoolBound):
                     ),
                 )
             ).fetchone()
+
         return admin_user_detail_from_row(row) if row else None
 
     async def admin_content_summary(self) -> AdminContentSummary:
@@ -200,7 +203,9 @@ class AdminMixin(PoolBound):
                     """
                 )
             ).fetchone()
+
         assert row is not None
+
         return AdminContentSummary(
             ready_entries=row_int(as_db_row(row), "ready_entries")
         )
@@ -225,6 +230,7 @@ class AdminMixin(PoolBound):
                     (word, word, limit),
                 )
             ).fetchall()
+
         return tuple(admin_word_match_from_row(row) for row in as_db_rows(rows))
 
     async def admin_preview_card(
@@ -244,25 +250,34 @@ class AdminMixin(PoolBound):
         order = "ORDER BY random()" if random_card else "ORDER BY entries.id"
         query = f"{CARD_CONTENT_SQL} {where} {order} LIMIT 1"
         parameters: tuple[int, ...] = (entry_id,) if entry_id is not None else ()
+
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(cast(Any, query), parameters)
             ).fetchone()
+
         if not row:
             return None
+
         data = as_db_row(row)
         available_us = data["us_source_url"] is not None
         available_gb = data["gb_source_url"] is not None
         requested = (dialect or "").lower()
+
         if requested == "both" and not (available_us and available_gb):
             return None
+
         if requested == "us" and not available_us:
             return None
+
         if requested == "gb" and not available_gb:
             return None
+
         selected = requested or (
             "both" if available_us and available_gb else "us" if available_us else "gb"
         )
+
         if selected not in VALID_PRONUNCIATIONS:
             return None
+
         return card_from_row(data, dialect=selected, history_id=0)

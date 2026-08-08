@@ -45,17 +45,20 @@ ADMIN_COMMANDS = (
 async def run_bot(config: BotConfig) -> None:
     template = CardTemplate(config.card_template_path)
     both_template = CardTemplate(config.both_card_template_path)
+
     database = Database(
         config.database_url,
         pool_size=config.database_pool_size,
     )
     await database.open()
+
     delivery = CardDeliveryService(database, template, both_template)
     scheduler = CardScheduler(
         database=database,
         delivery=delivery,
         config=config,
     )
+
     dispatcher = Dispatcher()
     dispatcher.include_router(
         create_router(
@@ -71,6 +74,7 @@ async def run_bot(config: BotConfig) -> None:
             config=config,
         )
     )
+
     bot = Bot(
         token=config.bot_token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
@@ -78,10 +82,12 @@ async def run_bot(config: BotConfig) -> None:
     scheduler_task: asyncio.Task[None] | None = None
     try:
         await configure_commands(bot, config)
+
         scheduler_task = asyncio.create_task(
             scheduler.run(bot),
             name="tgbot-card-scheduler",
         )
+
         LOGGER.info("Starting Telegram long polling")
         await dispatcher.start_polling(
             bot,
@@ -92,12 +98,14 @@ async def run_bot(config: BotConfig) -> None:
         scheduler.stop()
         if scheduler_task:
             await scheduler_task
+
         await bot.session.close()
         await database.close()
 
 
 async def configure_commands(bot: Bot, config: BotConfig) -> None:
     await bot.set_my_commands(list(USER_COMMANDS))
+
     for admin_id in config.admin_ids:
         try:
             await bot.set_my_commands(

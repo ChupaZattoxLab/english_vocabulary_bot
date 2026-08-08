@@ -22,6 +22,7 @@ def start() -> int:
     if existing is not None:
         print(f"Bot is already running (PID {existing.pid}).")
         return 1
+
     PID_FILE.unlink(missing_ok=True)
 
     process = psutil.Process(os.getpid())
@@ -76,8 +77,10 @@ def _read_process(path: Path = PID_FILE) -> psutil.Process | None:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
         process = psutil.Process(int(payload["pid"]))
+
         if abs(process.create_time() - float(payload["created_at"])) > 0.01:
             return None
+
         return process
     except (
         FileNotFoundError,
@@ -95,6 +98,7 @@ def _remove_pid_file(expected_pid: int | None = None) -> None:
         process = _read_process()
         if process is not None and process.pid != expected_pid:
             return
+
     PID_FILE.unlink(missing_ok=True)
 
 
@@ -140,6 +144,7 @@ def lint() -> int:
     )
     if check_code != 0:
         return check_code
+
     return os.spawnv(os.P_WAIT, ruff, ["ruff", "format", "--check", "."])
 
 

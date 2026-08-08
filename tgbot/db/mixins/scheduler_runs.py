@@ -80,6 +80,7 @@ class SchedulerMixin(PoolBound):
                     (scheduled_slot, grace_minutes),
                 )
             ).fetchone()
+
         return row is not None
 
     async def finish_scheduler_run(

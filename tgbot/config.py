@@ -59,9 +59,11 @@ class BotConfig:
     ) -> BotConfig:
         """Load secrets from env/.env; schedule and paths come from constants."""
         source = os.environ if values is None else values
+
         token = source.get("TELEGRAM_BOT_TOKEN", "").strip()
         if require_token and not token:
             raise ConfigError("TELEGRAM_BOT_TOKEN is required")
+
         database_url = source.get("OALD_DATABASE_URL", "").strip()
         if not database_url:
             raise ConfigError("OALD_DATABASE_URL is required")
@@ -91,6 +93,7 @@ def load_env_file(path: Path) -> None:
     """Load a small KEY=VALUE .env file without overriding real environment."""
     if not path.is_file():
         return
+
     for line_number, raw_line in enumerate(
         path.read_text(encoding="utf-8").splitlines(),
         start=1,
@@ -98,21 +101,26 @@ def load_env_file(path: Path) -> None:
         line = raw_line.strip()
         if not line or line.startswith("#"):
             continue
+
         if "=" not in line:
             raise ConfigError(f"{path}:{line_number}: expected KEY=VALUE")
+
         key, value = line.split("=", 1)
         key = key.strip()
         value = value.strip()
         if not key:
             raise ConfigError(f"{path}:{line_number}: environment key is empty")
+
         if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
             value = value[1:-1]
+
         os.environ.setdefault(key, value)
 
 
 def parse_admin_ids(value: str) -> frozenset[int]:
     if not value.strip():
         return frozenset()
+
     try:
         result = frozenset(
             int(item.strip()) for item in value.split(",") if item.strip()
@@ -121,8 +129,10 @@ def parse_admin_ids(value: str) -> frozenset[int]:
         raise ConfigError(
             "TELEGRAM_ADMIN_IDS must contain comma-separated integers"
         ) from exc
+
     if any(admin_id <= 0 for admin_id in result):
         raise ConfigError("TELEGRAM_ADMIN_IDS must contain positive user IDs")
+
     return result
 
 
@@ -138,8 +148,10 @@ def parse_send_times(value: str) -> tuple[time, ...]:
                 "SEND_TIMES must contain HH:MM values separated by commas"
             ) from exc
         parsed.append(parsed_time)
+
     if len(parsed) != CARDS_PER_DAY or len(set(parsed)) != CARDS_PER_DAY:
         raise ConfigError(
             f"SEND_TIMES must contain exactly {CARDS_PER_DAY} unique times"
         )
+
     return tuple(sorted(parsed))

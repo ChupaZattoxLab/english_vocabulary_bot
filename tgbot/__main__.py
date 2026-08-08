@@ -15,9 +15,11 @@ def main() -> int:
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
+
     try:
         load_env_file(PROJECT_ROOT / ".env")
         config = BotConfig.from_env()
+
         asyncio.run(run_bot(config))
         return 0
     except ConfigError as exc:

@@ -50,6 +50,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
 
     async def open(self) -> None:
         await self.pool.open(wait=True, timeout=DATABASE_POOL_OPEN_TIMEOUT_SECONDS)
+
         try:
             await self.verify_schema()
         except Exception:
@@ -74,6 +75,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
             ).fetchall()
             existing = {row_str(row, "table_name") for row in as_db_rows(rows)}
             missing = MANAGED_TABLES - existing
+
             if missing:
                 raise DatabaseError(
                     "Database schema is incomplete; missing tables: "
@@ -93,6 +95,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                 raise DatabaseError(
                     "Database is not managed by Alembic. Run `uv run migrate`."
                 )
+
             version = await (
                 await connection.execute("SELECT version_num FROM alembic_version")
             ).fetchone()
@@ -100,6 +103,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
             current = (
                 row_str(as_db_row(version), "version_num") if version else "<none>"
             )
+
             if current != expected:
                 raise DatabaseError(
                     f"Database migration is {current}, expected {expected}. "
@@ -111,8 +115,10 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
 def migration_head() -> str:
     config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
     head = ScriptDirectory.from_config(config).get_current_head()
+
     if head is None:
         raise DatabaseError("Alembic has no migration head revision")
+
     return head
 
 
@@ -121,6 +127,8 @@ def _pool_kwargs(database_url: str) -> dict[str, object]:
         "row_factory": dict_row,
         "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
     }
+
     if urlparse(database_url).hostname == "localhost":
         kwargs["hostaddr"] = "127.0.0.1"
+
     return kwargs
