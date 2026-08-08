@@ -21,11 +21,13 @@ check = "scripts.cli:check"
 test = "scripts.cli:test"
 format = "scripts.cli:format_code"
 lint = "scripts.cli:lint"
+typecheck = "scripts.cli:typecheck"
 
 [dependency-groups]
 dev = [
     "pytest>=8.3.4,<9",
     "ruff>=0.16.2",
+    "pyright>=1.1.400",
 ]
 
 [build-system]
@@ -50,3 +52,16 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.ruff.format]
 quote-style = "double"
 skip-magic-trailing-comma = false
+
+[tool.pyright]
+include = ["tgbot", "scripts/oald", "scripts/cli.py"]
+exclude = [
+    "**/__pycache__",
+    "vocabulary_bot",
+    "scripts/build_database",
+    "alembic/versions",
+]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"

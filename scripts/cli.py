@@ -141,3 +141,20 @@ def lint() -> int:
     if check_code != 0:
         return check_code
     return os.spawnv(os.P_WAIT, ruff, ["ruff", "format", "--check", "."])
+
+
+def typecheck() -> int:
+    """Type-check the active packages with Pyright."""
+    import subprocess
+    import sys
+
+    return subprocess.call(
+        [
+            sys.executable,
+            "-m",
+            "pyright",
+            "tgbot",
+            "scripts/oald",
+            "scripts/cli.py",
+        ]
+    )

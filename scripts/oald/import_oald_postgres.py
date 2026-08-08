@@ -384,14 +384,18 @@ def ensure_database_exists(
 
         target_parameters = conninfo_to_dict(database_url)
         target_database = target_parameters.get("dbname")
-        if not target_database:
+        if not isinstance(target_database, str) or not target_database:
             raise OaldDatabaseError(
                 "the target database URL must include a database name"
             )
         if admin_database_url:
             admin_connection_info = admin_database_url
         else:
-            admin_parameters = dict(target_parameters)
+            admin_parameters = {
+                key: value
+                for key, value in target_parameters.items()
+                if isinstance(value, str)
+            }
             admin_parameters["dbname"] = "postgres"
             if admin_parameters.get("host") == "localhost" and not admin_parameters.get(
                 "hostaddr"

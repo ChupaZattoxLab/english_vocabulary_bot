@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock
 from zoneinfo import ZoneInfo
 
 from tgbot.config import BotConfig, ConfigError
-from tgbot.db import ReservedAudio, ReservedCard
+from tgbot.db import AdminUserDetail, AdminWordMatch, ReservedAudio, ReservedCard
 from tgbot.delivery import (
     CardDeliveryService,
     CardTemplate,
@@ -24,6 +24,43 @@ from tgbot.handlers.admin_keyboards import (
 
 VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
+
+
+def make_admin_user_detail(**overrides: object) -> AdminUserDetail:
+    now = datetime.now(UTC)
+    user = AdminUserDetail(
+        telegram_user_id=1,
+        chat_id=1,
+        username="",
+        first_name="",
+        selected_levels=(),
+        pronunciation=None,
+        onboarding_completed=True,
+        is_active=True,
+        created_at=now,
+        updated_at=now,
+        last_delivery_at=None,
+        paused_at=None,
+        blocked_at=None,
+        delivered_cards=0,
+        last_successful_delivery=None,
+    )
+    return replace(user, **overrides)  # type: ignore[arg-type]
+
+
+def make_word_match(
+    entry_id: int,
+    *,
+    lexical_category: str,
+    cefr: str,
+) -> AdminWordMatch:
+    return AdminWordMatch(
+        id=entry_id,
+        word_us="word",
+        word_gb="word",
+        lexical_category=lexical_category,
+        cefr=cefr,
+    )
 
 
 def make_reserved_card(
@@ -154,18 +191,24 @@ class CardTemplateTests(unittest.TestCase):
 class AdminHelperTests(unittest.TestCase):
     def test_user_delivery_states_are_distinct(self) -> None:
         self.assertEqual(
-            _delivery_state({"is_active": True, "paused_at": None, "blocked_at": None}),
+            _delivery_state(make_admin_user_detail(is_active=True)),
             "включена",
         )
         self.assertEqual(
             _delivery_state(
-                {"is_active": False, "paused_at": object(), "blocked_at": None}
+                make_admin_user_detail(
+                    is_active=False,
+                    paused_at=datetime.now(UTC),
+                )
             ),
             "приостановлена",
         )
         self.assertEqual(
             _delivery_state(
-                {"is_active": False, "paused_at": None, "blocked_at": object()}
+                make_admin_user_detail(
+                    is_active=False,
+                    blocked_at=datetime.now(UTC),
+                )
             ),
             "бот заблокирован",
         )
@@ -184,8 +227,8 @@ class AdminHelperTests(unittest.TestCase):
             admin_main_keyboard(),
             word_categories_keyboard(
                 (
-                    {"id": 10, "lexical_category": "noun", "cefr": "a1"},
-                    {"id": 11, "lexical_category": "verb", "cefr": "b1"},
+                    make_word_match(10, lexical_category="noun", cefr="a1"),
+                    make_word_match(11, lexical_category="verb", cefr="b1"),
                 )
             ),
         )
@@ -220,8 +263,8 @@ class AdminHelperTests(unittest.TestCase):
     def test_word_categories_keyboard_uses_entry_ids(self) -> None:
         keyboard = word_categories_keyboard(
             (
-                {"id": 10, "lexical_category": "noun", "cefr": "a1"},
-                {"id": 11, "lexical_category": "verb", "cefr": "b1"},
+                make_word_match(10, lexical_category="noun", cefr="a1"),
+                make_word_match(11, lexical_category="verb", cefr="b1"),
             )
         )
         buttons = [button for row in keyboard.inline_keyboard for button in row]

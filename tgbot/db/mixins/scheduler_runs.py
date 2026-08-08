@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any, cast
 
 from tgbot.constants import (
     DEFAULT_SCHEDULE_GRACE_MINUTES,
@@ -27,7 +28,9 @@ class SchedulerMixin(PoolBound):
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
-                    f"""
+                    cast(
+                        Any,
+                        f"""
                     INSERT INTO bot_scheduler_runs (scheduled_slot)
                     VALUES (%s)
                     ON CONFLICT (scheduled_slot) DO UPDATE SET
@@ -74,6 +77,7 @@ class SchedulerMixin(PoolBound):
                       )
                     RETURNING scheduled_slot
                     """,
+                    ),
                     (scheduled_slot, grace_minutes),
                 )
             ).fetchone()

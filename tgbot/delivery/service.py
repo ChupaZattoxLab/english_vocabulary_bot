@@ -37,11 +37,7 @@ from tgbot.localization import locale
 
 LOGGER = logging.getLogger("tgbot.delivery")
 
-DeliveryStatus = Literal[
-    DELIVERY_STATUS_DELIVERED,
-    DELIVERY_STATUS_FAILED,
-    DELIVERY_STATUS_SKIPPED,
-]
+DeliveryStatus = Literal["delivered", "failed", "skipped"]
 T = TypeVar("T")
 
 

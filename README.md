@@ -142,6 +142,7 @@ uv run check      # metadata matches migrated DB
 uv run test       # pytest
 uv run format     # ruff format
 uv run lint       # ruff check --fix + format check
+uv run typecheck  # pyright on tgbot + scripts/oald
 ```
 
 Set `TEST_OALD_DATABASE_URL` to run PostgreSQL integration tests. The role must be

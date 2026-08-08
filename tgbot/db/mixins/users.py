@@ -9,6 +9,8 @@ from tgbot.db.models import (
     ActiveUser,
     BotUser,
     DatabaseError,
+    as_db_rows,
+    row_int,
     user_from_row,
 )
 
@@ -164,10 +166,10 @@ class UsersMixin(PoolBound):
             ).fetchall()
         return [
             ActiveUser(
-                telegram_user_id=int(row["telegram_user_id"]),
-                chat_id=int(row["chat_id"]),
+                telegram_user_id=row_int(row, "telegram_user_id"),
+                chat_id=row_int(row, "chat_id"),
             )
-            for row in rows
+            for row in as_db_rows(rows)
         ]
 
     async def deactivate_user(self, telegram_user_id: int) -> None:

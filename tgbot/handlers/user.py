@@ -16,6 +16,11 @@ from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
 from tgbot.localization import locale
 
 
+def _callback_message(callback: CallbackQuery) -> Message | None:
+    message = callback.message
+    return message if isinstance(message, Message) else None
+
+
 def user_settings_text(user: BotUser, config: BotConfig) -> str:
     levels = (
         ", ".join(level.upper() for level in user.selected_levels)
@@ -102,8 +107,9 @@ def create_router(
                     show_alert=True,
                 )
                 return
-            if callback.message:
-                await callback.message.edit_text(
+            message = _callback_message(callback)
+            if message is not None:
+                await message.edit_text(
                     locale.user.pick_pronunciation_next,
                     reply_markup=pronunciation_keyboard(),
                 )
@@ -111,8 +117,9 @@ def create_router(
             return
 
         user = await database.toggle_level(callback.from_user.id, action)
-        if callback.message:
-            await callback.message.edit_reply_markup(
+        message = _callback_message(callback)
+        if message is not None:
+            await message.edit_reply_markup(
                 reply_markup=levels_keyboard(user.selected_levels)
             )
         await callback.answer()
@@ -141,8 +148,9 @@ def create_router(
             )
             return
         user = await database.set_pronunciation(callback.from_user.id, dialect)
-        if callback.message:
-            await callback.message.edit_text(
+        message = _callback_message(callback)
+        if message is not None:
+            await message.edit_text(
                 locale.user.onboarding_done.format(
                     settings=user_settings_text(user, config)
                 )
@@ -176,8 +184,11 @@ def create_router(
             await message.answer(locale.user.need_onboarding)
             return
         await database.clear_blocked_marker(message.from_user.id)
+        bot = message.bot
+        if bot is None:
+            return
         outcome = await delivery.deliver(
-            message.bot,
+            bot,
             telegram_user_id=message.from_user.id,
             chat_id=message.chat.id,
             scheduled_slot=datetime.now(UTC),

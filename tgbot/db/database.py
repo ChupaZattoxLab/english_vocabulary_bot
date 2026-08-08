@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Any
 from urllib.parse import urlparse
 
 from alembic.config import Config as AlembicConfig
@@ -24,18 +23,27 @@ from tgbot.db.mixins import (
     SchedulerMixin,
     UsersMixin,
 )
-from tgbot.db.models import DatabaseError
+from tgbot.db.models import (
+    DatabaseError,
+    as_db_row,
+    as_db_rows,
+    row_optional_str,
+    row_str,
+)
 from tgbot.db.schema import MANAGED_TABLES
 
 
 @lru_cache(maxsize=1)
 def migration_head() -> str:
     config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
-    return ScriptDirectory.from_config(config).get_current_head()
+    head = ScriptDirectory.from_config(config).get_current_head()
+    if head is None:
+        raise DatabaseError("Alembic has no migration head revision")
+    return head
 
 
-def _pool_kwargs(database_url: str) -> dict[str, Any]:
-    kwargs: dict[str, Any] = {
+def _pool_kwargs(database_url: str) -> dict[str, object]:
+    kwargs: dict[str, object] = {
         "row_factory": dict_row,
         "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
     }
@@ -84,7 +92,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                     (list(MANAGED_TABLES),),
                 )
             ).fetchall()
-            existing = {str(row["table_name"]) for row in rows}
+            existing = {row_str(row, "table_name") for row in as_db_rows(rows)}
             missing = MANAGED_TABLES - existing
             if missing:
                 raise DatabaseError(
@@ -98,7 +106,10 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                     "SELECT to_regclass('public.alembic_version') AS name"
                 )
             ).fetchone()
-            if not version_table or version_table["name"] is None:
+            if (
+                not version_table
+                or row_optional_str(as_db_row(version_table), "name") is None
+            ):
                 raise DatabaseError(
                     "Database is not managed by Alembic. Run `uv run migrate`."
                 )
@@ -106,7 +117,9 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                 await connection.execute("SELECT version_num FROM alembic_version")
             ).fetchone()
             expected = migration_head()
-            current = str(version["version_num"]) if version else "<none>"
+            current = (
+                row_str(as_db_row(version), "version_num") if version else "<none>"
+            )
             if current != expected:
                 raise DatabaseError(
                     f"Database migration is {current}, expected {expected}. "

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, cast
 
 from tgbot.constants import (
     AUDIO_CONVERSION_PREPARED,
@@ -12,7 +12,21 @@ from tgbot.constants import (
 )
 from tgbot.db.mixins.base import PoolBound
 from tgbot.db.mixins.cards import CARD_CONTENT_SQL
-from tgbot.db.models import VALID_PRONUNCIATIONS, ReservedCard, card_from_row
+from tgbot.db.models import (
+    VALID_PRONUNCIATIONS,
+    AdminContentSummary,
+    AdminUserDetail,
+    AdminUsersSummary,
+    AdminWordMatch,
+    ReservedCard,
+    admin_user_detail_from_row,
+    admin_word_match_from_row,
+    as_db_row,
+    as_db_rows,
+    card_from_row,
+    row_int,
+    row_str,
+)
 
 
 class AdminMixin(PoolBound):
@@ -22,7 +36,7 @@ class AdminMixin(PoolBound):
         today_start: datetime,
         week_start: datetime,
         month_start: datetime,
-    ) -> dict[str, Any]:
+    ) -> AdminUsersSummary:
         async with self.pool.connection() as connection:
             totals = await (
                 await connection.execute(
@@ -70,16 +84,30 @@ class AdminMixin(PoolBound):
                     """
                 )
             ).fetchall()
-        result = dict(totals)
-        result["levels"] = {str(row["level"]): int(row["users"]) for row in levels}
-        result["dialects"] = {
-            str(row["pronunciation"]): int(row["users"])
-            for row in dialects
-            if row["pronunciation"]
-        }
-        return result
+        assert totals is not None
+        totals_row = as_db_row(totals)
+        level_rows = as_db_rows(levels)
+        dialect_rows = as_db_rows(dialects)
+        return AdminUsersSummary(
+            total_users=row_int(totals_row, "total_users"),
+            active_users=row_int(totals_row, "active_users"),
+            paused_users=row_int(totals_row, "paused_users"),
+            blocked_users=row_int(totals_row, "blocked_users"),
+            new_today=row_int(totals_row, "new_today"),
+            new_week=row_int(totals_row, "new_week"),
+            new_month=row_int(totals_row, "new_month"),
+            levels={row_str(row, "level"): row_int(row, "users") for row in level_rows},
+            dialects={
+                row_str(row, "pronunciation"): row_int(row, "users")
+                for row in dialect_rows
+                if row["pronunciation"]
+            },
+        )
 
-    async def admin_user_detail(self, telegram_user_id: int) -> dict[str, Any] | None:
+    async def admin_user_detail(
+        self,
+        telegram_user_id: int,
+    ) -> AdminUserDetail | None:
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
@@ -104,9 +132,9 @@ class AdminMixin(PoolBound):
                     ),
                 )
             ).fetchone()
-        return dict(row) if row else None
+        return admin_user_detail_from_row(row) if row else None
 
-    async def admin_content_summary(self) -> dict[str, int]:
+    async def admin_content_summary(self) -> AdminContentSummary:
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
@@ -173,14 +201,17 @@ class AdminMixin(PoolBound):
                     """
                 )
             ).fetchone()
-        return {"ready_entries": int(row["ready_entries"])}
+        assert row is not None
+        return AdminContentSummary(
+            ready_entries=row_int(as_db_row(row), "ready_entries")
+        )
 
     async def admin_word_search(
         self,
         word: str,
         *,
         limit: int = 10,
-    ) -> tuple[dict[str, Any], ...]:
+    ) -> tuple[AdminWordMatch, ...]:
         async with self.pool.connection() as connection:
             rows = await (
                 await connection.execute(
@@ -196,7 +227,7 @@ class AdminMixin(PoolBound):
                     (word, word, limit),
                 )
             ).fetchall()
-        return tuple(dict(row) for row in rows)
+        return tuple(admin_word_match_from_row(row) for row in as_db_rows(rows))
 
     async def admin_preview_card(
         self,
@@ -215,13 +246,16 @@ class AdminMixin(PoolBound):
         )
         order = "ORDER BY random()" if random_card else "ORDER BY entries.id"
         query = f"{CARD_CONTENT_SQL} {where} {order} LIMIT 1"
-        parameters: tuple[Any, ...] = (entry_id,) if entry_id is not None else ()
+        parameters: tuple[int, ...] = (entry_id,) if entry_id is not None else ()
         async with self.pool.connection() as connection:
-            row = await (await connection.execute(query, parameters)).fetchone()
+            row = await (
+                await connection.execute(cast(Any, query), parameters)
+            ).fetchone()
         if not row:
             return None
-        available_us = row["us_source_url"] is not None
-        available_gb = row["gb_source_url"] is not None
+        data = as_db_row(row)
+        available_us = data["us_source_url"] is not None
+        available_gb = data["gb_source_url"] is not None
         requested = (dialect or "").lower()
         if requested == "both" and not (available_us and available_gb):
             return None
@@ -234,4 +268,4 @@ class AdminMixin(PoolBound):
         )
         if selected not in VALID_PRONUNCIATIONS:
             return None
-        return card_from_row(row, dialect=selected, history_id=0)
+        return card_from_row(data, dialect=selected, history_id=0)

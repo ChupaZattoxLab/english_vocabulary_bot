@@ -3,6 +3,10 @@
 from tgbot.db.database import Database
 from tgbot.db.models import (
     ActiveUser,
+    AdminContentSummary,
+    AdminUserDetail,
+    AdminUsersSummary,
+    AdminWordMatch,
     BotUser,
     DatabaseError,
     ReservedAudio,
@@ -11,6 +15,10 @@ from tgbot.db.models import (
 
 __all__ = [
     "ActiveUser",
+    "AdminContentSummary",
+    "AdminUserDetail",
+    "AdminUsersSummary",
+    "AdminWordMatch",
     "BotUser",
     "Database",
     "DatabaseError",

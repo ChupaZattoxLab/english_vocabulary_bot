@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from tgbot.db.models import AdminWordMatch
 from tgbot.localization import locale
 
 
@@ -28,26 +29,21 @@ def admin_users_keyboard() -> InlineKeyboardMarkup:
 
 
 def word_categories_keyboard(
-    rows: Sequence[Mapping[str, object]],
+    rows: Sequence[AdminWordMatch],
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     category_counts: dict[str, int] = {}
     for row in rows:
-        category = (
-            str(row["lexical_category"]).strip() or locale.keyboard.unknown_category
-        )
+        category = row.lexical_category.strip() or locale.keyboard.unknown_category
         category_counts[category] = category_counts.get(category, 0) + 1
 
     for row in rows:
-        entry_id = int(row["id"])
-        category = (
-            str(row["lexical_category"]).strip() or locale.keyboard.unknown_category
-        )
+        category = row.lexical_category.strip() or locale.keyboard.unknown_category
         text = category
         if category_counts[category] > 1:
-            cefr = str(row.get("cefr") or "").upper()
-            text = f"{category} · {cefr or locale.keyboard.dash} · #{entry_id}"
-        builder.button(text=text, callback_data=f"admin:word:{entry_id}")
+            cefr = row.cefr.upper()
+            text = f"{category} · {cefr or locale.keyboard.dash} · #{row.id}"
+        builder.button(text=text, callback_data=f"admin:word:{row.id}")
     builder.adjust(2)
     return builder.as_markup()
 

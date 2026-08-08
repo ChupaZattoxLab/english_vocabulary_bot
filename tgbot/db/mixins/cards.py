@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any, cast
 
 from tgbot.constants import (
     AUDIO_CONVERSION_PREPARED,
@@ -17,7 +18,17 @@ from tgbot.constants import (
     ERROR_TYPE_STALE_RESERVATION,
 )
 from tgbot.db.mixins.base import PoolBound
-from tgbot.db.models import VALID_PRONUNCIATIONS, ReservedCard, card_from_row
+from tgbot.db.models import (
+    VALID_PRONUNCIATIONS,
+    ReservedCard,
+    as_db_row,
+    card_from_row,
+    row_bool,
+    row_int,
+    row_optional_str,
+    row_str,
+    row_str_sequence,
+)
 
 _ACTIVE_STATUSES_SQL = ", ".join(f"'{status}'" for status in CARD_ACTIVE_STATUSES)
 
@@ -102,7 +113,9 @@ class CardsMixin(PoolBound):
                     (telegram_user_id,),
                 )
                 await connection.execute(
-                    f"""
+                    cast(
+                        Any,
+                        f"""
                     UPDATE bot_user_cards
                     SET status = '{CARD_STATUS_FAILED}',
                         error_type = '{ERROR_TYPE_STALE_RESERVATION}',
@@ -112,6 +125,7 @@ class CardsMixin(PoolBound):
                       AND created_at < CURRENT_TIMESTAMP
                           - make_interval(mins => {CARD_RESERVATION_TIMEOUT_MINUTES})
                     """,
+                    ),
                     (telegram_user_id,),
                 )
                 user = await (
@@ -125,31 +139,37 @@ class CardsMixin(PoolBound):
                         (telegram_user_id,),
                     )
                 ).fetchone()
+                if not user:
+                    return None
+                user_row = as_db_row(user)
+                pronunciation = row_optional_str(user_row, "pronunciation")
                 if (
-                    not user
-                    or not user["onboarding_completed"]
-                    or not user["selected_levels"]
-                    or user["pronunciation"] not in VALID_PRONUNCIATIONS
-                    or (require_active and not user["is_active"])
+                    not row_bool(user_row, "onboarding_completed")
+                    or not user_row["selected_levels"]
+                    or pronunciation not in VALID_PRONUNCIATIONS
+                    or (require_active and not row_bool(user_row, "is_active"))
                 ):
                     return None
 
                 existing = await (
                     await connection.execute(
-                        f"""
+                        cast(
+                            Any,
+                            f"""
                         SELECT status
                         FROM bot_user_cards
                         WHERE telegram_user_id = %s
                           AND scheduled_slot = %s
                           AND status IN ({_ACTIVE_STATUSES_SQL})
                         """,
+                        ),
                         (telegram_user_id, scheduled_slot),
                     )
                 ).fetchone()
                 if existing:
                     return None
 
-                dialect = str(user["pronunciation"])
+                dialect = pronunciation
                 query = f"""
                     {CARD_CONTENT_SQL}
                     WHERE entries.is_active
@@ -174,9 +194,9 @@ class CardsMixin(PoolBound):
                     """
                 row = await (
                     await connection.execute(
-                        query,
+                        cast(Any, query),
                         (
-                            list(user["selected_levels"]),
+                            list(row_str_sequence(user_row, "selected_levels")),
                             dialect,
                             telegram_user_id,
                         ),
@@ -184,6 +204,7 @@ class CardsMixin(PoolBound):
                 ).fetchone()
                 if not row:
                     return None
+                card_row = as_db_row(row)
 
                 history = await (
                     await connection.execute(
@@ -200,21 +221,23 @@ class CardsMixin(PoolBound):
                         """,
                         (
                             telegram_user_id,
-                            row["entry_id"],
+                            row_int(card_row, "entry_id"),
                             dialect,
-                            row[
+                            card_row[
                                 "gb_source_url" if dialect == "gb" else "us_source_url"
                             ],
-                            row["gb_source_url"] if dialect == "both" else None,
+                            card_row["gb_source_url"] if dialect == "both" else None,
                             scheduled_slot,
                         ),
                     )
                 ).fetchone()
+                if history is None:
+                    return None
 
         return card_from_row(
-            row,
+            card_row,
             dialect=dialect,
-            history_id=int(history["id"]),
+            history_id=row_int(as_db_row(history), "id"),
         )
 
     async def finish_delivery(
@@ -261,7 +284,7 @@ class CardsMixin(PoolBound):
                             updated_at = CURRENT_TIMESTAMP
                         WHERE telegram_user_id = %s
                         """,
-                        (row["telegram_user_id"],),
+                        (row_int(as_db_row(row), "telegram_user_id"),),
                     )
 
     async def cached_audio_file_id(
@@ -280,7 +303,7 @@ class CardsMixin(PoolBound):
                     (source_url, send_method),
                 )
             ).fetchone()
-        return str(row["telegram_file_id"]) if row else None
+        return row_str(as_db_row(row), "telegram_file_id") if row else None
 
     async def cache_audio_file_id(
         self,
