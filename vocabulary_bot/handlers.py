@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
@@ -31,7 +31,9 @@ def user_settings_text(user: BotUser, config: BotConfig) -> str:
     )
 
 
-async def register_user(database: Database, telegram_user: User, chat_id: int) -> BotUser:
+async def register_user(
+    database: Database, telegram_user: User, chat_id: int
+) -> BotUser:
     return await database.upsert_user(
         telegram_user_id=telegram_user.id,
         chat_id=chat_id,
@@ -180,7 +182,7 @@ def create_router(
             message.bot,
             telegram_user_id=message.from_user.id,
             chat_id=message.chat.id,
-            scheduled_slot=datetime.now(timezone.utc),
+            scheduled_slot=datetime.now(UTC),
         )
         if outcome.status == "skipped":
             await message.answer(

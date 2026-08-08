@@ -248,9 +248,7 @@ def validate_translations(value: Any, row_number: int) -> dict[str, Any]:
         raise OaldValidationError(
             f"row {row_number}: translations.ru.main must be a string"
         )
-    if not isinstance(also, list) or not all(
-        isinstance(item, str) for item in also
-    ):
+    if not isinstance(also, list) or not all(isinstance(item, str) for item in also):
         raise OaldValidationError(
             f"row {row_number}: translations.ru.also must be an array of strings"
         )
@@ -268,9 +266,7 @@ def parse_entry(raw: Any, row_number: int) -> OaldEntry:
 
     cefr = required_text(raw, "cefr", row_number).lower()
     if cefr not in VALID_CEFR_LEVELS:
-        raise OaldValidationError(
-            f"row {row_number}: unsupported CEFR value {cefr!r}"
-        )
+        raise OaldValidationError(f"row {row_number}: unsupported CEFR value {cefr!r}")
 
     definition_url = required_text(raw, "definition_url_oxford", row_number)
     if urlparse(definition_url).scheme not in {"http", "https"}:
@@ -347,9 +343,7 @@ def load_entries(
         stats["audio_references_gb"] += len(entry.audio_source_gb)
 
     unique_urls = {
-        source_url
-        for entry in entries
-        for _, _, source_url in entry.audio_references()
+        source_url for entry in entries for _, _, source_url in entry.audio_references()
     }
     stats["unique_audio_urls"] = len(unique_urls)
     return entries, stats
@@ -401,9 +395,8 @@ def ensure_database_exists(
         else:
             admin_parameters = dict(target_parameters)
             admin_parameters["dbname"] = "postgres"
-            if (
-                admin_parameters.get("host") == "localhost"
-                and not admin_parameters.get("hostaddr")
+            if admin_parameters.get("host") == "localhost" and not admin_parameters.get(
+                "hostaddr"
             ):
                 admin_parameters["hostaddr"] = "127.0.0.1"
             admin_connection_info = make_conninfo(**admin_parameters)
@@ -435,7 +428,7 @@ def ensure_database_exists(
         return True
     except OaldDatabaseError:
         raise
-    except psycopg.Error as exc:
+    except psycopg.Error:
         try:
             with psycopg.connect(
                 database_url,
@@ -445,8 +438,7 @@ def ensure_database_exists(
                 return False
         except psycopg.Error as target_exc:
             raise OaldDatabaseError(
-                "could not connect to the target or administrative PostgreSQL "
-                "database"
+                "could not connect to the target or administrative PostgreSQL database"
             ) from target_exc
 
 
@@ -489,9 +481,7 @@ def import_entries(
                         entry_id = int(result[0])
                         imported_ids.append(entry_id)
                         for dialect, position, source_url in entry.audio_references():
-                            links.append(
-                                (entry_id, dialect, position, source_url)
-                            )
+                            links.append((entry_id, dialect, position, source_url))
                             batch_urls.add(source_url)
 
                     if imported_ids:
@@ -602,8 +592,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     if not args.dry_run and not args.database_url:
         LOGGER.error(
-            "PostgreSQL URL is required: use --database-url or set "
-            "OALD_DATABASE_URL"
+            "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
         )
         return 2
 
@@ -627,8 +616,7 @@ def main(argv: list[str] | None = None) -> int:
             batch_size=args.batch_size,
         )
         LOGGER.info(
-            "OALD import complete: entries=%s audio_references=%s "
-            "unique_audio_urls=%s",
+            "OALD import complete: entries=%s audio_references=%s unique_audio_urls=%s",
             f"{result.entries:,}",
             f"{result.audio_references:,}",
             f"{result.unique_audio_urls:,}",

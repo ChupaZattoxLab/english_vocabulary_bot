@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections import Counter
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import UTC, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 from aiogram import Bot
@@ -13,7 +13,6 @@ from aiogram import Bot
 from vocabulary_bot.config import BotConfig
 from vocabulary_bot.database import ActiveUser, Database
 from vocabulary_bot.delivery import CardDeliveryService
-
 
 LOGGER = logging.getLogger("vocabulary.bot.scheduler")
 
@@ -38,7 +37,7 @@ def due_schedule_slots(
                 tzinfo=timezone_value,
             )
             if local_slot <= local_now <= local_slot + grace:
-                slots.append(local_slot.astimezone(timezone.utc))
+                slots.append(local_slot.astimezone(UTC))
     return tuple(sorted(slots))
 
 
@@ -134,7 +133,7 @@ class CardScheduler:
         )
         while not self._stop_event.is_set():
             try:
-                now = datetime.now(timezone.utc)
+                now = datetime.now(UTC)
                 for scheduled_slot in due_schedule_slots(
                     now,
                     timezone_value=self.config.timezone,

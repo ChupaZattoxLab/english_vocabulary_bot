@@ -1,8 +1,9 @@
-from alembic import context
 from logging.config import fileConfig
+
 from sqlalchemy import engine_from_config, pool
 
-from vocabulary_bot.config import BotConfig, PROJECT_ROOT, load_env_file
+from alembic import context
+from vocabulary_bot.config import PROJECT_ROOT, BotConfig, load_env_file
 from vocabulary_bot.schema import MANAGED_TABLES, metadata
 
 # this is the Alembic Config object, which provides

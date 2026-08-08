@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Any
 
-
 OALD_TABLES = frozenset(
     {
         "oald_entries",
@@ -43,4 +42,3 @@ def require_tables(cursor: Any, table_names: Iterable[str]) -> None:
 
 def require_oald_schema(cursor: Any) -> None:
     require_tables(cursor, OALD_TABLES)
-

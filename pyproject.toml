@@ -16,6 +16,7 @@ psutil = "^7.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
+ruff = "^0.16.2"
 
 [tool.poetry.scripts]
 start = "vocabulary_bot.commands:start"
@@ -23,6 +24,8 @@ stop = "vocabulary_bot.commands:stop"
 migrate = "vocabulary_bot.commands:migrate"
 check = "vocabulary_bot.commands:check"
 test = "vocabulary_bot.commands:test"
+format = "vocabulary_bot.commands:format_code"
+lint = "vocabulary_bot.commands:lint"
 
 [build-system]
 requires = ["poetry-core"]
@@ -31,3 +34,15 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["scripts/build_database", "."]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+skip-magic-trailing-comma = false

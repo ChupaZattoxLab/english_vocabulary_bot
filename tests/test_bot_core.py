@@ -1,18 +1,18 @@
 import tempfile
 import unittest
 from dataclasses import replace
-from datetime import datetime, time, timezone
+from datetime import UTC, datetime, time
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 from zoneinfo import ZoneInfo
 
-from vocabulary_bot.card_template import CardTemplate, CardTemplateError
 from vocabulary_bot.admin import _delivery_state
 from vocabulary_bot.admin_keyboards import (
     admin_main_keyboard,
     word_categories_keyboard,
 )
+from vocabulary_bot.card_template import CardTemplate, CardTemplateError
 from vocabulary_bot.config import BotConfig, ConfigError
 from vocabulary_bot.database import ReservedAudio, ReservedCard
 from vocabulary_bot.delivery import (
@@ -21,7 +21,6 @@ from vocabulary_bot.delivery import (
     send_method,
 )
 from vocabulary_bot.scheduler import due_schedule_slots
-
 
 VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
@@ -113,7 +112,6 @@ class CardTemplateTests(unittest.TestCase):
         )
         self.assertIn("🇺🇸 <b>APPLE</b>", rendered)
 
-
     def test_both_template_accepts_both_ipa_fields(self) -> None:
         self.path.write_text(
             "{word_us_upper} {word_gb_upper} {lexical_category} {cefr} "
@@ -138,16 +136,22 @@ class AdminHelperTests(unittest.TestCase):
             "включена",
         )
         self.assertEqual(
-            _delivery_state({"is_active": False, "paused_at": object(), "blocked_at": None}),
+            _delivery_state(
+                {"is_active": False, "paused_at": object(), "blocked_at": None}
+            ),
             "приостановлена",
         )
         self.assertEqual(
-            _delivery_state({"is_active": False, "paused_at": None, "blocked_at": object()}),
+            _delivery_state(
+                {"is_active": False, "paused_at": None, "blocked_at": object()}
+            ),
             "бот заблокирован",
         )
 
     def test_delivery_errors_have_stable_categories(self) -> None:
-        self.assertEqual(classify_delivery_error(TimeoutError("timeout")), "telegram_timeout")
+        self.assertEqual(
+            classify_delivery_error(TimeoutError("timeout")), "telegram_timeout"
+        )
         self.assertEqual(
             classify_delivery_error(CardTemplateError("bad template")),
             "template_error",
@@ -172,7 +176,9 @@ class AdminHelperTests(unittest.TestCase):
 
         self.assertTrue(callback_values)
         self.assertTrue(all(value.startswith("admin:") for value in callback_values))
-        self.assertTrue(all(len(value.encode("utf-8")) <= 64 for value in callback_values))
+        self.assertTrue(
+            all(len(value.encode("utf-8")) <= 64 for value in callback_values)
+        )
 
     def test_main_admin_keyboard_has_expected_sections(self) -> None:
         values = {
@@ -207,7 +213,7 @@ class AdminHelperTests(unittest.TestCase):
 class SchedulerTests(unittest.TestCase):
     def test_due_slot_uses_configured_timezone(self) -> None:
         slots = due_schedule_slots(
-            datetime(2026, 8, 1, 7, 30, tzinfo=timezone.utc),
+            datetime(2026, 8, 1, 7, 30, tzinfo=UTC),
             timezone_value=ZoneInfo("Europe/Amsterdam"),
             send_times=(time(9), time(14), time(20)),
             grace_minutes=60,
@@ -215,12 +221,12 @@ class SchedulerTests(unittest.TestCase):
 
         self.assertEqual(
             slots,
-            (datetime(2026, 8, 1, 7, 0, tzinfo=timezone.utc),),
+            (datetime(2026, 8, 1, 7, 0, tzinfo=UTC),),
         )
 
     def test_old_slots_are_not_sent_late(self) -> None:
         slots = due_schedule_slots(
-            datetime(2026, 8, 1, 10, 30, tzinfo=timezone.utc),
+            datetime(2026, 8, 1, 10, 30, tzinfo=UTC),
             timezone_value=ZoneInfo("Europe/Amsterdam"),
             send_times=(time(9), time(14), time(20)),
             grace_minutes=60,
@@ -294,7 +300,6 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 "voice",
                 "telegram-voice-id",
             )
-
 
     async def test_both_dialects_use_both_template_and_send_two_voices(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

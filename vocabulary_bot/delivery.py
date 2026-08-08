@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 import html
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -18,7 +18,6 @@ from aiogram.types import BufferedInputFile, Message
 
 from vocabulary_bot.card_template import CardTemplate, CardTemplateError
 from vocabulary_bot.database import Database, ReservedAudio, ReservedCard
-
 
 LOGGER = logging.getLogger("vocabulary.bot.delivery")
 
@@ -39,6 +38,7 @@ def dialect_caption(dialect: str) -> str:
         "US": "🇺🇸 US",
         "GB": "🇬🇧 GB",
     }.get(dialect.upper(), dialect.upper())
+
 
 def voice_caption(dialect: str, ipa: str) -> str:
     label = dialect_caption(dialect)
@@ -212,7 +212,9 @@ class CardDeliveryService:
             )
         return message
 
-    async def send_preview(self, bot: Bot, *, chat_id: int, card: ReservedCard) -> Message:
+    async def send_preview(
+        self, bot: Bot, *, chat_id: int, card: ReservedCard
+    ) -> Message:
         """Send a card without creating or changing delivery history."""
         return await self._send_reserved(bot, chat_id=chat_id, card=card)
 

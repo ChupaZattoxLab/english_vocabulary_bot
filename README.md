@@ -75,15 +75,18 @@ Admin UI: `/admin` (only for IDs in `TELEGRAM_ADMIN_IDS`).
 
 Only one process may poll the same bot token. Stop the server instance before running locally.
 
-Tests:
+Tests and linting:
 
 ```powershell
 poetry run test
 poetry run check
+poetry run format
+poetry run lint
 ```
 
-Set `TEST_OALD_DATABASE_URL` to run the PostgreSQL integration tests. The role
-must be allowed to create temporary databases.
+`format` rewrites Python with Ruff; `lint` applies safe autofixes and fails if
+formatting is still needed. Set `TEST_OALD_DATABASE_URL` to run the PostgreSQL
+integration tests. The role must be allowed to create temporary databases.
 
 ## Database migrations
 

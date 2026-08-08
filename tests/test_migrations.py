@@ -6,13 +6,12 @@ from unittest.mock import patch
 
 import psycopg
 import sqlalchemy as sa
-from alembic import command
 from alembic.config import Config
 from psycopg import sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
+from alembic import command
 from vocabulary_bot.schema import MANAGED_TABLES, metadata, oald_entries
-
 
 TEST_DATABASE_URL = os.environ.get("TEST_OALD_DATABASE_URL", "")
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -31,9 +30,7 @@ class AlembicIntegrationTests(unittest.TestCase):
         self.admin_conninfo = make_conninfo(**admin_parameters)
         with psycopg.connect(self.admin_conninfo, autocommit=True) as connection:
             connection.execute(
-                sql.SQL("CREATE DATABASE {}").format(
-                    sql.Identifier(self.database_name)
-                )
+                sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.database_name))
             )
 
         url = sa.engine.make_url(TEST_DATABASE_URL)
@@ -101,9 +98,7 @@ class AlembicIntegrationTests(unittest.TestCase):
                         word_gb="migration-test",
                         lexical_category="noun",
                         cefr="a1",
-                        definition_url_oxford=(
-                            "https://example.test/migration-test"
-                        ),
+                        definition_url_oxford=("https://example.test/migration-test"),
                         definition="A migration test entry.",
                         example="This row must survive migration.",
                     )
@@ -128,10 +123,7 @@ class AlembicIntegrationTests(unittest.TestCase):
         try:
             with engine.begin() as connection:
                 connection.execute(
-                    sa.text(
-                        "CREATE TABLE oald_entries "
-                        "(id BIGINT PRIMARY KEY)"
-                    )
+                    sa.text("CREATE TABLE oald_entries (id BIGINT PRIMARY KEY)")
                 )
 
             with self.assertRaisesRegex(

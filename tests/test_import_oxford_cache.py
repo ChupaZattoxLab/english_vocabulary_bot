@@ -6,7 +6,6 @@ import unittest
 import uuid
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts" / "build_database"))
 
@@ -108,18 +107,14 @@ class OxfordCacheParserTests(unittest.TestCase):
                         "https://example.test/analyze-us.mp3",
                     ),
                 ],
-                "variantForms": [
-                    {"text": "analyze", "regions": [{"id": "us"}]}
-                ],
+                "variantForms": [{"text": "analyze", "regions": [{"id": "us"}]}],
                 "senses": [
                     {
                         "translations": [
                             translation("анализировать"),
                             translation("analyse", "en"),
                         ],
-                        "subsenses": [
-                            {"translations": [translation("разбирать")]}
-                        ],
+                        "subsenses": [{"translations": [translation("разбирать")]}],
                     }
                 ],
             },

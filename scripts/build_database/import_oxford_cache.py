@@ -7,7 +7,6 @@ import argparse
 import json
 import logging
 import os
-import re
 import unicodedata
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Iterator, Mapping
@@ -15,7 +14,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
-
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SOURCE_DIR = ROOT / "source" / "oxford_api" / "translations_en_ru"
@@ -443,9 +441,13 @@ def load_definition_index(
     try:
         raw_rows = json.loads(words_json.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        raise OxfordCacheError(f"Could not read definitions from {words_json}: {exc}") from exc
+        raise OxfordCacheError(
+            f"Could not read definitions from {words_json}: {exc}"
+        ) from exc
     if not isinstance(raw_rows, list):
-        raise OxfordCacheError(f"Definitions file must contain a JSON array: {words_json}")
+        raise OxfordCacheError(
+            f"Definitions file must contain a JSON array: {words_json}"
+        )
 
     index: dict[tuple[str, str], list[DatasetDefinition]] = defaultdict(list)
     for ordinal, raw in enumerate(raw_rows):
@@ -588,7 +590,9 @@ def build_rows(
     return rows, stats
 
 
-def iter_batches(rows: Iterable[OxfordRow], batch_size: int) -> Iterator[list[OxfordRow]]:
+def iter_batches(
+    rows: Iterable[OxfordRow], batch_size: int
+) -> Iterator[list[OxfordRow]]:
     batch: list[OxfordRow] = []
     for row in rows:
         batch.append(row)

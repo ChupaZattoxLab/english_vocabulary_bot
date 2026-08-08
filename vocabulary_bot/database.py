@@ -15,7 +15,6 @@ from psycopg_pool import AsyncConnectionPool
 
 from vocabulary_bot.config import PROJECT_ROOT
 
-
 VALID_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
 REQUIRED_TABLES = (
     "oald_entries",
@@ -33,6 +32,7 @@ REQUIRED_TABLES = (
 def migration_head() -> str:
     config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
     return ScriptDirectory.from_config(config).get_current_head()
+
 
 CARD_CONTENT_SQL = """
 SELECT
@@ -311,9 +311,7 @@ class Database:
                     "`poetry run alembic upgrade head`."
                 )
             version = await (
-                await connection.execute(
-                    "SELECT version_num FROM alembic_version"
-                )
+                await connection.execute("SELECT version_num FROM alembic_version")
             ).fetchone()
             expected = migration_head()
             current = str(version["version_num"]) if version else "<none>"
@@ -621,9 +619,7 @@ class Database:
                             row["entry_id"],
                             dialect,
                             row[
-                                "gb_source_url"
-                                if dialect == "gb"
-                                else "us_source_url"
+                                "gb_source_url" if dialect == "gb" else "us_source_url"
                             ],
                             row["gb_source_url"] if dialect == "both" else None,
                             scheduled_slot,
@@ -909,9 +905,7 @@ class Database:
                 for row in dialect_rows
                 if row["pronunciation"]
             },
-            users_by_level={
-                str(row["level"]): int(row["users"]) for row in level_rows
-            },
+            users_by_level={str(row["level"]): int(row["users"]) for row in level_rows},
             last_runs=tuple(dict(row) for row in run_rows),
         )
 
@@ -970,9 +964,7 @@ class Database:
                 )
             ).fetchall()
         result = dict(totals)
-        result["levels"] = {
-            str(row["level"]): int(row["users"]) for row in levels
-        }
+        result["levels"] = {str(row["level"]): int(row["users"]) for row in levels}
         result["dialects"] = {
             str(row["pronunciation"]): int(row["users"])
             for row in dialects
@@ -1278,9 +1270,13 @@ class Database:
         dialect: str | None = None,
         random_card: bool = False,
     ) -> ReservedCard | None:
-        where = "WHERE entries.id = %s" if entry_id is not None else (
-            "WHERE entries.is_active AND ("
-            "us_audio.source_url IS NOT NULL OR gb_audio.source_url IS NOT NULL)"
+        where = (
+            "WHERE entries.id = %s"
+            if entry_id is not None
+            else (
+                "WHERE entries.is_active AND ("
+                "us_audio.source_url IS NOT NULL OR gb_audio.source_url IS NOT NULL)"
+            )
         )
         order = "ORDER BY random()" if random_card else "ORDER BY entries.id"
         query = f"{CARD_CONTENT_SQL} {where} {order} LIMIT 1"

@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import time
 from pathlib import Path
-from typing import Mapping
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = Path(__file__).resolve().parent
@@ -51,7 +50,9 @@ def parse_admin_ids(value: str) -> frozenset[int]:
             int(item.strip()) for item in value.split(",") if item.strip()
         )
     except ValueError as exc:
-        raise ConfigError("TELEGRAM_ADMIN_IDS must contain comma-separated integers") from exc
+        raise ConfigError(
+            "TELEGRAM_ADMIN_IDS must contain comma-separated integers"
+        ) from exc
     if any(admin_id <= 0 for admin_id in result):
         raise ConfigError("TELEGRAM_ADMIN_IDS must contain positive user IDs")
     return result
@@ -110,7 +111,7 @@ class BotConfig:
         values: Mapping[str, str] | None = None,
         *,
         require_token: bool = True,
-    ) -> "BotConfig":
+    ) -> BotConfig:
         source = os.environ if values is None else values
         token = source.get("TELEGRAM_BOT_TOKEN", "").strip()
         if require_token and not token:

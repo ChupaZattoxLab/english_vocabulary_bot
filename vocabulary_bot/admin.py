@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import html
-from datetime import datetime, time, timedelta, timezone
+from datetime import UTC, datetime, time, timedelta
 from typing import Any
 
 from aiogram import F, Router
@@ -36,8 +36,8 @@ def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime, datetime]:
     local_start = datetime.combine(local_now.date(), time.min, tzinfo=config.timezone)
     return (
         local_now,
-        local_start.astimezone(timezone.utc),
-        (local_start + timedelta(days=1)).astimezone(timezone.utc),
+        local_start.astimezone(UTC),
+        (local_start + timedelta(days=1)).astimezone(UTC),
     )
 
 
@@ -68,8 +68,8 @@ async def _render_overview(database: Database, config: BotConfig) -> str:
     local_now, today_start, _ = _local_day_bounds(config)
     users = await database.admin_users_summary(
         today_start=today_start,
-        week_start=(local_now - timedelta(days=7)).astimezone(timezone.utc),
-        month_start=(local_now - timedelta(days=30)).astimezone(timezone.utc),
+        week_start=(local_now - timedelta(days=7)).astimezone(UTC),
+        month_start=(local_now - timedelta(days=30)).astimezone(UTC),
     )
     content = await database.admin_content_summary()
     return (
@@ -84,17 +84,20 @@ async def _render_users(database: Database, config: BotConfig) -> str:
     local_now, today_start, _ = _local_day_bounds(config)
     stats = await database.admin_users_summary(
         today_start=today_start,
-        week_start=(local_now - timedelta(days=7)).astimezone(timezone.utc),
-        month_start=(local_now - timedelta(days=30)).astimezone(timezone.utc),
+        week_start=(local_now - timedelta(days=7)).astimezone(UTC),
+        month_start=(local_now - timedelta(days=30)).astimezone(UTC),
     )
     levels = "\n".join(
         f"{level.upper()}: {_number(stats['levels'].get(level, 0))}"
         for level in ("a1", "a2", "b1", "b2", "c1", "c2")
     )
-    dialects = ", ".join(
-        f"{key.upper()}: {_number(value)}"
-        for key, value in sorted(stats["dialects"].items())
-    ) or "нет"
+    dialects = (
+        ", ".join(
+            f"{key.upper()}: {_number(value)}"
+            for key, value in sorted(stats["dialects"].items())
+        )
+        or "нет"
+    )
     return (
         "<b>👥 Пользователи</b>\n\n"
         f"Всего: {_number(stats['total_users'])}\n"
@@ -134,17 +137,20 @@ def create_admin_router(
         local_now, today_start, _ = _local_day_bounds(config)
         stats = await database.admin_users_summary(
             today_start=today_start,
-            week_start=(local_now - timedelta(days=7)).astimezone(timezone.utc),
-            month_start=(local_now - timedelta(days=30)).astimezone(timezone.utc),
+            week_start=(local_now - timedelta(days=7)).astimezone(UTC),
+            month_start=(local_now - timedelta(days=30)).astimezone(UTC),
         )
         levels = "\n".join(
             f"{level.upper()}: {_number(stats['levels'].get(level, 0))}"
             for level in ("a1", "a2", "b1", "b2", "c1", "c2")
         )
-        dialects = ", ".join(
-            f"{key.upper()}: {_number(value)}"
-            for key, value in sorted(stats["dialects"].items())
-        ) or "нет"
+        dialects = (
+            ", ".join(
+                f"{key.upper()}: {_number(value)}"
+                for key, value in sorted(stats["dialects"].items())
+            )
+            or "нет"
+        )
         await message.answer(
             "<b>👥 Users</b>\n\n"
             f"Всего: {_number(stats['total_users'])}\n"
@@ -180,6 +186,7 @@ def create_admin_router(
         )
         username = f"@{html.escape(user['username'])}" if user["username"] else "—"
         levels = ", ".join(level.upper() for level in user["selected_levels"]) or "—"
+        send_times = ", ".join(t.strftime("%H:%M") for t in config.send_times)
         await message.answer(
             f"<b>👤 User {user['telegram_user_id']}</b>\n\n"
             f"Username: {username}\n"
@@ -187,7 +194,7 @@ def create_admin_router(
             f"Уровни: {levels}\n"
             f"Произношение: {_dialect_label(user['pronunciation'])}\n"
             f"Карточек в день: {len(config.send_times)}\n"
-            f"Время отправки: {', '.join(t.strftime('%H:%M') for t in config.send_times)}\n"
+            f"Время отправки: {send_times}\n"
             f"Часовой пояс: {html.escape(config.timezone.key)}\n"
             f"Рассылка: {_delivery_state(user)}\n\n"
             f"Отправлено карточек: {_number(user['delivered_cards'])}\n"
@@ -228,9 +235,7 @@ def create_admin_router(
             chat_id=message.chat.id,
             entry_id=int(rows[0]["id"]),
         ):
-            await message.answer(
-                "Для этого слова нет одновременно US и GB аудио."
-            )
+            await message.answer("Для этого слова нет одновременно US и GB аудио.")
 
     @router.message(Command("send_test"))
     async def send_test_handler(message: Message) -> None:
@@ -242,7 +247,6 @@ def create_admin_router(
             return
         await delivery.send_preview(message.bot, chat_id=message.chat.id, card=card)
 
-
     @router.message(Command("reload_templates"))
     async def reload_templates_handler(message: Message) -> None:
         if not await _is_admin(message, config):
@@ -250,10 +254,11 @@ def create_admin_router(
         try:
             delivery.reload_templates()
         except CardTemplateError as exc:
-            await message.answer(f"Ошибка шаблона: <code>{html.escape(str(exc))}</code>")
+            await message.answer(
+                f"Ошибка шаблона: <code>{html.escape(str(exc))}</code>"
+            )
             return
         await message.answer("Оба шаблона карточек проверены и перезагружены.")
-
 
     @router.callback_query(F.data.startswith("admin:"))
     async def admin_panel_callback(callback: CallbackQuery) -> None:

@@ -46,7 +46,6 @@ def word_categories_keyboard(
     return builder.as_markup()
 
 
-
 def _back_and_refresh(section: str) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.button(text="⬅️ Назад", callback_data="admin:overview")

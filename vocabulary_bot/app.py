@@ -18,7 +18,6 @@ from vocabulary_bot.delivery import CardDeliveryService
 from vocabulary_bot.handlers import create_router
 from vocabulary_bot.scheduler import CardScheduler
 
-
 LOGGER = logging.getLogger("vocabulary.bot")
 
 USER_COMMANDS = (

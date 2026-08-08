@@ -8,7 +8,6 @@ import hashlib
 import logging
 import os
 import re
-import socket
 import subprocess
 import time
 import urllib.error
@@ -353,9 +352,7 @@ def validate_audio_payload(data: bytes, declared_type: str) -> str:
         declared_type.startswith("audio/")
         or declared_type in {"application/ogg", "application/octet-stream"}
     ):
-        raise AudioDownloadError(
-            f"unexpected response content type {declared_type!r}"
-        )
+        raise AudioDownloadError(f"unexpected response content type {declared_type!r}")
     return detected_type
 
 
@@ -516,7 +513,7 @@ def download_audio_file(
         ) from exc
     except AudioDownloadError:
         raise
-    except (urllib.error.URLError, TimeoutError, socket.timeout, OSError) as exc:
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
         raise AudioDownloadError(
             f"temporary network error: {exc}",
             retryable=True,
@@ -721,9 +718,7 @@ def download_audio_to_postgres(
         ) as connection:
             with connection.cursor() as cursor:
                 require_oald_schema(cursor)
-                cursor.execute(
-                    "SELECT to_regclass('public.bot_telegram_audio_cache')"
-                )
+                cursor.execute("SELECT to_regclass('public.bot_telegram_audio_cache')")
                 clear_telegram_cache = cursor.fetchone()[0] is not None
                 candidates = load_candidates(
                     cursor,
@@ -918,8 +913,7 @@ def main(argv: list[str] | None = None) -> int:
     configure_logging(args.log_level)
     if not args.database_url:
         LOGGER.error(
-            "PostgreSQL URL is required: use --database-url or set "
-            "OALD_DATABASE_URL"
+            "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
         )
         return 2
 

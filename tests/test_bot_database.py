@@ -1,7 +1,7 @@
 import os
 import unittest
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from psycopg.types.json import Jsonb
 
@@ -160,7 +160,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 )
 
     async def test_cards_never_repeat_and_slot_is_idempotent(self) -> None:
-        first_slot = datetime.now(timezone.utc)
+        first_slot = datetime.now(UTC)
         first = await self.database.reserve_card(
             self.telegram_user_id,
             first_slot,
@@ -185,7 +185,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(exhausted)
 
     async def test_scheduler_slot_can_only_be_claimed_once(self) -> None:
-        slot = datetime(2099, 1, 1, tzinfo=timezone.utc) + timedelta(
+        slot = datetime(2099, 1, 1, tzinfo=UTC) + timedelta(
             seconds=int(self.suffix[:6], 16)
         )
         self.scheduler_slots.append(slot)
@@ -203,7 +203,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         await self.database.set_pronunciation(self.telegram_user_id, "both")
         card = await self.database.reserve_card(
             self.telegram_user_id,
-            datetime.now(timezone.utc),
+            datetime.now(UTC),
         )
 
         self.assertIsNotNone(card)

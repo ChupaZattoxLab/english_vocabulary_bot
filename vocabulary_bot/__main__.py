@@ -6,7 +6,7 @@ import asyncio
 import logging
 
 from vocabulary_bot.app import run_bot
-from vocabulary_bot.config import BotConfig, ConfigError, PROJECT_ROOT, load_env_file
+from vocabulary_bot.config import PROJECT_ROOT, BotConfig, ConfigError, load_env_file
 
 
 def main() -> int:

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-
 LEVELS = ("A1", "A2", "B1", "B2", "C1", "C2")
 
 
@@ -22,9 +21,7 @@ def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:
                 )
             )
         rows.append(row)
-    rows.append(
-        [InlineKeyboardButton(text="Продолжить", callback_data="level:done")]
-    )
+    rows.append([InlineKeyboardButton(text="Продолжить", callback_data="level:done")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 

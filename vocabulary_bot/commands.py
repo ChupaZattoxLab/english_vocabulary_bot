@@ -7,12 +7,11 @@ import os
 from pathlib import Path
 
 import psutil
-from alembic import command
 from alembic.config import Config
 
+from alembic import command
 from vocabulary_bot.__main__ import main as bot_main
 from vocabulary_bot.config import PROJECT_ROOT
-
 
 PID_FILE = PROJECT_ROOT / ".bot.pid"
 
@@ -120,3 +119,25 @@ def test() -> int:
     import pytest
 
     return pytest.main()
+
+
+def format_code() -> int:
+    """Format the project with Ruff."""
+    from ruff.__main__ import find_ruff_bin
+
+    return os.spawnv(os.P_WAIT, find_ruff_bin(), ["ruff", "format", "."])
+
+
+def lint() -> int:
+    """Lint the project with Ruff and apply safe autofixes."""
+    from ruff.__main__ import find_ruff_bin
+
+    ruff = find_ruff_bin()
+    check_code = os.spawnv(
+        os.P_WAIT,
+        ruff,
+        ["ruff", "check", "--fix", "."],
+    )
+    if check_code != 0:
+        return check_code
+    return os.spawnv(os.P_WAIT, ruff, ["ruff", "format", "--check", "."])
