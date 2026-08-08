@@ -6,7 +6,8 @@ import asyncio
 import logging
 
 from tgbot.app import run_bot
-from tgbot.config import PROJECT_ROOT, BotConfig, ConfigError, load_env_file
+from tgbot.bot_config import BotConfig
+from tgbot.secrets import ConfigError
 
 
 def main() -> int:
@@ -17,9 +18,7 @@ def main() -> int:
     )
 
     try:
-        load_env_file(PROJECT_ROOT / ".env")
-        config = BotConfig.from_env()
-
+        config = BotConfig.load()
         asyncio.run(run_bot(config))
         return 0
     except ConfigError as exc:

@@ -4,10 +4,10 @@ from dataclasses import replace
 from datetime import UTC, datetime, time
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 from zoneinfo import ZoneInfo
 
-from tgbot.config import BotConfig, ConfigError
+from tgbot.bot_config import BotConfig, parse_send_times
 from tgbot.db import AdminUserDetail, AdminWordMatch, ReservedAudio, ReservedCard
 from tgbot.delivery import (
     CardDeliveryService,
@@ -21,6 +21,7 @@ from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     word_categories_keyboard,
 )
+from tgbot.secrets import ConfigError, Secrets
 
 VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
@@ -28,13 +29,15 @@ VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 
 class BotConfigTests(unittest.TestCase):
     def test_environment_configuration_is_parsed(self) -> None:
-        config = BotConfig.from_env(
+        test_secrets = Secrets.load(
             {
                 "TELEGRAM_BOT_TOKEN": "token",
                 "TELEGRAM_ADMIN_IDS": "123, 456",
                 "OALD_DATABASE_URL": "postgresql://localhost/test",
             }
         )
+        with patch("tgbot.bot_config.secrets", test_secrets):
+            config = BotConfig.load()
 
         self.assertEqual(config.admin_ids, frozenset({123, 456}))
         self.assertEqual(
@@ -48,8 +51,6 @@ class BotConfigTests(unittest.TestCase):
         )
 
     def test_send_times_constant_must_match_cards_per_day(self) -> None:
-        from tgbot.config import parse_send_times
-
         with self.assertRaises(ConfigError):
             parse_send_times("09:00,14:00")
 

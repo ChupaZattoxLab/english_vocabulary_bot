@@ -11,6 +11,7 @@ dependencies = [
     "alembic>=1.19.0,<2",
     "sqlalchemy>=2.0.51,<3",
     "psutil>=7.2.2,<8",
+    "python-dotenv>=1,<2",
 ]
 
 [project.scripts]
@@ -48,6 +49,9 @@ extend-exclude = ["migrations/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"migrations/env.py" = ["E402"]
 
 [tool.ruff.format]
 quote-style = "double"

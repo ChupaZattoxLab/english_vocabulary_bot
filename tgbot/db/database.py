@@ -10,7 +10,6 @@ from alembic.script import ScriptDirectory
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
-from tgbot.config import PROJECT_ROOT
 from tgbot.constants import (
     DATABASE_CONNECT_TIMEOUT_SECONDS,
     DATABASE_POOL_MIN_SIZE,
@@ -31,6 +30,7 @@ from tgbot.db.models import (
     row_str,
 )
 from tgbot.db.schema import MANAGED_TABLES
+from tgbot.secrets import PROJECT_ROOT
 
 
 class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):

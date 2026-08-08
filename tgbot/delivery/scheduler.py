@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 
 from aiogram import Bot
 
-from tgbot.config import BotConfig
+from tgbot.bot_config import BotConfig
 from tgbot.constants import (
     DELIVERY_STATUS_DELIVERED,
     DELIVERY_STATUS_FAILED,

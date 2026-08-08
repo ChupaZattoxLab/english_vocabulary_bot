@@ -63,6 +63,9 @@ class AlembicIntegrationTests(unittest.TestCase):
             os.environ,
             {"OALD_DATABASE_URL": self.database_url},
         ):
+            import tgbot.secrets as app_secrets
+
+            app_secrets.secrets = app_secrets.Secrets.load()
             command.upgrade(config, "head")
 
     def test_upgrade_creates_schema_from_scratch(self) -> None:

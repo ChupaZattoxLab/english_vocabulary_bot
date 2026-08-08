@@ -10,7 +10,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message
 
-from tgbot.config import BotConfig
+from tgbot.bot_config import BotConfig
 from tgbot.constants import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.db import Database
 from tgbot.db.models import VALID_LEVELS, AdminUserDetail

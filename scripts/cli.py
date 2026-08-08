@@ -11,7 +11,7 @@ from alembic import command
 from alembic.config import Config
 
 from tgbot.__main__ import main as bot_main
-from tgbot.config import PROJECT_ROOT
+from tgbot.secrets import PROJECT_ROOT
 
 PID_FILE = PROJECT_ROOT / ".bot.pid"
 
@@ -80,7 +80,6 @@ def _read_process(path: Path = PID_FILE) -> psutil.Process | None:
 
         if abs(process.create_time() - float(payload["created_at"])) > 0.01:
             return None
-
         return process
     except (
         FileNotFoundError,

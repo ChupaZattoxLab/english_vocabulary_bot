@@ -8,7 +8,7 @@ from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message, User
 
-from tgbot.config import BotConfig
+from tgbot.bot_config import BotConfig
 from tgbot.constants import DELIVERY_STATUS_FAILED, DELIVERY_STATUS_SKIPPED
 from tgbot.db import BotUser, Database
 from tgbot.delivery import CardDeliveryService

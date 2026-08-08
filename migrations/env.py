@@ -1,10 +1,9 @@
+from collections.abc import MutableMapping
 from logging.config import fileConfig
+from typing import Literal
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
-
-from tgbot.config import PROJECT_ROOT, BotConfig, load_env_file
-from tgbot.db.schema import MANAGED_TABLES, metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -15,39 +14,42 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-load_env_file(PROJECT_ROOT / ".env")
-database_url = BotConfig.from_env(require_token=False).database_url
-sqlalchemy_url = database_url.replace(
-    "postgresql://",
-    "postgresql+psycopg://",
-    1,
-)
-# ConfigParser treats '%' as interpolation syntax.
-config.set_main_option("sqlalchemy.url", sqlalchemy_url.replace("%", "%%"))
+# add your model's MetaData object here
+# for 'autogenerate' support
+from tgbot.db.schema import MANAGED_TABLES, metadata
+
 target_metadata = metadata
+
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc.
+from tgbot.secrets import secrets
+
+config.set_main_option("sqlalchemy.url", secrets.db_url)
 
 
 def include_name(
     name: str | None,
-    type_: str,
-    parent_names: dict[str, str | None],
+    type_: Literal[
+        "schema",
+        "table",
+        "column",
+        "index",
+        "unique_constraint",
+        "foreign_key_constraint",
+        "check_constraint",
+    ],
+    parent_names: MutableMapping[
+        Literal["schema_name", "table_name", "schema_qualified_table_name"],
+        str | None,
+    ],
 ) -> bool:
     """Keep unrelated public tables out of autogenerate output."""
     if type_ == "table":
         return name in MANAGED_TABLES
     table_name = parent_names.get("table_name")
     return table_name is None or table_name in MANAGED_TABLES
-
-
-def configure_context(**kwargs: object) -> None:
-    context.configure(
-        target_metadata=target_metadata,
-        compare_type=True,
-        compare_server_default=True,
-        include_name=include_name,
-        include_schemas=False,
-        **kwargs,
-    )
 
 
 def run_migrations_offline() -> None:
@@ -63,10 +65,15 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    configure_context(
+    context.configure(
         url=url,
+        target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        compare_type=True,
+        compare_server_default=True,
+        include_name=include_name,
+        include_schemas=False,
     )
 
     with context.begin_transaction():
@@ -87,7 +94,14 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        configure_context(connection=connection)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True,
+            compare_server_default=True,
+            include_name=include_name,
+            include_schemas=False,
+        )
 
         with context.begin_transaction():
             context.run_migrations()

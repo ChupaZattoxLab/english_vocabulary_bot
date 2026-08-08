@@ -7,7 +7,8 @@ Offline-friendly Telegram bot that sends OALD-backed vocabulary cards from Postg
 ```text
 tgbot/                 # runtime bot package
   app.py               # aiogram bootstrap / long polling
-  config.py            # env/.env settings
+  secrets.py           # .env / process environment secrets
+  bot_config.py        # runtime bot config
   constants.py         # shared domain / runtime constants
   localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot

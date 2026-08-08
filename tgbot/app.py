@@ -10,7 +10,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import BotCommand, BotCommandScopeChat
 
-from tgbot.config import BotConfig
+from tgbot.bot_config import BotConfig
 from tgbot.db import Database
 from tgbot.delivery import CardDeliveryService, CardTemplate
 from tgbot.delivery.scheduler import CardScheduler

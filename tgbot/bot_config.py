@@ -1,9 +1,7 @@
-"""Environment-backed configuration for the Telegram vocabulary bot."""
+"""Runtime bot configuration assembled from secrets and constants."""
 
 from __future__ import annotations
 
-import os
-from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import time
 from pathlib import Path
@@ -18,17 +16,12 @@ from tgbot.constants import (
     SEND_TIMES,
     TIMEZONE,
 )
+from tgbot.secrets import PACKAGE_ROOT, ConfigError, secrets
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_ROOT = Path(__file__).resolve().parent
 CARD_TEMPLATE_PATH = PACKAGE_ROOT / "delivery" / "templates" / "card_template.html"
 BOTH_CARD_TEMPLATE_PATH = (
     PACKAGE_ROOT / "delivery" / "templates" / "card_template_both.html"
 )
-
-
-class ConfigError(ValueError):
-    """Raised when bot configuration is missing or invalid."""
 
 
 @dataclass(frozen=True)
@@ -52,20 +45,12 @@ class BotConfig:
         return f"{times} ({self.timezone_name})"
 
     @classmethod
-    def from_env(
-        cls,
-        values: Mapping[str, str] | None = None,
-        require_token: bool = True,
-    ) -> BotConfig:
-        """Load secrets from env/.env; schedule and paths come from constants."""
-        source = os.environ if values is None else values
-
-        token = source.get("TELEGRAM_BOT_TOKEN", "").strip()
-        if require_token and not token:
+    def load(cls) -> BotConfig:
+        """Build runtime config from the module ``secrets`` singleton."""
+        if not secrets.telegram_bot_token:
             raise ConfigError("TELEGRAM_BOT_TOKEN is required")
 
-        database_url = source.get("OALD_DATABASE_URL", "").strip()
-        if not database_url:
+        if not secrets.db_url:
             raise ConfigError("OALD_DATABASE_URL is required")
 
         try:
@@ -74,9 +59,9 @@ class BotConfig:
             raise ConfigError(f"unknown TIMEZONE {TIMEZONE!r}") from exc
 
         return cls(
-            bot_token=token,
-            database_url=database_url,
-            admin_ids=parse_admin_ids(source.get("TELEGRAM_ADMIN_IDS", "")),
+            bot_token=secrets.telegram_bot_token,
+            database_url=psycopg_url(secrets.db_url),
+            admin_ids=secrets.admin_ids,
             timezone=timezone,
             timezone_name=TIMEZONE,
             send_times=parse_send_times(SEND_TIMES),
@@ -89,51 +74,11 @@ class BotConfig:
         )
 
 
-def load_env_file(path: Path) -> None:
-    """Load a small KEY=VALUE .env file without overriding real environment."""
-    if not path.is_file():
-        return
-
-    for line_number, raw_line in enumerate(
-        path.read_text(encoding="utf-8").splitlines(),
-        start=1,
-    ):
-        line = raw_line.strip()
-        if not line or line.startswith("#"):
-            continue
-
-        if "=" not in line:
-            raise ConfigError(f"{path}:{line_number}: expected KEY=VALUE")
-
-        key, value = line.split("=", 1)
-        key = key.strip()
-        value = value.strip()
-        if not key:
-            raise ConfigError(f"{path}:{line_number}: environment key is empty")
-
-        if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
-            value = value[1:-1]
-
-        os.environ.setdefault(key, value)
-
-
-def parse_admin_ids(value: str) -> frozenset[int]:
-    if not value.strip():
-        return frozenset()
-
-    try:
-        result = frozenset(
-            int(item.strip()) for item in value.split(",") if item.strip()
-        )
-    except ValueError as exc:
-        raise ConfigError(
-            "TELEGRAM_ADMIN_IDS must contain comma-separated integers"
-        ) from exc
-
-    if any(admin_id <= 0 for admin_id in result):
-        raise ConfigError("TELEGRAM_ADMIN_IDS must contain positive user IDs")
-
-    return result
+def psycopg_url(value: str) -> str:
+    """Strip the SQLAlchemy driver prefix for raw psycopg / psycopg_pool."""
+    if value.startswith("postgresql+psycopg://"):
+        return "postgresql://" + value.removeprefix("postgresql+psycopg://")
+    return value
 
 
 def parse_send_times(value: str) -> tuple[time, ...]:
