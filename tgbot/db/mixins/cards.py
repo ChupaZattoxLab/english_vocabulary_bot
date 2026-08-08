@@ -2,8 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import MutableMapping
 from datetime import datetime
-from typing import Any, cast
+from typing import Any, Literal
+
+import sqlalchemy as sa
+from sqlalchemy import FromClause, Select
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.ext.asyncio import AsyncConnection
 
 from tgbot.constants import (
     AUDIO_CONVERSION_PREPARED,
@@ -17,7 +23,7 @@ from tgbot.constants import (
     ERROR_TYPE_MAX_LEN,
     ERROR_TYPE_STALE_RESERVATION,
 )
-from tgbot.db.mixins.base import PoolBound
+from tgbot.db.mixins.base import EngineBound
 from tgbot.db.models import (
     VALID_PRONUNCIATIONS,
     ReservedCard,
@@ -29,220 +35,149 @@ from tgbot.db.models import (
     row_str,
     row_str_sequence,
 )
+from tgbot.db.schema import (
+    bot_telegram_audio_cache,
+    bot_user_cards,
+    bot_users,
+    oald_audio_files,
+    oald_audio_variants,
+    oald_entries,
+    oald_entry_audio_sources,
+)
 
-_ACTIVE_STATUSES_SQL = ", ".join(f"'{status}'" for status in CARD_ACTIVE_STATUSES)
-
-CARD_CONTENT_SQL = f"""
-SELECT
-    entries.id AS entry_id,
-    entries.word_us,
-    entries.word_gb,
-    entries.lexical_category,
-    entries.cefr,
-    entries.definition,
-    entries.example,
-    entries.ipa_us,
-    entries.ipa_gb,
-    entries.translations,
-    us_audio.source_url AS us_source_url,
-    us_audio.source_position AS us_source_position,
-    us_audio.audio_data AS us_audio_data,
-    us_audio.content_type AS us_content_type,
-    us_audio.filename AS us_filename,
-    gb_audio.source_url AS gb_source_url,
-    gb_audio.source_position AS gb_source_position,
-    gb_audio.audio_data AS gb_audio_data,
-    gb_audio.content_type AS gb_content_type,
-    gb_audio.filename AS gb_filename
-FROM oald_entries AS entries
-LEFT JOIN LATERAL (
-    SELECT links.source_url,
-           links.source_position,
-           voice.audio_data,
-           voice.content_type,
-           voice.filename
-    FROM oald_entry_audio_sources AS links
-    JOIN oald_audio_files AS files
-      ON files.source_url = links.source_url
-    JOIN oald_audio_variants AS voice
-      ON voice.source_url = files.source_url
-     AND voice.variant_type = '{AUDIO_VARIANT_TELEGRAM_VOICE_OPUS}'
-     AND voice.conversion_status = '{AUDIO_CONVERSION_PREPARED}'
-     AND voice.source_sha256 = files.sha256
-    WHERE links.entry_id = entries.id
-      AND links.dialect = 'us'
-      AND voice.audio_data IS NOT NULL
-    ORDER BY links.source_position
-    LIMIT 1
-) AS us_audio ON TRUE
-LEFT JOIN LATERAL (
-    SELECT links.source_url,
-           links.source_position,
-           voice.audio_data,
-           voice.content_type,
-           voice.filename
-    FROM oald_entry_audio_sources AS links
-    JOIN oald_audio_files AS files
-      ON files.source_url = links.source_url
-    JOIN oald_audio_variants AS voice
-      ON voice.source_url = files.source_url
-     AND voice.variant_type = '{AUDIO_VARIANT_TELEGRAM_VOICE_OPUS}'
-     AND voice.conversion_status = '{AUDIO_CONVERSION_PREPARED}'
-     AND voice.source_sha256 = files.sha256
-    WHERE links.entry_id = entries.id
-      AND links.dialect = 'gb'
-      AND voice.audio_data IS NOT NULL
-    ORDER BY links.source_position
-    LIMIT 1
-) AS gb_audio ON TRUE
-"""
+AudioDialect = Literal["us", "gb"]
 
 
-class CardsMixin(PoolBound):
+class CardsMixin(EngineBound):
     async def reserve_card(
         self,
         telegram_user_id: int,
         scheduled_slot: datetime,
         require_active: bool = True,
     ) -> ReservedCard | None:
-        async with self.pool.connection() as connection:
-            async with connection.transaction():
-                await connection.execute(
-                    "SELECT pg_advisory_xact_lock(%s)",
-                    (telegram_user_id,),
-                )
+        async with self.engine.begin() as connection:
+            await connection.execute(
+                sa.select(sa.func.pg_advisory_xact_lock(telegram_user_id))
+            )
 
-                await connection.execute(
-                    cast(
-                        Any,
-                        f"""
-                    UPDATE bot_user_cards
-                    SET status = '{CARD_STATUS_FAILED}',
-                        error_type = '{ERROR_TYPE_STALE_RESERVATION}',
-                        error_message = 'reservation timed out before delivery finished'
-                    WHERE telegram_user_id = %s
-                      AND status = '{CARD_STATUS_RESERVED}'
-                      AND created_at < CURRENT_TIMESTAMP
-                          - make_interval(mins => {CARD_RESERVATION_TIMEOUT_MINUTES})
-                    """,
+            await connection.execute(
+                sa.update(bot_user_cards)
+                .where(
+                    bot_user_cards.c.telegram_user_id == telegram_user_id,
+                    bot_user_cards.c.status == CARD_STATUS_RESERVED,
+                    bot_user_cards.c.created_at
+                    < sa.func.current_timestamp()
+                    - sa.func.make_interval(mins=CARD_RESERVATION_TIMEOUT_MINUTES),
+                )
+                .values(
+                    status=CARD_STATUS_FAILED,
+                    error_type=ERROR_TYPE_STALE_RESERVATION,
+                    error_message=("reservation timed out before delivery finished"),
+                )
+            )
+
+            user = (
+                (
+                    await connection.execute(
+                        sa.select(
+                            bot_users.c.selected_levels,
+                            bot_users.c.pronunciation,
+                            bot_users.c.is_active,
+                            bot_users.c.onboarding_completed,
+                        ).where(bot_users.c.telegram_user_id == telegram_user_id)
+                    )
+                )
+                .mappings()
+                .first()
+            )
+            if not user:
+                return None
+
+            user_row = as_db_row(user)
+            pronunciation = row_optional_str(user_row, "pronunciation")
+
+            if (
+                not row_bool(user_row, "onboarding_completed")
+                or not user_row["selected_levels"]
+                or pronunciation not in VALID_PRONUNCIATIONS
+                or (require_active and not row_bool(user_row, "is_active"))
+            ):
+                return None
+
+            existing = (
+                (
+                    await connection.execute(
+                        sa.select(bot_user_cards.c.status).where(
+                            bot_user_cards.c.telegram_user_id == telegram_user_id,
+                            bot_user_cards.c.scheduled_slot == scheduled_slot,
+                            bot_user_cards.c.status.in_(CARD_ACTIVE_STATUSES),
+                        )
+                    )
+                )
+                .mappings()
+                .first()
+            )
+            if existing:
+                return None
+
+            dialect = pronunciation
+            levels = list(row_str_sequence(user_row, "selected_levels"))
+            stmt, us_audio, gb_audio = card_content_select(with_audio_data=False)
+            stmt = (
+                stmt.where(
+                    oald_entries.c.is_active.is_(True),
+                    oald_entries.c.cefr.in_(levels),
+                    dialect_audio_ready(dialect, us_audio, gb_audio),
+                    ~sa.exists(
+                        sa.select(sa.literal(1)).where(
+                            bot_user_cards.c.telegram_user_id == telegram_user_id,
+                            bot_user_cards.c.entry_id == oald_entries.c.id,
+                            bot_user_cards.c.status.in_(CARD_ACTIVE_STATUSES),
+                        )
                     ),
-                    (telegram_user_id,),
                 )
+                .order_by(sa.func.random())
+                .limit(1)
+            )
 
-                user = await (
+            row = (await connection.execute(stmt)).mappings().first()
+            if not row:
+                return None
+
+            card_row = dict(row)
+            await hydrate_card_audio(connection, card_row, dialect)
+
+            source_url = card_row[
+                "gb_source_url" if dialect == "gb" else "us_source_url"
+            ]
+            source_url_gb = card_row["gb_source_url"] if dialect == "both" else None
+
+            history = (
+                (
                     await connection.execute(
-                        """
-                        SELECT selected_levels, pronunciation, is_active,
-                               onboarding_completed
-                        FROM bot_users
-                        WHERE telegram_user_id = %s
-                        """,
-                        (telegram_user_id,),
+                        sa.insert(bot_user_cards)
+                        .values(
+                            telegram_user_id=telegram_user_id,
+                            entry_id=row_int(as_db_row(card_row), "entry_id"),
+                            dialect=dialect,
+                            source_url=source_url,
+                            source_url_gb=source_url_gb,
+                            scheduled_slot=scheduled_slot,
+                        )
+                        .returning(bot_user_cards.c.id)
                     )
-                ).fetchone()
-                if not user:
-                    return None
+                )
+                .mappings()
+                .first()
+            )
+            if history is None:
+                return None
 
-                user_row = as_db_row(user)
-                pronunciation = row_optional_str(user_row, "pronunciation")
-
-                if (
-                    not row_bool(user_row, "onboarding_completed")
-                    or not user_row["selected_levels"]
-                    or pronunciation not in VALID_PRONUNCIATIONS
-                    or (require_active and not row_bool(user_row, "is_active"))
-                ):
-                    return None
-
-                existing = await (
-                    await connection.execute(
-                        cast(
-                            Any,
-                            f"""
-                        SELECT status
-                        FROM bot_user_cards
-                        WHERE telegram_user_id = %s
-                          AND scheduled_slot = %s
-                          AND status IN ({_ACTIVE_STATUSES_SQL})
-                        """,
-                        ),
-                        (telegram_user_id, scheduled_slot),
-                    )
-                ).fetchone()
-                if existing:
-                    return None
-
-                dialect = pronunciation
-                query = f"""
-                    {CARD_CONTENT_SQL}
-                    WHERE entries.is_active
-                      AND entries.cefr = ANY(%s)
-                      AND CASE %s
-                          WHEN 'us' THEN us_audio.source_url IS NOT NULL
-                          WHEN 'gb' THEN gb_audio.source_url IS NOT NULL
-                          WHEN 'both' THEN
-                              us_audio.source_url IS NOT NULL
-                              AND gb_audio.source_url IS NOT NULL
-                          ELSE FALSE
-                      END
-                      AND NOT EXISTS (
-                          SELECT 1
-                          FROM bot_user_cards AS history
-                          WHERE history.telegram_user_id = %s
-                            AND history.entry_id = entries.id
-                            AND history.status IN ({_ACTIVE_STATUSES_SQL})
-                      )
-                    ORDER BY random()
-                    LIMIT 1
-                    """
-                row = await (
-                    await connection.execute(
-                        cast(Any, query),
-                        (
-                            list(row_str_sequence(user_row, "selected_levels")),
-                            dialect,
-                            telegram_user_id,
-                        ),
-                    )
-                ).fetchone()
-                if not row:
-                    return None
-
-                card_row = as_db_row(row)
-
-                history = await (
-                    await connection.execute(
-                        """
-                        INSERT INTO bot_user_cards (
-                            telegram_user_id,
-                            entry_id,
-                            dialect,
-                            source_url,
-                            source_url_gb,
-                            scheduled_slot
-                        ) VALUES (%s, %s, %s, %s, %s, %s)
-                        RETURNING id
-                        """,
-                        (
-                            telegram_user_id,
-                            row_int(card_row, "entry_id"),
-                            dialect,
-                            card_row[
-                                "gb_source_url" if dialect == "gb" else "us_source_url"
-                            ],
-                            card_row["gb_source_url"] if dialect == "both" else None,
-                            scheduled_slot,
-                        ),
-                    )
-                ).fetchone()
-                if history is None:
-                    return None
-
-        return card_from_row(
-            card_row,
-            dialect=dialect,
-            history_id=row_int(as_db_row(history), "id"),
-        )
+            return card_from_row(
+                card_row,
+                dialect=dialect,
+                history_id=row_int(as_db_row(history), "id"),
+            )
 
     async def finish_delivery(
         self,
@@ -252,61 +187,65 @@ class CardsMixin(PoolBound):
         error_type: str = "",
         error_message: str = "",
     ) -> None:
-        async with self.pool.connection() as connection:
-            async with connection.transaction():
-                row = await (
+        async with self.engine.begin() as connection:
+            row = (
+                (
                     await connection.execute(
-                        """
-                        UPDATE bot_user_cards
-                        SET status = %s,
-                            telegram_message_id = %s,
-                            error_type = %s,
-                            error_message = %s,
-                            delivered_at = CASE
-                                WHEN %s THEN CURRENT_TIMESTAMP
-                                ELSE NULL
-                            END
-                        WHERE id = %s
-                        RETURNING telegram_user_id
-                        """,
-                        (
-                            CARD_STATUS_DELIVERED if delivered else CARD_STATUS_FAILED,
-                            telegram_message_id,
-                            "" if delivered else error_type[:ERROR_TYPE_MAX_LEN],
-                            error_message[:ERROR_MESSAGE_MAX_LEN],
-                            delivered,
-                            history_id,
-                        ),
+                        sa.update(bot_user_cards)
+                        .where(bot_user_cards.c.id == history_id)
+                        .values(
+                            status=(
+                                CARD_STATUS_DELIVERED
+                                if delivered
+                                else CARD_STATUS_FAILED
+                            ),
+                            telegram_message_id=telegram_message_id,
+                            error_type=(
+                                "" if delivered else error_type[:ERROR_TYPE_MAX_LEN]
+                            ),
+                            error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
+                            delivered_at=(
+                                sa.func.current_timestamp() if delivered else None
+                            ),
+                        )
+                        .returning(bot_user_cards.c.telegram_user_id)
                     )
-                ).fetchone()
+                )
+                .mappings()
+                .first()
+            )
 
-                if delivered and row:
-                    await connection.execute(
-                        """
-                        UPDATE bot_users
-                        SET last_delivery_at = CURRENT_TIMESTAMP,
-                            updated_at = CURRENT_TIMESTAMP
-                        WHERE telegram_user_id = %s
-                        """,
-                        (row_int(as_db_row(row), "telegram_user_id"),),
+            if delivered and row:
+                await connection.execute(
+                    sa.update(bot_users)
+                    .where(
+                        bot_users.c.telegram_user_id
+                        == row_int(as_db_row(row), "telegram_user_id")
                     )
+                    .values(
+                        last_delivery_at=sa.func.current_timestamp(),
+                        updated_at=sa.func.current_timestamp(),
+                    )
+                )
 
     async def cached_audio_file_id(
         self,
         source_url: str,
         send_method: str,
     ) -> str | None:
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    """
-                    SELECT telegram_file_id
-                    FROM bot_telegram_audio_cache
-                    WHERE source_url = %s AND send_method = %s
-                    """,
-                    (source_url, send_method),
+        async with self.engine.connect() as connection:
+            row = (
+                (
+                    await connection.execute(
+                        sa.select(bot_telegram_audio_cache.c.telegram_file_id).where(
+                            bot_telegram_audio_cache.c.source_url == source_url,
+                            bot_telegram_audio_cache.c.send_method == send_method,
+                        )
+                    )
                 )
-            ).fetchone()
+                .mappings()
+                .first()
+            )
 
         return row_str(as_db_row(row), "telegram_file_id") if row else None
 
@@ -316,29 +255,184 @@ class CardsMixin(PoolBound):
         send_method: str,
         telegram_file_id: str,
     ) -> None:
-        async with self.pool.connection() as connection:
-            await connection.execute(
-                """
-                INSERT INTO bot_telegram_audio_cache (
-                    source_url, send_method, telegram_file_id
-                ) VALUES (%s, %s, %s)
-                ON CONFLICT (source_url, send_method) DO UPDATE SET
-                    telegram_file_id = EXCLUDED.telegram_file_id,
-                    updated_at = CURRENT_TIMESTAMP
-                """,
-                (source_url, send_method, telegram_file_id),
-            )
+        stmt = pg_insert(bot_telegram_audio_cache).values(
+            source_url=source_url,
+            send_method=send_method,
+            telegram_file_id=telegram_file_id,
+        )
+        stmt = stmt.on_conflict_do_update(
+            index_elements=[
+                bot_telegram_audio_cache.c.source_url,
+                bot_telegram_audio_cache.c.send_method,
+            ],
+            set_={
+                "telegram_file_id": stmt.excluded.telegram_file_id,
+                "updated_at": sa.func.current_timestamp(),
+            },
+        )
+
+        async with self.engine.begin() as connection:
+            await connection.execute(stmt)
 
     async def clear_cached_audio_file_id(
         self,
         source_url: str,
         send_method: str,
     ) -> None:
-        async with self.pool.connection() as connection:
+        async with self.engine.begin() as connection:
             await connection.execute(
-                """
-                DELETE FROM bot_telegram_audio_cache
-                WHERE source_url = %s AND send_method = %s
-                """,
-                (source_url, send_method),
+                sa.delete(bot_telegram_audio_cache).where(
+                    bot_telegram_audio_cache.c.source_url == source_url,
+                    bot_telegram_audio_cache.c.send_method == send_method,
+                )
             )
+
+
+def card_content_select(
+    with_audio_data: bool = True,
+) -> tuple[Select[Any], FromClause, FromClause]:
+    """Entry row plus first prepared US/GB telegram-voice audio (LATERAL)."""
+    us_audio = prepared_audio_lateral("us", with_audio_data=with_audio_data)
+    gb_audio = prepared_audio_lateral("gb", with_audio_data=with_audio_data)
+
+    columns: list[Any] = [
+        oald_entries.c.id.label("entry_id"),
+        oald_entries.c.word_us,
+        oald_entries.c.word_gb,
+        oald_entries.c.lexical_category,
+        oald_entries.c.cefr,
+        oald_entries.c.definition,
+        oald_entries.c.example,
+        oald_entries.c.ipa_us,
+        oald_entries.c.ipa_gb,
+        oald_entries.c.translations,
+        us_audio.c.source_url.label("us_source_url"),
+        us_audio.c.source_position.label("us_source_position"),
+    ]
+    if with_audio_data:
+        columns.append(us_audio.c.audio_data.label("us_audio_data"))
+    columns.extend(
+        [
+            us_audio.c.content_type.label("us_content_type"),
+            us_audio.c.filename.label("us_filename"),
+            gb_audio.c.source_url.label("gb_source_url"),
+            gb_audio.c.source_position.label("gb_source_position"),
+        ]
+    )
+    if with_audio_data:
+        columns.append(gb_audio.c.audio_data.label("gb_audio_data"))
+    columns.extend(
+        [
+            gb_audio.c.content_type.label("gb_content_type"),
+            gb_audio.c.filename.label("gb_filename"),
+        ]
+    )
+
+    statement = sa.select(*columns).select_from(
+        oald_entries.outerjoin(us_audio, sa.true()).outerjoin(gb_audio, sa.true())
+    )
+
+    return statement, us_audio, gb_audio
+
+
+def prepared_audio_lateral(
+    dialect: AudioDialect,
+    with_audio_data: bool = True,
+) -> FromClause:
+    links = oald_entry_audio_sources.alias(f"{dialect}_links")
+    files = oald_audio_files.alias(f"{dialect}_files")
+    voice = oald_audio_variants.alias(f"{dialect}_voice")
+
+    columns: list[Any] = [
+        links.c.source_url,
+        links.c.source_position,
+    ]
+    if with_audio_data:
+        columns.append(voice.c.audio_data)
+    columns.extend([voice.c.content_type, voice.c.filename])
+
+    return (
+        sa.select(*columns)
+        .select_from(
+            links.join(files, files.c.source_url == links.c.source_url).join(
+                voice,
+                sa.and_(
+                    voice.c.source_url == files.c.source_url,
+                    voice.c.variant_type == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+                    voice.c.conversion_status == AUDIO_CONVERSION_PREPARED,
+                    voice.c.source_sha256 == files.c.sha256,
+                ),
+            )
+        )
+        .where(
+            links.c.entry_id == oald_entries.c.id,
+            links.c.dialect == dialect,
+            voice.c.audio_data.is_not(None),
+        )
+        .order_by(links.c.source_position)
+        .limit(1)
+        .lateral()
+        .alias(f"{dialect}_audio")
+    )
+
+
+def dialect_audio_ready(
+    dialect: str,
+    us_audio: FromClause,
+    gb_audio: FromClause,
+) -> sa.ColumnElement[bool]:
+    if dialect == "us":
+        return us_audio.c.source_url.is_not(None)
+    if dialect == "gb":
+        return gb_audio.c.source_url.is_not(None)
+    if dialect == "both":
+        return sa.and_(
+            us_audio.c.source_url.is_not(None),
+            gb_audio.c.source_url.is_not(None),
+        )
+    return sa.false()
+
+
+async def hydrate_card_audio(
+    connection: AsyncConnection,
+    card_row: MutableMapping[str, object],
+    dialect: str,
+) -> None:
+    """Load prepared telegram-voice blobs for the chosen source URLs only."""
+    prefixes: list[str] = []
+    if dialect in {"us", "both"}:
+        prefixes.append("us")
+    if dialect in {"gb", "both"}:
+        prefixes.append("gb")
+
+    for prefix in prefixes:
+        source_url = card_row.get(f"{prefix}_source_url")
+        if not source_url:
+            continue
+
+        audio = (
+            (
+                await connection.execute(
+                    sa.select(
+                        oald_audio_variants.c.audio_data,
+                        oald_audio_variants.c.content_type,
+                        oald_audio_variants.c.filename,
+                    ).where(
+                        oald_audio_variants.c.source_url == source_url,
+                        oald_audio_variants.c.variant_type
+                        == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+                        oald_audio_variants.c.conversion_status
+                        == AUDIO_CONVERSION_PREPARED,
+                        oald_audio_variants.c.audio_data.is_not(None),
+                    )
+                )
+            )
+            .mappings()
+            .first()
+        )
+        if audio is None:
+            continue
+
+        card_row[f"{prefix}_audio_data"] = audio["audio_data"]
+        card_row[f"{prefix}_content_type"] = audio["content_type"]
+        card_row[f"{prefix}_filename"] = audio["filename"]

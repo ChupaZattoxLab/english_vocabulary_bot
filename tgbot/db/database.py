@@ -5,15 +5,14 @@ from __future__ import annotations
 from functools import lru_cache
 from urllib.parse import urlparse
 
+import sqlalchemy as sa
 from alembic.config import Config as AlembicConfig
 from alembic.script import ScriptDirectory
-from psycopg.rows import dict_row
-from psycopg_pool import AsyncConnectionPool
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from tgbot.constants import (
     DATABASE_CONNECT_TIMEOUT_SECONDS,
-    DATABASE_POOL_MIN_SIZE,
-    DATABASE_POOL_OPEN_TIMEOUT_SECONDS,
+    DATABASE_POOL_RECYCLE_SECONDS,
     DATABASE_POOL_SIZE,
 )
 from tgbot.db.mixins import (
@@ -30,7 +29,18 @@ from tgbot.db.models import (
     row_str,
 )
 from tgbot.db.schema import MANAGED_TABLES
-from tgbot.secrets import PROJECT_ROOT
+from tgbot.secrets import PROJECT_ROOT, sqlalchemy_db_url
+
+_information_schema_tables = sa.table(
+    "tables",
+    sa.column("table_schema", sa.Text),
+    sa.column("table_name", sa.Text),
+    schema="information_schema",
+)
+_alembic_version = sa.table(
+    "alembic_version",
+    sa.column("version_num", sa.Text),
+)
 
 
 class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
@@ -39,41 +49,52 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
         database_url: str,
         pool_size: int = DATABASE_POOL_SIZE,
     ):
-        self.pool = AsyncConnectionPool(
-            conninfo=database_url,
-            kwargs=_pool_kwargs(database_url),
-            min_size=DATABASE_POOL_MIN_SIZE,
-            max_size=pool_size,
-            open=False,
-            name="tgbot",
+        connect_args: dict[str, object] = {
+            "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
+        }
+        parsed = urlparse(database_url)
+        if parsed.hostname == "localhost":
+            connect_args["hostaddr"] = "127.0.0.1"
+
+        self.engine: AsyncEngine = create_async_engine(
+            sqlalchemy_db_url(database_url),
+            pool_size=pool_size,
+            # Headroom for concurrent deliveries + scheduler bookkeeping.
+            max_overflow=pool_size,
+            pool_pre_ping=True,
+            pool_recycle=DATABASE_POOL_RECYCLE_SECONDS,
+            connect_args=connect_args,
         )
 
     async def open(self) -> None:
-        await self.pool.open(wait=True, timeout=DATABASE_POOL_OPEN_TIMEOUT_SECONDS)
-
         try:
             await self.verify_schema()
         except Exception:
-            await self.pool.close()
+            await self.engine.dispose()
             raise
 
     async def close(self) -> None:
-        await self.pool.close()
+        await self.engine.dispose()
 
     async def verify_schema(self) -> None:
-        async with self.pool.connection() as connection:
-            rows = await (
-                await connection.execute(
-                    """
-                    SELECT table_name
-                    FROM information_schema.tables
-                    WHERE table_schema = 'public'
-                      AND table_name = ANY(%s)
-                    """,
-                    (list(MANAGED_TABLES),),
+        async with self.engine.connect() as connection:
+            rows = (
+                (
+                    await connection.execute(
+                        sa.select(_information_schema_tables.c.table_name).where(
+                            _information_schema_tables.c.table_schema == "public",
+                            _information_schema_tables.c.table_name.in_(
+                                list(MANAGED_TABLES)
+                            ),
+                        )
+                    )
                 )
-            ).fetchall()
-            existing = {row_str(row, "table_name") for row in as_db_rows(rows)}
+                .mappings()
+                .all()
+            )
+            existing = {
+                row_str(as_db_row(row), "table_name") for row in as_db_rows(rows)
+            }
             missing = MANAGED_TABLES - existing
 
             if missing:
@@ -83,11 +104,17 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                     "`uv run migrate`."
                 )
 
-            version_table = await (
-                await connection.execute(
-                    "SELECT to_regclass('public.alembic_version') AS name"
+            version_table = (
+                (
+                    await connection.execute(
+                        sa.select(
+                            sa.func.to_regclass("public.alembic_version").label("name")
+                        )
+                    )
                 )
-            ).fetchone()
+                .mappings()
+                .first()
+            )
             if (
                 not version_table
                 or row_optional_str(as_db_row(version_table), "name") is None
@@ -96,9 +123,11 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                     "Database is not managed by Alembic. Run `uv run migrate`."
                 )
 
-            version = await (
-                await connection.execute("SELECT version_num FROM alembic_version")
-            ).fetchone()
+            version = (
+                (await connection.execute(sa.select(_alembic_version.c.version_num)))
+                .mappings()
+                .first()
+            )
             expected = migration_head()
             current = (
                 row_str(as_db_row(version), "version_num") if version else "<none>"
@@ -120,15 +149,3 @@ def migration_head() -> str:
         raise DatabaseError("Alembic has no migration head revision")
 
     return head
-
-
-def _pool_kwargs(database_url: str) -> dict[str, object]:
-    kwargs: dict[str, object] = {
-        "row_factory": dict_row,
-        "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
-    }
-
-    if urlparse(database_url).hostname == "localhost":
-        kwargs["hostaddr"] = "127.0.0.1"
-
-    return kwargs

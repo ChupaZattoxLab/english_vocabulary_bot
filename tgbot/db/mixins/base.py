@@ -1,11 +1,11 @@
-"""Shared base for database mixins that require a connection pool."""
+"""Shared base for database mixins that require an async SQLAlchemy engine."""
 
 from __future__ import annotations
 
-from psycopg_pool import AsyncConnectionPool
+from sqlalchemy.ext.asyncio import AsyncEngine
 
 
-class PoolBound:
-    """Declares the pool attribute that Database provides at runtime."""
+class EngineBound:
+    """Declares the engine attribute that Database provides at runtime."""
 
-    pool: AsyncConnectionPool
+    engine: AsyncEngine

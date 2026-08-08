@@ -260,7 +260,7 @@ def translation_text(translations: Mapping[str, object] | None) -> str:
 
 
 def as_db_row(row: object) -> DbRow:
-    """Cast a psycopg dict_row result to a typed mapping."""
+    """Cast a mapping-like query row to a typed mapping."""
     return cast(DbRow, row)
 
 

@@ -12,7 +12,7 @@ tgbot/                 # runtime bot package
   constants.py         # shared domain / runtime constants
   localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot
-  db/                  # PostgreSQL access
+  db/                  # async SQLAlchemy Core access + schema metadata
     mixins/            # users, cards, scheduler, admin queries
     schema/            # SQLAlchemy table metadata (bot/ + oald/)
   delivery/            # card templates, send logic, scheduler

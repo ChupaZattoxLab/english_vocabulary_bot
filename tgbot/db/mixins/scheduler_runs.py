@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, cast
+
+import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from tgbot.constants import (
     ERROR_MESSAGE_MAX_LEN,
@@ -14,72 +16,62 @@ from tgbot.constants import (
     SCHEDULER_STATUS_FAILED,
     SCHEDULER_STATUS_RUNNING,
 )
-from tgbot.db.mixins.base import PoolBound
+from tgbot.db.mixins.base import EngineBound
+from tgbot.db.schema import bot_scheduler_runs
 
 
-class SchedulerMixin(PoolBound):
+class SchedulerMixin(EngineBound):
     async def claim_scheduler_run(
         self,
         scheduled_slot: datetime,
         grace_minutes: int = SCHEDULE_GRACE_MINUTES,
     ) -> bool:
         """Claim a slot, or reclaim it for retries within the grace window."""
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    cast(
-                        Any,
-                        f"""
-                    INSERT INTO bot_scheduler_runs (scheduled_slot)
-                    VALUES (%s)
-                    ON CONFLICT (scheduled_slot) DO UPDATE SET
-                        status = '{SCHEDULER_STATUS_RUNNING}',
-                        attempted_users = 0,
-                        delivered_cards = 0,
-                        failed_cards = 0,
-                        skipped_users = 0,
-                        started_at = CURRENT_TIMESTAMP,
-                        completed_at = NULL,
-                        error_message = ''
-                    WHERE CURRENT_TIMESTAMP
-                          <= bot_scheduler_runs.scheduled_slot
-                             + make_interval(mins => %s)
-                      AND (
-                          (
-                              bot_scheduler_runs.status = '{SCHEDULER_STATUS_FAILED}'
-                              AND COALESCE(
-                                  bot_scheduler_runs.completed_at,
-                                  bot_scheduler_runs.started_at
-                              ) < CURRENT_TIMESTAMP
-                                  - make_interval(
-                                      mins => {SCHEDULER_RETRY_COOLDOWN_MINUTES}
-                                  )
-                          )
-                          OR (
-                              bot_scheduler_runs.status = '{SCHEDULER_STATUS_RUNNING}'
-                              AND bot_scheduler_runs.started_at
-                                  < CURRENT_TIMESTAMP
-                                      - make_interval(
-                                          mins => {SCHEDULER_STALE_RUNNING_MINUTES}
-                                      )
-                          )
-                          OR (
-                              bot_scheduler_runs.status
-                                  = '{SCHEDULER_STATUS_COMPLETED}'
-                              AND bot_scheduler_runs.failed_cards > 0
-                              AND bot_scheduler_runs.completed_at
-                                  < CURRENT_TIMESTAMP
-                                      - make_interval(
-                                          mins => {SCHEDULER_RETRY_COOLDOWN_MINUTES}
-                                      )
-                          )
-                      )
-                    RETURNING scheduled_slot
-                    """,
-                    ),
-                    (scheduled_slot, grace_minutes),
-                )
-            ).fetchone()
+        runs = bot_scheduler_runs
+        within_grace = sa.func.current_timestamp() <= (
+            runs.c.scheduled_slot + sa.func.make_interval(mins=grace_minutes)
+        )
+        failed_ready = sa.and_(
+            runs.c.status == SCHEDULER_STATUS_FAILED,
+            sa.func.coalesce(runs.c.completed_at, runs.c.started_at)
+            < sa.func.current_timestamp()
+            - sa.func.make_interval(mins=SCHEDULER_RETRY_COOLDOWN_MINUTES),
+        )
+        stale_running = sa.and_(
+            runs.c.status == SCHEDULER_STATUS_RUNNING,
+            runs.c.started_at
+            < sa.func.current_timestamp()
+            - sa.func.make_interval(mins=SCHEDULER_STALE_RUNNING_MINUTES),
+        )
+        completed_with_failures = sa.and_(
+            runs.c.status == SCHEDULER_STATUS_COMPLETED,
+            runs.c.failed_cards > 0,
+            runs.c.completed_at
+            < sa.func.current_timestamp()
+            - sa.func.make_interval(mins=SCHEDULER_RETRY_COOLDOWN_MINUTES),
+        )
+
+        stmt = pg_insert(runs).values(scheduled_slot=scheduled_slot)
+        stmt = stmt.on_conflict_do_update(
+            index_elements=[runs.c.scheduled_slot],
+            set_={
+                "status": SCHEDULER_STATUS_RUNNING,
+                "attempted_users": 0,
+                "delivered_cards": 0,
+                "failed_cards": 0,
+                "skipped_users": 0,
+                "started_at": sa.func.current_timestamp(),
+                "completed_at": None,
+                "error_message": "",
+            },
+            where=sa.and_(
+                within_grace,
+                sa.or_(failed_ready, stale_running, completed_with_failures),
+            ),
+        ).returning(runs.c.scheduled_slot)
+
+        async with self.engine.begin() as connection:
+            row = (await connection.execute(stmt)).mappings().first()
 
         return row is not None
 
@@ -92,30 +84,21 @@ class SchedulerMixin(PoolBound):
         skipped: int,
         error_message: str = "",
     ) -> None:
-        async with self.pool.connection() as connection:
+        async with self.engine.begin() as connection:
             await connection.execute(
-                """
-                UPDATE bot_scheduler_runs
-                SET status = %s,
-                    attempted_users = %s,
-                    delivered_cards = %s,
-                    failed_cards = %s,
-                    skipped_users = %s,
-                    error_message = %s,
-                    completed_at = CURRENT_TIMESTAMP
-                WHERE scheduled_slot = %s
-                """,
-                (
-                    (
+                sa.update(bot_scheduler_runs)
+                .where(bot_scheduler_runs.c.scheduled_slot == scheduled_slot)
+                .values(
+                    status=(
                         SCHEDULER_STATUS_FAILED
                         if error_message
                         else SCHEDULER_STATUS_COMPLETED
                     ),
-                    attempted,
-                    delivered,
-                    failed,
-                    skipped,
-                    error_message[:ERROR_MESSAGE_MAX_LEN],
-                    scheduled_slot,
-                ),
+                    attempted_users=attempted,
+                    delivered_cards=delivered,
+                    failed_cards=failed,
+                    skipped_users=skipped,
+                    error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
+                    completed_at=sa.func.current_timestamp(),
+                )
             )

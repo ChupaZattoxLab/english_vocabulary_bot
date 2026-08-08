@@ -1,7 +1,6 @@
 """Canonical SQLAlchemy metadata for the PostgreSQL schema.
 
-The bot continues to use psycopg directly at runtime. This metadata exists so
-Alembic has one authoritative schema for migrations and autogeneration.
+Shared by the async bot runtime (SQLAlchemy Core) and Alembic migrations.
 """
 
 from tgbot.db.schema.base import metadata

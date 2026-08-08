@@ -60,7 +60,7 @@ class BotConfig:
 
         return cls(
             bot_token=secrets.telegram_bot_token,
-            database_url=psycopg_url(secrets.db_url),
+            database_url=secrets.db_url,
             admin_ids=secrets.admin_ids,
             timezone=timezone,
             timezone_name=TIMEZONE,
@@ -72,13 +72,6 @@ class BotConfig:
             delivery_concurrency=DELIVERY_CONCURRENCY,
             database_pool_size=DATABASE_POOL_SIZE,
         )
-
-
-def psycopg_url(value: str) -> str:
-    """Strip the SQLAlchemy driver prefix for raw psycopg / psycopg_pool."""
-    if value.startswith("postgresql+psycopg://"):
-        return "postgresql://" + value.removeprefix("postgresql+psycopg://")
-    return value
 
 
 def parse_send_times(value: str) -> tuple[time, ...]:

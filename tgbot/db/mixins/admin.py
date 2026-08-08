@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, cast
+
+import sqlalchemy as sa
 
 from tgbot.constants import (
     AUDIO_CONVERSION_PREPARED,
     AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
     CARD_STATUS_DELIVERED,
 )
-from tgbot.db.mixins.base import PoolBound
-from tgbot.db.mixins.cards import CARD_CONTENT_SQL
+from tgbot.db.mixins.base import EngineBound
+from tgbot.db.mixins.cards import card_content_select, hydrate_card_audio
 from tgbot.db.models import (
     VALID_PRONUNCIATIONS,
     AdminContentSummary,
@@ -27,64 +28,94 @@ from tgbot.db.models import (
     row_int,
     row_str,
 )
+from tgbot.db.schema import (
+    bot_user_cards,
+    bot_users,
+    oald_audio_files,
+    oald_audio_variants,
+    oald_entries,
+    oald_entry_audio_sources,
+)
 
 
-class AdminMixin(PoolBound):
+class AdminMixin(EngineBound):
     async def admin_users_summary(
         self,
         today_start: datetime,
         week_start: datetime,
         month_start: datetime,
     ) -> AdminUsersSummary:
-        async with self.pool.connection() as connection:
-            totals = await (
-                await connection.execute(
-                    """
-                    SELECT
-                        count(*) AS total_users,
-                        count(*) FILTER (
-                            WHERE is_active AND onboarding_completed
-                        ) AS active_users,
-                        count(*) FILTER (
-                            WHERE paused_at IS NOT NULL
-                              AND blocked_at IS NULL
-                        ) AS paused_users,
-                        count(*) FILTER (
-                            WHERE blocked_at IS NOT NULL
-                        ) AS blocked_users,
-                        count(*) FILTER (WHERE created_at >= %s) AS new_today,
-                        count(*) FILTER (WHERE created_at >= %s) AS new_week,
-                        count(*) FILTER (WHERE created_at >= %s) AS new_month
-                    FROM bot_users
-                    """,
-                    (today_start, week_start, month_start),
+        async with self.engine.connect() as connection:
+            totals = (
+                (
+                    await connection.execute(
+                        sa.select(
+                            sa.func.count().label("total_users"),
+                            sa.func.count()
+                            .filter(
+                                sa.and_(
+                                    bot_users.c.is_active.is_(True),
+                                    bot_users.c.onboarding_completed.is_(True),
+                                )
+                            )
+                            .label("active_users"),
+                            sa.func.count()
+                            .filter(
+                                sa.and_(
+                                    bot_users.c.paused_at.is_not(None),
+                                    bot_users.c.blocked_at.is_(None),
+                                )
+                            )
+                            .label("paused_users"),
+                            sa.func.count()
+                            .filter(bot_users.c.blocked_at.is_not(None))
+                            .label("blocked_users"),
+                            sa.func.count()
+                            .filter(bot_users.c.created_at >= today_start)
+                            .label("new_today"),
+                            sa.func.count()
+                            .filter(bot_users.c.created_at >= week_start)
+                            .label("new_week"),
+                            sa.func.count()
+                            .filter(bot_users.c.created_at >= month_start)
+                            .label("new_month"),
+                        ).select_from(bot_users)
+                    )
                 )
-            ).fetchone()
-            levels = await (
-                await connection.execute(
-                    """
-                    SELECT level, count(*) AS users
-                    FROM bot_users
-                    CROSS JOIN LATERAL unnest(selected_levels) AS level
-                    WHERE onboarding_completed
-                    GROUP BY level
-                    ORDER BY level
-                    """
-                )
-            ).fetchall()
-            dialects = await (
-                await connection.execute(
-                    """
-                    SELECT pronunciation, count(*) AS users
-                    FROM bot_users
-                    WHERE onboarding_completed
-                    GROUP BY pronunciation
-                    ORDER BY pronunciation
-                    """
-                )
-            ).fetchall()
+                .mappings()
+                .one()
+            )
 
-        assert totals is not None
+            level = sa.func.unnest(bot_users.c.selected_levels).label("level")
+            levels = (
+                (
+                    await connection.execute(
+                        sa.select(level, sa.func.count().label("users"))
+                        .where(bot_users.c.onboarding_completed.is_(True))
+                        .group_by(level)
+                        .order_by(level)
+                    )
+                )
+                .mappings()
+                .all()
+            )
+
+            dialects = (
+                (
+                    await connection.execute(
+                        sa.select(
+                            bot_users.c.pronunciation,
+                            sa.func.count().label("users"),
+                        )
+                        .where(bot_users.c.onboarding_completed.is_(True))
+                        .group_by(bot_users.c.pronunciation)
+                        .order_by(bot_users.c.pronunciation)
+                    )
+                )
+                .mappings()
+                .all()
+            )
+
         totals_row = as_db_row(totals)
         level_rows = as_db_rows(levels)
         dialect_rows = as_db_rows(dialects)
@@ -109,102 +140,105 @@ class AdminMixin(PoolBound):
         self,
         telegram_user_id: int,
     ) -> AdminUserDetail | None:
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    """
-                    SELECT users.*,
-                           count(cards.id) FILTER (
-                               WHERE cards.status = %s
-                           ) AS delivered_cards,
-                           max(cards.delivered_at) FILTER (
-                               WHERE cards.status = %s
-                           ) AS last_successful_delivery
-                    FROM bot_users AS users
-                    LEFT JOIN bot_user_cards AS cards
-                      ON cards.telegram_user_id = users.telegram_user_id
-                    WHERE users.telegram_user_id = %s
-                    GROUP BY users.telegram_user_id
-                    """,
-                    (
-                        CARD_STATUS_DELIVERED,
-                        CARD_STATUS_DELIVERED,
-                        telegram_user_id,
-                    ),
-                )
-            ).fetchone()
+        delivered = bot_user_cards.c.status == CARD_STATUS_DELIVERED
+        stmt = (
+            sa.select(
+                bot_users,
+                sa.func.count(bot_user_cards.c.id)
+                .filter(delivered)
+                .label("delivered_cards"),
+                sa.func.max(bot_user_cards.c.delivered_at)
+                .filter(delivered)
+                .label("last_successful_delivery"),
+            )
+            .outerjoin(
+                bot_user_cards,
+                bot_user_cards.c.telegram_user_id == bot_users.c.telegram_user_id,
+            )
+            .where(bot_users.c.telegram_user_id == telegram_user_id)
+            .group_by(bot_users.c.telegram_user_id)
+        )
 
-        return admin_user_detail_from_row(row) if row else None
+        async with self.engine.connect() as connection:
+            row = (await connection.execute(stmt)).mappings().first()
+
+        return admin_user_detail_from_row(as_db_row(row)) if row else None
 
     async def admin_content_summary(self) -> AdminContentSummary:
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    f"""
-                    WITH audio AS (
-                        SELECT links.entry_id,
-                               bool_or(
-                                   links.dialect = 'us'
-                                   AND variants.conversion_status
-                                       = '{AUDIO_CONVERSION_PREPARED}'
-                                   AND variants.audio_data IS NOT NULL
-                                   AND variants.source_sha256 = files.sha256
-                               ) AS has_us_audio,
-                               bool_or(
-                                   links.dialect = 'gb'
-                                   AND variants.conversion_status
-                                       = '{AUDIO_CONVERSION_PREPARED}'
-                                   AND variants.audio_data IS NOT NULL
-                                   AND variants.source_sha256 = files.sha256
-                               ) AS has_gb_audio
-                        FROM oald_entry_audio_sources AS links
-                        JOIN oald_audio_files AS files
-                          ON files.source_url = links.source_url
-                        LEFT JOIN oald_audio_variants AS variants
-                          ON variants.source_url = files.source_url
-                         AND variants.variant_type
-                             = '{AUDIO_VARIANT_TELEGRAM_VOICE_OPUS}'
-                        GROUP BY links.entry_id
-                    )
-                    SELECT count(*) FILTER (
-                        WHERE entries.is_active
-                          AND btrim(entries.word_us) <> ''
-                          AND btrim(entries.word_gb) <> ''
-                          AND btrim(entries.lexical_category) <> ''
-                          AND btrim(entries.definition) <> ''
-                          AND btrim(entries.example) <> ''
-                          AND (
-                              btrim(COALESCE(
-                                  entries.translations #>> '{{ru,main}}', ''
-                              )) <> ''
-                              OR CASE
-                                  WHEN jsonb_typeof(
-                                      entries.translations #> '{{ru,also}}'
-                                  ) = 'array'
-                                  THEN jsonb_array_length(
-                                      entries.translations #> '{{ru,also}}'
-                                  ) > 0
-                                  ELSE FALSE
-                              END
-                          )
-                          AND (
-                              (
-                                  cardinality(entries.ipa_us) > 0
-                                  AND COALESCE(audio.has_us_audio, FALSE)
-                              )
-                              OR (
-                                  cardinality(entries.ipa_gb) > 0
-                                  AND COALESCE(audio.has_gb_audio, FALSE)
-                              )
-                          )
-                    ) AS ready_entries
-                    FROM oald_entries AS entries
-                    LEFT JOIN audio ON audio.entry_id = entries.id
-                    """
-                )
-            ).fetchone()
+        links = oald_entry_audio_sources
+        files = oald_audio_files
+        variants = oald_audio_variants
 
-        assert row is not None
+        audio = (
+            sa.select(
+                links.c.entry_id,
+                sa.func.bool_or(
+                    sa.and_(
+                        links.c.dialect == "us",
+                        variants.c.conversion_status == AUDIO_CONVERSION_PREPARED,
+                        variants.c.audio_data.is_not(None),
+                        variants.c.source_sha256 == files.c.sha256,
+                    )
+                ).label("has_us_audio"),
+                sa.func.bool_or(
+                    sa.and_(
+                        links.c.dialect == "gb",
+                        variants.c.conversion_status == AUDIO_CONVERSION_PREPARED,
+                        variants.c.audio_data.is_not(None),
+                        variants.c.source_sha256 == files.c.sha256,
+                    )
+                ).label("has_gb_audio"),
+            )
+            .select_from(
+                links.join(files, files.c.source_url == links.c.source_url).outerjoin(
+                    variants,
+                    sa.and_(
+                        variants.c.source_url == files.c.source_url,
+                        variants.c.variant_type == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+                    ),
+                )
+            )
+            .group_by(links.c.entry_id)
+            .cte("audio")
+        )
+
+        ru_main = oald_entries.c.translations["ru"]["main"].as_string()
+        ru_also = oald_entries.c.translations["ru"]["also"]
+        has_translation = sa.or_(
+            sa.func.btrim(sa.func.coalesce(ru_main, "")) != "",
+            sa.and_(
+                sa.func.jsonb_typeof(ru_also) == "array",
+                sa.func.jsonb_array_length(ru_also) > 0,
+            ),
+        )
+        ready = sa.and_(
+            oald_entries.c.is_active.is_(True),
+            sa.func.btrim(oald_entries.c.word_us) != "",
+            sa.func.btrim(oald_entries.c.word_gb) != "",
+            sa.func.btrim(oald_entries.c.lexical_category) != "",
+            sa.func.btrim(oald_entries.c.definition) != "",
+            sa.func.btrim(oald_entries.c.example) != "",
+            has_translation,
+            sa.or_(
+                sa.and_(
+                    sa.func.cardinality(oald_entries.c.ipa_us) > 0,
+                    sa.func.coalesce(audio.c.has_us_audio, False),
+                ),
+                sa.and_(
+                    sa.func.cardinality(oald_entries.c.ipa_gb) > 0,
+                    sa.func.coalesce(audio.c.has_gb_audio, False),
+                ),
+            ),
+        )
+
+        stmt = sa.select(
+            sa.func.count().filter(ready).label("ready_entries")
+        ).select_from(
+            oald_entries.outerjoin(audio, audio.c.entry_id == oald_entries.c.id)
+        )
+
+        async with self.engine.connect() as connection:
+            row = (await connection.execute(stmt)).mappings().one()
 
         return AdminContentSummary(
             ready_entries=row_int(as_db_row(row), "ready_entries")
@@ -215,23 +249,30 @@ class AdminMixin(PoolBound):
         word: str,
         limit: int = 10,
     ) -> tuple[AdminWordMatch, ...]:
-        async with self.pool.connection() as connection:
-            rows = await (
-                await connection.execute(
-                    """
-                    SELECT entries.id, entries.word_us, entries.word_gb,
-                           entries.lexical_category, entries.cefr
-                    FROM oald_entries AS entries
-                    WHERE lower(entries.word_us) = lower(%s)
-                       OR lower(entries.word_gb) = lower(%s)
-                    ORDER BY entries.lexical_category, entries.id
-                    LIMIT %s
-                    """,
-                    (word, word, limit),
+        stmt = (
+            sa.select(
+                oald_entries.c.id,
+                oald_entries.c.word_us,
+                oald_entries.c.word_gb,
+                oald_entries.c.lexical_category,
+                oald_entries.c.cefr,
+            )
+            .where(
+                sa.or_(
+                    sa.func.lower(oald_entries.c.word_us) == sa.func.lower(word),
+                    sa.func.lower(oald_entries.c.word_gb) == sa.func.lower(word),
                 )
-            ).fetchall()
+            )
+            .order_by(oald_entries.c.lexical_category, oald_entries.c.id)
+            .limit(limit)
+        )
 
-        return tuple(admin_word_match_from_row(row) for row in as_db_rows(rows))
+        async with self.engine.connect() as connection:
+            rows = (await connection.execute(stmt)).mappings().all()
+
+        return tuple(
+            admin_word_match_from_row(as_db_row(row)) for row in as_db_rows(rows)
+        )
 
     async def admin_preview_card(
         self,
@@ -239,45 +280,53 @@ class AdminMixin(PoolBound):
         dialect: str | None = None,
         random_card: bool = False,
     ) -> ReservedCard | None:
-        where = (
-            "WHERE entries.id = %s"
-            if entry_id is not None
-            else (
-                "WHERE entries.is_active AND ("
-                "us_audio.source_url IS NOT NULL OR gb_audio.source_url IS NOT NULL)"
+        stmt, us_audio, gb_audio = card_content_select(with_audio_data=False)
+
+        if entry_id is not None:
+            stmt = stmt.where(oald_entries.c.id == entry_id)
+        else:
+            stmt = stmt.where(
+                oald_entries.c.is_active.is_(True),
+                sa.or_(
+                    us_audio.c.source_url.is_not(None),
+                    gb_audio.c.source_url.is_not(None),
+                ),
             )
-        )
-        order = "ORDER BY random()" if random_card else "ORDER BY entries.id"
-        query = f"{CARD_CONTENT_SQL} {where} {order} LIMIT 1"
-        parameters: tuple[int, ...] = (entry_id,) if entry_id is not None else ()
 
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(cast(Any, query), parameters)
-            ).fetchone()
+        stmt = stmt.order_by(
+            sa.func.random() if random_card else oald_entries.c.id
+        ).limit(1)
 
-        if not row:
-            return None
+        async with self.engine.connect() as connection:
+            row = (await connection.execute(stmt)).mappings().first()
+            if not row:
+                return None
 
-        data = as_db_row(row)
-        available_us = data["us_source_url"] is not None
-        available_gb = data["gb_source_url"] is not None
-        requested = (dialect or "").lower()
+            data = dict(row)
+            available_us = data["us_source_url"] is not None
+            available_gb = data["gb_source_url"] is not None
+            requested = (dialect or "").lower()
 
-        if requested == "both" and not (available_us and available_gb):
-            return None
+            if requested == "both" and not (available_us and available_gb):
+                return None
 
-        if requested == "us" and not available_us:
-            return None
+            if requested == "us" and not available_us:
+                return None
 
-        if requested == "gb" and not available_gb:
-            return None
+            if requested == "gb" and not available_gb:
+                return None
 
-        selected = requested or (
-            "both" if available_us and available_gb else "us" if available_us else "gb"
-        )
+            selected = requested or (
+                "both"
+                if available_us and available_gb
+                else "us"
+                if available_us
+                else "gb"
+            )
 
-        if selected not in VALID_PRONUNCIATIONS:
-            return None
+            if selected not in VALID_PRONUNCIATIONS:
+                return None
+
+            await hydrate_card_audio(connection, data, selected)
 
         return card_from_row(data, dialect=selected, history_id=0)
