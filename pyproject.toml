@@ -57,8 +57,6 @@ skip-magic-trailing-comma = false
 include = ["tgbot", "scripts/oald", "scripts/cli.py"]
 exclude = [
     "**/__pycache__",
-    "vocabulary_bot",
-    "scripts/build_database",
     "alembic/versions",
 ]
 pythonVersion = "3.11"

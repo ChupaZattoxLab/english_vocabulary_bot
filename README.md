@@ -8,8 +8,12 @@ Offline-friendly Telegram bot that sends OALD-backed vocabulary cards from Postg
 tgbot/                 # runtime bot package
   app.py               # aiogram bootstrap / long polling
   config.py            # env/.env settings
+  constants.py         # shared domain / runtime constants
+  localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot
-  db/                  # PostgreSQL access + SQLAlchemy schema metadata
+  db/                  # PostgreSQL access
+    mixins/            # users, cards, scheduler, admin queries
+    schema/            # SQLAlchemy table metadata (bot/ + oald/)
   delivery/            # card templates, send logic, scheduler
   handlers/            # Telegram user/admin commands and keyboards
 scripts/
@@ -151,7 +155,7 @@ allowed to create temporary databases.
 ## Database migrations
 
 Alembic manages all eight application/OALD tables. Canonical table metadata lives in
-`tgbot/db/schema.py`.
+`tgbot/db/schema/`.
 
 ```powershell
 uv run migrate
