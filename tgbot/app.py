@@ -15,25 +15,30 @@ from tgbot.db import Database
 from tgbot.delivery import CardDeliveryService, CardTemplate
 from tgbot.delivery.scheduler import CardScheduler
 from tgbot.handlers import create_admin_router, create_router
+from tgbot.localization import locale
 
 LOGGER = logging.getLogger("tgbot")
 
 USER_COMMANDS = (
-    BotCommand(command="start", description="Начать работу"),
-    BotCommand(command="card", description="Получить новую карточку"),
-    BotCommand(command="settings", description="Настройки"),
-    BotCommand(command="pause", description="Приостановить рассылку"),
-    BotCommand(command="resume", description="Продолжить рассылку"),
-    BotCommand(command="help", description="Помощь"),
+    BotCommand(command="start", description=locale.commands.start),
+    BotCommand(command="card", description=locale.commands.card),
+    BotCommand(command="settings", description=locale.commands.settings),
+    BotCommand(command="levels", description=locale.commands.levels),
+    BotCommand(command="pronunciation", description=locale.commands.pronunciation),
+    BotCommand(command="pause", description=locale.commands.pause),
+    BotCommand(command="resume", description=locale.commands.resume),
+    BotCommand(command="help", description=locale.commands.help),
 )
 
 ADMIN_COMMANDS = (
-    BotCommand(command="admin", description="Открыть админ-панель"),
-    BotCommand(command="users", description="Статистика пользователей"),
-    BotCommand(command="user", description="Пользователь по Telegram ID"),
-    BotCommand(command="word", description="Карточка слова"),
-    BotCommand(command="send_test", description="Тестовая карточка"),
-    BotCommand(command="reload_templates", description="Перезагрузить шаблоны"),
+    BotCommand(command="admin", description=locale.commands.admin),
+    BotCommand(command="users", description=locale.commands.users),
+    BotCommand(command="user", description=locale.commands.user),
+    BotCommand(command="word", description=locale.commands.word),
+    BotCommand(command="send_test", description=locale.commands.send_test),
+    BotCommand(
+        command="reload_templates", description=locale.commands.reload_templates
+    ),
 )
 
 

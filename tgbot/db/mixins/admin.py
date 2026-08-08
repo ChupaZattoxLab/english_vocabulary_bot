@@ -5,6 +5,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from tgbot.constants import (
+    AUDIO_CONVERSION_PREPARED,
+    AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+    CARD_STATUS_DELIVERED,
+)
 from tgbot.db.mixins.base import PoolBound
 from tgbot.db.mixins.cards import CARD_CONTENT_SQL
 from tgbot.db.models import VALID_PRONUNCIATIONS, ReservedCard, card_from_row
@@ -81,10 +86,10 @@ class AdminMixin(PoolBound):
                     """
                     SELECT users.*,
                            count(cards.id) FILTER (
-                               WHERE cards.status = 'delivered'
+                               WHERE cards.status = %s
                            ) AS delivered_cards,
                            max(cards.delivered_at) FILTER (
-                               WHERE cards.status = 'delivered'
+                               WHERE cards.status = %s
                            ) AS last_successful_delivery
                     FROM bot_users AS users
                     LEFT JOIN bot_user_cards AS cards
@@ -92,7 +97,11 @@ class AdminMixin(PoolBound):
                     WHERE users.telegram_user_id = %s
                     GROUP BY users.telegram_user_id
                     """,
-                    (telegram_user_id,),
+                    (
+                        CARD_STATUS_DELIVERED,
+                        CARD_STATUS_DELIVERED,
+                        telegram_user_id,
+                    ),
                 )
             ).fetchone()
         return dict(row) if row else None
@@ -101,18 +110,20 @@ class AdminMixin(PoolBound):
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
-                    """
+                    f"""
                     WITH audio AS (
                         SELECT links.entry_id,
                                bool_or(
                                    links.dialect = 'us'
-                                   AND variants.conversion_status = 'prepared'
+                                   AND variants.conversion_status
+                                       = '{AUDIO_CONVERSION_PREPARED}'
                                    AND variants.audio_data IS NOT NULL
                                    AND variants.source_sha256 = files.sha256
                                ) AS has_us_audio,
                                bool_or(
                                    links.dialect = 'gb'
-                                   AND variants.conversion_status = 'prepared'
+                                   AND variants.conversion_status
+                                       = '{AUDIO_CONVERSION_PREPARED}'
                                    AND variants.audio_data IS NOT NULL
                                    AND variants.source_sha256 = files.sha256
                                ) AS has_gb_audio
@@ -121,7 +132,8 @@ class AdminMixin(PoolBound):
                           ON files.source_url = links.source_url
                         LEFT JOIN oald_audio_variants AS variants
                           ON variants.source_url = files.source_url
-                         AND variants.variant_type = 'telegram_voice_opus'
+                         AND variants.variant_type
+                             = '{AUDIO_VARIANT_TELEGRAM_VOICE_OPUS}'
                         GROUP BY links.entry_id
                     )
                     SELECT count(*) FILTER (
@@ -133,14 +145,14 @@ class AdminMixin(PoolBound):
                           AND btrim(entries.example) <> ''
                           AND (
                               btrim(COALESCE(
-                                  entries.translations #>> '{ru,main}', ''
+                                  entries.translations #>> '{{ru,main}}', ''
                               )) <> ''
                               OR CASE
                                   WHEN jsonb_typeof(
-                                      entries.translations #> '{ru,also}'
+                                      entries.translations #> '{{ru,also}}'
                                   ) = 'array'
                                   THEN jsonb_array_length(
-                                      entries.translations #> '{ru,also}'
+                                      entries.translations #> '{{ru,also}}'
                                   ) > 0
                                   ELSE FALSE
                               END

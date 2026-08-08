@@ -18,13 +18,30 @@ from aiogram.exceptions import (
 )
 from aiogram.types import BufferedInputFile, Message
 
+from tgbot.constants import (
+    DELIVERY_STATUS_DELIVERED,
+    DELIVERY_STATUS_FAILED,
+    DELIVERY_STATUS_SKIPPED,
+    ERROR_TYPE_AUDIO_UNAVAILABLE,
+    ERROR_TYPE_BOT_BLOCKED,
+    ERROR_TYPE_TECHNICAL,
+    ERROR_TYPE_TELEGRAM_ERROR,
+    ERROR_TYPE_TELEGRAM_TIMEOUT,
+    ERROR_TYPE_TEMPLATE_ERROR,
+    SEND_KIND_TEXT,
+    SEND_METHOD_VOICE,
+)
 from tgbot.db import Database, ReservedAudio, ReservedCard
 from tgbot.delivery.card_template import CardTemplate, CardTemplateError
-from tgbot.labels import dialect_caption, dialect_flag
+from tgbot.localization import locale
 
 LOGGER = logging.getLogger("tgbot.delivery")
 
-DeliveryStatus = Literal["delivered", "failed", "skipped"]
+DeliveryStatus = Literal[
+    DELIVERY_STATUS_DELIVERED,
+    DELIVERY_STATUS_FAILED,
+    DELIVERY_STATUS_SKIPPED,
+]
 T = TypeVar("T")
 
 
@@ -35,7 +52,7 @@ class DeliveryOutcome:
 
 
 def voice_caption(dialect: str, ipa: str) -> str:
-    label = dialect_caption(dialect)
+    label = locale.dialect_caption(dialect)
     transcription = ipa.strip()
 
     if not transcription:
@@ -47,18 +64,18 @@ def voice_caption(dialect: str, ipa: str) -> str:
 def classify_delivery_error(exc: Exception) -> str:
     """Return a stable, queryable category for a delivery exception."""
     if isinstance(exc, TelegramForbiddenError):
-        return "bot_blocked"
+        return ERROR_TYPE_BOT_BLOCKED
     if isinstance(exc, CardTemplateError):
-        return "template_error"
+        return ERROR_TYPE_TEMPLATE_ERROR
     name = type(exc).__name__.lower()
     message = str(exc).lower()
     if "timeout" in name or "timeout" in message:
-        return "telegram_timeout"
+        return ERROR_TYPE_TELEGRAM_TIMEOUT
     if "audio" in message or "voice" in message:
-        return "audio_unavailable"
+        return ERROR_TYPE_AUDIO_UNAVAILABLE
     if name.startswith("telegram"):
-        return "telegram_error"
-    return "technical_error"
+        return ERROR_TYPE_TELEGRAM_ERROR
+    return ERROR_TYPE_TECHNICAL
 
 
 async def _call_with_retry_after(
@@ -108,7 +125,12 @@ class CardDeliveryService:
                 "example": card.example,
                 "translation": card.translation,
                 "dialect": card.dialect,
-                "dialect_flag": dialect_flag(card.dialect),
+                "dialect_flag": locale.dialect_flag(card.dialect),
+                "heading_definition": locale.labels.card_heading_definition,
+                "heading_example": locale.labels.card_heading_example,
+                "heading_translation": locale.labels.card_heading_translation,
+                "flag_us": locale.labels.dialect_flags["US"],
+                "flag_gb": locale.labels.dialect_flags["GB"],
             }
         )
 
@@ -134,10 +156,10 @@ class CardDeliveryService:
                     voice=file_reference,
                     caption=caption,
                 ),
-                kind="voice",
+                kind=SEND_METHOD_VOICE,
             )
 
-        method = "voice"
+        method = SEND_METHOD_VOICE
         cached_file_id = await self.database.cached_audio_file_id(
             source_url,
             method,
@@ -165,7 +187,7 @@ class CardDeliveryService:
     async def _send_card_text(self, bot: Bot, *, chat_id: int, text: str) -> None:
         await _call_with_retry_after(
             lambda: bot.send_message(chat_id=chat_id, text=text),
-            kind="text",
+            kind=SEND_KIND_TEXT,
         )
 
     async def deliver(
@@ -183,7 +205,7 @@ class CardDeliveryService:
             require_active=require_active,
         )
         if card is None:
-            return DeliveryOutcome("skipped")
+            return DeliveryOutcome(DELIVERY_STATUS_SKIPPED)
 
         text_sent = False
         try:
@@ -200,7 +222,7 @@ class CardDeliveryService:
                 delivered=True,
                 telegram_message_id=message.message_id,
             )
-            return DeliveryOutcome("delivered", card)
+            return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
         except TelegramForbiddenError as exc:
             if text_sent:
                 await self.database.finish_delivery(
@@ -216,7 +238,10 @@ class CardDeliveryService:
                 )
             await self.database.deactivate_user(telegram_user_id)
             LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
-            return DeliveryOutcome("delivered" if text_sent else "failed", card)
+            return DeliveryOutcome(
+                DELIVERY_STATUS_DELIVERED if text_sent else DELIVERY_STATUS_FAILED,
+                card,
+            )
         except Exception as exc:  # noqa: BLE001
             if text_sent:
                 await self.database.finish_delivery(
@@ -228,7 +253,7 @@ class CardDeliveryService:
                     "counting as delivered",
                     telegram_user_id,
                 )
-                return DeliveryOutcome("delivered", card)
+                return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
             await self.database.finish_delivery(
                 card.history_id,
                 delivered=False,
@@ -236,7 +261,7 @@ class CardDeliveryService:
                 error_message=str(exc),
             )
             LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
-            return DeliveryOutcome("failed", card)
+            return DeliveryOutcome(DELIVERY_STATUS_FAILED, card)
 
     async def _send_reserved_voices(
         self,

@@ -9,6 +9,16 @@ from datetime import time
 from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+from tgbot.constants import (
+    CARDS_PER_DAY,
+    DEFAULT_DATABASE_POOL_SIZE,
+    DEFAULT_DELIVERY_CONCURRENCY,
+    DEFAULT_SCHEDULE_GRACE_MINUTES,
+    DEFAULT_SCHEDULER_POLL_SECONDS,
+    DEFAULT_SEND_TIMES,
+    DEFAULT_TIMEZONE,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = Path(__file__).resolve().parent
 DEFAULT_TEMPLATE_PATH = PACKAGE_ROOT / "delivery" / "templates" / "card_template.html"
@@ -72,8 +82,10 @@ def parse_send_times(value: str) -> tuple[time, ...]:
                 "BOT_SEND_TIMES must contain HH:MM values separated by commas"
             ) from exc
         parsed.append(parsed_time)
-    if len(parsed) != 3 or len(set(parsed)) != 3:
-        raise ConfigError("BOT_SEND_TIMES must contain exactly three unique times")
+    if len(parsed) != CARDS_PER_DAY or len(set(parsed)) != CARDS_PER_DAY:
+        raise ConfigError(
+            f"BOT_SEND_TIMES must contain exactly {CARDS_PER_DAY} unique times"
+        )
     return tuple(sorted(parsed))
 
 
@@ -129,7 +141,7 @@ class BotConfig:
         if not database_url:
             raise ConfigError("OALD_DATABASE_URL is required")
 
-        timezone_name = source.get("BOT_TIMEZONE", "Europe/Moscow").strip()
+        timezone_name = source.get("BOT_TIMEZONE", DEFAULT_TIMEZONE).strip()
         try:
             timezone = ZoneInfo(timezone_name)
         except ZoneInfoNotFoundError as exc:
@@ -151,28 +163,28 @@ class BotConfig:
             timezone=timezone,
             timezone_name=timezone_name,
             send_times=parse_send_times(
-                source.get("BOT_SEND_TIMES", "09:00,14:00,20:00")
+                source.get("BOT_SEND_TIMES", DEFAULT_SEND_TIMES)
             ),
             card_template_path=template_path,
             both_card_template_path=both_template_path,
             schedule_grace_minutes=positive_int(
                 source,
                 "BOT_SCHEDULE_GRACE_MINUTES",
-                60,
+                DEFAULT_SCHEDULE_GRACE_MINUTES,
             ),
             scheduler_poll_seconds=positive_int(
                 source,
                 "BOT_SCHEDULER_POLL_SECONDS",
-                20,
+                DEFAULT_SCHEDULER_POLL_SECONDS,
             ),
             delivery_concurrency=positive_int(
                 source,
                 "BOT_DELIVERY_CONCURRENCY",
-                5,
+                DEFAULT_DELIVERY_CONCURRENCY,
             ),
             database_pool_size=positive_int(
                 source,
                 "BOT_DATABASE_POOL_SIZE",
-                5,
+                DEFAULT_DATABASE_POOL_SIZE,
             ),
         )

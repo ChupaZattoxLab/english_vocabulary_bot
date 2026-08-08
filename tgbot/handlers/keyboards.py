@@ -5,6 +5,7 @@ from __future__ import annotations
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from tgbot.db.models import VALID_LEVELS
+from tgbot.localization import locale
 
 LEVELS = tuple(level.upper() for level in VALID_LEVELS)
 
@@ -15,7 +16,11 @@ def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:
     for start in range(0, len(LEVELS), 3):
         row: list[InlineKeyboardButton] = []
         for level in LEVELS[start : start + 3]:
-            marker = "✅ " if level.lower() in selected else ""
+            marker = (
+                locale.keyboard.level_selected_prefix
+                if level.lower() in selected
+                else ""
+            )
             row.append(
                 InlineKeyboardButton(
                     text=f"{marker}{level}",
@@ -23,7 +28,14 @@ def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:
                 )
             )
         rows.append(row)
-    rows.append([InlineKeyboardButton(text="Продолжить", callback_data="level:done")])
+    rows.append(
+        [
+            InlineKeyboardButton(
+                text=locale.keyboard.continue_button,
+                callback_data="level:done",
+            )
+        ]
+    )
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
@@ -32,17 +44,17 @@ def pronunciation_keyboard() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🇺🇸 American (US)",
+                    text=locale.keyboard.pronunciation_us,
                     callback_data="dialect:us",
                 ),
                 InlineKeyboardButton(
-                    text="🇬🇧 British (GB)",
+                    text=locale.keyboard.pronunciation_gb,
                     callback_data="dialect:gb",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="🇺🇸 + 🇬🇧 Оба варианта",
+                    text=locale.keyboard.pronunciation_both,
                     callback_data="dialect:both",
                 )
             ],

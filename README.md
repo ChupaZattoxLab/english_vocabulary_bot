@@ -30,7 +30,7 @@ only on your machine or server.
 ## Prerequisites
 
 - Docker Desktop (or Docker Engine) with Compose
-- [uv](https://docs.astral.sh/uv/) (installs/manages a local Python 3.11–3.14 toolchain)
+- [uv](https://docs.astral.sh/uv/) (installs/manages a local Python 3.11-3.14 toolchain)
 - A Telegram bot token from [@BotFather](https://t.me/BotFather)
 - Your numeric Telegram user ID from [@useridinfobot](https://t.me/useridinfobot) (for `/admin`)
 

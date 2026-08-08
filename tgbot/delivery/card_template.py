@@ -7,6 +7,8 @@ import string
 from collections.abc import Mapping
 from pathlib import Path
 
+from tgbot.constants import TELEGRAM_MESSAGE_MAX_LEN
+
 ALLOWED_FIELDS = {
     "word",
     "word_upper",
@@ -24,6 +26,11 @@ ALLOWED_FIELDS = {
     "translation",
     "dialect",
     "dialect_flag",
+    "heading_definition",
+    "heading_example",
+    "heading_translation",
+    "flag_us",
+    "flag_gb",
 }
 REQUIRED_FIELDS = {
     "lexical_category",
@@ -107,9 +114,10 @@ class CardTemplate:
             for field in ALLOWED_FIELDS
         }
         rendered = self._template.format_map(escaped)
-        if len(rendered) > 4096:
+        if len(rendered) > TELEGRAM_MESSAGE_MAX_LEN:
             raise CardTemplateError(
-                "rendered card exceeds Telegram's 4096-character text limit"
+                "rendered card exceeds Telegram's "
+                f"{TELEGRAM_MESSAGE_MAX_LEN}-character text limit"
             )
         return rendered
 

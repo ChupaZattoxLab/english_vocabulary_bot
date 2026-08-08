@@ -4,6 +4,15 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from tgbot.constants import (
+    DEFAULT_SCHEDULE_GRACE_MINUTES,
+    ERROR_MESSAGE_MAX_LEN,
+    SCHEDULER_RETRY_COOLDOWN_MINUTES,
+    SCHEDULER_STALE_RUNNING_MINUTES,
+    SCHEDULER_STATUS_COMPLETED,
+    SCHEDULER_STATUS_FAILED,
+    SCHEDULER_STATUS_RUNNING,
+)
 from tgbot.db.mixins.base import PoolBound
 
 
@@ -12,17 +21,17 @@ class SchedulerMixin(PoolBound):
         self,
         scheduled_slot: datetime,
         *,
-        grace_minutes: int = 60,
+        grace_minutes: int = DEFAULT_SCHEDULE_GRACE_MINUTES,
     ) -> bool:
         """Claim a slot, or reclaim it for retries within the grace window."""
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
-                    """
+                    f"""
                     INSERT INTO bot_scheduler_runs (scheduled_slot)
                     VALUES (%s)
                     ON CONFLICT (scheduled_slot) DO UPDATE SET
-                        status = 'running',
+                        status = '{SCHEDULER_STATUS_RUNNING}',
                         attempted_users = 0,
                         delivered_cards = 0,
                         failed_cards = 0,
@@ -35,22 +44,32 @@ class SchedulerMixin(PoolBound):
                              + make_interval(mins => %s)
                       AND (
                           (
-                              bot_scheduler_runs.status = 'failed'
+                              bot_scheduler_runs.status = '{SCHEDULER_STATUS_FAILED}'
                               AND COALESCE(
                                   bot_scheduler_runs.completed_at,
                                   bot_scheduler_runs.started_at
-                              ) < CURRENT_TIMESTAMP - INTERVAL '2 minutes'
+                              ) < CURRENT_TIMESTAMP
+                                  - make_interval(
+                                      mins => {SCHEDULER_RETRY_COOLDOWN_MINUTES}
+                                  )
                           )
                           OR (
-                              bot_scheduler_runs.status = 'running'
+                              bot_scheduler_runs.status = '{SCHEDULER_STATUS_RUNNING}'
                               AND bot_scheduler_runs.started_at
-                                  < CURRENT_TIMESTAMP - INTERVAL '15 minutes'
+                                  < CURRENT_TIMESTAMP
+                                      - make_interval(
+                                          mins => {SCHEDULER_STALE_RUNNING_MINUTES}
+                                      )
                           )
                           OR (
-                              bot_scheduler_runs.status = 'completed'
+                              bot_scheduler_runs.status
+                                  = '{SCHEDULER_STATUS_COMPLETED}'
                               AND bot_scheduler_runs.failed_cards > 0
                               AND bot_scheduler_runs.completed_at
-                                  < CURRENT_TIMESTAMP - INTERVAL '2 minutes'
+                                  < CURRENT_TIMESTAMP
+                                      - make_interval(
+                                          mins => {SCHEDULER_RETRY_COOLDOWN_MINUTES}
+                                      )
                           )
                       )
                     RETURNING scheduled_slot
@@ -84,12 +103,16 @@ class SchedulerMixin(PoolBound):
                 WHERE scheduled_slot = %s
                 """,
                 (
-                    "failed" if error_message else "completed",
+                    (
+                        SCHEDULER_STATUS_FAILED
+                        if error_message
+                        else SCHEDULER_STATUS_COMPLETED
+                    ),
                     attempted,
                     delivered,
                     failed,
                     skipped,
-                    error_message[:2000],
+                    error_message[:ERROR_MESSAGE_MAX_LEN],
                     scheduled_slot,
                 ),
             )

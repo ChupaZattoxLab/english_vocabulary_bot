@@ -12,6 +12,12 @@ from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
 from tgbot.config import PROJECT_ROOT
+from tgbot.constants import (
+    DATABASE_CONNECT_TIMEOUT_SECONDS,
+    DATABASE_POOL_MIN_SIZE,
+    DATABASE_POOL_OPEN_TIMEOUT_SECONDS,
+    DEFAULT_DATABASE_POOL_SIZE,
+)
 from tgbot.db.mixins import (
     AdminMixin,
     CardsMixin,
@@ -31,7 +37,7 @@ def migration_head() -> str:
 def _pool_kwargs(database_url: str) -> dict[str, Any]:
     kwargs: dict[str, Any] = {
         "row_factory": dict_row,
-        "connect_timeout": 10,
+        "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
     }
     if urlparse(database_url).hostname == "localhost":
         kwargs["hostaddr"] = "127.0.0.1"
@@ -39,18 +45,23 @@ def _pool_kwargs(database_url: str) -> dict[str, Any]:
 
 
 class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
-    def __init__(self, database_url: str, *, pool_size: int = 5):
+    def __init__(
+        self,
+        database_url: str,
+        *,
+        pool_size: int = DEFAULT_DATABASE_POOL_SIZE,
+    ):
         self.pool = AsyncConnectionPool(
             conninfo=database_url,
             kwargs=_pool_kwargs(database_url),
-            min_size=1,
+            min_size=DATABASE_POOL_MIN_SIZE,
             max_size=pool_size,
             open=False,
             name="tgbot",
         )
 
     async def open(self) -> None:
-        await self.pool.open(wait=True, timeout=30)
+        await self.pool.open(wait=True, timeout=DATABASE_POOL_OPEN_TIMEOUT_SECONDS)
         try:
             await self.verify_schema()
         except Exception:

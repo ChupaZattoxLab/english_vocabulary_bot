@@ -4,10 +4,24 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from tgbot.constants import (
+    AUDIO_CONVERSION_PREPARED,
+    AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+    CARD_ACTIVE_STATUSES,
+    CARD_RESERVATION_TIMEOUT_MINUTES,
+    CARD_STATUS_DELIVERED,
+    CARD_STATUS_FAILED,
+    CARD_STATUS_RESERVED,
+    ERROR_MESSAGE_MAX_LEN,
+    ERROR_TYPE_MAX_LEN,
+    ERROR_TYPE_STALE_RESERVATION,
+)
 from tgbot.db.mixins.base import PoolBound
 from tgbot.db.models import VALID_PRONUNCIATIONS, ReservedCard, card_from_row
 
-CARD_CONTENT_SQL = """
+_ACTIVE_STATUSES_SQL = ", ".join(f"'{status}'" for status in CARD_ACTIVE_STATUSES)
+
+CARD_CONTENT_SQL = f"""
 SELECT
     entries.id AS entry_id,
     entries.word_us,
@@ -41,8 +55,8 @@ LEFT JOIN LATERAL (
       ON files.source_url = links.source_url
     JOIN oald_audio_variants AS voice
       ON voice.source_url = files.source_url
-     AND voice.variant_type = 'telegram_voice_opus'
-     AND voice.conversion_status = 'prepared'
+     AND voice.variant_type = '{AUDIO_VARIANT_TELEGRAM_VOICE_OPUS}'
+     AND voice.conversion_status = '{AUDIO_CONVERSION_PREPARED}'
      AND voice.source_sha256 = files.sha256
     WHERE links.entry_id = entries.id
       AND links.dialect = 'us'
@@ -61,8 +75,8 @@ LEFT JOIN LATERAL (
       ON files.source_url = links.source_url
     JOIN oald_audio_variants AS voice
       ON voice.source_url = files.source_url
-     AND voice.variant_type = 'telegram_voice_opus'
-     AND voice.conversion_status = 'prepared'
+     AND voice.variant_type = '{AUDIO_VARIANT_TELEGRAM_VOICE_OPUS}'
+     AND voice.conversion_status = '{AUDIO_CONVERSION_PREPARED}'
      AND voice.source_sha256 = files.sha256
     WHERE links.entry_id = entries.id
       AND links.dialect = 'gb'
@@ -88,14 +102,15 @@ class CardsMixin(PoolBound):
                     (telegram_user_id,),
                 )
                 await connection.execute(
-                    """
+                    f"""
                     UPDATE bot_user_cards
-                    SET status = 'failed',
-                        error_type = 'stale_reservation',
+                    SET status = '{CARD_STATUS_FAILED}',
+                        error_type = '{ERROR_TYPE_STALE_RESERVATION}',
                         error_message = 'reservation timed out before delivery finished'
                     WHERE telegram_user_id = %s
-                      AND status = 'reserved'
-                      AND created_at < CURRENT_TIMESTAMP - INTERVAL '15 minutes'
+                      AND status = '{CARD_STATUS_RESERVED}'
+                      AND created_at < CURRENT_TIMESTAMP
+                          - make_interval(mins => {CARD_RESERVATION_TIMEOUT_MINUTES})
                     """,
                     (telegram_user_id,),
                 )
@@ -121,12 +136,12 @@ class CardsMixin(PoolBound):
 
                 existing = await (
                     await connection.execute(
-                        """
+                        f"""
                         SELECT status
                         FROM bot_user_cards
                         WHERE telegram_user_id = %s
                           AND scheduled_slot = %s
-                          AND status IN ('delivered', 'reserved')
+                          AND status IN ({_ACTIVE_STATUSES_SQL})
                         """,
                         (telegram_user_id, scheduled_slot),
                     )
@@ -152,7 +167,7 @@ class CardsMixin(PoolBound):
                           FROM bot_user_cards AS history
                           WHERE history.telegram_user_id = %s
                             AND history.entry_id = entries.id
-                            AND history.status IN ('delivered', 'reserved')
+                            AND history.status IN ({_ACTIVE_STATUSES_SQL})
                       )
                     ORDER BY random()
                     LIMIT 1
@@ -229,10 +244,10 @@ class CardsMixin(PoolBound):
                         RETURNING telegram_user_id
                         """,
                         (
-                            "delivered" if delivered else "failed",
+                            CARD_STATUS_DELIVERED if delivered else CARD_STATUS_FAILED,
                             telegram_message_id,
-                            "" if delivered else error_type[:100],
-                            error_message[:2000],
+                            "" if delivered else error_type[:ERROR_TYPE_MAX_LEN],
+                            error_message[:ERROR_MESSAGE_MAX_LEN],
                             delivered,
                             history_id,
                         ),

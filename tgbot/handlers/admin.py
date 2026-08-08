@@ -12,14 +12,16 @@ from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message
 
 from tgbot.config import BotConfig
+from tgbot.constants import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.db import Database
+from tgbot.db.models import VALID_LEVELS
 from tgbot.delivery import CardDeliveryService, CardTemplateError
 from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     admin_users_keyboard,
     word_categories_keyboard,
 )
-from tgbot.labels import pronunciation_admin
+from tgbot.localization import locale
 
 
 def _number(value: Any) -> str:
@@ -42,16 +44,16 @@ def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
 
 def _delivery_state(user: dict[str, Any]) -> str:
     if user.get("blocked_at"):
-        return "бот заблокирован"
+        return locale.admin.delivery_blocked
     if user.get("paused_at") or not user.get("is_active"):
-        return "приостановлена"
-    return "включена"
+        return locale.admin.delivery_paused
+    return locale.admin.delivery_active
 
 
 async def _is_admin(message: Message, config: BotConfig) -> bool:
     if message.from_user and message.from_user.id in config.admin_ids:
         return True
-    await message.answer("Нет доступа.")
+    await message.answer(locale.admin.no_access)
     return False
 
 
@@ -59,15 +61,16 @@ async def _render_overview(database: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
     users = await database.admin_users_summary(
         today_start=today_start,
-        week_start=(local_now - timedelta(days=7)).astimezone(UTC),
-        month_start=(local_now - timedelta(days=30)).astimezone(UTC),
+        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
+        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
+            UTC
+        ),
     )
     content = await database.admin_content_summary()
-    return (
-        "<b>🛠 Vocabulary Bot — Admin Panel</b>\n\n"
-        f"👥 Пользователей: {_number(users['total_users'])}\n"
-        f"📨 Получают карточки: {_number(users['active_users'])}\n"
-        f"📚 Готовых карточек: {_number(content['ready_entries'])}\n\n"
+    return locale.admin.overview.format(
+        total_users=_number(users["total_users"]),
+        active_users=_number(users["active_users"]),
+        ready_entries=_number(content["ready_entries"]),
     )
 
 
@@ -75,32 +78,34 @@ async def _render_users(database: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
     stats = await database.admin_users_summary(
         today_start=today_start,
-        week_start=(local_now - timedelta(days=7)).astimezone(UTC),
-        month_start=(local_now - timedelta(days=30)).astimezone(UTC),
+        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
+        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
+            UTC
+        ),
     )
     levels = "\n".join(
         f"{level.upper()}: {_number(stats['levels'].get(level, 0))}"
-        for level in ("a1", "a2", "b1", "b2", "c1", "c2")
+        for level in VALID_LEVELS
     )
     dialects = (
         ", ".join(
             f"{key.upper()}: {_number(value)}"
             for key, value in sorted(stats["dialects"].items())
         )
-        or "нет"
+        or locale.admin.none
     )
-    return (
-        "<b>👥 Пользователи</b>\n\n"
-        f"Всего: {_number(stats['total_users'])}\n"
-        f"Получают карточки: {_number(stats['active_users'])}\n"
-        f"Пауза: {_number(stats['paused_users'])}\n"
-        f"Заблокировали бота: {_number(stats['blocked_users'])}\n\n"
-        "<b>Новые</b>\n"
-        f"Сегодня: {_number(stats['new_today'])}\n"
-        f"За 7 дней: {_number(stats['new_week'])}\n"
-        f"За 30 дней: {_number(stats['new_month'])}\n\n"
-        f"<b>По уровням</b>\n{levels}\n\n"
-        f"<b>По произношению</b>\n{dialects}"
+    return locale.admin.users_panel.format(
+        total_users=_number(stats["total_users"]),
+        active_users=_number(stats["active_users"]),
+        paused_users=_number(stats["paused_users"]),
+        blocked_users=_number(stats["blocked_users"]),
+        new_today=_number(stats["new_today"]),
+        new_week=_number(stats["new_week"]),
+        new_month=_number(stats["new_month"]),
+        week_days=ADMIN_STATS_WEEK_DAYS,
+        month_days=ADMIN_STATS_MONTH_DAYS,
+        levels=levels,
+        dialects=dialects,
     )
 
 
@@ -133,34 +138,43 @@ def create_admin_router(
             return
         argument = _arguments(message)
         if not argument.isdigit():
-            await message.answer("Использование: <code>/user TELEGRAM_ID</code>")
+            await message.answer(locale.admin.user_usage)
             return
         user = await database.admin_user_detail(int(argument))
         if not user:
-            await message.answer("Пользователь не найден.")
+            await message.answer(locale.admin.user_not_found)
             return
         registered = user["created_at"].astimezone(config.timezone)
         last_delivery = user.get("last_successful_delivery")
         last_text = (
             last_delivery.astimezone(config.timezone).strftime("%d.%m.%Y %H:%M")
             if last_delivery
-            else "ещё не было"
+            else locale.admin.never_delivered
         )
-        username = f"@{html.escape(user['username'])}" if user["username"] else "—"
-        levels = ", ".join(level.upper() for level in user["selected_levels"]) or "—"
+        username = (
+            f"@{html.escape(user['username'])}"
+            if user["username"]
+            else locale.admin.placeholder
+        )
+        levels = (
+            ", ".join(level.upper() for level in user["selected_levels"])
+            or locale.admin.placeholder
+        )
         send_times = ", ".join(t.strftime("%H:%M") for t in config.send_times)
         await message.answer(
-            f"<b>👤 User {user['telegram_user_id']}</b>\n\n"
-            f"Username: {username}\n"
-            f"Зарегистрирован: {registered:%d.%m.%Y %H:%M}\n"
-            f"Уровни: {levels}\n"
-            f"Произношение: {pronunciation_admin(user['pronunciation'])}\n"
-            f"Карточек в день: {len(config.send_times)}\n"
-            f"Время отправки: {send_times}\n"
-            f"Часовой пояс: {html.escape(config.timezone.key)}\n"
-            f"Рассылка: {_delivery_state(user)}\n\n"
-            f"Отправлено карточек: {_number(user['delivered_cards'])}\n"
-            f"Последняя отправка: {last_text}\n"
+            locale.admin.user_detail.format(
+                telegram_user_id=user["telegram_user_id"],
+                username=username,
+                registered=registered.strftime("%d.%m.%Y %H:%M"),
+                levels=levels,
+                pronunciation=locale.pronunciation_admin(user["pronunciation"]),
+                cards_per_day=len(config.send_times),
+                send_times=send_times,
+                timezone=html.escape(config.timezone.key),
+                delivery_state=_delivery_state(user),
+                delivered_cards=_number(user["delivered_cards"]),
+                last_delivery=last_text,
+            )
         )
 
     async def send_word_card(bot: Any, *, chat_id: int, entry_id: int) -> bool:
@@ -179,16 +193,15 @@ def create_admin_router(
             return
         word = _arguments(message)
         if not word:
-            await message.answer("Использование: <code>/word WORD</code>")
+            await message.answer(locale.admin.word_usage)
             return
         rows = await database.admin_word_search(word)
         if not rows:
-            await message.answer("Слово не найдено.")
+            await message.answer(locale.admin.word_not_found)
             return
         if len(rows) > 1:
             await message.answer(
-                f"У слова <b>{html.escape(word)}</b> несколько частей речи. "
-                "Выберите нужную:",
+                locale.admin.word_pick_category.format(word=html.escape(word)),
                 reply_markup=word_categories_keyboard(rows),
             )
             return
@@ -197,7 +210,7 @@ def create_admin_router(
             chat_id=message.chat.id,
             entry_id=int(rows[0]["id"]),
         ):
-            await message.answer("Для этого слова нет одновременно US и GB аудио.")
+            await message.answer(locale.admin.word_no_both_audio)
 
     @router.message(Command("send_test"))
     async def send_test_handler(message: Message) -> None:
@@ -205,7 +218,7 @@ def create_admin_router(
             return
         card = await database.admin_preview_card(random_card=True)
         if not card:
-            await message.answer("Нет карточек с готовым аудио для тестовой отправки.")
+            await message.answer(locale.admin.no_test_cards)
             return
         await delivery.send_preview(message.bot, chat_id=message.chat.id, card=card)
 
@@ -217,18 +230,18 @@ def create_admin_router(
             delivery.reload_templates()
         except CardTemplateError as exc:
             await message.answer(
-                f"Ошибка шаблона: <code>{html.escape(str(exc))}</code>"
+                locale.admin.template_error.format(error=html.escape(str(exc)))
             )
             return
-        await message.answer("Оба шаблона карточек проверены и перезагружены.")
+        await message.answer(locale.admin.templates_reloaded)
 
     @router.callback_query(F.data.startswith("admin:"))
     async def admin_panel_callback(callback: CallbackQuery) -> None:
         if callback.from_user.id not in config.admin_ids:
-            await callback.answer("Нет доступа.", show_alert=True)
+            await callback.answer(locale.admin.no_access, show_alert=True)
             return
         if not callback.message:
-            await callback.answer("Сообщение панели недоступно.", show_alert=True)
+            await callback.answer(locale.admin.panel_unavailable, show_alert=True)
             return
 
         action = (callback.data or "admin:overview").split(":", 1)[1]
@@ -237,19 +250,17 @@ def create_admin_router(
             if action.startswith("word:"):
                 entry_id = action.removeprefix("word:")
                 if not entry_id.isdigit():
-                    await callback.answer("Некорректный выбор.", show_alert=True)
+                    await callback.answer(locale.admin.bad_choice, show_alert=True)
                     answered = True
                     return
-                await callback.answer("Отправляю карточку…")
+                await callback.answer(locale.admin.sending_card)
                 answered = True
                 if not await send_word_card(
                     callback.bot,
                     chat_id=callback.message.chat.id,
                     entry_id=int(entry_id),
                 ):
-                    await callback.message.answer(
-                        "Для выбранной части речи нет одновременно US и GB аудио."
-                    )
+                    await callback.message.answer(locale.admin.word_entry_no_both_audio)
                     return
                 try:
                     await callback.message.edit_reply_markup(reply_markup=None)
@@ -258,13 +269,11 @@ def create_admin_router(
                 return
 
             if action == "test_card":
-                await callback.answer("Отправляю тестовую карточку…")
+                await callback.answer(locale.admin.sending_test_card)
                 answered = True
                 card = await database.admin_preview_card(random_card=True)
                 if not card:
-                    await callback.message.answer(
-                        "Нет карточек с готовым аудио для предпросмотра."
-                    )
+                    await callback.message.answer(locale.admin.no_preview_cards)
                     return
                 await delivery.send_preview(
                     callback.bot,
@@ -289,14 +298,17 @@ def create_admin_router(
                 if "message is not modified" not in str(exc).lower():
                     raise
                 if not answered:
-                    await callback.answer("Данные уже актуальны.")
+                    await callback.answer(locale.admin.already_up_to_date)
                     answered = True
         except Exception as exc:  # noqa: BLE001
             if not answered:
-                await callback.answer("Не удалось обновить раздел.", show_alert=True)
+                await callback.answer(
+                    locale.admin.panel_update_failed,
+                    show_alert=True,
+                )
                 answered = True
             await callback.message.answer(
-                f"Ошибка admin panel: <code>{html.escape(str(exc)[:300])}</code>"
+                locale.admin.panel_error.format(error=html.escape(str(exc)[:300]))
             )
         finally:
             if not answered:

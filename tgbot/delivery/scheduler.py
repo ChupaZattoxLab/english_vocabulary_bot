@@ -11,6 +11,11 @@ from zoneinfo import ZoneInfo
 from aiogram import Bot
 
 from tgbot.config import BotConfig
+from tgbot.constants import (
+    DELIVERY_STATUS_DELIVERED,
+    DELIVERY_STATUS_FAILED,
+    DELIVERY_STATUS_SKIPPED,
+)
 from tgbot.db import ActiveUser, Database
 from tgbot.delivery.service import CardDeliveryService
 
@@ -78,7 +83,7 @@ class CardScheduler:
                     "Unexpected scheduled delivery error for user %s",
                     user.telegram_user_id,
                 )
-                return "failed"
+                return DELIVERY_STATUS_FAILED
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
         claimed = await self.database.claim_scheduler_run(
@@ -106,9 +111,9 @@ class CardScheduler:
                 )
             )
             counts = Counter(statuses)
-            delivered = counts["delivered"]
-            failed = counts["failed"]
-            skipped = counts["skipped"]
+            delivered = counts[DELIVERY_STATUS_DELIVERED]
+            failed = counts[DELIVERY_STATUS_FAILED]
+            skipped = counts[DELIVERY_STATUS_SKIPPED]
         except Exception as exc:  # noqa: BLE001
             error_message = str(exc)
             LOGGER.exception("Scheduled slot %s failed", scheduled_slot.isoformat())
