@@ -1,8 +1,8 @@
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from alembic import context
 from tgbot.config import PROJECT_ROOT, BotConfig, load_env_file
 from tgbot.db.schema import MANAGED_TABLES, metadata
 

@@ -6,11 +6,11 @@ from unittest.mock import patch
 
 import psycopg
 import sqlalchemy as sa
+from alembic import command
 from alembic.config import Config
 from psycopg import sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
-from alembic import command
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db.schema import MANAGED_TABLES, metadata, oald_entries
 

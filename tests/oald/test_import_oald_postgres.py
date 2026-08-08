@@ -279,7 +279,6 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
 def oald_row(
     word: str,
     definition_url: str,
-    *,
     lexical_category: str = "verb",
     cefr: str = "b1",
     definition: str = "A test definition.",

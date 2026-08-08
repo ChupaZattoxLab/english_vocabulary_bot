@@ -133,7 +133,6 @@ def user_from_row(row: object) -> BotUser:
 
 def card_from_row(
     row: object,
-    *,
     dialect: str,
     history_id: int,
 ) -> ReservedCard:

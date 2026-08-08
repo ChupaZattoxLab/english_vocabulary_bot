@@ -21,7 +21,6 @@ class SchedulerMixin(PoolBound):
     async def claim_scheduler_run(
         self,
         scheduled_slot: datetime,
-        *,
         grace_minutes: int = SCHEDULE_GRACE_MINUTES,
     ) -> bool:
         """Claim a slot, or reclaim it for retries within the grace window."""
@@ -86,7 +85,6 @@ class SchedulerMixin(PoolBound):
     async def finish_scheduler_run(
         self,
         scheduled_slot: datetime,
-        *,
         attempted: int,
         delivered: int,
         failed: int,

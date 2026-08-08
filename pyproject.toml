@@ -44,7 +44,7 @@ pythonpath = ["scripts/oald", "."]
 [tool.ruff]
 line-length = 88
 target-version = "py311"
-extend-exclude = ["alembic/versions"]
+extend-exclude = ["migrations/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
@@ -57,7 +57,7 @@ skip-magic-trailing-comma = false
 include = ["tgbot", "scripts/oald", "scripts/cli.py"]
 exclude = [
     "**/__pycache__",
-    "alembic/versions",
+    "migrations/versions",
 ]
 pythonVersion = "3.11"
 typeCheckingMode = "standard"

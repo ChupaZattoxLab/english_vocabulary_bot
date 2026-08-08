@@ -24,7 +24,6 @@ from tgbot.localization import locale
 
 
 def create_admin_router(
-    *,
     database: Database,
     delivery: CardDeliveryService,
     config: BotConfig,
@@ -92,7 +91,7 @@ def create_admin_router(
             )
         )
 
-    async def send_word_card(bot: Bot, *, chat_id: int, entry_id: int) -> bool:
+    async def send_word_card(bot: Bot, chat_id: int, entry_id: int) -> bool:
         card = await database.admin_preview_card(
             entry_id=entry_id,
             dialect="both",

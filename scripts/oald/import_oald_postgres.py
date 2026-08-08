@@ -256,7 +256,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def load_entries(
     json_path: Path,
-    *,
     strict: bool = False,
 ) -> tuple[list[OaldEntry], Counter[str]]:
     try:
@@ -300,7 +299,6 @@ def load_entries(
 def import_entries(
     entries: Iterable[OaldEntry],
     database_url: str,
-    *,
     batch_size: int = 500,
 ) -> ImportResult:
     psycopg = _load_psycopg()
@@ -380,7 +378,6 @@ def import_entries(
 
 def ensure_database_exists(
     database_url: str,
-    *,
     admin_database_url: str | None = None,
 ) -> bool:
     """Ensure the target database exists; return True when it was created."""
@@ -550,7 +547,6 @@ def string_list(
     raw: Mapping[str, Any],
     field: str,
     row_number: int,
-    *,
     require_urls: bool = False,
 ) -> list[str]:
     value = raw.get(field)

@@ -18,7 +18,6 @@ from tgbot.db.models import (
 class UsersMixin(PoolBound):
     async def upsert_user(
         self,
-        *,
         telegram_user_id: int,
         chat_id: int,
         username: str,

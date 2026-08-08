@@ -61,7 +61,6 @@ class CardDeliveryService:
     async def deliver(
         self,
         bot: Bot,
-        *,
         telegram_user_id: int,
         chat_id: int,
         scheduled_slot: datetime,
@@ -131,9 +130,7 @@ class CardDeliveryService:
             LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
             return DeliveryOutcome(DELIVERY_STATUS_FAILED, card)
 
-    async def send_preview(
-        self, bot: Bot, *, chat_id: int, card: ReservedCard
-    ) -> Message:
+    async def send_preview(self, bot: Bot, chat_id: int, card: ReservedCard) -> Message:
         """Send a card without creating or changing delivery history."""
         return await self._send_reserved(bot, chat_id=chat_id, card=card)
 
@@ -173,7 +170,6 @@ class CardDeliveryService:
     async def _send_reserved(
         self,
         bot: Bot,
-        *,
         chat_id: int,
         card: ReservedCard,
     ) -> Message:
@@ -184,7 +180,6 @@ class CardDeliveryService:
     async def _send_reserved_voices(
         self,
         bot: Bot,
-        *,
         chat_id: int,
         card: ReservedCard,
     ) -> Message:
@@ -215,7 +210,7 @@ class CardDeliveryService:
             )
         return message
 
-    async def _send_card_text(self, bot: Bot, *, chat_id: int, text: str) -> None:
+    async def _send_card_text(self, bot: Bot, chat_id: int, text: str) -> None:
         await _call_with_retry_after(
             lambda: bot.send_message(chat_id=chat_id, text=text),
             kind=SEND_KIND_TEXT,
@@ -224,7 +219,6 @@ class CardDeliveryService:
     async def _send_voice_attachment(
         self,
         bot: Bot,
-        *,
         chat_id: int,
         source_url: str,
         audio_data: bytes,
@@ -296,7 +290,6 @@ def classify_delivery_error(exc: Exception) -> str:
 
 async def _call_with_retry_after(
     operation: Callable[[], Awaitable[T]],
-    *,
     kind: str,
 ) -> T:
     try:

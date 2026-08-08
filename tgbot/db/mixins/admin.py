@@ -32,7 +32,6 @@ from tgbot.db.models import (
 class AdminMixin(PoolBound):
     async def admin_users_summary(
         self,
-        *,
         today_start: datetime,
         week_start: datetime,
         month_start: datetime,
@@ -209,7 +208,6 @@ class AdminMixin(PoolBound):
     async def admin_word_search(
         self,
         word: str,
-        *,
         limit: int = 10,
     ) -> tuple[AdminWordMatch, ...]:
         async with self.pool.connection() as connection:
@@ -231,7 +229,6 @@ class AdminMixin(PoolBound):
 
     async def admin_preview_card(
         self,
-        *,
         entry_id: int | None = None,
         dialect: str | None = None,
         random_card: bool = False,

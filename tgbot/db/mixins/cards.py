@@ -103,7 +103,6 @@ class CardsMixin(PoolBound):
         self,
         telegram_user_id: int,
         scheduled_slot: datetime,
-        *,
         require_active: bool = True,
     ) -> ReservedCard | None:
         async with self.pool.connection() as connection:
@@ -243,7 +242,6 @@ class CardsMixin(PoolBound):
     async def finish_delivery(
         self,
         history_id: int,
-        *,
         delivered: bool,
         telegram_message_id: int | None = None,
         error_type: str = "",

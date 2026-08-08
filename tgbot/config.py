@@ -55,7 +55,6 @@ class BotConfig:
     def from_env(
         cls,
         values: Mapping[str, str] | None = None,
-        *,
         require_token: bool = True,
     ) -> BotConfig:
         """Load secrets from env/.env; schedule and paths come from constants."""

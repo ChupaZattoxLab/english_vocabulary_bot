@@ -25,7 +25,6 @@ LOGGER = logging.getLogger("tgbot.scheduler")
 class CardScheduler:
     def __init__(
         self,
-        *,
         database: Database,
         delivery: CardDeliveryService,
         config: BotConfig,
@@ -139,7 +138,6 @@ class CardScheduler:
 
 def due_schedule_slots(
     now: datetime,
-    *,
     timezone_value: ZoneInfo,
     send_times: tuple[time, ...],
     grace_minutes: int,

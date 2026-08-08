@@ -24,7 +24,8 @@ tests/
   tgbot/               # bot unit/integration tests
   oald/                # OALD/Oxford import-script tests
   test_migrations.py   # Alembic baseline tests
-alembic/               # migration revisions
+migrations/            # Alembic migration revisions
+alembic.ini            # Alembic config (script_location → migrations/)
 compose.yaml           # local Postgres 16
 ```
 

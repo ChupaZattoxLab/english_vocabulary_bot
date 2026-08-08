@@ -404,7 +404,6 @@ def make_admin_user_detail(**overrides: object) -> AdminUserDetail:
 
 def make_word_match(
     entry_id: int,
-    *,
     lexical_category: str,
     cefr: str,
 ) -> AdminWordMatch:

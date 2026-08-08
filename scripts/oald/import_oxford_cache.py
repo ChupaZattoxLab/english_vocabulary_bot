@@ -307,7 +307,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def parse_cache_files(
     source_dir: Path,
-    *,
     limit_files: int | None = None,
     strict: bool = False,
 ) -> tuple[dict[str, OxfordGroup], Counter[str]]:
@@ -460,7 +459,6 @@ def build_rows(
 def import_rows(
     rows: Iterable[OxfordRow],
     database_url: str,
-    *,
     batch_size: int = 500,
 ) -> int:
     try:

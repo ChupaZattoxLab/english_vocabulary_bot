@@ -207,7 +207,6 @@ def dialect_caption(dialect: str) -> str:
 
 
 def user_settings_lines(
-    *,
     levels: str,
     pronunciation: str,
     delivery_state: str,

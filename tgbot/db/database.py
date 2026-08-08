@@ -37,7 +37,6 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
     def __init__(
         self,
         database_url: str,
-        *,
         pool_size: int = DATABASE_POOL_SIZE,
     ):
         self.pool = AsyncConnectionPool(

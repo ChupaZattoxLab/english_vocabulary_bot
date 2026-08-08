@@ -22,6 +22,9 @@ android-app/captures/
 *.ap_
 *.dex
 
+# IDE
+.idea/
+
 # Python
 .venv/
 .bot.pid

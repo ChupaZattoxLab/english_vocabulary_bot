@@ -192,7 +192,6 @@ class AudioDownloadError(OaldAudioError):
     def __init__(
         self,
         message: str,
-        *,
         retryable: bool = False,
         status_code: int | None = None,
         attempts: int = 1,
@@ -361,7 +360,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def download_audio_file(
     source_url: str,
-    *,
     timeout: float = 30.0,
     max_bytes: int = DEFAULT_MAX_AUDIO_BYTES,
     urlopen: Callable[..., Any] = urllib.request.urlopen,
@@ -430,7 +428,6 @@ def download_audio_file(
 
 def transcode_audio_to_voice(
     audio: DownloadedAudio,
-    *,
     timeout: float = 30.0,
     max_bytes: int = DEFAULT_MAX_AUDIO_BYTES,
     ffmpeg_executable: str | None = None,
@@ -499,7 +496,6 @@ def transcode_audio_to_voice(
 
 def download_with_retries(
     source_url: str,
-    *,
     timeout: float,
     max_bytes: int,
     retries: int,
@@ -537,7 +533,6 @@ def download_with_retries(
 
 def download_audio_to_postgres(
     database_url: str,
-    *,
     dialects: list[str] | None = None,
     limit: int | None = None,
     force: bool = False,
@@ -688,7 +683,6 @@ def download_audio_to_postgres(
 
 def load_candidates(
     cursor: Any,
-    *,
     dialects: list[str],
     force: bool,
     limit: int | None,
@@ -735,7 +729,6 @@ def store_failure(
     cursor: Any,
     candidate: AudioCandidate,
     error: AudioDownloadError,
-    *,
     keep_pending: bool = False,
 ) -> None:
     cursor.execute(
@@ -755,7 +748,6 @@ def store_voice_success(
     candidate: AudioCandidate,
     original: DownloadedAudio,
     voice: VoiceAudio,
-    *,
     clear_telegram_cache: bool = False,
 ) -> None:
     cursor.execute(

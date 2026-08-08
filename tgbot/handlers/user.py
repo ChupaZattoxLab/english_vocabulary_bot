@@ -17,7 +17,6 @@ from tgbot.localization import locale
 
 
 def create_router(
-    *,
     database: Database,
     delivery: CardDeliveryService,
     config: BotConfig,

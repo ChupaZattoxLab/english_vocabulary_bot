@@ -7,9 +7,9 @@ import os
 from pathlib import Path
 
 import psutil
+from alembic import command
 from alembic.config import Config
 
-from alembic import command
 from tgbot.__main__ import main as bot_main
 from tgbot.config import PROJECT_ROOT
 

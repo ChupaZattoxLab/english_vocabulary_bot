@@ -395,7 +395,6 @@ class FakeResponse:
     def __init__(
         self,
         data: bytes,
-        *,
         content_type: str = "audio/ogg",
         url: str = "https://audio.example/test.ogg",
         content_length: int | None = None,
