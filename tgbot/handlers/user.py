@@ -8,10 +8,10 @@ from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message, User
 
-from vocabulary_bot.config import BotConfig
-from vocabulary_bot.database import BotUser, Database
-from vocabulary_bot.delivery import CardDeliveryService
-from vocabulary_bot.keyboards import levels_keyboard, pronunciation_keyboard
+from tgbot.config import BotConfig
+from tgbot.db import BotUser, Database
+from tgbot.delivery import CardDeliveryService
+from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
 
 
 def user_settings_text(user: BotUser, config: BotConfig) -> str:

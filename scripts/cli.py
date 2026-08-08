@@ -1,4 +1,4 @@
-"""Short Poetry command entry points for common project actions."""
+"""CLI entry points for common project actions (`uv run start`, etc.)."""
 
 from __future__ import annotations
 
@@ -10,8 +10,8 @@ import psutil
 from alembic.config import Config
 
 from alembic import command
-from vocabulary_bot.__main__ import main as bot_main
-from vocabulary_bot.config import PROJECT_ROOT
+from tgbot.__main__ import main as bot_main
+from tgbot.config import PROJECT_ROOT
 
 PID_FILE = PROJECT_ROOT / ".bot.pid"
 

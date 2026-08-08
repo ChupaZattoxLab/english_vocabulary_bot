@@ -1,12 +1,12 @@
-"""Run the Telegram vocabulary bot with ``python -m vocabulary_bot``."""
+"""Run the Telegram vocabulary bot with ``python -m tgbot``."""
 
 from __future__ import annotations
 
 import asyncio
 import logging
 
-from vocabulary_bot.app import run_bot
-from vocabulary_bot.config import PROJECT_ROOT, BotConfig, ConfigError, load_env_file
+from tgbot.app import run_bot
+from tgbot.config import PROJECT_ROOT, BotConfig, ConfigError, load_env_file
 
 
 def main() -> int:

@@ -13,7 +13,7 @@ from alembic.script import ScriptDirectory
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
-from vocabulary_bot.config import PROJECT_ROOT
+from tgbot.config import PROJECT_ROOT
 
 VALID_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
 REQUIRED_TABLES = (

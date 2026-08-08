@@ -2,15 +2,30 @@
 
 Offline-friendly Telegram bot that sends OALD-backed vocabulary cards from PostgreSQL.
 
-## What is in this repo
+## Repository layout
 
-- `vocabulary_bot/` — Telegram bot (aiogram) and HTML card templates
-- `scripts/database/10-restore-oald-seed.sh` — Postgres first-boot hook (optional seed restore)
-- `compose.yaml` — local Postgres 16
-- `alembic/` — database migrations
-- `scripts/build_database/` — optional pipeline to rebuild the DB from external sources
+```text
+tgbot/                 # runtime bot package
+  app.py               # aiogram bootstrap / long polling
+  config.py            # env/.env settings
+  __main__.py          # python -m tgbot
+  db/                  # PostgreSQL access + SQLAlchemy schema metadata
+  delivery/            # card templates, send logic, scheduler
+  handlers/            # Telegram user/admin commands and keyboards
+scripts/
+  cli.py               # uv run start|stop|migrate|test|lint|…
+  restore-oald-seed.sh # Docker first-boot seed restore
+  import/              # offline OALD/Oxford build & import helpers
+tests/
+  tgbot/               # bot unit/integration tests
+  import/              # import-script tests
+  test_migrations.py   # Alembic baseline tests
+alembic/               # migration revisions
+compose.yaml           # local Postgres 16
+```
 
-Large artefacts (`data/`, Kaikki `.jsonl`, DB dumps) are **not** published. Keep them only on your machine or server.
+Large artefacts (`data/`, Kaikki `.jsonl`, DB dumps) are **not** published. Keep them
+only on your machine or server.
 
 ## Prerequisites
 
@@ -60,9 +75,9 @@ data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts/
   SHA256SUMS.txt
 ```
 
-Without these parts Postgres still starts; the init script skips restore and you get
-an empty schema after migrations. The bot will start, but there will be nothing to send
-until you restore a dump or rebuild via `scripts/build_database/`.
+Without these parts Postgres still starts; `scripts/restore-oald-seed.sh` skips restore
+and you get an empty schema after migrations. The bot will start, but there will be
+nothing to send until you restore a dump or rebuild via `scripts/import/`.
 
 If the volume was already created without the seed, either add the parts and recreate
 the volume, or restore a dump manually:
@@ -134,7 +149,8 @@ allowed to create temporary databases.
 
 ## Database migrations
 
-Alembic manages all eight application/OALD tables.
+Alembic manages all eight application/OALD tables. Canonical table metadata lives in
+`tgbot/db/schema.py`.
 
 ```powershell
 uv run migrate
@@ -155,7 +171,7 @@ If a remote instance keeps coming back after `kill`, systemd is restarting it:
 systemctl list-units --type=service --all | grep -iE 'vocab|bot|telegram'
 sudo systemctl stop vocabulary-bot
 sudo systemctl disable vocabulary-bot
-ps aux | grep vocabulary_bot | grep -v grep
+ps aux | grep tgbot | grep -v grep
 ```
 
 To run on the server again later (after `git pull`, `uv sync`, `uv run migrate`):

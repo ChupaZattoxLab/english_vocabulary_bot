@@ -10,13 +10,11 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import BotCommand, BotCommandScopeChat
 
-from vocabulary_bot.admin import create_admin_router
-from vocabulary_bot.card_template import CardTemplate
-from vocabulary_bot.config import BotConfig
-from vocabulary_bot.database import Database
-from vocabulary_bot.delivery import CardDeliveryService
-from vocabulary_bot.handlers import create_router
-from vocabulary_bot.scheduler import CardScheduler
+from tgbot.config import BotConfig
+from tgbot.db import Database
+from tgbot.delivery import CardDeliveryService, CardTemplate
+from tgbot.delivery.scheduler import CardScheduler
+from tgbot.handlers import create_admin_router, create_router
 
 LOGGER = logging.getLogger("vocabulary.bot")
 

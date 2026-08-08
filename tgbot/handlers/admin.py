@@ -11,15 +11,14 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message
 
-from vocabulary_bot.admin_keyboards import (
+from tgbot.config import BotConfig
+from tgbot.db import Database
+from tgbot.delivery import CardDeliveryService, CardTemplateError
+from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     admin_users_keyboard,
     word_categories_keyboard,
 )
-from vocabulary_bot.card_template import CardTemplateError
-from vocabulary_bot.config import BotConfig
-from vocabulary_bot.database import Database
-from vocabulary_bot.delivery import CardDeliveryService
 
 
 def _number(value: Any) -> str:

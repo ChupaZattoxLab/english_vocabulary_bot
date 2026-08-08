@@ -16,8 +16,8 @@ from aiogram.exceptions import (
 )
 from aiogram.types import BufferedInputFile, Message
 
-from vocabulary_bot.card_template import CardTemplate, CardTemplateError
-from vocabulary_bot.database import Database, ReservedAudio, ReservedCard
+from tgbot.db import Database, ReservedAudio, ReservedCard
+from tgbot.delivery.card_template import CardTemplate, CardTemplateError
 
 LOGGER = logging.getLogger("vocabulary.bot.delivery")
 

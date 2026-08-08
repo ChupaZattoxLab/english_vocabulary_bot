@@ -10,9 +10,9 @@ from zoneinfo import ZoneInfo
 
 from aiogram import Bot
 
-from vocabulary_bot.config import BotConfig
-from vocabulary_bot.database import ActiveUser, Database
-from vocabulary_bot.delivery import CardDeliveryService
+from tgbot.config import BotConfig
+from tgbot.db import ActiveUser, Database
+from tgbot.delivery import CardDeliveryService
 
 LOGGER = logging.getLogger("vocabulary.bot.scheduler")
 

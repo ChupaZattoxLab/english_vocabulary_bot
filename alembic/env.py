@@ -3,8 +3,8 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from vocabulary_bot.config import PROJECT_ROOT, BotConfig, load_env_file
-from vocabulary_bot.schema import MANAGED_TABLES, metadata
+from tgbot.config import PROJECT_ROOT, BotConfig, load_env_file
+from tgbot.db.schema import MANAGED_TABLES, metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

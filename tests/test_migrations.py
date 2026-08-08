@@ -11,7 +11,7 @@ from psycopg import sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
 from alembic import command
-from vocabulary_bot.schema import MANAGED_TABLES, metadata, oald_entries
+from tgbot.db.schema import MANAGED_TABLES, metadata, oald_entries
 
 TEST_DATABASE_URL = os.environ.get("TEST_OALD_DATABASE_URL", "")
 PROJECT_ROOT = Path(__file__).resolve().parents[1]

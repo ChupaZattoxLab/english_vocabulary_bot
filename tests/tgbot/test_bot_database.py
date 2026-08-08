@@ -5,7 +5,7 @@ from datetime import UTC, datetime, timedelta
 
 from psycopg.types.json import Jsonb
 
-from vocabulary_bot.database import Database
+from tgbot.db import Database
 
 
 @unittest.skipUnless(

@@ -16,9 +16,9 @@ from typing import Any
 from urllib.parse import urlparse
 
 try:
-    from .oald_audio_schema import require_oald_schema
+    from .oald_preflight import require_oald_schema
 except ImportError:
-    from oald_audio_schema import require_oald_schema  # type: ignore[no-redef]
+    from oald_preflight import require_oald_schema  # type: ignore[no-redef]
 
 
 ROOT = Path(__file__).resolve().parents[2]

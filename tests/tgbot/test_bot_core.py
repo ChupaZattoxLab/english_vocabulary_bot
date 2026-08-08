@@ -7,20 +7,21 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock
 from zoneinfo import ZoneInfo
 
-from vocabulary_bot.admin import _delivery_state
-from vocabulary_bot.admin_keyboards import (
-    admin_main_keyboard,
-    word_categories_keyboard,
-)
-from vocabulary_bot.card_template import CardTemplate, CardTemplateError
-from vocabulary_bot.config import BotConfig, ConfigError
-from vocabulary_bot.database import ReservedAudio, ReservedCard
-from vocabulary_bot.delivery import (
+from tgbot.config import BotConfig, ConfigError
+from tgbot.db import ReservedAudio, ReservedCard
+from tgbot.delivery import (
     CardDeliveryService,
+    CardTemplate,
+    CardTemplateError,
     classify_delivery_error,
     send_method,
 )
-from vocabulary_bot.scheduler import due_schedule_slots
+from tgbot.delivery.scheduler import due_schedule_slots
+from tgbot.handlers.admin import _delivery_state
+from tgbot.handlers.admin_keyboards import (
+    admin_main_keyboard,
+    word_categories_keyboard,
+)
 
 VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
