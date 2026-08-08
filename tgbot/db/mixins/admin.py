@@ -7,7 +7,7 @@ from typing import Any
 
 from tgbot.db.mixins.base import PoolBound
 from tgbot.db.mixins.cards import CARD_CONTENT_SQL
-from tgbot.db.models import ReservedCard, card_from_row
+from tgbot.db.models import VALID_PRONUNCIATIONS, ReservedCard, card_from_row
 
 
 class AdminMixin(PoolBound):
@@ -220,6 +220,6 @@ class AdminMixin(PoolBound):
         selected = requested or (
             "both" if available_us and available_gb else "us" if available_us else "gb"
         )
-        if selected not in {"us", "gb", "both"}:
+        if selected not in VALID_PRONUNCIATIONS:
             return None
         return card_from_row(row, dialect=selected, history_id=0)

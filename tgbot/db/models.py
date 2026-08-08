@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal, cast
 
-VALID_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
+CefrLevel = Literal["a1", "a2", "b1", "b2", "c1", "c2"]
+Pronunciation = Literal["us", "gb", "both"]
+CardDialect = Literal["US", "GB", "BOTH"]
+
+VALID_LEVELS: tuple[CefrLevel, ...] = ("a1", "a2", "b1", "b2", "c1", "c2")
+VALID_PRONUNCIATIONS: frozenset[Pronunciation] = frozenset({"us", "gb", "both"})
 
 
 class DatabaseError(RuntimeError):
@@ -32,7 +37,7 @@ class ActiveUser:
 
 @dataclass(frozen=True)
 class ReservedAudio:
-    dialect: str
+    dialect: CardDialect
     source_url: str
     audio_data: bytes
     content_type: str
@@ -49,7 +54,7 @@ class ReservedCard:
     definition: str
     example: str
     ipa: str
-    dialect: str
+    dialect: CardDialect
     translation: str
     source_url: str
     audio_data: bytes
@@ -97,9 +102,12 @@ def card_from_row(
     history_id: int,
 ) -> ReservedCard:
     normalized = dialect.lower()
+    if normalized not in VALID_PRONUNCIATIONS:
+        raise ValueError(f"unsupported pronunciation {dialect!r}")
     ipa_us = selected_ipa(row["ipa_us"], row["us_source_position"])
     ipa_gb = selected_ipa(row["ipa_gb"], row["gb_source_position"])
     primary_prefix = "gb" if normalized == "gb" else "us"
+    card_dialect = cast(CardDialect, normalized.upper())
     return ReservedCard(
         history_id=history_id,
         entry_id=int(row["entry_id"]),
@@ -109,7 +117,7 @@ def card_from_row(
         definition=str(row["definition"]),
         example=str(row["example"]),
         ipa=ipa_gb if normalized == "gb" else ipa_us,
-        dialect=normalized.upper(),
+        dialect=card_dialect,
         translation=translation_text(row["translations"]),
         source_url=str(row[f"{primary_prefix}_source_url"]),
         audio_data=bytes(row[f"{primary_prefix}_audio_data"]),

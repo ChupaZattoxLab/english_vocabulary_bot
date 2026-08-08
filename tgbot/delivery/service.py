@@ -5,8 +5,10 @@ from __future__ import annotations
 import asyncio
 import html
 import logging
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Literal, TypeVar
 
 from aiogram import Bot
 from aiogram.exceptions import (
@@ -18,21 +20,18 @@ from aiogram.types import BufferedInputFile, Message
 
 from tgbot.db import Database, ReservedAudio, ReservedCard
 from tgbot.delivery.card_template import CardTemplate, CardTemplateError
+from tgbot.labels import dialect_caption, dialect_flag
 
 LOGGER = logging.getLogger("tgbot.delivery")
+
+DeliveryStatus = Literal["delivered", "failed", "skipped"]
+T = TypeVar("T")
 
 
 @dataclass(frozen=True)
 class DeliveryOutcome:
-    status: str
+    status: DeliveryStatus
     card: ReservedCard | None = None
-
-
-def dialect_caption(dialect: str) -> str:
-    return {
-        "US": "🇺🇸 US",
-        "GB": "🇬🇧 GB",
-    }.get(dialect.upper(), dialect.upper())
 
 
 def voice_caption(dialect: str, ipa: str) -> str:
@@ -62,6 +61,23 @@ def classify_delivery_error(exc: Exception) -> str:
     return "technical_error"
 
 
+async def _call_with_retry_after(
+    operation: Callable[[], Awaitable[T]],
+    *,
+    kind: str,
+) -> T:
+    try:
+        return await operation()
+    except TelegramRetryAfter as exc:
+        LOGGER.warning(
+            "Telegram %s rate limit; retrying in %s seconds",
+            kind,
+            exc.retry_after,
+        )
+        await asyncio.sleep(float(exc.retry_after))
+        return await operation()
+
+
 class CardDeliveryService:
     def __init__(
         self,
@@ -74,11 +90,6 @@ class CardDeliveryService:
         self.both_template = both_template or template
 
     def render_card(self, card: ReservedCard) -> str:
-        dialect_flag = {
-            "US": "🇺🇸",
-            "GB": "🇬🇧",
-            "BOTH": "🇺🇸 + 🇬🇧",
-        }.get(card.dialect, "")
         template = self.both_template if card.dialect == "BOTH" else self.template
         return template.render(
             {
@@ -97,7 +108,7 @@ class CardDeliveryService:
                 "example": card.example,
                 "translation": card.translation,
                 "dialect": card.dialect,
-                "dialect_flag": dialect_flag,
+                "dialect_flag": dialect_flag(card.dialect),
             }
         )
 
@@ -117,23 +128,14 @@ class CardDeliveryService:
         caption: str | None,
     ) -> Message:
         async def send(file_reference: str | BufferedInputFile) -> Message:
-            try:
-                return await bot.send_voice(
+            return await _call_with_retry_after(
+                lambda: bot.send_voice(
                     chat_id=chat_id,
                     voice=file_reference,
                     caption=caption,
-                )
-            except TelegramRetryAfter as exc:
-                LOGGER.warning(
-                    "Telegram voice rate limit; retrying in %s seconds",
-                    exc.retry_after,
-                )
-                await asyncio.sleep(float(exc.retry_after))
-                return await bot.send_voice(
-                    chat_id=chat_id,
-                    voice=file_reference,
-                    caption=caption,
-                )
+                ),
+                kind="voice",
+            )
 
         method = "voice"
         cached_file_id = await self.database.cached_audio_file_id(
@@ -161,15 +163,10 @@ class CardDeliveryService:
         return message
 
     async def _send_card_text(self, bot: Bot, *, chat_id: int, text: str) -> None:
-        try:
-            await bot.send_message(chat_id=chat_id, text=text)
-        except TelegramRetryAfter as exc:
-            LOGGER.warning(
-                "Telegram text rate limit; retrying in %s seconds",
-                exc.retry_after,
-            )
-            await asyncio.sleep(float(exc.retry_after))
-            await bot.send_message(chat_id=chat_id, text=text)
+        await _call_with_retry_after(
+            lambda: bot.send_message(chat_id=chat_id, text=text),
+            kind="text",
+        )
 
     async def deliver(
         self,

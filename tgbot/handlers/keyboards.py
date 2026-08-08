@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-LEVELS = ("A1", "A2", "B1", "B2", "C1", "C2")
+from tgbot.db.models import VALID_LEVELS
+
+LEVELS = tuple(level.upper() for level in VALID_LEVELS)
 
 
 def levels_keyboard(selected_levels: tuple[str, ...]) -> InlineKeyboardMarkup:

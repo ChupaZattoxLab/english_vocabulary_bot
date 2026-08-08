@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 import unittest
 import uuid
@@ -10,6 +9,8 @@ from import_oald_postgres import (
     import_entries,
     load_entries,
 )
+
+from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -184,12 +185,9 @@ class OaldJsonTests(unittest.TestCase):
         self.assertEqual(stats["unique_audio_urls"], 10393)
 
 
-@unittest.skipUnless(
-    os.environ.get("TEST_OALD_DATABASE_URL"),
-    "TEST_OALD_DATABASE_URL is not set",
-)
+@requires_oald_database
 class OaldPostgreSqlIntegrationTests(unittest.TestCase):
-    database_url = os.environ.get("TEST_OALD_DATABASE_URL", "")
+    database_url = TEST_OALD_DATABASE_URL
 
     def test_repeat_add_update_links_and_preserve_audio_bytes(self) -> None:
         try:

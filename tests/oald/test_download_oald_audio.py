@@ -1,6 +1,5 @@
 import hashlib
 import io
-import os
 import tempfile
 import unittest
 import urllib.error
@@ -23,6 +22,8 @@ from download_oald_audio import (
 )
 from import_oald_postgres import import_entries, load_entries
 from test_import_oald_postgres import oald_row, write_rows
+
+from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 
 
 class FakeHeaders:
@@ -248,12 +249,9 @@ class OaldAudioDownloadTests(unittest.TestCase):
             )
 
 
-@unittest.skipUnless(
-    os.environ.get("TEST_OALD_DATABASE_URL"),
-    "TEST_OALD_DATABASE_URL is not set",
-)
+@requires_oald_database
 class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
-    database_url = os.environ.get("TEST_OALD_DATABASE_URL", "")
+    database_url = TEST_OALD_DATABASE_URL
 
     def test_download_store_skip_and_force(self) -> None:
         try:

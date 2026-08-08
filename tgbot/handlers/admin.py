@@ -19,6 +19,7 @@ from tgbot.handlers.admin_keyboards import (
     admin_users_keyboard,
     word_categories_keyboard,
 )
+from tgbot.labels import pronunciation_admin
 
 
 def _number(value: Any) -> str:
@@ -37,14 +38,6 @@ def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
         local_now,
         local_start.astimezone(UTC),
     )
-
-
-def _dialect_label(value: str | None) -> str:
-    return {
-        "us": "American English",
-        "gb": "British English",
-        "both": "American + British English",
-    }.get(value or "", "не выбран")
 
 
 def _delivery_state(user: dict[str, Any]) -> str:
@@ -161,7 +154,7 @@ def create_admin_router(
             f"Username: {username}\n"
             f"Зарегистрирован: {registered:%d.%m.%Y %H:%M}\n"
             f"Уровни: {levels}\n"
-            f"Произношение: {_dialect_label(user['pronunciation'])}\n"
+            f"Произношение: {pronunciation_admin(user['pronunciation'])}\n"
             f"Карточек в день: {len(config.send_times)}\n"
             f"Время отправки: {send_times}\n"
             f"Часовой пояс: {html.escape(config.timezone.key)}\n"

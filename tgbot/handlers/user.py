@@ -12,20 +12,16 @@ from tgbot.config import BotConfig
 from tgbot.db import BotUser, Database
 from tgbot.delivery import CardDeliveryService
 from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
+from tgbot.labels import pronunciation_short
 
 
 def user_settings_text(user: BotUser, config: BotConfig) -> str:
     levels = ", ".join(level.upper() for level in user.selected_levels) or "не выбраны"
-    dialect = {
-        "us": "US",
-        "gb": "GB",
-        "both": "US + GB",
-    }.get(user.pronunciation or "", "не выбрано")
     state = "активна" if user.is_active else "приостановлена"
     return (
         f"<b>Ваши настройки</b>\n"
         f"Уровни: {levels}\n"
-        f"Произношение: {dialect}\n"
+        f"Произношение: {pronunciation_short(user.pronunciation)}\n"
         f"Рассылка: {state}\n"
         f"Время: {config.schedule_text}"
     )

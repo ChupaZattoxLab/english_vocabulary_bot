@@ -11,20 +11,17 @@ from psycopg import sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
 from alembic import command
+from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db.schema import MANAGED_TABLES, metadata, oald_entries
 
-TEST_DATABASE_URL = os.environ.get("TEST_OALD_DATABASE_URL", "")
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-@unittest.skipUnless(
-    TEST_DATABASE_URL,
-    "TEST_OALD_DATABASE_URL is not set",
-)
+@requires_oald_database
 class AlembicIntegrationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.database_name = f"vocab_alembic_{uuid.uuid4().hex}"
-        parameters = conninfo_to_dict(TEST_DATABASE_URL)
+        parameters = conninfo_to_dict(TEST_OALD_DATABASE_URL)
         admin_parameters = dict(parameters)
         admin_parameters["dbname"] = "postgres"
         self.admin_conninfo = make_conninfo(**admin_parameters)
@@ -33,7 +30,7 @@ class AlembicIntegrationTests(unittest.TestCase):
                 sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.database_name))
             )
 
-        url = sa.engine.make_url(TEST_DATABASE_URL)
+        url = sa.engine.make_url(TEST_OALD_DATABASE_URL)
         self.database_url = url.set(database=self.database_name).render_as_string(
             hide_password=False
         )

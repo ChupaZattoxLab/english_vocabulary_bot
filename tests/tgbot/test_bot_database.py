@@ -1,19 +1,16 @@
-import os
 import unittest
 import uuid
 from datetime import UTC, datetime, timedelta
 
 from psycopg.types.json import Jsonb
 
+from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db import Database
 
 
-@unittest.skipUnless(
-    os.environ.get("TEST_OALD_DATABASE_URL"),
-    "TEST_OALD_DATABASE_URL is not set",
-)
+@requires_oald_database
 class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
-    database_url = os.environ.get("TEST_OALD_DATABASE_URL", "")
+    database_url = TEST_OALD_DATABASE_URL
 
     async def asyncSetUp(self) -> None:
         import psycopg

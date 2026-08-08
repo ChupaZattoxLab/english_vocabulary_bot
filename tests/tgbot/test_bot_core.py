@@ -26,6 +26,28 @@ VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
 
 
+def make_reserved_card(
+    content_type: str = "audio/ogg",
+    filename: str = "test.voice.ogg",
+) -> ReservedCard:
+    return ReservedCard(
+        history_id=1,
+        entry_id=1,
+        word="test",
+        lexical_category="noun",
+        cefr="A1",
+        definition="definition",
+        example="example",
+        ipa="/test/",
+        dialect="US",
+        translation="тест",
+        source_url="https://example.test/audio",
+        audio_data=b"audio",
+        content_type=content_type,
+        filename=filename,
+    )
+
+
 class BotConfigTests(unittest.TestCase):
     def test_environment_configuration_is_parsed(self) -> None:
         config = BotConfig.from_env(
@@ -234,26 +256,6 @@ class SchedulerTests(unittest.TestCase):
         self.assertEqual(slots, ())
 
 
-class DeliveryFormatTests(unittest.TestCase):
-    def card(self, content_type: str, filename: str) -> ReservedCard:
-        return ReservedCard(
-            history_id=1,
-            entry_id=1,
-            word="test",
-            lexical_category="noun",
-            cefr="A1",
-            definition="definition",
-            example="example",
-            ipa="/test/",
-            dialect="US",
-            translation="тест",
-            source_url="https://example.test/audio",
-            audio_data=b"audio",
-            content_type=content_type,
-            filename=filename,
-        )
-
-
 class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
     async def test_voice_is_uploaded_and_telegram_file_id_is_cached(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -274,7 +276,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 send_message=AsyncMock(),
             )
             service = CardDeliveryService(database, CardTemplate(template_path))
-            card = DeliveryFormatTests().card("audio/ogg", "test.voice.ogg")
+            card = make_reserved_card("audio/ogg", "test.voice.ogg")
 
             await service._send_reserved(bot, chat_id=123, card=card)
 
@@ -302,7 +304,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             template_path = Path(temporary_directory) / "card.html"
             template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
-            card = DeliveryFormatTests().card("audio/ogg", "test.voice.ogg")
+            card = make_reserved_card("audio/ogg", "test.voice.ogg")
             database = SimpleNamespace(
                 reserve_card=AsyncMock(return_value=card),
                 finish_delivery=AsyncMock(),
@@ -366,7 +368,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 CardTemplate(both_template_path),
             )
             card = replace(
-                DeliveryFormatTests().card("audio/ogg", "test-us.voice.ogg"),
+                make_reserved_card("audio/ogg", "test-us.voice.ogg"),
                 dialect="BOTH",
                 word_us="color",
                 word_gb="colour",

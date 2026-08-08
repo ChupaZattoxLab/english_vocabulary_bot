@@ -5,6 +5,7 @@ from __future__ import annotations
 from tgbot.db.mixins.base import PoolBound
 from tgbot.db.models import (
     VALID_LEVELS,
+    VALID_PRONUNCIATIONS,
     ActiveUser,
     BotUser,
     DatabaseError,
@@ -88,7 +89,7 @@ class UsersMixin(PoolBound):
         dialect: str,
     ) -> BotUser:
         normalized = dialect.lower()
-        if normalized not in {"us", "gb", "both"}:
+        if normalized not in VALID_PRONUNCIATIONS:
             raise ValueError(f"unsupported pronunciation {dialect!r}")
         async with self.pool.connection() as connection:
             row = await (

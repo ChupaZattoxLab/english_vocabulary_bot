@@ -87,6 +87,13 @@ def positive_int(values: Mapping[str, str], name: str, default: int) -> int:
     return result
 
 
+def resolve_path(value: str, default: Path) -> Path:
+    path = Path(value).expanduser() if value else default
+    if not path.is_absolute():
+        path = PROJECT_ROOT / path
+    return path
+
+
 @dataclass(frozen=True)
 class BotConfig:
     bot_token: str
@@ -128,26 +135,14 @@ class BotConfig:
         except ZoneInfoNotFoundError as exc:
             raise ConfigError(f"unknown BOT_TIMEZONE {timezone_name!r}") from exc
 
-        template_value = source.get("BOT_CARD_TEMPLATE_PATH", "").strip()
-        template_path = (
-            Path(template_value).expanduser()
-            if template_value
-            else DEFAULT_TEMPLATE_PATH
+        template_path = resolve_path(
+            source.get("BOT_CARD_TEMPLATE_PATH", "").strip(),
+            DEFAULT_TEMPLATE_PATH,
         )
-        if not template_path.is_absolute():
-            template_path = PROJECT_ROOT / template_path
-
-        both_template_value = source.get(
-            "BOT_CARD_TEMPLATE_BOTH_PATH",
-            "",
-        ).strip()
-        both_template_path = (
-            Path(both_template_value).expanduser()
-            if both_template_value
-            else DEFAULT_BOTH_TEMPLATE_PATH
+        both_template_path = resolve_path(
+            source.get("BOT_CARD_TEMPLATE_BOTH_PATH", "").strip(),
+            DEFAULT_BOTH_TEMPLATE_PATH,
         )
-        if not both_template_path.is_absolute():
-            both_template_path = PROJECT_ROOT / both_template_path
 
         return cls(
             bot_token=token,

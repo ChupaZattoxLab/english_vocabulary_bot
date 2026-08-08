@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from tgbot.db.mixins.base import PoolBound
-from tgbot.db.models import ReservedCard, card_from_row
+from tgbot.db.models import VALID_PRONUNCIATIONS, ReservedCard, card_from_row
 
 CARD_CONTENT_SQL = """
 SELECT
@@ -114,7 +114,7 @@ class CardsMixin(PoolBound):
                     not user
                     or not user["onboarding_completed"]
                     or not user["selected_levels"]
-                    or user["pronunciation"] not in {"us", "gb", "both"}
+                    or user["pronunciation"] not in VALID_PRONUNCIATIONS
                     or (require_active and not user["is_active"])
                 ):
                     return None
@@ -135,91 +135,31 @@ class CardsMixin(PoolBound):
                     return None
 
                 dialect = str(user["pronunciation"])
+                query = f"""
+                    {CARD_CONTENT_SQL}
+                    WHERE entries.is_active
+                      AND entries.cefr = ANY(%s)
+                      AND CASE %s
+                          WHEN 'us' THEN us_audio.source_url IS NOT NULL
+                          WHEN 'gb' THEN gb_audio.source_url IS NOT NULL
+                          WHEN 'both' THEN
+                              us_audio.source_url IS NOT NULL
+                              AND gb_audio.source_url IS NOT NULL
+                          ELSE FALSE
+                      END
+                      AND NOT EXISTS (
+                          SELECT 1
+                          FROM bot_user_cards AS history
+                          WHERE history.telegram_user_id = %s
+                            AND history.entry_id = entries.id
+                            AND history.status IN ('delivered', 'reserved')
+                      )
+                    ORDER BY random()
+                    LIMIT 1
+                    """
                 row = await (
                     await connection.execute(
-                        """
-                        SELECT
-                            entries.id AS entry_id,
-                            entries.word_us,
-                            entries.word_gb,
-                            entries.lexical_category,
-                            entries.cefr,
-                            entries.definition,
-                            entries.example,
-                            entries.ipa_us,
-                            entries.ipa_gb,
-                            entries.translations,
-                            us_audio.source_url AS us_source_url,
-                            us_audio.source_position AS us_source_position,
-                            us_audio.audio_data AS us_audio_data,
-                            us_audio.content_type AS us_content_type,
-                            us_audio.filename AS us_filename,
-                            gb_audio.source_url AS gb_source_url,
-                            gb_audio.source_position AS gb_source_position,
-                            gb_audio.audio_data AS gb_audio_data,
-                            gb_audio.content_type AS gb_content_type,
-                            gb_audio.filename AS gb_filename
-                        FROM oald_entries AS entries
-                        LEFT JOIN LATERAL (
-                            SELECT links.source_url,
-                                   links.source_position,
-                                   voice.audio_data,
-                                   voice.content_type,
-                                   voice.filename
-                            FROM oald_entry_audio_sources AS links
-                            JOIN oald_audio_files AS files
-                              ON files.source_url = links.source_url
-                            JOIN oald_audio_variants AS voice
-                              ON voice.source_url = files.source_url
-                             AND voice.variant_type = 'telegram_voice_opus'
-                             AND voice.conversion_status = 'prepared'
-                             AND voice.source_sha256 = files.sha256
-                            WHERE links.entry_id = entries.id
-                              AND links.dialect = 'us'
-                              AND voice.audio_data IS NOT NULL
-                            ORDER BY links.source_position
-                            LIMIT 1
-                        ) AS us_audio ON TRUE
-                        LEFT JOIN LATERAL (
-                            SELECT links.source_url,
-                                   links.source_position,
-                                   voice.audio_data,
-                                   voice.content_type,
-                                   voice.filename
-                            FROM oald_entry_audio_sources AS links
-                            JOIN oald_audio_files AS files
-                              ON files.source_url = links.source_url
-                            JOIN oald_audio_variants AS voice
-                              ON voice.source_url = files.source_url
-                             AND voice.variant_type = 'telegram_voice_opus'
-                             AND voice.conversion_status = 'prepared'
-                             AND voice.source_sha256 = files.sha256
-                            WHERE links.entry_id = entries.id
-                              AND links.dialect = 'gb'
-                              AND voice.audio_data IS NOT NULL
-                            ORDER BY links.source_position
-                            LIMIT 1
-                        ) AS gb_audio ON TRUE
-                        WHERE entries.is_active
-                          AND entries.cefr = ANY(%s)
-                          AND CASE %s
-                              WHEN 'us' THEN us_audio.source_url IS NOT NULL
-                              WHEN 'gb' THEN gb_audio.source_url IS NOT NULL
-                              WHEN 'both' THEN
-                                  us_audio.source_url IS NOT NULL
-                                  AND gb_audio.source_url IS NOT NULL
-                              ELSE FALSE
-                          END
-                          AND NOT EXISTS (
-                              SELECT 1
-                              FROM bot_user_cards AS history
-                              WHERE history.telegram_user_id = %s
-                                AND history.entry_id = entries.id
-                                AND history.status IN ('delivered', 'reserved')
-                          )
-                        ORDER BY random()
-                        LIMIT 1
-                        """,
+                        query,
                         (
                             list(user["selected_levels"]),
                             dialect,
