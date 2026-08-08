@@ -33,25 +33,6 @@ from tgbot.db.models import (
 from tgbot.db.schema import MANAGED_TABLES
 
 
-@lru_cache(maxsize=1)
-def migration_head() -> str:
-    config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
-    head = ScriptDirectory.from_config(config).get_current_head()
-    if head is None:
-        raise DatabaseError("Alembic has no migration head revision")
-    return head
-
-
-def _pool_kwargs(database_url: str) -> dict[str, object]:
-    kwargs: dict[str, object] = {
-        "row_factory": dict_row,
-        "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
-    }
-    if urlparse(database_url).hostname == "localhost":
-        kwargs["hostaddr"] = "127.0.0.1"
-    return kwargs
-
-
 class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
     def __init__(
         self,
@@ -125,3 +106,22 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
                     f"Database migration is {current}, expected {expected}. "
                     "Run `uv run migrate`."
                 )
+
+
+@lru_cache(maxsize=1)
+def migration_head() -> str:
+    config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
+    head = ScriptDirectory.from_config(config).get_current_head()
+    if head is None:
+        raise DatabaseError("Alembic has no migration head revision")
+    return head
+
+
+def _pool_kwargs(database_url: str) -> dict[str, object]:
+    kwargs: dict[str, object] = {
+        "row_factory": dict_row,
+        "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
+    }
+    if urlparse(database_url).hostname == "localhost":
+        kwargs["hostaddr"] = "127.0.0.1"
+    return kwargs

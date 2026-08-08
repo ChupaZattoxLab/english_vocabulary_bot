@@ -164,146 +164,94 @@ class ImportResult:
     unique_audio_urls: int
 
 
-def configure_logging(level: str) -> None:
-    logging.basicConfig(
-        level=getattr(logging, level),
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    configure_logging(args.log_level)
+
+    if not args.json.is_file():
+        LOGGER.error("OALD JSON file does not exist: %s", args.json)
+        return 2
+    if not args.dry_run and not args.database_url:
+        LOGGER.error(
+            "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
+        )
+        return 2
+
+    try:
+        LOGGER.info("Reading OALD entries from %s", args.json)
+        entries, stats = load_entries(args.json, strict=args.strict)
+        log_input_summary(stats)
+        if args.dry_run:
+            LOGGER.info("Dry-run complete; no database changes made")
+            return 0
+
+        created = ensure_database_exists(
+            args.database_url,
+            admin_database_url=args.admin_database_url,
+        )
+        if created:
+            LOGGER.info("Created target OALD PostgreSQL database")
+        result = import_entries(
+            entries,
+            args.database_url,
+            batch_size=args.batch_size,
+        )
+        LOGGER.info(
+            "OALD import complete: entries=%s audio_references=%s unique_audio_urls=%s",
+            f"{result.entries:,}",
+            f"{result.audio_references:,}",
+            f"{result.unique_audio_urls:,}",
+        )
+        return 0
+    except (OaldValidationError, OaldDatabaseError) as exc:
+        LOGGER.error("OALD import failed: %s", exc)
+        return 1
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--json",
+        type=Path,
+        default=DEFAULT_JSON_PATH,
+        help=f"OALD words JSON (default: {DEFAULT_JSON_PATH})",
     )
-
-
-def positive_integer(value: str) -> int:
-    parsed = int(value)
-    if parsed <= 0:
-        raise argparse.ArgumentTypeError("must be greater than zero")
-    return parsed
-
-
-def normalize_text(value: str) -> str:
-    return unicodedata.normalize("NFC", value.strip())
-
-
-def connection_options(database_url: str) -> dict[str, Any]:
-    if urlparse(database_url).hostname == "localhost":
-        return {"hostaddr": "127.0.0.1"}
-    return {}
-
-
-def required_text(raw: Mapping[str, Any], field: str, row_number: int) -> str:
-    value = raw.get(field)
-    if not isinstance(value, str) or not normalize_text(value):
-        raise OaldValidationError(
-            f"row {row_number}: {field} must be a non-empty string"
-        )
-    return normalize_text(value)
-
-
-def optional_text(raw: Mapping[str, Any], field: str, row_number: int) -> str:
-    value = raw.get(field)
-    if not isinstance(value, str):
-        raise OaldValidationError(f"row {row_number}: {field} must be a string")
-    return normalize_text(value)
-
-
-def string_list(
-    raw: Mapping[str, Any],
-    field: str,
-    row_number: int,
-    *,
-    require_urls: bool = False,
-) -> list[str]:
-    value = raw.get(field)
-    if not isinstance(value, list):
-        raise OaldValidationError(f"row {row_number}: {field} must be a JSON array")
-    result: list[str] = []
-    for position, item in enumerate(value):
-        if not isinstance(item, str):
-            raise OaldValidationError(
-                f"row {row_number}: {field}[{position}] must be a string"
-            )
-        normalized = normalize_text(item)
-        if not normalized:
-            raise OaldValidationError(
-                f"row {row_number}: {field}[{position}] must not be empty"
-            )
-        if require_urls and urlparse(normalized).scheme not in {"http", "https"}:
-            raise OaldValidationError(
-                f"row {row_number}: {field}[{position}] must be an HTTP(S) URL"
-            )
-        result.append(normalized)
-    return result
-
-
-def validate_translations(value: Any, row_number: int) -> dict[str, Any]:
-    if not isinstance(value, dict):
-        raise OaldValidationError(f"row {row_number}: translations must be an object")
-    ru = value.get("ru")
-    if not isinstance(ru, dict):
-        raise OaldValidationError(
-            f"row {row_number}: translations.ru must be an object"
-        )
-    main = ru.get("main")
-    also = ru.get("also")
-    if not isinstance(main, str):
-        raise OaldValidationError(
-            f"row {row_number}: translations.ru.main must be a string"
-        )
-    if not isinstance(also, list) or not all(isinstance(item, str) for item in also):
-        raise OaldValidationError(
-            f"row {row_number}: translations.ru.also must be an array of strings"
-        )
-    return value
-
-
-def parse_entry(raw: Any, row_number: int) -> OaldEntry:
-    if not isinstance(raw, Mapping):
-        raise OaldValidationError(f"row {row_number}: entry must be an object")
-    missing_fields = sorted(EXPECTED_FIELDS - set(raw))
-    if missing_fields:
-        raise OaldValidationError(
-            f"row {row_number}: missing fields: {', '.join(missing_fields)}"
-        )
-
-    cefr = required_text(raw, "cefr", row_number).lower()
-    if cefr not in VALID_CEFR_LEVELS:
-        raise OaldValidationError(f"row {row_number}: unsupported CEFR value {cefr!r}")
-
-    definition_url = required_text(raw, "definition_url_oxford", row_number)
-    if urlparse(definition_url).scheme not in {"http", "https"}:
-        raise OaldValidationError(
-            f"row {row_number}: definition_url_oxford must be an HTTP(S) URL"
-        )
-    cambridge_url = optional_text(raw, "definition_url_cambridge", row_number)
-    if cambridge_url and urlparse(cambridge_url).scheme not in {"http", "https"}:
-        raise OaldValidationError(
-            f"row {row_number}: definition_url_cambridge must be an HTTP(S) URL"
-        )
-
-    return OaldEntry(
-        word_us=required_text(raw, "word_us", row_number),
-        word_gb=required_text(raw, "word_gb", row_number),
-        lexical_category=required_text(raw, "lexical_category", row_number),
-        cefr=cefr,
-        definition_url_oxford=definition_url,
-        definition_url_cambridge=cambridge_url,
-        ipa_us=string_list(raw, "ipa_us", row_number),
-        ipa_gb=string_list(raw, "ipa_gb", row_number),
-        definition=required_text(raw, "definition", row_number),
-        example=required_text(raw, "example", row_number),
-        audio_source_us=string_list(
-            raw,
-            "audio_source_us",
-            row_number,
-            require_urls=True,
-        ),
-        audio_source_gb=string_list(
-            raw,
-            "audio_source_gb",
-            row_number,
-            require_urls=True,
-        ),
-        translations=validate_translations(raw.get("translations"), row_number),
+    parser.add_argument(
+        "--database-url",
+        default=os.environ.get("OALD_DATABASE_URL"),
+        help="Target PostgreSQL URL; defaults to OALD_DATABASE_URL",
     )
+    parser.add_argument(
+        "--admin-database-url",
+        default=os.environ.get("OALD_ADMIN_DATABASE_URL"),
+        help=(
+            "Optional PostgreSQL admin URL used only to create a missing "
+            "target database; defaults to the target server's postgres database"
+        ),
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=positive_integer,
+        default=500,
+        help="Entries per PostgreSQL batch (default: 500)",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate and report without creating a database or changing data",
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Stop on the first invalid JSON entry instead of skipping it",
+    )
+    parser.add_argument(
+        "--log-level",
+        choices=LOG_LEVELS,
+        default="INFO",
+        help="Terminal log verbosity (default: INFO)",
+    )
+    return parser.parse_args(argv)
 
 
 def load_entries(
@@ -347,101 +295,6 @@ def load_entries(
     }
     stats["unique_audio_urls"] = len(unique_urls)
     return entries, stats
-
-
-def iter_batches(
-    entries: Iterable[OaldEntry],
-    batch_size: int,
-) -> Iterator[list[OaldEntry]]:
-    batch: list[OaldEntry] = []
-    for entry in entries:
-        batch.append(entry)
-        if len(batch) >= batch_size:
-            yield batch
-            batch = []
-    if batch:
-        yield batch
-
-
-def _load_psycopg() -> Any:
-    try:
-        import psycopg
-    except ImportError as exc:
-        raise OaldDatabaseError("psycopg is not installed; run: uv sync") from exc
-    return psycopg
-
-
-def ensure_database_exists(
-    database_url: str,
-    *,
-    admin_database_url: str | None = None,
-) -> bool:
-    """Ensure the target database exists; return True when it was created."""
-    psycopg = _load_psycopg()
-    try:
-        from psycopg import sql
-        from psycopg.conninfo import conninfo_to_dict, make_conninfo
-
-        target_parameters = conninfo_to_dict(database_url)
-        target_database = target_parameters.get("dbname")
-        if not isinstance(target_database, str) or not target_database:
-            raise OaldDatabaseError(
-                "the target database URL must include a database name"
-            )
-        if admin_database_url:
-            admin_connection_info = admin_database_url
-        else:
-            admin_parameters = {
-                key: value
-                for key, value in target_parameters.items()
-                if isinstance(value, str)
-            }
-            admin_parameters["dbname"] = "postgres"
-            if admin_parameters.get("host") == "localhost" and not admin_parameters.get(
-                "hostaddr"
-            ):
-                admin_parameters["hostaddr"] = "127.0.0.1"
-            admin_connection_info = make_conninfo(**admin_parameters)
-
-        with psycopg.connect(
-            admin_connection_info,
-            autocommit=True,
-            connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-        ) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT 1 FROM pg_database WHERE datname = %s",
-                    (target_database,),
-                )
-                if cursor.fetchone():
-                    return False
-                try:
-                    cursor.execute(
-                        sql.SQL("CREATE DATABASE {}").format(
-                            sql.Identifier(target_database)
-                        )
-                    )
-                except psycopg.Error as exc:
-                    raise OaldDatabaseError(
-                        "could not create the target database; provide "
-                        "--admin-database-url for a role allowed to create "
-                        "databases"
-                    ) from exc
-        return True
-    except OaldDatabaseError:
-        raise
-    except psycopg.Error:
-        try:
-            with psycopg.connect(
-                database_url,
-                connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-                **connection_options(database_url),
-            ):
-                return False
-        except psycopg.Error as target_exc:
-            raise OaldDatabaseError(
-                "could not connect to the target or administrative PostgreSQL database"
-            ) from target_exc
 
 
 def import_entries(
@@ -525,6 +378,79 @@ def import_entries(
         ) from exc
 
 
+def ensure_database_exists(
+    database_url: str,
+    *,
+    admin_database_url: str | None = None,
+) -> bool:
+    """Ensure the target database exists; return True when it was created."""
+    psycopg = _load_psycopg()
+    try:
+        from psycopg import sql
+        from psycopg.conninfo import conninfo_to_dict, make_conninfo
+
+        target_parameters = conninfo_to_dict(database_url)
+        target_database = target_parameters.get("dbname")
+        if not isinstance(target_database, str) or not target_database:
+            raise OaldDatabaseError(
+                "the target database URL must include a database name"
+            )
+        if admin_database_url:
+            admin_connection_info = admin_database_url
+        else:
+            admin_parameters = {
+                key: value
+                for key, value in target_parameters.items()
+                if isinstance(value, str)
+            }
+            admin_parameters["dbname"] = "postgres"
+            if admin_parameters.get("host") == "localhost" and not admin_parameters.get(
+                "hostaddr"
+            ):
+                admin_parameters["hostaddr"] = "127.0.0.1"
+            admin_connection_info = make_conninfo(**admin_parameters)
+
+        with psycopg.connect(
+            admin_connection_info,
+            autocommit=True,
+            connect_timeout=DEFAULT_CONNECT_TIMEOUT,
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT 1 FROM pg_database WHERE datname = %s",
+                    (target_database,),
+                )
+                if cursor.fetchone():
+                    return False
+                try:
+                    cursor.execute(
+                        sql.SQL("CREATE DATABASE {}").format(
+                            sql.Identifier(target_database)
+                        )
+                    )
+                except psycopg.Error as exc:
+                    raise OaldDatabaseError(
+                        "could not create the target database; provide "
+                        "--admin-database-url for a role allowed to create "
+                        "databases"
+                    ) from exc
+        return True
+    except OaldDatabaseError:
+        raise
+    except psycopg.Error:
+        try:
+            with psycopg.connect(
+                database_url,
+                connect_timeout=DEFAULT_CONNECT_TIMEOUT,
+                **connection_options(database_url),
+            ):
+                return False
+        except psycopg.Error as target_exc:
+            raise OaldDatabaseError(
+                "could not connect to the target or administrative PostgreSQL database"
+            ) from target_exc
+
+
 def log_input_summary(stats: Counter[str]) -> None:
     LOGGER.info(
         "OALD JSON: read=%s valid=%s invalid=%s audio_refs(us=%s gb=%s total=%s) "
@@ -539,94 +465,168 @@ def log_input_summary(stats: Counter[str]) -> None:
     )
 
 
-def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--json",
-        type=Path,
-        default=DEFAULT_JSON_PATH,
-        help=f"OALD words JSON (default: {DEFAULT_JSON_PATH})",
-    )
-    parser.add_argument(
-        "--database-url",
-        default=os.environ.get("OALD_DATABASE_URL"),
-        help="Target PostgreSQL URL; defaults to OALD_DATABASE_URL",
-    )
-    parser.add_argument(
-        "--admin-database-url",
-        default=os.environ.get("OALD_ADMIN_DATABASE_URL"),
-        help=(
-            "Optional PostgreSQL admin URL used only to create a missing "
-            "target database; defaults to the target server's postgres database"
+def iter_batches(
+    entries: Iterable[OaldEntry],
+    batch_size: int,
+) -> Iterator[list[OaldEntry]]:
+    batch: list[OaldEntry] = []
+    for entry in entries:
+        batch.append(entry)
+        if len(batch) >= batch_size:
+            yield batch
+            batch = []
+    if batch:
+        yield batch
+
+
+def parse_entry(raw: Any, row_number: int) -> OaldEntry:
+    if not isinstance(raw, Mapping):
+        raise OaldValidationError(f"row {row_number}: entry must be an object")
+    missing_fields = sorted(EXPECTED_FIELDS - set(raw))
+    if missing_fields:
+        raise OaldValidationError(
+            f"row {row_number}: missing fields: {', '.join(missing_fields)}"
+        )
+
+    cefr = required_text(raw, "cefr", row_number).lower()
+    if cefr not in VALID_CEFR_LEVELS:
+        raise OaldValidationError(f"row {row_number}: unsupported CEFR value {cefr!r}")
+
+    definition_url = required_text(raw, "definition_url_oxford", row_number)
+    if urlparse(definition_url).scheme not in {"http", "https"}:
+        raise OaldValidationError(
+            f"row {row_number}: definition_url_oxford must be an HTTP(S) URL"
+        )
+    cambridge_url = optional_text(raw, "definition_url_cambridge", row_number)
+    if cambridge_url and urlparse(cambridge_url).scheme not in {"http", "https"}:
+        raise OaldValidationError(
+            f"row {row_number}: definition_url_cambridge must be an HTTP(S) URL"
+        )
+
+    return OaldEntry(
+        word_us=required_text(raw, "word_us", row_number),
+        word_gb=required_text(raw, "word_gb", row_number),
+        lexical_category=required_text(raw, "lexical_category", row_number),
+        cefr=cefr,
+        definition_url_oxford=definition_url,
+        definition_url_cambridge=cambridge_url,
+        ipa_us=string_list(raw, "ipa_us", row_number),
+        ipa_gb=string_list(raw, "ipa_gb", row_number),
+        definition=required_text(raw, "definition", row_number),
+        example=required_text(raw, "example", row_number),
+        audio_source_us=string_list(
+            raw,
+            "audio_source_us",
+            row_number,
+            require_urls=True,
         ),
+        audio_source_gb=string_list(
+            raw,
+            "audio_source_gb",
+            row_number,
+            require_urls=True,
+        ),
+        translations=validate_translations(raw.get("translations"), row_number),
     )
-    parser.add_argument(
-        "--batch-size",
-        type=positive_integer,
-        default=500,
-        help="Entries per PostgreSQL batch (default: 500)",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Validate and report without creating a database or changing data",
-    )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Stop on the first invalid JSON entry instead of skipping it",
-    )
-    parser.add_argument(
-        "--log-level",
-        choices=LOG_LEVELS,
-        default="INFO",
-        help="Terminal log verbosity (default: INFO)",
-    )
-    return parser.parse_args(argv)
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
-    configure_logging(args.log_level)
-
-    if not args.json.is_file():
-        LOGGER.error("OALD JSON file does not exist: %s", args.json)
-        return 2
-    if not args.dry_run and not args.database_url:
-        LOGGER.error(
-            "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
+def required_text(raw: Mapping[str, Any], field: str, row_number: int) -> str:
+    value = raw.get(field)
+    if not isinstance(value, str) or not normalize_text(value):
+        raise OaldValidationError(
+            f"row {row_number}: {field} must be a non-empty string"
         )
-        return 2
+    return normalize_text(value)
 
+
+def optional_text(raw: Mapping[str, Any], field: str, row_number: int) -> str:
+    value = raw.get(field)
+    if not isinstance(value, str):
+        raise OaldValidationError(f"row {row_number}: {field} must be a string")
+    return normalize_text(value)
+
+
+def string_list(
+    raw: Mapping[str, Any],
+    field: str,
+    row_number: int,
+    *,
+    require_urls: bool = False,
+) -> list[str]:
+    value = raw.get(field)
+    if not isinstance(value, list):
+        raise OaldValidationError(f"row {row_number}: {field} must be a JSON array")
+    result: list[str] = []
+    for position, item in enumerate(value):
+        if not isinstance(item, str):
+            raise OaldValidationError(
+                f"row {row_number}: {field}[{position}] must be a string"
+            )
+        normalized = normalize_text(item)
+        if not normalized:
+            raise OaldValidationError(
+                f"row {row_number}: {field}[{position}] must not be empty"
+            )
+        if require_urls and urlparse(normalized).scheme not in {"http", "https"}:
+            raise OaldValidationError(
+                f"row {row_number}: {field}[{position}] must be an HTTP(S) URL"
+            )
+        result.append(normalized)
+    return result
+
+
+def validate_translations(value: Any, row_number: int) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise OaldValidationError(f"row {row_number}: translations must be an object")
+    ru = value.get("ru")
+    if not isinstance(ru, dict):
+        raise OaldValidationError(
+            f"row {row_number}: translations.ru must be an object"
+        )
+    main = ru.get("main")
+    also = ru.get("also")
+    if not isinstance(main, str):
+        raise OaldValidationError(
+            f"row {row_number}: translations.ru.main must be a string"
+        )
+    if not isinstance(also, list) or not all(isinstance(item, str) for item in also):
+        raise OaldValidationError(
+            f"row {row_number}: translations.ru.also must be an array of strings"
+        )
+    return value
+
+
+def normalize_text(value: str) -> str:
+    return unicodedata.normalize("NFC", value.strip())
+
+
+def connection_options(database_url: str) -> dict[str, Any]:
+    if urlparse(database_url).hostname == "localhost":
+        return {"hostaddr": "127.0.0.1"}
+    return {}
+
+
+def _load_psycopg() -> Any:
     try:
-        LOGGER.info("Reading OALD entries from %s", args.json)
-        entries, stats = load_entries(args.json, strict=args.strict)
-        log_input_summary(stats)
-        if args.dry_run:
-            LOGGER.info("Dry-run complete; no database changes made")
-            return 0
+        import psycopg
+    except ImportError as exc:
+        raise OaldDatabaseError("psycopg is not installed; run: uv sync") from exc
+    return psycopg
 
-        created = ensure_database_exists(
-            args.database_url,
-            admin_database_url=args.admin_database_url,
-        )
-        if created:
-            LOGGER.info("Created target OALD PostgreSQL database")
-        result = import_entries(
-            entries,
-            args.database_url,
-            batch_size=args.batch_size,
-        )
-        LOGGER.info(
-            "OALD import complete: entries=%s audio_references=%s unique_audio_urls=%s",
-            f"{result.entries:,}",
-            f"{result.audio_references:,}",
-            f"{result.unique_audio_urls:,}",
-        )
-        return 0
-    except (OaldValidationError, OaldDatabaseError) as exc:
-        LOGGER.error("OALD import failed: %s", exc)
-        return 1
+
+def configure_logging(level: str) -> None:
+    logging.basicConfig(
+        level=getattr(logging, level),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+
+def positive_integer(value: str) -> int:
+    parsed = int(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
 
 
 if __name__ == "__main__":

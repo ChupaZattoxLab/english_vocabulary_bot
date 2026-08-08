@@ -2,13 +2,8 @@
 
 from __future__ import annotations
 
-# ---------------------------------------------------------------------------
-# User-facing bot replies (commands, onboarding, settings, /card, /help)
-# ---------------------------------------------------------------------------
-
 
 class user:
-    # Settings summary lines
     settings_title = "<b>Ваши настройки</b>"
     levels_none = "не выбраны"
     delivery_active = "активна"
@@ -18,7 +13,6 @@ class user:
     settings_delivery = "Рассылка: {state}"
     settings_schedule = "Время: {schedule}"
 
-    # Onboarding and /start
     welcome_back = "С возвращением!\n\n{settings}"
     welcome_new = (
         "Привет! Я буду присылать {cards_per_day} новые английские карточки в день.\n\n"
@@ -36,7 +30,6 @@ class user:
     )
     settings_saved = "Настройки сохранены"
 
-    # Pause / resume / delivery status
     paused = "Рассылка приостановлена. Команда для продолжения: /resume"
     need_onboarding = "Сначала завершите настройку через /start."
     resumed = "Рассылка снова активна."
@@ -47,7 +40,6 @@ class user:
     card_send_failed = "Не удалось отправить карточку, попробуйте позже."
     resume_hint = "Чтобы снова получать по расписанию - /resume"
 
-    # /help
     help = (
         "<b>Команды</b>\n"
         "/start - регистрация\n"
@@ -61,37 +53,23 @@ class user:
     )
 
 
-# ---------------------------------------------------------------------------
-# Inline keyboard button labels (user + admin panels)
-# ---------------------------------------------------------------------------
-
-
 class keyboard:
-    # User level / pronunciation pickers
     continue_button = "Продолжить"
     pronunciation_us = "🇺🇸 American (US)"
     pronunciation_gb = "🇬🇧 British (GB)"
     pronunciation_both = "🇺🇸 + 🇬🇧 Оба варианта"
     level_selected_prefix = "✅ "
 
-    # Admin panel navigation
     admin_users = "👥 Пользователи"
     admin_test_card = "🧪 Тест-карта"
     admin_refresh = "🔄 Обновить"
     admin_back = "⬅️ Назад"
 
-    # Shared placeholders on buttons
     unknown_category = "неизвестно"
     dash = "-"
 
 
-# ---------------------------------------------------------------------------
-# Telegram BotCommand menu descriptions (set_my_commands)
-# ---------------------------------------------------------------------------
-
-
 class commands:
-    # User menu
     start = "Начать работу"
     card = "Получить новую карточку"
     settings = "Настройки"
@@ -101,7 +79,6 @@ class commands:
     resume = "Продолжить рассылку"
     help = "Помощь"
 
-    # Admin menu (scoped to admin chats)
     admin = "Открыть админ-панель"
     users = "Статистика пользователей"
     user = "Пользователь по Telegram ID"
@@ -110,13 +87,7 @@ class commands:
     reload_templates = "Перезагрузить шаблоны"
 
 
-# ---------------------------------------------------------------------------
-# Short labels used inside cards, captions, and settings summaries
-# ---------------------------------------------------------------------------
-
-
 class labels:
-    # Pronunciation display in user settings
     pronunciation_short = {
         "us": "US",
         "gb": "GB",
@@ -124,7 +95,6 @@ class labels:
     }
     pronunciation_short_unknown = "не выбрано"
 
-    # Pronunciation display in admin user detail
     pronunciation_admin = {
         "us": "American English",
         "gb": "British English",
@@ -132,7 +102,6 @@ class labels:
     }
     pronunciation_admin_unknown = "не выбран"
 
-    # Dialect markers on cards and voice captions
     dialect_flags = {
         "US": "🇺🇸",
         "GB": "🇬🇧",
@@ -143,19 +112,12 @@ class labels:
         "GB": "🇬🇧 GB",
     }
 
-    # Section headings inside the card HTML template
     card_heading_definition = "Definition"
     card_heading_example = "Example"
     card_heading_translation = "Translation"
 
 
-# ---------------------------------------------------------------------------
-# Admin panel messages (/admin, /user, /word, callbacks)
-# ---------------------------------------------------------------------------
-
-
 class admin:
-    # Access and delivery state labels
     no_access = "Нет доступа."
     delivery_blocked = "бот заблокирован"
     delivery_paused = "приостановлена"
@@ -164,7 +126,6 @@ class admin:
     placeholder = "-"
     never_delivered = "ещё не было"
 
-    # Overview and users panels
     overview = (
         "<b>🛠 Vocabulary Bot - Admin Panel</b>\n\n"
         "👥 Пользователей: {total_users}\n"
@@ -185,7 +146,6 @@ class admin:
         "<b>По произношению</b>\n{dialects}"
     )
 
-    # /user command
     user_usage = "Использование: <code>/user TELEGRAM_ID</code>"
     user_not_found = "Пользователь не найден."
     user_detail = (
@@ -202,7 +162,6 @@ class admin:
         "Последняя отправка: {last_delivery}\n"
     )
 
-    # /word and preview cards
     word_usage = "Использование: <code>/word WORD</code>"
     word_not_found = "Слово не найдено."
     word_pick_category = "У слова <b>{word}</b> несколько частей речи. Выберите нужную:"
@@ -215,7 +174,6 @@ class admin:
     sending_card = "Отправляю карточку…"
     sending_test_card = "Отправляю тестовую карточку…"
 
-    # Templates and panel callbacks
     template_error = "Ошибка шаблона: <code>{error}</code>"
     templates_reloaded = "Оба шаблона карточек проверены и перезагружены."
     panel_unavailable = "Сообщение панели недоступно."
@@ -223,11 +181,6 @@ class admin:
     already_up_to_date = "Данные уже актуальны."
     panel_update_failed = "Не удалось обновить раздел."
     panel_error = "Ошибка admin panel: <code>{error}</code>"
-
-
-# ---------------------------------------------------------------------------
-# Helpers that format labels / settings into ready-to-send strings
-# ---------------------------------------------------------------------------
 
 
 def pronunciation_short(value: str | None) -> str:

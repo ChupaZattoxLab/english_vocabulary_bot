@@ -22,30 +22,6 @@ from tgbot.delivery.service import CardDeliveryService
 LOGGER = logging.getLogger("tgbot.scheduler")
 
 
-def due_schedule_slots(
-    now: datetime,
-    *,
-    timezone_value: ZoneInfo,
-    send_times: tuple[time, ...],
-    grace_minutes: int,
-) -> tuple[datetime, ...]:
-    """Return due UTC slots inside the grace window, including yesterday."""
-    local_now = now.astimezone(timezone_value)
-    grace = timedelta(minutes=grace_minutes)
-    candidate_dates = (local_now.date() - timedelta(days=1), local_now.date())
-    slots: list[datetime] = []
-    for candidate_date in candidate_dates:
-        for send_time in send_times:
-            local_slot = datetime.combine(
-                candidate_date,
-                send_time,
-                tzinfo=timezone_value,
-            )
-            if local_slot <= local_now <= local_slot + grace:
-                slots.append(local_slot.astimezone(UTC))
-    return tuple(sorted(slots))
-
-
 class CardScheduler:
     def __init__(
         self,
@@ -62,28 +38,31 @@ class CardScheduler:
     def stop(self) -> None:
         self._stop_event.set()
 
-    async def _deliver_to_user(
-        self,
-        bot: Bot,
-        user: ActiveUser,
-        scheduled_slot: datetime,
-        semaphore: asyncio.Semaphore,
-    ) -> str:
-        async with semaphore:
+    async def run(self, bot: Bot) -> None:
+        LOGGER.info(
+            "Scheduler started: %s",
+            self.config.schedule_text,
+        )
+        while not self._stop_event.is_set():
             try:
-                outcome = await self.delivery.deliver(
-                    bot,
-                    telegram_user_id=user.telegram_user_id,
-                    chat_id=user.chat_id,
-                    scheduled_slot=scheduled_slot,
-                )
-                return outcome.status
+                now = datetime.now(UTC)
+                for scheduled_slot in due_schedule_slots(
+                    now,
+                    timezone_value=self.config.timezone,
+                    send_times=self.config.send_times,
+                    grace_minutes=self.config.schedule_grace_minutes,
+                ):
+                    await self.run_slot(bot, scheduled_slot)
             except Exception:  # noqa: BLE001
-                LOGGER.exception(
-                    "Unexpected scheduled delivery error for user %s",
-                    user.telegram_user_id,
+                LOGGER.exception("Scheduler iteration failed; it will retry")
+            try:
+                await asyncio.wait_for(
+                    self._stop_event.wait(),
+                    timeout=self.config.scheduler_poll_seconds,
                 )
-                return DELIVERY_STATUS_FAILED
+            except TimeoutError:
+                continue
+        LOGGER.info("Scheduler stopped")
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
         claimed = await self.database.claim_scheduler_run(
@@ -134,28 +113,49 @@ class CardScheduler:
             skipped,
         )
 
-    async def run(self, bot: Bot) -> None:
-        LOGGER.info(
-            "Scheduler started: %s",
-            self.config.schedule_text,
-        )
-        while not self._stop_event.is_set():
+    async def _deliver_to_user(
+        self,
+        bot: Bot,
+        user: ActiveUser,
+        scheduled_slot: datetime,
+        semaphore: asyncio.Semaphore,
+    ) -> str:
+        async with semaphore:
             try:
-                now = datetime.now(UTC)
-                for scheduled_slot in due_schedule_slots(
-                    now,
-                    timezone_value=self.config.timezone,
-                    send_times=self.config.send_times,
-                    grace_minutes=self.config.schedule_grace_minutes,
-                ):
-                    await self.run_slot(bot, scheduled_slot)
-            except Exception:  # noqa: BLE001
-                LOGGER.exception("Scheduler iteration failed; it will retry")
-            try:
-                await asyncio.wait_for(
-                    self._stop_event.wait(),
-                    timeout=self.config.scheduler_poll_seconds,
+                outcome = await self.delivery.deliver(
+                    bot,
+                    telegram_user_id=user.telegram_user_id,
+                    chat_id=user.chat_id,
+                    scheduled_slot=scheduled_slot,
                 )
-            except TimeoutError:
-                continue
-        LOGGER.info("Scheduler stopped")
+                return outcome.status
+            except Exception:  # noqa: BLE001
+                LOGGER.exception(
+                    "Unexpected scheduled delivery error for user %s",
+                    user.telegram_user_id,
+                )
+                return DELIVERY_STATUS_FAILED
+
+
+def due_schedule_slots(
+    now: datetime,
+    *,
+    timezone_value: ZoneInfo,
+    send_times: tuple[time, ...],
+    grace_minutes: int,
+) -> tuple[datetime, ...]:
+    """Return due UTC slots inside the grace window, including yesterday."""
+    local_now = now.astimezone(timezone_value)
+    grace = timedelta(minutes=grace_minutes)
+    candidate_dates = (local_now.date() - timedelta(days=1), local_now.date())
+    slots: list[datetime] = []
+    for candidate_date in candidate_dates:
+        for send_time in send_times:
+            local_slot = datetime.combine(
+                candidate_date,
+                send_time,
+                tzinfo=timezone_value,
+            )
+            if local_slot <= local_now <= local_slot + grace:
+                slots.append(local_slot.astimezone(UTC))
+    return tuple(sorted(slots))

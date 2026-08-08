@@ -16,32 +16,6 @@ from tgbot.config import PROJECT_ROOT
 PID_FILE = PROJECT_ROOT / ".bot.pid"
 
 
-def _read_process(path: Path = PID_FILE) -> psutil.Process | None:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        process = psutil.Process(int(payload["pid"]))
-        if abs(process.create_time() - float(payload["created_at"])) > 0.01:
-            return None
-        return process
-    except (
-        FileNotFoundError,
-        json.JSONDecodeError,
-        KeyError,
-        TypeError,
-        ValueError,
-        psutil.NoSuchProcess,
-    ):
-        return None
-
-
-def _remove_pid_file(expected_pid: int | None = None) -> None:
-    if expected_pid is not None:
-        process = _read_process()
-        if process is not None and process.pid != expected_pid:
-            return
-    PID_FILE.unlink(missing_ok=True)
-
-
 def start() -> int:
     """Start one bot process and record it for ``uv run stop``."""
     existing = _read_process()
@@ -98,8 +72,30 @@ def stop() -> int:
     return 0
 
 
-def alembic_config() -> Config:
-    return Config(str(PROJECT_ROOT / "alembic.ini"))
+def _read_process(path: Path = PID_FILE) -> psutil.Process | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        process = psutil.Process(int(payload["pid"]))
+        if abs(process.create_time() - float(payload["created_at"])) > 0.01:
+            return None
+        return process
+    except (
+        FileNotFoundError,
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+        ValueError,
+        psutil.NoSuchProcess,
+    ):
+        return None
+
+
+def _remove_pid_file(expected_pid: int | None = None) -> None:
+    if expected_pid is not None:
+        process = _read_process()
+        if process is not None and process.pid != expected_pid:
+            return
+    PID_FILE.unlink(missing_ok=True)
 
 
 def migrate() -> int:
@@ -112,6 +108,10 @@ def check() -> int:
     """Check that SQLAlchemy metadata matches the migrated database."""
     command.check(alembic_config())
     return 0
+
+
+def alembic_config() -> Config:
+    return Config(str(PROJECT_ROOT / "alembic.ini"))
 
 
 def test() -> int:

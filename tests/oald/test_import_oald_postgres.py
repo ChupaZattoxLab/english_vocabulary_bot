@@ -15,56 +15,6 @@ from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def oald_row(
-    word: str,
-    definition_url: str,
-    *,
-    lexical_category: str = "verb",
-    cefr: str = "b1",
-    definition: str = "A test definition.",
-    example: str = "A test example.",
-    ipa_us: list[str] | None = None,
-    ipa_gb: list[str] | None = None,
-    audio_us: list[str] | None = None,
-    audio_gb: list[str] | None = None,
-) -> dict:
-    return {
-        "word_us": word,
-        "word_gb": word,
-        "lexical_category": lexical_category,
-        "cefr": cefr,
-        "definition_url_oxford": definition_url,
-        "definition_url_cambridge": f"https://dictionary.example/{word}",
-        "ipa_us": ipa_us if ipa_us is not None else ["/test/"],
-        "ipa_gb": ipa_gb if ipa_gb is not None else ["/test/"],
-        "definition": definition,
-        "example": example,
-        "audio_source_us": (
-            audio_us
-            if audio_us is not None
-            else [f"https://audio.example/{word}-us.ogg"]
-        ),
-        "audio_source_gb": (
-            audio_gb
-            if audio_gb is not None
-            else [f"https://audio.example/{word}-gb.ogg"]
-        ),
-        "translations": {
-            "ru": {
-                "main": "тест",
-                "also": ["проверка"],
-            }
-        },
-    }
-
-
-def write_rows(path: Path, rows: list[dict]) -> None:
-    path.write_text(
-        json.dumps(rows, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-
-
 class OaldJsonTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary_directory = tempfile.TemporaryDirectory()
@@ -324,6 +274,56 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                             """,
                             (all_audio_urls,),
                         )
+
+
+def oald_row(
+    word: str,
+    definition_url: str,
+    *,
+    lexical_category: str = "verb",
+    cefr: str = "b1",
+    definition: str = "A test definition.",
+    example: str = "A test example.",
+    ipa_us: list[str] | None = None,
+    ipa_gb: list[str] | None = None,
+    audio_us: list[str] | None = None,
+    audio_gb: list[str] | None = None,
+) -> dict:
+    return {
+        "word_us": word,
+        "word_gb": word,
+        "lexical_category": lexical_category,
+        "cefr": cefr,
+        "definition_url_oxford": definition_url,
+        "definition_url_cambridge": f"https://dictionary.example/{word}",
+        "ipa_us": ipa_us if ipa_us is not None else ["/test/"],
+        "ipa_gb": ipa_gb if ipa_gb is not None else ["/test/"],
+        "definition": definition,
+        "example": example,
+        "audio_source_us": (
+            audio_us
+            if audio_us is not None
+            else [f"https://audio.example/{word}-us.ogg"]
+        ),
+        "audio_source_gb": (
+            audio_gb
+            if audio_gb is not None
+            else [f"https://audio.example/{word}-gb.ogg"]
+        ),
+        "translations": {
+            "ru": {
+                "main": "тест",
+                "also": ["проверка"],
+            }
+        },
+    }
+
+
+def write_rows(path: Path, rows: list[dict]) -> None:
+    path.write_text(
+        json.dumps(rows, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

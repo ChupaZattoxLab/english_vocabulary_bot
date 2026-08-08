@@ -23,7 +23,6 @@ try:
 except ImportError:  # running as a plain script
     from oald_preflight import require_oald_schema  # type: ignore[no-redef]
 
-
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 LOGGER = logging.getLogger("tgbot.oald_audio_download")
 DEFAULT_MAX_AUDIO_BYTES = 10 * 1024 * 1024
@@ -250,205 +249,114 @@ class DownloadStats:
     voice_bytes: int = 0
 
 
-def configure_logging(level: str) -> None:
-    logging.basicConfig(
-        level=getattr(logging, level),
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-
-
-def connection_options(database_url: str) -> dict[str, str]:
-    if urlparse(database_url).hostname == "localhost":
-        return {"hostaddr": "127.0.0.1"}
-    return {}
-
-
-def positive_integer(value: str) -> int:
-    parsed = int(value)
-    if parsed <= 0:
-        raise argparse.ArgumentTypeError("must be greater than zero")
-    return parsed
-
-
-def nonnegative_integer(value: str) -> int:
-    parsed = int(value)
-    if parsed < 0:
-        raise argparse.ArgumentTypeError("must be zero or greater")
-    return parsed
-
-
-def positive_float(value: str) -> float:
-    parsed = float(value)
-    if parsed <= 0:
-        raise argparse.ArgumentTypeError("must be greater than zero")
-    return parsed
-
-
-def nonnegative_float(value: str) -> float:
-    parsed = float(value)
-    if parsed < 0:
-        raise argparse.ArgumentTypeError("must be zero or greater")
-    return parsed
-
-
-def filename_from_response(response: Any, fallback_url: str) -> str:
-    headers = response.headers
-    disposition = str(headers.get("Content-Disposition", "") or "")
-    encoded_match = re.search(
-        r"filename\*=UTF-8''([^;]+)",
-        disposition,
-        flags=re.IGNORECASE,
-    )
-    if encoded_match:
-        return Path(unquote(encoded_match.group(1).strip())).name
-    plain_match = re.search(
-        r'filename="?([^";]+)"?',
-        disposition,
-        flags=re.IGNORECASE,
-    )
-    if plain_match:
-        return Path(plain_match.group(1).strip()).name
-
-    final_url = response.geturl() if hasattr(response, "geturl") else fallback_url
-    filename = Path(unquote(urlparse(final_url).path)).name
-    return filename or "pronunciation-audio"
-
-
-def declared_content_type(headers: Any) -> str:
-    if hasattr(headers, "get_content_type"):
-        content_type = str(headers.get_content_type() or "")
-    else:
-        content_type = str(headers.get("Content-Type", "") or "").split(";", 1)[0]
-    return content_type.strip().lower()
-
-
-def detected_audio_content_type(data: bytes) -> str:
-    if data.startswith(b"OggS"):
-        return "audio/ogg"
-    if data.startswith(b"ID3") or (
-        len(data) >= 2 and data[0] == 0xFF and data[1] & 0xE0 == 0xE0
-    ):
-        return "audio/mpeg"
-    if len(data) >= 12 and data.startswith(b"RIFF") and data[8:12] == b"WAVE":
-        return "audio/wav"
-    if len(data) >= 12 and data[4:8] == b"ftyp":
-        return "audio/mp4"
-    return ""
-
-
-def validate_audio_payload(data: bytes, declared_type: str) -> str:
-    if not data:
-        raise AudioDownloadError("the server returned an empty response")
-    prefix = data[:256].lstrip().lower()
-    if prefix.startswith(b"<!doctype html") or prefix.startswith(b"<html"):
-        raise AudioDownloadError("the server returned HTML instead of audio")
-    detected_type = detected_audio_content_type(data)
-    if not detected_type:
-        raise AudioDownloadError(
-            f"unrecognized audio signature (declared type {declared_type or 'unknown'})"
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    configure_logging(args.log_level)
+    if not args.database_url:
+        LOGGER.error(
+            "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
         )
-    if declared_type and not (
-        declared_type.startswith("audio/")
-        or declared_type in {"application/ogg", "application/octet-stream"}
-    ):
-        raise AudioDownloadError(f"unexpected response content type {declared_type!r}")
-    return detected_type
+        return 2
 
-
-def validate_voice_payload(data: bytes, max_bytes: int) -> None:
-    if not data:
-        raise AudioConversionError("FFmpeg returned an empty voice file")
-    if len(data) > max_bytes:
-        raise AudioConversionError(
-            f"converted voice is larger than the {max_bytes:,}-byte limit"
-        )
-    if not data.startswith(b"OggS") or b"OpusHead" not in data[:4096]:
-        raise AudioConversionError(
-            "converted file is not an OGG container encoded with Opus"
-        )
-
-
-def _ffmpeg_executable() -> str:
     try:
-        import imageio_ffmpeg
-    except ImportError as exc:
-        raise AudioConversionError(
-            "imageio-ffmpeg is not installed; run: uv sync"
-        ) from exc
-    try:
-        return str(imageio_ffmpeg.get_ffmpeg_exe())
-    except RuntimeError as exc:
-        raise AudioConversionError(f"FFmpeg is unavailable: {exc}") from exc
-
-
-def transcode_audio_to_voice(
-    audio: DownloadedAudio,
-    *,
-    timeout: float = 30.0,
-    max_bytes: int = DEFAULT_MAX_AUDIO_BYTES,
-    ffmpeg_executable: str | None = None,
-    run: Callable[..., Any] = subprocess.run,
-) -> VoiceAudio:
-    executable = ffmpeg_executable or _ffmpeg_executable()
-    command = [
-        executable,
-        "-nostdin",
-        "-hide_banner",
-        "-loglevel",
-        "error",
-        "-i",
-        "pipe:0",
-        "-map",
-        "0:a:0",
-        "-vn",
-        "-ac",
-        "1",
-        "-ar",
-        "48000",
-        "-c:a",
-        "libopus",
-        "-b:a",
-        "32k",
-        "-vbr",
-        "on",
-        "-application",
-        "voip",
-        "-f",
-        "ogg",
-        "pipe:1",
-    ]
-    try:
-        result = run(
-            command,
-            input=audio.data,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=timeout,
-            check=False,
+        stats = download_audio_to_postgres(
+            args.database_url,
+            dialects=args.dialects,
+            limit=args.limit,
+            force=args.force,
+            request_delay=args.request_delay,
+            timeout=args.timeout,
+            retries=args.retries,
+            retry_backoff=args.retry_backoff,
+            max_audio_bytes=args.max_audio_bytes,
+            fail_fast=args.fail_fast,
         )
-    except subprocess.TimeoutExpired as exc:
-        raise AudioConversionError(
-            f"FFmpeg timed out after {timeout:g} seconds"
-        ) from exc
-    except OSError as exc:
-        raise AudioConversionError(f"could not run FFmpeg: {exc}") from exc
-
-    output = bytes(result.stdout or b"")
-    if result.returncode != 0:
-        details = bytes(result.stderr or b"").decode("utf-8", errors="replace").strip()
-        raise AudioConversionError(
-            f"FFmpeg failed with exit code {result.returncode}: "
-            f"{details[:1000] or 'no error details'}"
+        LOGGER.info(
+            "Audio run complete: candidates=%s downloaded=%s reused=%s "
+            "download_failed=%s voices_prepared=%s conversion_failed=%s "
+            "stored_bytes=%s voice_bytes=%s rate_limited=%s",
+            f"{stats.candidates:,}",
+            f"{stats.downloaded:,}",
+            f"{stats.reused_originals:,}",
+            f"{stats.failed:,}",
+            f"{stats.voices_prepared:,}",
+            f"{stats.conversion_failed:,}",
+            f"{stats.stored_bytes:,}",
+            f"{stats.voice_bytes:,}",
+            stats.rate_limited,
         )
-    validate_voice_payload(output, max_bytes)
-    source_stem = Path(audio.filename or "pronunciation").stem
-    return VoiceAudio(
-        data=output,
-        content_type="audio/ogg",
-        filename=f"{source_stem}.voice.ogg",
-        sha256=hashlib.sha256(output).hexdigest(),
+        return 3 if stats.rate_limited else 0
+    except (AudioDownloadError, AudioConversionError, OaldAudioDatabaseError) as exc:
+        LOGGER.error("OALD audio run failed: %s", exc)
+        return 1
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--database-url",
+        default=os.environ.get("OALD_DATABASE_URL"),
+        help="OALD PostgreSQL URL; defaults to OALD_DATABASE_URL",
     )
+    parser.add_argument(
+        "--dialects",
+        nargs="+",
+        choices=("us", "gb"),
+        default=["us", "gb"],
+        help="Audio dialects to download (default: us gb)",
+    )
+    parser.add_argument(
+        "--limit",
+        type=positive_integer,
+        help="Process at most N unique audio URLs",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Download originals again and rebuild Telegram voice variants",
+    )
+    parser.add_argument(
+        "--request-delay",
+        type=nonnegative_float,
+        default=0.5,
+        help="Delay between different URLs in seconds (default: 0.5)",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=positive_float,
+        default=30.0,
+        help="Per-request timeout in seconds (default: 30)",
+    )
+    parser.add_argument(
+        "--retries",
+        type=nonnegative_integer,
+        default=3,
+        help="Retries for temporary errors (default: 3)",
+    )
+    parser.add_argument(
+        "--retry-backoff",
+        type=nonnegative_float,
+        default=2.0,
+        help="Initial exponential retry delay in seconds (default: 2)",
+    )
+    parser.add_argument(
+        "--max-audio-bytes",
+        type=positive_integer,
+        default=DEFAULT_MAX_AUDIO_BYTES,
+        help="Maximum accepted file size (default: 10485760)",
+    )
+    parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="Stop on the first non-rate-limit download failure",
+    )
+    parser.add_argument(
+        "--log-level",
+        choices=LOG_LEVELS,
+        default="INFO",
+        help="Terminal log verbosity (default: INFO)",
+    )
+    return parser.parse_args(argv)
 
 
 def download_audio_file(
@@ -520,6 +428,75 @@ def download_audio_file(
         ) from exc
 
 
+def transcode_audio_to_voice(
+    audio: DownloadedAudio,
+    *,
+    timeout: float = 30.0,
+    max_bytes: int = DEFAULT_MAX_AUDIO_BYTES,
+    ffmpeg_executable: str | None = None,
+    run: Callable[..., Any] = subprocess.run,
+) -> VoiceAudio:
+    executable = ffmpeg_executable or _ffmpeg_executable()
+    command = [
+        executable,
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-i",
+        "pipe:0",
+        "-map",
+        "0:a:0",
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        "48000",
+        "-c:a",
+        "libopus",
+        "-b:a",
+        "32k",
+        "-vbr",
+        "on",
+        "-application",
+        "voip",
+        "-f",
+        "ogg",
+        "pipe:1",
+    ]
+    try:
+        result = run(
+            command,
+            input=audio.data,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise AudioConversionError(
+            f"FFmpeg timed out after {timeout:g} seconds"
+        ) from exc
+    except OSError as exc:
+        raise AudioConversionError(f"could not run FFmpeg: {exc}") from exc
+
+    output = bytes(result.stdout or b"")
+    if result.returncode != 0:
+        details = bytes(result.stderr or b"").decode("utf-8", errors="replace").strip()
+        raise AudioConversionError(
+            f"FFmpeg failed with exit code {result.returncode}: "
+            f"{details[:1000] or 'no error details'}"
+        )
+    validate_voice_payload(output, max_bytes)
+    source_stem = Path(audio.filename or "pronunciation").stem
+    return VoiceAudio(
+        data=output,
+        content_type="audio/ogg",
+        filename=f"{source_stem}.voice.ogg",
+        sha256=hashlib.sha256(output).hexdigest(),
+    )
+
+
 def download_with_retries(
     source_url: str,
     *,
@@ -556,135 +533,6 @@ def download_with_retries(
             )
             sleep(delay)
     raise AssertionError("retry loop ended unexpectedly")
-
-
-def _load_psycopg() -> Any:
-    try:
-        import psycopg
-    except ImportError as exc:
-        raise OaldAudioDatabaseError("psycopg is not installed; run: uv sync") from exc
-    return psycopg
-
-
-def load_candidates(
-    cursor: Any,
-    *,
-    dialects: list[str],
-    force: bool,
-    limit: int | None,
-    source_urls: list[str] | None = None,
-) -> list[AudioCandidate]:
-    sql_limit = limit if limit is not None else 2_147_483_647
-    cursor.execute(
-        CANDIDATE_SQL,
-        (dialects, force, source_urls, source_urls, sql_limit),
-    )
-    return [
-        AudioCandidate(
-            source_url=str(row[0]),
-            example_word=str(row[1]),
-            dialects=tuple(row[2]),
-            has_original=bool(row[3]),
-        )
-        for row in cursor.fetchall()
-    ]
-
-
-def load_stored_audio(cursor: Any, candidate: AudioCandidate) -> DownloadedAudio:
-    cursor.execute(LOAD_STORED_AUDIO_SQL, (candidate.source_url,))
-    row = cursor.fetchone()
-    if row is None:
-        raise OaldAudioDatabaseError(
-            f"stored audio disappeared for {candidate.source_url}"
-        )
-    return DownloadedAudio(
-        data=bytes(row[0]),
-        content_type=str(row[1]),
-        filename=str(row[2]),
-        sha256=str(row[3]).strip(),
-        http_status=int(row[4]) if row[4] is not None else None,
-    )
-
-
-def store_success(
-    cursor: Any,
-    candidate: AudioCandidate,
-    audio: DownloadedAudio,
-    attempts: int,
-) -> None:
-    cursor.execute(
-        STORE_SUCCESS_SQL,
-        (
-            audio.data,
-            audio.content_type,
-            audio.filename,
-            len(audio.data),
-            audio.sha256,
-            audio.http_status,
-            attempts,
-            candidate.source_url,
-        ),
-    )
-
-
-def store_failure(
-    cursor: Any,
-    candidate: AudioCandidate,
-    error: AudioDownloadError,
-    *,
-    keep_pending: bool = False,
-) -> None:
-    cursor.execute(
-        STORE_FAILURE_SQL,
-        (
-            "pending" if keep_pending else "failed",
-            error.status_code,
-            str(error)[:2000],
-            error.attempts,
-            candidate.source_url,
-        ),
-    )
-
-
-def store_voice_success(
-    cursor: Any,
-    candidate: AudioCandidate,
-    original: DownloadedAudio,
-    voice: VoiceAudio,
-    *,
-    clear_telegram_cache: bool = False,
-) -> None:
-    cursor.execute(
-        STORE_VOICE_SUCCESS_SQL,
-        (
-            candidate.source_url,
-            original.sha256,
-            voice.data,
-            voice.filename,
-            len(voice.data),
-            voice.sha256,
-        ),
-    )
-    if clear_telegram_cache:
-        cursor.execute(
-            """
-            DELETE FROM bot_telegram_audio_cache
-            WHERE source_url = %s AND send_method = 'voice'
-            """,
-            (candidate.source_url,),
-        )
-
-
-def store_voice_failure(
-    cursor: Any,
-    candidate: AudioCandidate,
-    original: DownloadedAudio,
-    error: AudioConversionError,
-) -> None:
-    cursor.execute(
-        STORE_VOICE_FAILURE_SQL,
-        (candidate.source_url, original.sha256, str(error)[:2000]),
-    )
 
 
 def download_audio_to_postgres(
@@ -838,114 +686,265 @@ def download_audio_to_postgres(
         ) from exc
 
 
-def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--database-url",
-        default=os.environ.get("OALD_DATABASE_URL"),
-        help="OALD PostgreSQL URL; defaults to OALD_DATABASE_URL",
+def load_candidates(
+    cursor: Any,
+    *,
+    dialects: list[str],
+    force: bool,
+    limit: int | None,
+    source_urls: list[str] | None = None,
+) -> list[AudioCandidate]:
+    sql_limit = limit if limit is not None else 2_147_483_647
+    cursor.execute(
+        CANDIDATE_SQL,
+        (dialects, force, source_urls, source_urls, sql_limit),
     )
-    parser.add_argument(
-        "--dialects",
-        nargs="+",
-        choices=("us", "gb"),
-        default=["us", "gb"],
-        help="Audio dialects to download (default: us gb)",
-    )
-    parser.add_argument(
-        "--limit",
-        type=positive_integer,
-        help="Process at most N unique audio URLs",
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Download originals again and rebuild Telegram voice variants",
-    )
-    parser.add_argument(
-        "--request-delay",
-        type=nonnegative_float,
-        default=0.5,
-        help="Delay between different URLs in seconds (default: 0.5)",
-    )
-    parser.add_argument(
-        "--timeout",
-        type=positive_float,
-        default=30.0,
-        help="Per-request timeout in seconds (default: 30)",
-    )
-    parser.add_argument(
-        "--retries",
-        type=nonnegative_integer,
-        default=3,
-        help="Retries for temporary errors (default: 3)",
-    )
-    parser.add_argument(
-        "--retry-backoff",
-        type=nonnegative_float,
-        default=2.0,
-        help="Initial exponential retry delay in seconds (default: 2)",
-    )
-    parser.add_argument(
-        "--max-audio-bytes",
-        type=positive_integer,
-        default=DEFAULT_MAX_AUDIO_BYTES,
-        help="Maximum accepted file size (default: 10485760)",
-    )
-    parser.add_argument(
-        "--fail-fast",
-        action="store_true",
-        help="Stop on the first non-rate-limit download failure",
-    )
-    parser.add_argument(
-        "--log-level",
-        choices=LOG_LEVELS,
-        default="INFO",
-        help="Terminal log verbosity (default: INFO)",
-    )
-    return parser.parse_args(argv)
-
-
-def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
-    configure_logging(args.log_level)
-    if not args.database_url:
-        LOGGER.error(
-            "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
+    return [
+        AudioCandidate(
+            source_url=str(row[0]),
+            example_word=str(row[1]),
+            dialects=tuple(row[2]),
+            has_original=bool(row[3]),
         )
-        return 2
+        for row in cursor.fetchall()
+    ]
 
+
+def store_success(
+    cursor: Any,
+    candidate: AudioCandidate,
+    audio: DownloadedAudio,
+    attempts: int,
+) -> None:
+    cursor.execute(
+        STORE_SUCCESS_SQL,
+        (
+            audio.data,
+            audio.content_type,
+            audio.filename,
+            len(audio.data),
+            audio.sha256,
+            audio.http_status,
+            attempts,
+            candidate.source_url,
+        ),
+    )
+
+
+def store_failure(
+    cursor: Any,
+    candidate: AudioCandidate,
+    error: AudioDownloadError,
+    *,
+    keep_pending: bool = False,
+) -> None:
+    cursor.execute(
+        STORE_FAILURE_SQL,
+        (
+            "pending" if keep_pending else "failed",
+            error.status_code,
+            str(error)[:2000],
+            error.attempts,
+            candidate.source_url,
+        ),
+    )
+
+
+def store_voice_success(
+    cursor: Any,
+    candidate: AudioCandidate,
+    original: DownloadedAudio,
+    voice: VoiceAudio,
+    *,
+    clear_telegram_cache: bool = False,
+) -> None:
+    cursor.execute(
+        STORE_VOICE_SUCCESS_SQL,
+        (
+            candidate.source_url,
+            original.sha256,
+            voice.data,
+            voice.filename,
+            len(voice.data),
+            voice.sha256,
+        ),
+    )
+    if clear_telegram_cache:
+        cursor.execute(
+            """
+            DELETE FROM bot_telegram_audio_cache
+            WHERE source_url = %s AND send_method = 'voice'
+            """,
+            (candidate.source_url,),
+        )
+
+
+def store_voice_failure(
+    cursor: Any,
+    candidate: AudioCandidate,
+    original: DownloadedAudio,
+    error: AudioConversionError,
+) -> None:
+    cursor.execute(
+        STORE_VOICE_FAILURE_SQL,
+        (candidate.source_url, original.sha256, str(error)[:2000]),
+    )
+
+
+def load_stored_audio(cursor: Any, candidate: AudioCandidate) -> DownloadedAudio:
+    cursor.execute(LOAD_STORED_AUDIO_SQL, (candidate.source_url,))
+    row = cursor.fetchone()
+    if row is None:
+        raise OaldAudioDatabaseError(
+            f"stored audio disappeared for {candidate.source_url}"
+        )
+    return DownloadedAudio(
+        data=bytes(row[0]),
+        content_type=str(row[1]),
+        filename=str(row[2]),
+        sha256=str(row[3]).strip(),
+        http_status=int(row[4]) if row[4] is not None else None,
+    )
+
+
+def validate_audio_payload(data: bytes, declared_type: str) -> str:
+    if not data:
+        raise AudioDownloadError("the server returned an empty response")
+    prefix = data[:256].lstrip().lower()
+    if prefix.startswith(b"<!doctype html") or prefix.startswith(b"<html"):
+        raise AudioDownloadError("the server returned HTML instead of audio")
+    detected_type = detected_audio_content_type(data)
+    if not detected_type:
+        raise AudioDownloadError(
+            f"unrecognized audio signature (declared type {declared_type or 'unknown'})"
+        )
+    if declared_type and not (
+        declared_type.startswith("audio/")
+        or declared_type in {"application/ogg", "application/octet-stream"}
+    ):
+        raise AudioDownloadError(f"unexpected response content type {declared_type!r}")
+    return detected_type
+
+
+def validate_voice_payload(data: bytes, max_bytes: int) -> None:
+    if not data:
+        raise AudioConversionError("FFmpeg returned an empty voice file")
+    if len(data) > max_bytes:
+        raise AudioConversionError(
+            f"converted voice is larger than the {max_bytes:,}-byte limit"
+        )
+    if not data.startswith(b"OggS") or b"OpusHead" not in data[:4096]:
+        raise AudioConversionError(
+            "converted file is not an OGG container encoded with Opus"
+        )
+
+
+def filename_from_response(response: Any, fallback_url: str) -> str:
+    headers = response.headers
+    disposition = str(headers.get("Content-Disposition", "") or "")
+    encoded_match = re.search(
+        r"filename\*=UTF-8''([^;]+)",
+        disposition,
+        flags=re.IGNORECASE,
+    )
+    if encoded_match:
+        return Path(unquote(encoded_match.group(1).strip())).name
+    plain_match = re.search(
+        r'filename="?([^";]+)"?',
+        disposition,
+        flags=re.IGNORECASE,
+    )
+    if plain_match:
+        return Path(plain_match.group(1).strip()).name
+
+    final_url = response.geturl() if hasattr(response, "geturl") else fallback_url
+    filename = Path(unquote(urlparse(final_url).path)).name
+    return filename or "pronunciation-audio"
+
+
+def declared_content_type(headers: Any) -> str:
+    if hasattr(headers, "get_content_type"):
+        content_type = str(headers.get_content_type() or "")
+    else:
+        content_type = str(headers.get("Content-Type", "") or "").split(";", 1)[0]
+    return content_type.strip().lower()
+
+
+def detected_audio_content_type(data: bytes) -> str:
+    if data.startswith(b"OggS"):
+        return "audio/ogg"
+    if data.startswith(b"ID3") or (
+        len(data) >= 2 and data[0] == 0xFF and data[1] & 0xE0 == 0xE0
+    ):
+        return "audio/mpeg"
+    if len(data) >= 12 and data.startswith(b"RIFF") and data[8:12] == b"WAVE":
+        return "audio/wav"
+    if len(data) >= 12 and data[4:8] == b"ftyp":
+        return "audio/mp4"
+    return ""
+
+
+def connection_options(database_url: str) -> dict[str, str]:
+    if urlparse(database_url).hostname == "localhost":
+        return {"hostaddr": "127.0.0.1"}
+    return {}
+
+
+def _ffmpeg_executable() -> str:
     try:
-        stats = download_audio_to_postgres(
-            args.database_url,
-            dialects=args.dialects,
-            limit=args.limit,
-            force=args.force,
-            request_delay=args.request_delay,
-            timeout=args.timeout,
-            retries=args.retries,
-            retry_backoff=args.retry_backoff,
-            max_audio_bytes=args.max_audio_bytes,
-            fail_fast=args.fail_fast,
-        )
-        LOGGER.info(
-            "Audio run complete: candidates=%s downloaded=%s reused=%s "
-            "download_failed=%s voices_prepared=%s conversion_failed=%s "
-            "stored_bytes=%s voice_bytes=%s rate_limited=%s",
-            f"{stats.candidates:,}",
-            f"{stats.downloaded:,}",
-            f"{stats.reused_originals:,}",
-            f"{stats.failed:,}",
-            f"{stats.voices_prepared:,}",
-            f"{stats.conversion_failed:,}",
-            f"{stats.stored_bytes:,}",
-            f"{stats.voice_bytes:,}",
-            stats.rate_limited,
-        )
-        return 3 if stats.rate_limited else 0
-    except (AudioDownloadError, AudioConversionError, OaldAudioDatabaseError) as exc:
-        LOGGER.error("OALD audio run failed: %s", exc)
-        return 1
+        import imageio_ffmpeg
+    except ImportError as exc:
+        raise AudioConversionError(
+            "imageio-ffmpeg is not installed; run: uv sync"
+        ) from exc
+    try:
+        return str(imageio_ffmpeg.get_ffmpeg_exe())
+    except RuntimeError as exc:
+        raise AudioConversionError(f"FFmpeg is unavailable: {exc}") from exc
+
+
+def _load_psycopg() -> Any:
+    try:
+        import psycopg
+    except ImportError as exc:
+        raise OaldAudioDatabaseError("psycopg is not installed; run: uv sync") from exc
+    return psycopg
+
+
+def configure_logging(level: str) -> None:
+    logging.basicConfig(
+        level=getattr(logging, level),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+
+def positive_integer(value: str) -> int:
+    parsed = int(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
+
+
+def nonnegative_integer(value: str) -> int:
+    parsed = int(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be zero or greater")
+    return parsed
+
+
+def positive_float(value: str) -> float:
+    parsed = float(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
+
+
+def nonnegative_float(value: str) -> float:
+    parsed = float(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be zero or greater")
+    return parsed
 
 
 if __name__ == "__main__":

@@ -26,61 +26,6 @@ from test_import_oald_postgres import oald_row, write_rows
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 
 
-class FakeHeaders:
-    def __init__(
-        self,
-        content_type: str = "audio/ogg",
-        content_length: int | None = None,
-        content_disposition: str = "",
-    ):
-        self.content_type = content_type
-        self.content_length = content_length
-        self.content_disposition = content_disposition
-
-    def get(self, name: str, default=None):
-        normalized = name.lower()
-        if normalized == "content-length" and self.content_length is not None:
-            return str(self.content_length)
-        if normalized == "content-type":
-            return self.content_type
-        if normalized == "content-disposition" and self.content_disposition:
-            return self.content_disposition
-        return default
-
-    def get_content_type(self) -> str:
-        return self.content_type
-
-
-class FakeResponse:
-    def __init__(
-        self,
-        data: bytes,
-        *,
-        content_type: str = "audio/ogg",
-        url: str = "https://audio.example/test.ogg",
-        content_length: int | None = None,
-    ):
-        self.stream = io.BytesIO(data)
-        self.headers = FakeHeaders(
-            content_type,
-            len(data) if content_length is None else content_length,
-        )
-        self.url = url
-        self.status = 200
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        return False
-
-    def read(self, size: int) -> bytes:
-        return self.stream.read(size)
-
-    def geturl(self) -> str:
-        return self.url
-
-
 class OaldAudioDownloadTests(unittest.TestCase):
     def test_voice_payload_requires_ogg_opus(self) -> None:
         validate_voice_payload(b"OggS-header-OpusHead-audio", 1000)
@@ -419,6 +364,61 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                             """,
                             (audio_url,),
                         )
+
+
+class FakeHeaders:
+    def __init__(
+        self,
+        content_type: str = "audio/ogg",
+        content_length: int | None = None,
+        content_disposition: str = "",
+    ):
+        self.content_type = content_type
+        self.content_length = content_length
+        self.content_disposition = content_disposition
+
+    def get(self, name: str, default=None):
+        normalized = name.lower()
+        if normalized == "content-length" and self.content_length is not None:
+            return str(self.content_length)
+        if normalized == "content-type":
+            return self.content_type
+        if normalized == "content-disposition" and self.content_disposition:
+            return self.content_disposition
+        return default
+
+    def get_content_type(self) -> str:
+        return self.content_type
+
+
+class FakeResponse:
+    def __init__(
+        self,
+        data: bytes,
+        *,
+        content_type: str = "audio/ogg",
+        url: str = "https://audio.example/test.ogg",
+        content_length: int | None = None,
+    ):
+        self.stream = io.BytesIO(data)
+        self.headers = FakeHeaders(
+            content_type,
+            len(data) if content_length is None else content_length,
+        )
+        self.url = url
+        self.status = 200
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        return False
+
+    def read(self, size: int) -> bytes:
+        return self.stream.read(size)
+
+    def geturl(self) -> str:
+        return self.url
 
 
 if __name__ == "__main__":

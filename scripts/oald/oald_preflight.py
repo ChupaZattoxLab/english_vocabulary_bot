@@ -19,6 +19,10 @@ class SchemaNotMigratedError(RuntimeError):
     """Raised when a build script runs before Alembic migrations."""
 
 
+def require_oald_schema(cursor: Any) -> None:
+    require_tables(cursor, OALD_TABLES)
+
+
 def require_tables(cursor: Any, table_names: Iterable[str]) -> None:
     expected = set(table_names)
     cursor.execute(
@@ -38,7 +42,3 @@ def require_tables(cursor: Any, table_names: Iterable[str]) -> None:
             f"{', '.join(sorted(missing))}. Run "
             "`uv run migrate` first."
         )
-
-
-def require_oald_schema(cursor: Any) -> None:
-    require_tables(cursor, OALD_TABLES)

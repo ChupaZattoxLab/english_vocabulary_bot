@@ -14,62 +14,6 @@ from import_oxford_cache import (
 )
 
 
-def pronunciation(
-    ipa: str,
-    dialect: str,
-    audio: str = "",
-) -> dict:
-    value = {
-        "dialects": [dialect],
-        "phoneticNotation": "IPA",
-        "phoneticSpelling": ipa,
-    }
-    if audio:
-        value["audioFile"] = audio
-    return value
-
-
-def translation(text: str, language: str = "ru") -> dict:
-    return {"language": language, "text": text}
-
-
-def cache_wrapper(result_id: str, lexical_entries: list[dict]) -> dict:
-    return {
-        "query": result_id,
-        "resolved": result_id,
-        "status": 200,
-        "ok": True,
-        "data": {
-            "results": [
-                {
-                    "id": result_id,
-                    "word": result_id,
-                    "lexicalEntries": lexical_entries,
-                }
-            ]
-        },
-    }
-
-
-def lexical_entry(
-    word: str,
-    category: str,
-    entries: list[dict],
-) -> dict:
-    return {
-        "text": word,
-        "lexicalCategory": {"id": category, "text": category.title()},
-        "entries": entries,
-    }
-
-
-def write_json(path: Path, value) -> None:
-    path.write_text(
-        json.dumps(value, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
-
-
 class OxfordCacheParserTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary_directory = tempfile.TemporaryDirectory()
@@ -384,6 +328,62 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                             "WHERE source_lexical_key = ANY(%s)",
                             (keys,),
                         )
+
+
+def pronunciation(
+    ipa: str,
+    dialect: str,
+    audio: str = "",
+) -> dict:
+    value = {
+        "dialects": [dialect],
+        "phoneticNotation": "IPA",
+        "phoneticSpelling": ipa,
+    }
+    if audio:
+        value["audioFile"] = audio
+    return value
+
+
+def translation(text: str, language: str = "ru") -> dict:
+    return {"language": language, "text": text}
+
+
+def cache_wrapper(result_id: str, lexical_entries: list[dict]) -> dict:
+    return {
+        "query": result_id,
+        "resolved": result_id,
+        "status": 200,
+        "ok": True,
+        "data": {
+            "results": [
+                {
+                    "id": result_id,
+                    "word": result_id,
+                    "lexicalEntries": lexical_entries,
+                }
+            ]
+        },
+    }
+
+
+def lexical_entry(
+    word: str,
+    category: str,
+    entries: list[dict],
+) -> dict:
+    return {
+        "text": word,
+        "lexicalCategory": {"id": category, "text": category.title()},
+        "entries": entries,
+    }
+
+
+def write_json(path: Path, value) -> None:
+    path.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

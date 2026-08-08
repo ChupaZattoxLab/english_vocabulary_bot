@@ -23,96 +23,6 @@ from tgbot.handlers.admin_keyboards import (
 from tgbot.localization import locale
 
 
-def _callback_message(callback: CallbackQuery) -> Message | None:
-    message = callback.message
-    return message if isinstance(message, Message) else None
-
-
-def _number(value: int) -> str:
-    return f"{value:,}".replace(",", " ")
-
-
-def _arguments(message: Message) -> str:
-    text = message.text or ""
-    return text.split(maxsplit=1)[1].strip() if len(text.split(maxsplit=1)) == 2 else ""
-
-
-def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
-    local_now = datetime.now(config.timezone)
-    local_start = datetime.combine(local_now.date(), time.min, tzinfo=config.timezone)
-    return (
-        local_now,
-        local_start.astimezone(UTC),
-    )
-
-
-def _delivery_state(user: AdminUserDetail) -> str:
-    if user.blocked_at:
-        return locale.admin.delivery_blocked
-    if user.paused_at or not user.is_active:
-        return locale.admin.delivery_paused
-    return locale.admin.delivery_active
-
-
-async def _is_admin(message: Message, config: BotConfig) -> bool:
-    if message.from_user and message.from_user.id in config.admin_ids:
-        return True
-    await message.answer(locale.admin.no_access)
-    return False
-
-
-async def _render_overview(database: Database, config: BotConfig) -> str:
-    local_now, today_start = _local_day_bounds(config)
-    users = await database.admin_users_summary(
-        today_start=today_start,
-        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
-        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
-            UTC
-        ),
-    )
-    content = await database.admin_content_summary()
-    return locale.admin.overview.format(
-        total_users=_number(users.total_users),
-        active_users=_number(users.active_users),
-        ready_entries=_number(content.ready_entries),
-    )
-
-
-async def _render_users(database: Database, config: BotConfig) -> str:
-    local_now, today_start = _local_day_bounds(config)
-    stats = await database.admin_users_summary(
-        today_start=today_start,
-        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
-        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
-            UTC
-        ),
-    )
-    levels = "\n".join(
-        f"{level.upper()}: {_number(stats.levels.get(level, 0))}"
-        for level in VALID_LEVELS
-    )
-    dialects = (
-        ", ".join(
-            f"{key.upper()}: {_number(value)}"
-            for key, value in sorted(stats.dialects.items())
-        )
-        or locale.admin.none
-    )
-    return locale.admin.users_panel.format(
-        total_users=_number(stats.total_users),
-        active_users=_number(stats.active_users),
-        paused_users=_number(stats.paused_users),
-        blocked_users=_number(stats.blocked_users),
-        new_today=_number(stats.new_today),
-        new_week=_number(stats.new_week),
-        new_month=_number(stats.new_month),
-        week_days=ADMIN_STATS_WEEK_DAYS,
-        month_days=ADMIN_STATS_MONTH_DAYS,
-        levels=levels,
-        dialects=dialects,
-    )
-
-
 def create_admin_router(
     *,
     database: Database,
@@ -335,3 +245,93 @@ def create_admin_router(
                 await callback.answer()
 
     return router
+
+
+async def _is_admin(message: Message, config: BotConfig) -> bool:
+    if message.from_user and message.from_user.id in config.admin_ids:
+        return True
+    await message.answer(locale.admin.no_access)
+    return False
+
+
+async def _render_overview(database: Database, config: BotConfig) -> str:
+    local_now, today_start = _local_day_bounds(config)
+    users = await database.admin_users_summary(
+        today_start=today_start,
+        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
+        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
+            UTC
+        ),
+    )
+    content = await database.admin_content_summary()
+    return locale.admin.overview.format(
+        total_users=_number(users.total_users),
+        active_users=_number(users.active_users),
+        ready_entries=_number(content.ready_entries),
+    )
+
+
+async def _render_users(database: Database, config: BotConfig) -> str:
+    local_now, today_start = _local_day_bounds(config)
+    stats = await database.admin_users_summary(
+        today_start=today_start,
+        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
+        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
+            UTC
+        ),
+    )
+    levels = "\n".join(
+        f"{level.upper()}: {_number(stats.levels.get(level, 0))}"
+        for level in VALID_LEVELS
+    )
+    dialects = (
+        ", ".join(
+            f"{key.upper()}: {_number(value)}"
+            for key, value in sorted(stats.dialects.items())
+        )
+        or locale.admin.none
+    )
+    return locale.admin.users_panel.format(
+        total_users=_number(stats.total_users),
+        active_users=_number(stats.active_users),
+        paused_users=_number(stats.paused_users),
+        blocked_users=_number(stats.blocked_users),
+        new_today=_number(stats.new_today),
+        new_week=_number(stats.new_week),
+        new_month=_number(stats.new_month),
+        week_days=ADMIN_STATS_WEEK_DAYS,
+        month_days=ADMIN_STATS_MONTH_DAYS,
+        levels=levels,
+        dialects=dialects,
+    )
+
+
+def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
+    local_now = datetime.now(config.timezone)
+    local_start = datetime.combine(local_now.date(), time.min, tzinfo=config.timezone)
+    return (
+        local_now,
+        local_start.astimezone(UTC),
+    )
+
+
+def _delivery_state(user: AdminUserDetail) -> str:
+    if user.blocked_at:
+        return locale.admin.delivery_blocked
+    if user.paused_at or not user.is_active:
+        return locale.admin.delivery_paused
+    return locale.admin.delivery_active
+
+
+def _arguments(message: Message) -> str:
+    text = message.text or ""
+    return text.split(maxsplit=1)[1].strip() if len(text.split(maxsplit=1)) == 2 else ""
+
+
+def _number(value: int) -> str:
+    return f"{value:,}".replace(",", " ")
+
+
+def _callback_message(callback: CallbackQuery) -> Message | None:
+    message = callback.message
+    return message if isinstance(message, Message) else None

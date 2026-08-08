@@ -42,22 +42,6 @@ ADMIN_COMMANDS = (
 )
 
 
-async def configure_commands(bot: Bot, config: BotConfig) -> None:
-    await bot.set_my_commands(list(USER_COMMANDS))
-    for admin_id in config.admin_ids:
-        try:
-            await bot.set_my_commands(
-                [*USER_COMMANDS, *ADMIN_COMMANDS],
-                scope=BotCommandScopeChat(chat_id=admin_id),
-            )
-        except Exception:  # noqa: BLE001
-            LOGGER.warning(
-                "Could not configure admin command scope for %s",
-                admin_id,
-                exc_info=True,
-            )
-
-
 async def run_bot(config: BotConfig) -> None:
     template = CardTemplate(config.card_template_path)
     both_template = CardTemplate(config.both_card_template_path)
@@ -110,3 +94,19 @@ async def run_bot(config: BotConfig) -> None:
             await scheduler_task
         await bot.session.close()
         await database.close()
+
+
+async def configure_commands(bot: Bot, config: BotConfig) -> None:
+    await bot.set_my_commands(list(USER_COMMANDS))
+    for admin_id in config.admin_ids:
+        try:
+            await bot.set_my_commands(
+                [*USER_COMMANDS, *ADMIN_COMMANDS],
+                scope=BotCommandScopeChat(chat_id=admin_id),
+            )
+        except Exception:  # noqa: BLE001
+            LOGGER.warning(
+                "Could not configure admin command scope for %s",
+                admin_id,
+                exc_info=True,
+            )

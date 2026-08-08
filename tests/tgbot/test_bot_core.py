@@ -26,65 +26,6 @@ VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
 
 
-def make_admin_user_detail(**overrides: object) -> AdminUserDetail:
-    now = datetime.now(UTC)
-    user = AdminUserDetail(
-        telegram_user_id=1,
-        chat_id=1,
-        username="",
-        first_name="",
-        selected_levels=(),
-        pronunciation=None,
-        onboarding_completed=True,
-        is_active=True,
-        created_at=now,
-        updated_at=now,
-        last_delivery_at=None,
-        paused_at=None,
-        blocked_at=None,
-        delivered_cards=0,
-        last_successful_delivery=None,
-    )
-    return replace(user, **overrides)  # type: ignore[arg-type]
-
-
-def make_word_match(
-    entry_id: int,
-    *,
-    lexical_category: str,
-    cefr: str,
-) -> AdminWordMatch:
-    return AdminWordMatch(
-        id=entry_id,
-        word_us="word",
-        word_gb="word",
-        lexical_category=lexical_category,
-        cefr=cefr,
-    )
-
-
-def make_reserved_card(
-    content_type: str = "audio/ogg",
-    filename: str = "test.voice.ogg",
-) -> ReservedCard:
-    return ReservedCard(
-        history_id=1,
-        entry_id=1,
-        word="test",
-        lexical_category="noun",
-        cefr="A1",
-        definition="definition",
-        example="example",
-        ipa="/test/",
-        dialect="US",
-        translation="тест",
-        source_url="https://example.test/audio",
-        audio_data=b"audio",
-        content_type=content_type,
-        filename=filename,
-    )
-
-
 class BotConfigTests(unittest.TestCase):
     def test_environment_configuration_is_parsed(self) -> None:
         config = BotConfig.from_env(
@@ -437,6 +378,65 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 "🇬🇧 GB · <code>/gb/</code>",
             )
             self.assertEqual(database.cache_audio_file_id.await_count, 2)
+
+
+def make_admin_user_detail(**overrides: object) -> AdminUserDetail:
+    now = datetime.now(UTC)
+    user = AdminUserDetail(
+        telegram_user_id=1,
+        chat_id=1,
+        username="",
+        first_name="",
+        selected_levels=(),
+        pronunciation=None,
+        onboarding_completed=True,
+        is_active=True,
+        created_at=now,
+        updated_at=now,
+        last_delivery_at=None,
+        paused_at=None,
+        blocked_at=None,
+        delivered_cards=0,
+        last_successful_delivery=None,
+    )
+    return replace(user, **overrides)  # type: ignore[arg-type]
+
+
+def make_word_match(
+    entry_id: int,
+    *,
+    lexical_category: str,
+    cefr: str,
+) -> AdminWordMatch:
+    return AdminWordMatch(
+        id=entry_id,
+        word_us="word",
+        word_gb="word",
+        lexical_category=lexical_category,
+        cefr=cefr,
+    )
+
+
+def make_reserved_card(
+    content_type: str = "audio/ogg",
+    filename: str = "test.voice.ogg",
+) -> ReservedCard:
+    return ReservedCard(
+        history_id=1,
+        entry_id=1,
+        word="test",
+        lexical_category="noun",
+        cefr="A1",
+        definition="definition",
+        example="example",
+        ipa="/test/",
+        dialect="US",
+        translation="тест",
+        source_url="https://example.test/audio",
+        audio_data=b"audio",
+        content_type=content_type,
+        filename=filename,
+    )
 
 
 if __name__ == "__main__":

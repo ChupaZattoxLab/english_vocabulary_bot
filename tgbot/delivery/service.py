@@ -47,50 +47,6 @@ class DeliveryOutcome:
     card: ReservedCard | None = None
 
 
-def voice_caption(dialect: str, ipa: str) -> str:
-    label = locale.dialect_caption(dialect)
-    transcription = ipa.strip()
-
-    if not transcription:
-        return label
-
-    return f"{label} · <code>{html.escape(transcription)}</code>"
-
-
-def classify_delivery_error(exc: Exception) -> str:
-    """Return a stable, queryable category for a delivery exception."""
-    if isinstance(exc, TelegramForbiddenError):
-        return ERROR_TYPE_BOT_BLOCKED
-    if isinstance(exc, CardTemplateError):
-        return ERROR_TYPE_TEMPLATE_ERROR
-    name = type(exc).__name__.lower()
-    message = str(exc).lower()
-    if "timeout" in name or "timeout" in message:
-        return ERROR_TYPE_TELEGRAM_TIMEOUT
-    if "audio" in message or "voice" in message:
-        return ERROR_TYPE_AUDIO_UNAVAILABLE
-    if name.startswith("telegram"):
-        return ERROR_TYPE_TELEGRAM_ERROR
-    return ERROR_TYPE_TECHNICAL
-
-
-async def _call_with_retry_after(
-    operation: Callable[[], Awaitable[T]],
-    *,
-    kind: str,
-) -> T:
-    try:
-        return await operation()
-    except TelegramRetryAfter as exc:
-        LOGGER.warning(
-            "Telegram %s rate limit; retrying in %s seconds",
-            kind,
-            exc.retry_after,
-        )
-        await asyncio.sleep(float(exc.retry_after))
-        return await operation()
-
-
 class CardDeliveryService:
     def __init__(
         self,
@@ -101,90 +57,6 @@ class CardDeliveryService:
         self.database = database
         self.template = template
         self.both_template = both_template or template
-
-    def render_card(self, card: ReservedCard) -> str:
-        template = self.both_template if card.dialect == "BOTH" else self.template
-        return template.render(
-            {
-                "word": card.word,
-                "word_upper": card.word.upper(),
-                "word_us": card.word_us or card.word,
-                "word_us_upper": (card.word_us or card.word).upper(),
-                "word_gb": card.word_gb or card.word,
-                "word_gb_upper": (card.word_gb or card.word).upper(),
-                "lexical_category": card.lexical_category,
-                "cefr": card.cefr,
-                "definition": card.definition,
-                "ipa": card.ipa,
-                "ipa_us": card.ipa_us or card.ipa,
-                "ipa_gb": card.ipa_gb or card.ipa,
-                "example": card.example,
-                "translation": card.translation,
-                "dialect": card.dialect,
-                "dialect_flag": locale.dialect_flag(card.dialect),
-                "heading_definition": locale.labels.card_heading_definition,
-                "heading_example": locale.labels.card_heading_example,
-                "heading_translation": locale.labels.card_heading_translation,
-                "flag_us": locale.labels.dialect_flags["US"],
-                "flag_gb": locale.labels.dialect_flags["GB"],
-            }
-        )
-
-    def reload_templates(self) -> None:
-        self.template.reload()
-        if self.both_template is not self.template:
-            self.both_template.reload()
-
-    async def _send_voice_attachment(
-        self,
-        bot: Bot,
-        *,
-        chat_id: int,
-        source_url: str,
-        audio_data: bytes,
-        filename: str,
-        caption: str | None,
-    ) -> Message:
-        async def send(file_reference: str | BufferedInputFile) -> Message:
-            return await _call_with_retry_after(
-                lambda: bot.send_voice(
-                    chat_id=chat_id,
-                    voice=file_reference,
-                    caption=caption,
-                ),
-                kind=SEND_METHOD_VOICE,
-            )
-
-        method = SEND_METHOD_VOICE
-        cached_file_id = await self.database.cached_audio_file_id(
-            source_url,
-            method,
-        )
-        if cached_file_id:
-            try:
-                return await send(cached_file_id)
-            except TelegramBadRequest:
-                LOGGER.warning(
-                    "Telegram rejected cached file_id for %s; uploading bytes again",
-                    source_url,
-                )
-                await self.database.clear_cached_audio_file_id(source_url, method)
-
-        upload = BufferedInputFile(audio_data, filename=filename)
-        message = await send(upload)
-        if message.voice:
-            await self.database.cache_audio_file_id(
-                source_url,
-                method,
-                message.voice.file_id,
-            )
-        return message
-
-    async def _send_card_text(self, bot: Bot, *, chat_id: int, text: str) -> None:
-        await _call_with_retry_after(
-            lambda: bot.send_message(chat_id=chat_id, text=text),
-            kind=SEND_KIND_TEXT,
-        )
 
     async def deliver(
         self,
@@ -259,6 +131,56 @@ class CardDeliveryService:
             LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
             return DeliveryOutcome(DELIVERY_STATUS_FAILED, card)
 
+    async def send_preview(
+        self, bot: Bot, *, chat_id: int, card: ReservedCard
+    ) -> Message:
+        """Send a card without creating or changing delivery history."""
+        return await self._send_reserved(bot, chat_id=chat_id, card=card)
+
+    def reload_templates(self) -> None:
+        self.template.reload()
+        if self.both_template is not self.template:
+            self.both_template.reload()
+
+    def render_card(self, card: ReservedCard) -> str:
+        template = self.both_template if card.dialect == "BOTH" else self.template
+        return template.render(
+            {
+                "word": card.word,
+                "word_upper": card.word.upper(),
+                "word_us": card.word_us or card.word,
+                "word_us_upper": (card.word_us or card.word).upper(),
+                "word_gb": card.word_gb or card.word,
+                "word_gb_upper": (card.word_gb or card.word).upper(),
+                "lexical_category": card.lexical_category,
+                "cefr": card.cefr,
+                "definition": card.definition,
+                "ipa": card.ipa,
+                "ipa_us": card.ipa_us or card.ipa,
+                "ipa_gb": card.ipa_gb or card.ipa,
+                "example": card.example,
+                "translation": card.translation,
+                "dialect": card.dialect,
+                "dialect_flag": locale.dialect_flag(card.dialect),
+                "heading_definition": locale.labels.card_heading_definition,
+                "heading_example": locale.labels.card_heading_example,
+                "heading_translation": locale.labels.card_heading_translation,
+                "flag_us": locale.labels.dialect_flags["US"],
+                "flag_gb": locale.labels.dialect_flags["GB"],
+            }
+        )
+
+    async def _send_reserved(
+        self,
+        bot: Bot,
+        *,
+        chat_id: int,
+        card: ReservedCard,
+    ) -> Message:
+        rendered = self.render_card(card)
+        await self._send_card_text(bot, chat_id=chat_id, text=rendered)
+        return await self._send_reserved_voices(bot, chat_id=chat_id, card=card)
+
     async def _send_reserved_voices(
         self,
         bot: Bot,
@@ -293,19 +215,97 @@ class CardDeliveryService:
             )
         return message
 
-    async def _send_reserved(
+    async def _send_card_text(self, bot: Bot, *, chat_id: int, text: str) -> None:
+        await _call_with_retry_after(
+            lambda: bot.send_message(chat_id=chat_id, text=text),
+            kind=SEND_KIND_TEXT,
+        )
+
+    async def _send_voice_attachment(
         self,
         bot: Bot,
         *,
         chat_id: int,
-        card: ReservedCard,
+        source_url: str,
+        audio_data: bytes,
+        filename: str,
+        caption: str | None,
     ) -> Message:
-        rendered = self.render_card(card)
-        await self._send_card_text(bot, chat_id=chat_id, text=rendered)
-        return await self._send_reserved_voices(bot, chat_id=chat_id, card=card)
+        async def send(file_reference: str | BufferedInputFile) -> Message:
+            return await _call_with_retry_after(
+                lambda: bot.send_voice(
+                    chat_id=chat_id,
+                    voice=file_reference,
+                    caption=caption,
+                ),
+                kind=SEND_METHOD_VOICE,
+            )
 
-    async def send_preview(
-        self, bot: Bot, *, chat_id: int, card: ReservedCard
-    ) -> Message:
-        """Send a card without creating or changing delivery history."""
-        return await self._send_reserved(bot, chat_id=chat_id, card=card)
+        method = SEND_METHOD_VOICE
+        cached_file_id = await self.database.cached_audio_file_id(
+            source_url,
+            method,
+        )
+        if cached_file_id:
+            try:
+                return await send(cached_file_id)
+            except TelegramBadRequest:
+                LOGGER.warning(
+                    "Telegram rejected cached file_id for %s; uploading bytes again",
+                    source_url,
+                )
+                await self.database.clear_cached_audio_file_id(source_url, method)
+
+        upload = BufferedInputFile(audio_data, filename=filename)
+        message = await send(upload)
+        if message.voice:
+            await self.database.cache_audio_file_id(
+                source_url,
+                method,
+                message.voice.file_id,
+            )
+        return message
+
+
+def voice_caption(dialect: str, ipa: str) -> str:
+    label = locale.dialect_caption(dialect)
+    transcription = ipa.strip()
+
+    if not transcription:
+        return label
+
+    return f"{label} · <code>{html.escape(transcription)}</code>"
+
+
+def classify_delivery_error(exc: Exception) -> str:
+    """Return a stable, queryable category for a delivery exception."""
+    if isinstance(exc, TelegramForbiddenError):
+        return ERROR_TYPE_BOT_BLOCKED
+    if isinstance(exc, CardTemplateError):
+        return ERROR_TYPE_TEMPLATE_ERROR
+    name = type(exc).__name__.lower()
+    message = str(exc).lower()
+    if "timeout" in name or "timeout" in message:
+        return ERROR_TYPE_TELEGRAM_TIMEOUT
+    if "audio" in message or "voice" in message:
+        return ERROR_TYPE_AUDIO_UNAVAILABLE
+    if name.startswith("telegram"):
+        return ERROR_TYPE_TELEGRAM_ERROR
+    return ERROR_TYPE_TECHNICAL
+
+
+async def _call_with_retry_after(
+    operation: Callable[[], Awaitable[T]],
+    *,
+    kind: str,
+) -> T:
+    try:
+        return await operation()
+    except TelegramRetryAfter as exc:
+        LOGGER.warning(
+            "Telegram %s rate limit; retrying in %s seconds",
+            kind,
+            exc.retry_after,
+        )
+        await asyncio.sleep(float(exc.retry_after))
+        return await operation()

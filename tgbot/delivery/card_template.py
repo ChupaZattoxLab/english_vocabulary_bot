@@ -52,6 +52,25 @@ class CardTemplate:
         self._template = ""
         self._load_if_changed()
 
+    def render(self, values: Mapping[str, str]) -> str:
+        self._load_if_changed()
+        escaped = {
+            field: html.escape(str(values.get(field, "")), quote=False)
+            for field in ALLOWED_FIELDS
+        }
+        rendered = self._template.format_map(escaped)
+        if len(rendered) > TELEGRAM_MESSAGE_MAX_LEN:
+            raise CardTemplateError(
+                "rendered card exceeds Telegram's "
+                f"{TELEGRAM_MESSAGE_MAX_LEN}-character text limit"
+            )
+        return rendered
+
+    def reload(self) -> None:
+        """Validate and reload the template even when its timestamp is unchanged."""
+        self._mtime_ns = -1
+        self._load_if_changed()
+
     def _load_if_changed(self) -> None:
         try:
             stat = self.path.stat()
@@ -106,22 +125,3 @@ class CardTemplate:
             )
         self._template = template
         self._mtime_ns = stat.st_mtime_ns
-
-    def render(self, values: Mapping[str, str]) -> str:
-        self._load_if_changed()
-        escaped = {
-            field: html.escape(str(values.get(field, "")), quote=False)
-            for field in ALLOWED_FIELDS
-        }
-        rendered = self._template.format_map(escaped)
-        if len(rendered) > TELEGRAM_MESSAGE_MAX_LEN:
-            raise CardTemplateError(
-                "rendered card exceeds Telegram's "
-                f"{TELEGRAM_MESSAGE_MAX_LEN}-character text limit"
-            )
-        return rendered
-
-    def reload(self) -> None:
-        """Validate and reload the template even when its timestamp is unchanged."""
-        self._mtime_ns = -1
-        self._load_if_changed()

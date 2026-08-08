@@ -218,144 +218,91 @@ class OxfordRow:
         }
 
 
-def configure_logging(level: str) -> None:
-    logging.basicConfig(
-        level=getattr(logging, level),
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    configure_logging(args.log_level)
+
+    if not args.source_dir.is_dir():
+        LOGGER.error("Oxford cache directory does not exist: %s", args.source_dir)
+        return 2
+    if not args.words_json.is_file():
+        LOGGER.error("Definition JSON does not exist: %s", args.words_json)
+        return 2
+    if not args.dry_run and not args.database_url:
+        LOGGER.error(
+            "PostgreSQL URL is required: use --database-url or set DATABASE_URL"
+        )
+        return 2
+
+    try:
+        LOGGER.info("Reading Oxford cache from %s", args.source_dir)
+        groups, file_stats = parse_cache_files(
+            args.source_dir,
+            limit_files=args.limit_files,
+            strict=args.strict,
+        )
+        definition_index = load_definition_index(args.words_json)
+        rows, row_stats = build_rows(groups, definition_index)
+        log_summary(file_stats, row_stats)
+        if args.dry_run:
+            LOGGER.info("Dry-run complete; no database changes made")
+            return 0
+
+        imported = import_rows(rows, args.database_url, batch_size=args.batch_size)
+        LOGGER.info("Oxford import complete: %s rows processed", f"{imported:,}")
+        return 0
+    except (OxfordCacheError, OxfordDatabaseError) as exc:
+        LOGGER.error("Oxford import failed: %s", exc)
+        return 1
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--source-dir",
+        type=Path,
+        default=DEFAULT_SOURCE_DIR,
+        help=f"Oxford cache directory (default: {DEFAULT_SOURCE_DIR})",
     )
-
-
-def positive_integer(value: str) -> int:
-    parsed = int(value)
-    if parsed <= 0:
-        raise argparse.ArgumentTypeError("must be greater than zero")
-    return parsed
-
-
-def normalize_word(value: Any) -> str:
-    text = unicodedata.normalize("NFC", str(value or "").strip())
-    return " ".join(text.lower().split())
-
-
-def normalize_category(value: Any) -> str:
-    return normalize_word(value).replace("_", " ")
-
-
-def normalize_marker(value: Any) -> str:
-    if isinstance(value, Mapping):
-        value = value.get("id") or value.get("text") or ""
-    text = normalize_word(value).replace("_", " ").replace("-", " ")
-    return " ".join(text.split())
-
-
-def normalize_ipa(value: Any) -> str:
-    text = unicodedata.normalize("NFC", str(value or "").strip())
-    if not text:
-        return ""
-    text = text.strip("/[]").strip()
-    return f"/{text}/" if text else ""
-
-
-def comparable_ipa(value: Any) -> str:
-    return normalize_ipa(value).strip("/").replace(" ", "")
-
-
-def append_unique(values: list[Any], value: Any) -> None:
-    if value not in values:
-        values.append(value)
-
-
-def regions_from_items(items: Iterable[Any]) -> set[str]:
-    regions: set[str] = set()
-    for item in items:
-        marker = normalize_marker(item)
-        if marker in US_REGION_MARKERS:
-            regions.add("us")
-        if marker in GB_REGION_MARKERS:
-            regions.add("gb")
-    return regions
-
-
-def source_key(result_id: str, lexical_category: str) -> str:
-    encoded_id = quote(normalize_word(result_id), safe="._-")
-    encoded_category = quote(normalize_category(lexical_category), safe="._-")
-    return f"oxford:{encoded_id}:{encoded_category}"
-
-
-def add_pronunciation(
-    group: OxfordGroup,
-    pronunciation: Mapping[str, Any],
-    inherited_regions: set[str] | None = None,
-) -> None:
-    notation = normalize_word(pronunciation.get("phoneticNotation"))
-    raw_ipa = pronunciation.get("phoneticSpelling")
-    ipa = normalize_ipa(raw_ipa) if not notation or notation == "ipa" else ""
-    audio = str(pronunciation.get("audioFile") or "").strip()
-    if not ipa and not audio:
-        return
-
-    regions = regions_from_items(pronunciation.get("dialects") or [])
-    if not regions:
-        regions = set(inherited_regions or ())
-    pair = (ipa, audio)
-    if "us" in regions:
-        append_unique(group.pronunciations_us, pair)
-    if "gb" in regions:
-        append_unique(group.pronunciations_gb, pair)
-
-
-def iter_senses(senses: Iterable[Mapping[str, Any]]) -> Iterator[Mapping[str, Any]]:
-    for sense in senses:
-        yield sense
-        yield from iter_senses(sense.get("subsenses") or [])
-
-
-def add_translations(group: OxfordGroup, senses: Iterable[Mapping[str, Any]]) -> None:
-    for sense in iter_senses(senses):
-        for translation in sense.get("translations") or []:
-            language = normalize_word(translation.get("language"))
-            if language not in {"", "ru", "russian"}:
-                continue
-            text = unicodedata.normalize(
-                "NFC", str(translation.get("text") or "").strip()
-            )
-            if text:
-                append_unique(group.translations, text)
-
-
-def process_variant_form(group: OxfordGroup, variant: Mapping[str, Any]) -> None:
-    regions = regions_from_items(variant.get("regions") or [])
-    variant_word = normalize_word(variant.get("text"))
-    if variant_word:
-        if "us" in regions:
-            append_unique(group.us_variants, variant_word)
-        if "gb" in regions:
-            append_unique(group.gb_variants, variant_word)
-    for pronunciation in variant.get("pronunciations") or []:
-        add_pronunciation(group, pronunciation, inherited_regions=regions)
-
-
-def process_lexical_entry(
-    group: OxfordGroup,
-    lexical_entry: Mapping[str, Any],
-) -> None:
-    base_word = normalize_word(lexical_entry.get("text"))
-    if base_word:
-        append_unique(group.base_words, base_word)
-
-    for pronunciation in lexical_entry.get("pronunciations") or []:
-        add_pronunciation(group, pronunciation)
-    for variant in lexical_entry.get("variantForms") or []:
-        process_variant_form(group, variant)
-
-    for entry in lexical_entry.get("entries") or []:
-        group.entry_count += 1
-        for pronunciation in entry.get("pronunciations") or []:
-            add_pronunciation(group, pronunciation)
-        for variant in entry.get("variantForms") or []:
-            process_variant_form(group, variant)
-        add_translations(group, entry.get("senses") or [])
+    parser.add_argument(
+        "--words-json",
+        type=Path,
+        default=DEFAULT_WORDS_JSON,
+        help=f"Definition source JSON (default: {DEFAULT_WORDS_JSON})",
+    )
+    parser.add_argument(
+        "--database-url",
+        default=os.environ.get("DATABASE_URL"),
+        help="PostgreSQL URL; defaults to DATABASE_URL",
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=positive_integer,
+        default=500,
+        help="Rows per PostgreSQL batch (default: 500)",
+    )
+    parser.add_argument(
+        "--limit-files",
+        type=positive_integer,
+        help="Process only the first N cache files",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Parse and report without connecting to PostgreSQL",
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Stop on the first malformed cache file",
+    )
+    parser.add_argument(
+        "--log-level",
+        choices=LOG_LEVELS,
+        default="INFO",
+        help="Terminal log verbosity (default: INFO)",
+    )
+    return parser.parse_args(argv)
 
 
 def parse_cache_files(
@@ -467,86 +414,6 @@ def load_definition_index(
     return index
 
 
-def group_spellings(group: OxfordGroup) -> tuple[str, str]:
-    base_word = group.base_words[0] if group.base_words else ""
-    word_us = group.us_variants[0] if group.us_variants else base_word
-    word_gb = group.gb_variants[0] if group.gb_variants else base_word
-    if len(group.us_variants) > 1:
-        LOGGER.warning(
-            "%s has multiple US spellings; using %r and ignoring %r",
-            group.source_lexical_key,
-            group.us_variants[0],
-            group.us_variants[1:],
-        )
-    if len(group.gb_variants) > 1:
-        LOGGER.warning(
-            "%s has multiple GB spellings; using %r and ignoring %r",
-            group.source_lexical_key,
-            group.gb_variants[0],
-            group.gb_variants[1:],
-        )
-    return word_us, word_gb
-
-
-def definition_candidates(
-    group: OxfordGroup,
-    definition_index: Mapping[tuple[str, str], list[DatasetDefinition]],
-) -> list[DatasetDefinition]:
-    allowed_pos = DATASET_POS_BY_OXFORD_CATEGORY.get(
-        group.lexical_category, {group.lexical_category}
-    )
-
-    def candidates_for(words: Iterable[str]) -> list[DatasetDefinition]:
-        matches: list[DatasetDefinition] = []
-        seen: set[int] = set()
-        for word in words:
-            for part_of_speech in allowed_pos:
-                for candidate in definition_index.get((word, part_of_speech), []):
-                    if candidate.ordinal not in seen:
-                        seen.add(candidate.ordinal)
-                        matches.append(candidate)
-        return matches
-
-    base_matches = candidates_for(group.base_words)
-    if base_matches:
-        return base_matches
-    return candidates_for([*group.us_variants, *group.gb_variants])
-
-
-def choose_definition(
-    group: OxfordGroup,
-    definition_index: Mapping[tuple[str, str], list[DatasetDefinition]],
-) -> tuple[str, str, str]:
-    candidates = definition_candidates(group, definition_index)
-    if not candidates:
-        return "", "", "missing"
-    if len(candidates) == 1:
-        candidate = candidates[0]
-        return candidate.definition, candidate.example, "unique_word_pos"
-
-    group_ipas = {
-        comparable_ipa(ipa)
-        for ipa, _ in [*group.pronunciations_us, *group.pronunciations_gb]
-        if ipa
-    }
-    phonetic_matches = [
-        candidate
-        for candidate in candidates
-        if comparable_ipa(candidate.phonetic) in group_ipas
-    ]
-    if len(phonetic_matches) == 1:
-        candidate = phonetic_matches[0]
-        return candidate.definition, candidate.example, "phonetic"
-
-    LOGGER.warning(
-        "Ambiguous definition for %s: %s dataset candidates, %s phonetic matches",
-        group.source_lexical_key,
-        len(candidates),
-        len(phonetic_matches),
-    )
-    return "", "", "ambiguous"
-
-
 def build_rows(
     groups: Mapping[str, OxfordGroup],
     definition_index: Mapping[tuple[str, str], list[DatasetDefinition]],
@@ -590,25 +457,6 @@ def build_rows(
     return rows, stats
 
 
-def iter_batches(
-    rows: Iterable[OxfordRow], batch_size: int
-) -> Iterator[list[OxfordRow]]:
-    batch: list[OxfordRow] = []
-    for row in rows:
-        batch.append(row)
-        if len(batch) == batch_size:
-            yield batch
-            batch = []
-    if batch:
-        yield batch
-
-
-def ensure_schema(cursor: Any) -> None:
-    cursor.execute(CREATE_TABLE_SQL)
-    for statement in CREATE_INDEX_SQL:
-        cursor.execute(statement)
-
-
 def import_rows(
     rows: Iterable[OxfordRow],
     database_url: str,
@@ -644,6 +492,12 @@ def import_rows(
     return processed
 
 
+def ensure_schema(cursor: Any) -> None:
+    cursor.execute(CREATE_TABLE_SQL)
+    for statement in CREATE_INDEX_SQL:
+        cursor.execute(statement)
+
+
 def log_summary(file_stats: Counter[str], row_stats: Counter[str]) -> None:
     LOGGER.info(
         "Oxford cache: files=%s, successful=%s, 404=%s, invalid=%s, "
@@ -668,91 +522,237 @@ def log_summary(file_stats: Counter[str], row_stats: Counter[str]) -> None:
     )
 
 
-def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--source-dir",
-        type=Path,
-        default=DEFAULT_SOURCE_DIR,
-        help=f"Oxford cache directory (default: {DEFAULT_SOURCE_DIR})",
-    )
-    parser.add_argument(
-        "--words-json",
-        type=Path,
-        default=DEFAULT_WORDS_JSON,
-        help=f"Definition source JSON (default: {DEFAULT_WORDS_JSON})",
-    )
-    parser.add_argument(
-        "--database-url",
-        default=os.environ.get("DATABASE_URL"),
-        help="PostgreSQL URL; defaults to DATABASE_URL",
-    )
-    parser.add_argument(
-        "--batch-size",
-        type=positive_integer,
-        default=500,
-        help="Rows per PostgreSQL batch (default: 500)",
-    )
-    parser.add_argument(
-        "--limit-files",
-        type=positive_integer,
-        help="Process only the first N cache files",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Parse and report without connecting to PostgreSQL",
-    )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Stop on the first malformed cache file",
-    )
-    parser.add_argument(
-        "--log-level",
-        choices=LOG_LEVELS,
-        default="INFO",
-        help="Terminal log verbosity (default: INFO)",
-    )
-    return parser.parse_args(argv)
+def iter_batches(
+    rows: Iterable[OxfordRow], batch_size: int
+) -> Iterator[list[OxfordRow]]:
+    batch: list[OxfordRow] = []
+    for row in rows:
+        batch.append(row)
+        if len(batch) == batch_size:
+            yield batch
+            batch = []
+    if batch:
+        yield batch
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
-    configure_logging(args.log_level)
+def process_lexical_entry(
+    group: OxfordGroup,
+    lexical_entry: Mapping[str, Any],
+) -> None:
+    base_word = normalize_word(lexical_entry.get("text"))
+    if base_word:
+        append_unique(group.base_words, base_word)
 
-    if not args.source_dir.is_dir():
-        LOGGER.error("Oxford cache directory does not exist: %s", args.source_dir)
-        return 2
-    if not args.words_json.is_file():
-        LOGGER.error("Definition JSON does not exist: %s", args.words_json)
-        return 2
-    if not args.dry_run and not args.database_url:
-        LOGGER.error(
-            "PostgreSQL URL is required: use --database-url or set DATABASE_URL"
+    for pronunciation in lexical_entry.get("pronunciations") or []:
+        add_pronunciation(group, pronunciation)
+    for variant in lexical_entry.get("variantForms") or []:
+        process_variant_form(group, variant)
+
+    for entry in lexical_entry.get("entries") or []:
+        group.entry_count += 1
+        for pronunciation in entry.get("pronunciations") or []:
+            add_pronunciation(group, pronunciation)
+        for variant in entry.get("variantForms") or []:
+            process_variant_form(group, variant)
+        add_translations(group, entry.get("senses") or [])
+
+
+def process_variant_form(group: OxfordGroup, variant: Mapping[str, Any]) -> None:
+    regions = regions_from_items(variant.get("regions") or [])
+    variant_word = normalize_word(variant.get("text"))
+    if variant_word:
+        if "us" in regions:
+            append_unique(group.us_variants, variant_word)
+        if "gb" in regions:
+            append_unique(group.gb_variants, variant_word)
+    for pronunciation in variant.get("pronunciations") or []:
+        add_pronunciation(group, pronunciation, inherited_regions=regions)
+
+
+def add_translations(group: OxfordGroup, senses: Iterable[Mapping[str, Any]]) -> None:
+    for sense in iter_senses(senses):
+        for translation in sense.get("translations") or []:
+            language = normalize_word(translation.get("language"))
+            if language not in {"", "ru", "russian"}:
+                continue
+            text = unicodedata.normalize(
+                "NFC", str(translation.get("text") or "").strip()
+            )
+            if text:
+                append_unique(group.translations, text)
+
+
+def add_pronunciation(
+    group: OxfordGroup,
+    pronunciation: Mapping[str, Any],
+    inherited_regions: set[str] | None = None,
+) -> None:
+    notation = normalize_word(pronunciation.get("phoneticNotation"))
+    raw_ipa = pronunciation.get("phoneticSpelling")
+    ipa = normalize_ipa(raw_ipa) if not notation or notation == "ipa" else ""
+    audio = str(pronunciation.get("audioFile") or "").strip()
+    if not ipa and not audio:
+        return
+
+    regions = regions_from_items(pronunciation.get("dialects") or [])
+    if not regions:
+        regions = set(inherited_regions or ())
+    pair = (ipa, audio)
+    if "us" in regions:
+        append_unique(group.pronunciations_us, pair)
+    if "gb" in regions:
+        append_unique(group.pronunciations_gb, pair)
+
+
+def choose_definition(
+    group: OxfordGroup,
+    definition_index: Mapping[tuple[str, str], list[DatasetDefinition]],
+) -> tuple[str, str, str]:
+    candidates = definition_candidates(group, definition_index)
+    if not candidates:
+        return "", "", "missing"
+    if len(candidates) == 1:
+        candidate = candidates[0]
+        return candidate.definition, candidate.example, "unique_word_pos"
+
+    group_ipas = {
+        comparable_ipa(ipa)
+        for ipa, _ in [*group.pronunciations_us, *group.pronunciations_gb]
+        if ipa
+    }
+    phonetic_matches = [
+        candidate
+        for candidate in candidates
+        if comparable_ipa(candidate.phonetic) in group_ipas
+    ]
+    if len(phonetic_matches) == 1:
+        candidate = phonetic_matches[0]
+        return candidate.definition, candidate.example, "phonetic"
+
+    LOGGER.warning(
+        "Ambiguous definition for %s: %s dataset candidates, %s phonetic matches",
+        group.source_lexical_key,
+        len(candidates),
+        len(phonetic_matches),
+    )
+    return "", "", "ambiguous"
+
+
+def definition_candidates(
+    group: OxfordGroup,
+    definition_index: Mapping[tuple[str, str], list[DatasetDefinition]],
+) -> list[DatasetDefinition]:
+    allowed_pos = DATASET_POS_BY_OXFORD_CATEGORY.get(
+        group.lexical_category, {group.lexical_category}
+    )
+
+    def candidates_for(words: Iterable[str]) -> list[DatasetDefinition]:
+        matches: list[DatasetDefinition] = []
+        seen: set[int] = set()
+        for word in words:
+            for part_of_speech in allowed_pos:
+                for candidate in definition_index.get((word, part_of_speech), []):
+                    if candidate.ordinal not in seen:
+                        seen.add(candidate.ordinal)
+                        matches.append(candidate)
+        return matches
+
+    base_matches = candidates_for(group.base_words)
+    if base_matches:
+        return base_matches
+    return candidates_for([*group.us_variants, *group.gb_variants])
+
+
+def group_spellings(group: OxfordGroup) -> tuple[str, str]:
+    base_word = group.base_words[0] if group.base_words else ""
+    word_us = group.us_variants[0] if group.us_variants else base_word
+    word_gb = group.gb_variants[0] if group.gb_variants else base_word
+    if len(group.us_variants) > 1:
+        LOGGER.warning(
+            "%s has multiple US spellings; using %r and ignoring %r",
+            group.source_lexical_key,
+            group.us_variants[0],
+            group.us_variants[1:],
         )
-        return 2
-
-    try:
-        LOGGER.info("Reading Oxford cache from %s", args.source_dir)
-        groups, file_stats = parse_cache_files(
-            args.source_dir,
-            limit_files=args.limit_files,
-            strict=args.strict,
+    if len(group.gb_variants) > 1:
+        LOGGER.warning(
+            "%s has multiple GB spellings; using %r and ignoring %r",
+            group.source_lexical_key,
+            group.gb_variants[0],
+            group.gb_variants[1:],
         )
-        definition_index = load_definition_index(args.words_json)
-        rows, row_stats = build_rows(groups, definition_index)
-        log_summary(file_stats, row_stats)
-        if args.dry_run:
-            LOGGER.info("Dry-run complete; no database changes made")
-            return 0
+    return word_us, word_gb
 
-        imported = import_rows(rows, args.database_url, batch_size=args.batch_size)
-        LOGGER.info("Oxford import complete: %s rows processed", f"{imported:,}")
-        return 0
-    except (OxfordCacheError, OxfordDatabaseError) as exc:
-        LOGGER.error("Oxford import failed: %s", exc)
-        return 1
+
+def iter_senses(senses: Iterable[Mapping[str, Any]]) -> Iterator[Mapping[str, Any]]:
+    for sense in senses:
+        yield sense
+        yield from iter_senses(sense.get("subsenses") or [])
+
+
+def normalize_word(value: Any) -> str:
+    text = unicodedata.normalize("NFC", str(value or "").strip())
+    return " ".join(text.lower().split())
+
+
+def normalize_category(value: Any) -> str:
+    return normalize_word(value).replace("_", " ")
+
+
+def normalize_marker(value: Any) -> str:
+    if isinstance(value, Mapping):
+        value = value.get("id") or value.get("text") or ""
+    text = normalize_word(value).replace("_", " ").replace("-", " ")
+    return " ".join(text.split())
+
+
+def normalize_ipa(value: Any) -> str:
+    text = unicodedata.normalize("NFC", str(value or "").strip())
+    if not text:
+        return ""
+    text = text.strip("/[]").strip()
+    return f"/{text}/" if text else ""
+
+
+def comparable_ipa(value: Any) -> str:
+    return normalize_ipa(value).strip("/").replace(" ", "")
+
+
+def append_unique(values: list[Any], value: Any) -> None:
+    if value not in values:
+        values.append(value)
+
+
+def regions_from_items(items: Iterable[Any]) -> set[str]:
+    regions: set[str] = set()
+    for item in items:
+        marker = normalize_marker(item)
+        if marker in US_REGION_MARKERS:
+            regions.add("us")
+        if marker in GB_REGION_MARKERS:
+            regions.add("gb")
+    return regions
+
+
+def source_key(result_id: str, lexical_category: str) -> str:
+    encoded_id = quote(normalize_word(result_id), safe="._-")
+    encoded_category = quote(normalize_category(lexical_category), safe="._-")
+    return f"oxford:{encoded_id}:{encoded_category}"
+
+
+def configure_logging(level: str) -> None:
+    logging.basicConfig(
+        level=getattr(logging, level),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+
+def positive_integer(value: str) -> int:
+    parsed = int(value)
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
 
 
 if __name__ == "__main__":
