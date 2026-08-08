@@ -1,0 +1,34 @@
+"""Canonical SQLAlchemy metadata for the PostgreSQL schema.
+
+The bot continues to use psycopg directly at runtime. This metadata exists so
+Alembic has one authoritative schema for migrations and autogeneration.
+"""
+
+from tgbot.db.schema.base import metadata
+from tgbot.db.schema.bot import (
+    bot_scheduler_runs,
+    bot_telegram_audio_cache,
+    bot_user_cards,
+    bot_users,
+)
+from tgbot.db.schema.oald import (
+    oald_audio_files,
+    oald_audio_variants,
+    oald_entries,
+    oald_entry_audio_sources,
+)
+
+MANAGED_TABLES = frozenset(metadata.tables)
+
+__all__ = [
+    "MANAGED_TABLES",
+    "bot_scheduler_runs",
+    "bot_telegram_audio_cache",
+    "bot_user_cards",
+    "bot_users",
+    "metadata",
+    "oald_audio_files",
+    "oald_audio_variants",
+    "oald_entries",
+    "oald_entry_audio_sources",
+]

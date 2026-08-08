@@ -1,9 +1,9 @@
 """PostgreSQL access and schema metadata for the bot."""
 
-from tgbot.db.database import (
+from tgbot.db.database import Database
+from tgbot.db.models import (
     ActiveUser,
     BotUser,
-    Database,
     DatabaseError,
     ReservedAudio,
     ReservedCard,
