@@ -374,7 +374,7 @@ def _ffmpeg_executable() -> str:
         import imageio_ffmpeg
     except ImportError as exc:
         raise AudioConversionError(
-            "imageio-ffmpeg is not installed; run: poetry install"
+            "imageio-ffmpeg is not installed; run: uv sync"
         ) from exc
     try:
         return str(imageio_ffmpeg.get_ffmpeg_exe())
@@ -562,9 +562,7 @@ def _load_psycopg() -> Any:
     try:
         import psycopg
     except ImportError as exc:
-        raise OaldAudioDatabaseError(
-            "psycopg is not installed; run: poetry install"
-        ) from exc
+        raise OaldAudioDatabaseError("psycopg is not installed; run: uv sync") from exc
     return psycopg
 
 

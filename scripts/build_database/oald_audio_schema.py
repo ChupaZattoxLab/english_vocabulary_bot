@@ -36,7 +36,7 @@ def require_tables(cursor: Any, table_names: Iterable[str]) -> None:
         raise SchemaNotMigratedError(
             "Database schema is incomplete; missing tables: "
             f"{', '.join(sorted(missing))}. Run "
-            "`poetry run alembic upgrade head` first."
+            "`uv run migrate` first."
         )
 
 

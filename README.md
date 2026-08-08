@@ -7,23 +7,51 @@ Offline-friendly Telegram bot that sends OALD-backed vocabulary cards from Postg
 - `vocabulary_bot/` — Telegram bot (aiogram) and HTML card templates
 - `scripts/database/10-restore-oald-seed.sh` — Postgres first-boot hook (optional seed restore)
 - `compose.yaml` — local Postgres 16
+- `alembic/` — database migrations
 - `scripts/build_database/` — optional pipeline to rebuild the DB from external sources
 
 Large artefacts (`data/`, Kaikki `.jsonl`, DB dumps) are **not** published. Keep them only on your machine or server.
 
+## Prerequisites
+
+- Docker Desktop (or Docker Engine) with Compose
+- [uv](https://docs.astral.sh/uv/) (installs/manages a local Python 3.11–3.14 toolchain)
+- A Telegram bot token from [@BotFather](https://t.me/BotFather)
+- Your numeric Telegram user ID from [@useridinfobot](https://t.me/useridinfobot) (for `/admin`)
+
 ## Local setup
 
-1. Docker Desktop (or Docker Engine) installed and running.
+Do the steps in order. Commands below are for PowerShell on Windows; on Linux/macOS use the same `uv` / `docker compose` commands.
 
-2. Copy env and fill secrets (never commit `.env`):
+### 1. Clone and configure env
 
 ```powershell
+cd english_vocabulary_bot
 Copy-Item .env.example .env
 ```
 
-Set `TELEGRAM_BOT_TOKEN` (BotFather) and `TELEGRAM_ADMIN_IDS` (numeric IDs from `@useridinfobot`).
+Edit `.env` and set at least:
 
-3. Place the OALD Postgres seed **locally** (not in Git), if you have it:
+```env
+TELEGRAM_BOT_TOKEN=...your token...
+TELEGRAM_ADMIN_IDS=123456789
+```
+
+`OALD_DATABASE_URL` in `.env.example` already matches the Compose defaults
+(`vocab_app` / `vocab_dev_password` / `english_vocabulary_oald` on port `5432`).
+
+If host port **5432** is already taken (common when a local Postgres is installed),
+set **both** of these in `.env` **before** starting Compose:
+
+```env
+POSTGRES_PORT=5433
+OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5433/english_vocabulary_oald
+```
+
+### 2. Optional: place the OALD seed
+
+For a useful local bot (thousands of ready cards + audio), put the seed parts here
+**before the first** `docker compose up` (init runs only once per Docker volume):
 
 ```text
 data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts/
@@ -32,119 +60,124 @@ data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts/
   SHA256SUMS.txt
 ```
 
-Without these parts, Postgres still starts; the init script skips restore and you get an empty DB (or restore a dump another way).
+Without these parts Postgres still starts; the init script skips restore and you get
+an empty schema after migrations. The bot will start, but there will be nothing to send
+until you restore a dump or rebuild via `scripts/build_database/`.
 
-4. Start Postgres:
+If the volume was already created without the seed, either add the parts and recreate
+the volume, or restore a dump manually:
+
+```powershell
+docker compose down -v
+# place seed parts, then:
+docker compose up -d
+```
+
+`down -v` deletes the Postgres volume (all local DB data).
+
+### 3. Start Postgres
 
 ```powershell
 docker compose up -d
 docker compose logs -f postgres
 ```
 
-Wait for `OALD seed restore completed` (or the skip message), then `Ctrl+C`.
+Wait for `OALD seed restore completed` or `OALD seed parts are missing; skipping automatic restore`, then `Ctrl+C` (Compose keeps running in the background).
 
-If port **5432** is already taken, set in `.env`:
-
-```env
-POSTGRES_PORT=5433
-OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5433/english_vocabulary_oald
-```
-
-5. Install Poetry (once), install dependencies, migrate the database, then run
-the bot:
+Quick health check:
 
 ```powershell
-python -m pip install poetry
-poetry install
-poetry run migrate
-poetry run start
+docker compose ps
 ```
 
-Stop that local bot process from another terminal with:
+### 4. Install dependencies, migrate, run the bot
 
 ```powershell
-poetry run stop
+# once: https://docs.astral.sh/uv/getting-started/installation/
+irm https://astral.sh/uv/install.ps1 | iex
+# open a new terminal (or refresh PATH), then from the repo root:
+uv sync
+uv run migrate
+uv run start
 ```
 
-`alembic upgrade head` is required both for an empty database and after
-restoring an older seed. It safely adopts a complete legacy schema and records
-its migration version without deleting OALD data. Database-building and audio
+You should see long polling for your bot username. In Telegram: `/start`, then `/admin`
+if your ID is in `TELEGRAM_ADMIN_IDS`.
+
+Stop that local bot from another terminal:
+
+```powershell
+uv run stop
+```
+
+Only one process may poll the same bot token. Stop any server/systemd instance before
+running locally, or you will get `TelegramConflictError`.
+
+`uv run migrate` is required both for an empty database and after restoring an older
+seed. It adopts a complete legacy schema without deleting OALD data. Import/audio
 scripts expect migrations to have run first; they no longer create tables.
 
-Admin UI: `/admin` (only for IDs in `TELEGRAM_ADMIN_IDS`).
-
-Only one process may poll the same bot token. Stop the server instance before running locally.
-
-Tests and linting:
+## Day-to-day commands
 
 ```powershell
-poetry run test
-poetry run check
-poetry run format
-poetry run lint
+uv run start      # run the bot (records PID for stop)
+uv run stop       # stop the bot started via start
+uv run migrate    # alembic upgrade head
+uv run check      # metadata matches migrated DB
+uv run test       # pytest
+uv run format     # ruff format
+uv run lint       # ruff check --fix + format check
 ```
 
-`format` rewrites Python with Ruff; `lint` applies safe autofixes and fails if
-formatting is still needed. Set `TEST_OALD_DATABASE_URL` to run the PostgreSQL
-integration tests. The role must be allowed to create temporary databases.
+Set `TEST_OALD_DATABASE_URL` to run PostgreSQL integration tests. The role must be
+allowed to create temporary databases.
 
 ## Database migrations
 
-Alembic manages all eight application/OALD tables. Useful commands:
+Alembic manages all eight application/OALD tables.
 
 ```powershell
-# apply pending migrations
-poetry run migrate
-
-# inspect the database version and migration history
-poetry run alembic current
-poetry run alembic history
-
-# generate a migration after editing vocabulary_bot/schema.py
-poetry run alembic revision --autogenerate -m "describe schema change"
-
-# verify metadata has no uncommitted schema changes
-poetry run check
+uv run migrate
+uv run alembic current
+uv run alembic history
+uv run alembic revision --autogenerate -m "describe schema change"
+uv run check
 ```
 
 Review every autogenerated revision before applying it. On deployment, run
-`poetry run migrate` before restarting the systemd service.
+`uv run migrate` before restarting the bot service.
 
-### Server (systemd)
+### Server notes
 
-Unit file: [`deploy/vocabulary-bot.service`](deploy/vocabulary-bot.service).
-
-If the bot keeps coming back after `kill`, systemd is restarting it. On the server:
+If a remote instance keeps coming back after `kill`, systemd is restarting it:
 
 ```bash
-# find the unit that owns the process
-systemctl status 1718651
-# or:
 systemctl list-units --type=service --all | grep -iE 'vocab|bot|telegram'
-ls /etc/systemd/system/*vocab* /etc/systemd/system/*bot* 2>/dev/null
-
-# stop + disable autostart (use the real unit name)
 sudo systemctl stop vocabulary-bot
 sudo systemctl disable vocabulary-bot
-
-# confirm nothing is left
 ps aux | grep vocabulary_bot | grep -v grep
 ```
 
-To run on the server again later:
+To run on the server again later (after `git pull`, `uv sync`, `uv run migrate`):
 
 ```bash
 sudo systemctl enable --now vocabulary-bot
+# or, without systemd:
+cd /opt/english_vocabulary_bot
+uv sync
+uv run migrate
+uv run start
 ```
-
 
 ## pgAdmin
 
 - Host `127.0.0.1`
-- Port `5432` (or `5433` if you remapped)
+- Port `5432` (or the `POSTGRES_PORT` from `.env`)
 - DB `english_vocabulary_oald`
 - User `vocab_app` / password `vocab_dev_password`
 
 ## Git history note
 
-Removing `data/` and Kaikki dumps from the current tree does **not** erase them from old commits. For a truly lean public clone, rewrite history (`git filter-repo`) or publish a fresh repository without those blobs.
+Removing `data/` and Kaikki dumps from the current tree does **not** erase them from
+old commits. For a truly lean public clone, rewrite history (`git filter-repo`) or
+publish a fresh repository without those blobs.

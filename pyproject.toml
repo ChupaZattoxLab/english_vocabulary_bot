@@ -1,24 +1,19 @@
-[tool.poetry]
+[project]
 name = "english-vocabulary-bot"
 version = "0.1.0"
 description = "Telegram bot that sends OALD-backed vocabulary cards from PostgreSQL"
 readme = "README.md"
-packages = [{ include = "vocabulary_bot" }]
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "aiogram>=3.20,<4",
+    "imageio-ffmpeg>=0.6,<1",
+    "psycopg[binary,pool]>=3,<4",
+    "alembic>=1.19.0,<2",
+    "sqlalchemy>=2.0.51,<3",
+    "psutil>=7.2.2,<8",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.11,<3.15"
-aiogram = ">=3.20,<4"
-imageio-ffmpeg = ">=0.6,<1"
-psycopg = { version = ">=3,<4", extras = ["binary", "pool"] }
-alembic = "^1.19.0"
-sqlalchemy = "^2.0.51"
-psutil = "^7.2.2"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
-ruff = "^0.16.2"
-
-[tool.poetry.scripts]
+[project.scripts]
 start = "vocabulary_bot.commands:start"
 stop = "vocabulary_bot.commands:stop"
 migrate = "vocabulary_bot.commands:migrate"
@@ -27,9 +22,18 @@ test = "vocabulary_bot.commands:test"
 format = "vocabulary_bot.commands:format_code"
 lint = "vocabulary_bot.commands:lint"
 
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4,<9",
+    "ruff>=0.16.2",
+]
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["vocabulary_bot"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

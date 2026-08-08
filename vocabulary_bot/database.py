@@ -297,7 +297,7 @@ class Database:
                 raise DatabaseError(
                     "Database schema is incomplete; missing tables: "
                     f"{', '.join(sorted(missing))}. Run "
-                    "`poetry run alembic upgrade head`."
+                    "`uv run migrate`."
                 )
 
             version_table = await (
@@ -307,8 +307,7 @@ class Database:
             ).fetchone()
             if not version_table or version_table["name"] is None:
                 raise DatabaseError(
-                    "Database is not managed by Alembic. Run "
-                    "`poetry run alembic upgrade head`."
+                    "Database is not managed by Alembic. Run `uv run migrate`."
                 )
             version = await (
                 await connection.execute("SELECT version_num FROM alembic_version")
@@ -318,7 +317,7 @@ class Database:
             if current != expected:
                 raise DatabaseError(
                     f"Database migration is {current}, expected {expected}. "
-                    "Run `poetry run alembic upgrade head`."
+                    "Run `uv run migrate`."
                 )
 
     async def upsert_user(

@@ -367,9 +367,7 @@ def _load_psycopg() -> Any:
     try:
         import psycopg
     except ImportError as exc:
-        raise OaldDatabaseError(
-            "psycopg is not installed; run: poetry install"
-        ) from exc
+        raise OaldDatabaseError("psycopg is not installed; run: uv sync") from exc
     return psycopg
 
 

@@ -618,9 +618,7 @@ def import_rows(
     try:
         import psycopg
     except ImportError as exc:
-        raise OxfordDatabaseError(
-            "psycopg is not installed; run: poetry install"
-        ) from exc
+        raise OxfordDatabaseError("psycopg is not installed; run: uv sync") from exc
 
     processed = 0
     try:

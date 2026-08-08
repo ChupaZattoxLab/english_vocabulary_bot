@@ -43,7 +43,7 @@ def _remove_pid_file(expected_pid: int | None = None) -> None:
 
 
 def start() -> int:
-    """Start one bot process and record it for ``poetry run stop``."""
+    """Start one bot process and record it for ``uv run stop``."""
     existing = _read_process()
     if existing is not None:
         print(f"Bot is already running (PID {existing.pid}).")
@@ -70,7 +70,7 @@ def start() -> int:
 
 
 def stop() -> int:
-    """Stop the bot process recorded by ``poetry run start``."""
+    """Stop the bot process recorded by ``uv run start``."""
     process = _read_process()
     if process is None:
         PID_FILE.unlink(missing_ok=True)
