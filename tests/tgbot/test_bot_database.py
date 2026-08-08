@@ -214,6 +214,109 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(card.secondary_audio)
         self.assertIn(card.secondary_audio.source_url, self.gb_audio_urls)
 
+    async def test_pronunciation_change_preserves_pause(self) -> None:
+        await self.database.set_active(self.telegram_user_id, False)
+        user = await self.database.set_pronunciation(self.telegram_user_id, "gb")
+        self.assertFalse(user.is_active)
+        self.assertEqual(user.pronunciation, "gb")
+
+    async def test_failed_card_does_not_consume_word_or_slot(self) -> None:
+        slot = datetime.now(UTC)
+        first = await self.database.reserve_card(self.telegram_user_id, slot)
+        second = await self.database.reserve_card(
+            self.telegram_user_id,
+            slot + timedelta(hours=1),
+        )
+        self.assertIsNotNone(first)
+        self.assertIsNotNone(second)
+        await self.database.finish_delivery(
+            first.history_id,
+            delivered=False,
+            error_type="technical_error",
+            error_message="boom",
+        )
+        await self.database.finish_delivery(
+            second.history_id,
+            delivered=True,
+            telegram_message_id=1,
+        )
+        retry = await self.database.reserve_card(self.telegram_user_id, slot)
+        self.assertIsNotNone(retry)
+        self.assertEqual(retry.entry_id, first.entry_id)
+
+    async def test_paused_user_can_reserve_one_off_card(self) -> None:
+        await self.database.set_active(self.telegram_user_id, False)
+        denied = await self.database.reserve_card(
+            self.telegram_user_id,
+            datetime.now(UTC),
+        )
+        allowed = await self.database.reserve_card(
+            self.telegram_user_id,
+            datetime.now(UTC),
+            require_active=False,
+        )
+        self.assertIsNone(denied)
+        self.assertIsNotNone(allowed)
+
+    async def test_scheduler_reclaims_failed_run_within_grace(self) -> None:
+        import psycopg
+
+        slot = datetime.now(UTC) - timedelta(minutes=10)
+        self.scheduler_slots.append(slot)
+        self.assertTrue(await self.database.claim_scheduler_run(slot, grace_minutes=60))
+        await self.database.finish_scheduler_run(
+            slot,
+            attempted=1,
+            delivered=0,
+            failed=1,
+            skipped=0,
+        )
+        self.assertFalse(
+            await self.database.claim_scheduler_run(slot, grace_minutes=60)
+        )
+        with psycopg.connect(self.database_url) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    UPDATE bot_scheduler_runs
+                    SET completed_at = CURRENT_TIMESTAMP - INTERVAL '3 minutes'
+                    WHERE scheduled_slot = %s
+                    """,
+                    (slot,),
+                )
+        self.assertTrue(await self.database.claim_scheduler_run(slot, grace_minutes=60))
+        await self.database.finish_scheduler_run(
+            slot,
+            attempted=1,
+            delivered=1,
+            failed=0,
+            skipped=0,
+        )
+        with psycopg.connect(self.database_url) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    UPDATE bot_scheduler_runs
+                    SET completed_at = CURRENT_TIMESTAMP - INTERVAL '3 minutes'
+                    WHERE scheduled_slot = %s
+                    """,
+                    (slot,),
+                )
+        self.assertFalse(
+            await self.database.claim_scheduler_run(slot, grace_minutes=60)
+        )
+
+    async def test_block_keeps_paused_state(self) -> None:
+        await self.database.set_active(self.telegram_user_id, False)
+        await self.database.deactivate_user(self.telegram_user_id)
+        user = await self.database.upsert_user(
+            telegram_user_id=self.telegram_user_id,
+            chat_id=self.telegram_user_id,
+            username="integration",
+            first_name="Integration",
+        )
+        self.assertFalse(user.is_active)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -20,12 +20,12 @@ from urllib.parse import unquote, urlparse
 
 try:
     from .oald_preflight import require_oald_schema
-except ImportError:
+except ImportError:  # running as a plain script
     from oald_preflight import require_oald_schema  # type: ignore[no-redef]
 
 
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
-LOGGER = logging.getLogger("vocabulary.oald_audio_download")
+LOGGER = logging.getLogger("tgbot.oald_audio_download")
 DEFAULT_MAX_AUDIO_BYTES = 10 * 1024 * 1024
 DEFAULT_CONNECT_TIMEOUT = 10
 RETRYABLE_HTTP_STATUS = {408, 425, 500, 502, 503, 504}

@@ -37,7 +37,7 @@ packages = ["tgbot", "scripts"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["scripts/import", "."]
+pythonpath = ["scripts/oald", "."]
 
 [tool.ruff]
 line-length = 88

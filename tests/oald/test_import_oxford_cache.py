@@ -1,15 +1,11 @@
 import json
 import os
-import sys
 import tempfile
 import unittest
 import uuid
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "scripts" / "import"))
-
-from import_oxford_cache import (  # noqa: E402
+from import_oxford_cache import (
     OxfordCacheError,
     build_rows,
     import_rows,
@@ -268,7 +264,7 @@ class OxfordCacheParserTests(unittest.TestCase):
             },
         ]
 
-        with self.assertLogs("vocabulary.oxford_import", level="WARNING"):
+        with self.assertLogs("tgbot.oxford_import", level="WARNING"):
             rows, _, row_stats = self.build(definitions)
 
         self.assertEqual(rows[0].definition, "")
@@ -278,7 +274,7 @@ class OxfordCacheParserTests(unittest.TestCase):
     def test_malformed_json_is_skipped_or_raised_in_strict_mode(self) -> None:
         (self.cache_directory / "bad.json").write_text("{bad", encoding="utf-8")
 
-        with self.assertLogs("vocabulary.oxford_import", level="ERROR"):
+        with self.assertLogs("tgbot.oxford_import", level="ERROR"):
             groups, stats = parse_cache_files(self.cache_directory)
         self.assertEqual(groups, {})
         self.assertEqual(stats["invalid_files"], 1)

@@ -14,7 +14,6 @@ from tgbot.delivery import (
     CardTemplate,
     CardTemplateError,
     classify_delivery_error,
-    send_method,
 )
 from tgbot.delivery.scheduler import due_schedule_slots
 from tgbot.handlers.admin import _delivery_state
@@ -254,9 +253,6 @@ class DeliveryFormatTests(unittest.TestCase):
             filename=filename,
         )
 
-    def test_prepared_audio_is_sent_as_voice(self) -> None:
-        self.assertEqual(send_method(self.card("audio/ogg", "test.voice.ogg")), "voice")
-
 
 class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
     async def test_voice_is_uploaded_and_telegram_file_id_is_cached(self) -> None:
@@ -300,6 +296,38 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 card.source_url,
                 "voice",
                 "telegram-voice-id",
+            )
+
+    async def test_partial_send_counts_as_delivered(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            template_path = Path(temporary_directory) / "card.html"
+            template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
+            card = DeliveryFormatTests().card("audio/ogg", "test.voice.ogg")
+            database = SimpleNamespace(
+                reserve_card=AsyncMock(return_value=card),
+                finish_delivery=AsyncMock(),
+                deactivate_user=AsyncMock(),
+                cached_audio_file_id=AsyncMock(return_value=None),
+                cache_audio_file_id=AsyncMock(),
+                clear_cached_audio_file_id=AsyncMock(),
+            )
+            bot = SimpleNamespace(
+                send_message=AsyncMock(),
+                send_voice=AsyncMock(side_effect=RuntimeError("voice failed")),
+            )
+            service = CardDeliveryService(database, CardTemplate(template_path))
+
+            outcome = await service.deliver(
+                bot,
+                telegram_user_id=1,
+                chat_id=1,
+                scheduled_slot=datetime.now(UTC),
+            )
+
+            self.assertEqual(outcome.status, "delivered")
+            database.finish_delivery.assert_awaited_once_with(
+                card.history_id,
+                delivered=True,
             )
 
     async def test_both_dialects_use_both_template_and_send_two_voices(self) -> None:

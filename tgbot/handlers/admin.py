@@ -30,13 +30,12 @@ def _arguments(message: Message) -> str:
     return text.split(maxsplit=1)[1].strip() if len(text.split(maxsplit=1)) == 2 else ""
 
 
-def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime, datetime]:
+def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
     local_now = datetime.now(config.timezone)
     local_start = datetime.combine(local_now.date(), time.min, tzinfo=config.timezone)
     return (
         local_now,
         local_start.astimezone(UTC),
-        (local_start + timedelta(days=1)).astimezone(UTC),
     )
 
 
@@ -64,7 +63,7 @@ async def _is_admin(message: Message, config: BotConfig) -> bool:
 
 
 async def _render_overview(database: Database, config: BotConfig) -> str:
-    local_now, today_start, _ = _local_day_bounds(config)
+    local_now, today_start = _local_day_bounds(config)
     users = await database.admin_users_summary(
         today_start=today_start,
         week_start=(local_now - timedelta(days=7)).astimezone(UTC),
@@ -80,7 +79,7 @@ async def _render_overview(database: Database, config: BotConfig) -> str:
 
 
 async def _render_users(database: Database, config: BotConfig) -> str:
-    local_now, today_start, _ = _local_day_bounds(config)
+    local_now, today_start = _local_day_bounds(config)
     stats = await database.admin_users_summary(
         today_start=today_start,
         week_start=(local_now - timedelta(days=7)).astimezone(UTC),
@@ -118,7 +117,7 @@ def create_admin_router(
     delivery: CardDeliveryService,
     config: BotConfig,
 ) -> Router:
-    router = Router(name="vocabulary-admin")
+    router = Router(name="tgbot-admin")
 
     @router.message(Command("admin"))
     async def admin_handler(message: Message) -> None:
@@ -133,36 +132,7 @@ def create_admin_router(
     async def users_handler(message: Message) -> None:
         if not await _is_admin(message, config):
             return
-        local_now, today_start, _ = _local_day_bounds(config)
-        stats = await database.admin_users_summary(
-            today_start=today_start,
-            week_start=(local_now - timedelta(days=7)).astimezone(UTC),
-            month_start=(local_now - timedelta(days=30)).astimezone(UTC),
-        )
-        levels = "\n".join(
-            f"{level.upper()}: {_number(stats['levels'].get(level, 0))}"
-            for level in ("a1", "a2", "b1", "b2", "c1", "c2")
-        )
-        dialects = (
-            ", ".join(
-                f"{key.upper()}: {_number(value)}"
-                for key, value in sorted(stats["dialects"].items())
-            )
-            or "нет"
-        )
-        await message.answer(
-            "<b>👥 Users</b>\n\n"
-            f"Всего: {_number(stats['total_users'])}\n"
-            f"Получают карточки: {_number(stats['active_users'])}\n"
-            f"Пауза: {_number(stats['paused_users'])}\n"
-            f"Заблокировали бота: {_number(stats['blocked_users'])}\n\n"
-            "<b>Новые</b>\n"
-            f"Сегодня: {_number(stats['new_today'])}\n"
-            f"За 7 дней: {_number(stats['new_week'])}\n"
-            f"За 30 дней: {_number(stats['new_month'])}\n\n"
-            f"<b>По уровням</b>\n{levels}\n\n"
-            f"<b>По произношению</b>\n{dialects}"
-        )
+        await message.answer(await _render_users(database, config))
 
     @router.message(Command("user"))
     async def user_handler(message: Message) -> None:

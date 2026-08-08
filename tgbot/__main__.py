@@ -21,7 +21,7 @@ def main() -> int:
         asyncio.run(run_bot(config))
         return 0
     except ConfigError as exc:
-        logging.getLogger("vocabulary.bot").error("Configuration error: %s", exc)
+        logging.getLogger("tgbot").error("Configuration error: %s", exc)
         return 2
     except KeyboardInterrupt:
         return 0

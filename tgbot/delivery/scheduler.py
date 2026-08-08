@@ -12,9 +12,9 @@ from aiogram import Bot
 
 from tgbot.config import BotConfig
 from tgbot.db import ActiveUser, Database
-from tgbot.delivery import CardDeliveryService
+from tgbot.delivery.service import CardDeliveryService
 
-LOGGER = logging.getLogger("vocabulary.bot.scheduler")
+LOGGER = logging.getLogger("tgbot.scheduler")
 
 
 def due_schedule_slots(
@@ -81,7 +81,10 @@ class CardScheduler:
                 return "failed"
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
-        claimed = await self.database.claim_scheduler_run(scheduled_slot)
+        claimed = await self.database.claim_scheduler_run(
+            scheduled_slot,
+            grace_minutes=self.config.schedule_grace_minutes,
+        )
         if not claimed:
             return
         LOGGER.info("Starting scheduled delivery slot %s", scheduled_slot.isoformat())

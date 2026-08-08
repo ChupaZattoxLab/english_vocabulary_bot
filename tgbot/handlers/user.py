@@ -48,7 +48,7 @@ def create_router(
     delivery: CardDeliveryService,
     config: BotConfig,
 ) -> Router:
-    router = Router(name="vocabulary-bot")
+    router = Router(name="tgbot")
 
     @router.message(CommandStart())
     async def start_handler(message: Message) -> None:
@@ -178,17 +178,25 @@ def create_router(
         if not user or not user.onboarding_completed:
             await message.answer("Сначала завершите настройку через /start.")
             return
+        await database.clear_blocked_marker(message.from_user.id)
         outcome = await delivery.deliver(
             message.bot,
             telegram_user_id=message.from_user.id,
             chat_id=message.chat.id,
             scheduled_slot=datetime.now(UTC),
+            require_active=False,
         )
         if outcome.status == "skipped":
             await message.answer(
                 "Для выбранных уровней больше нет новых карточек с загруженным "
                 "аудио. Карточки не повторяются."
             )
+            return
+        if outcome.status == "failed":
+            await message.answer("Не удалось отправить карточку, попробуйте позже.")
+            return
+        if not user.is_active:
+            await message.answer("Чтобы снова получать по расписанию — /resume")
 
     @router.message(Command("help"))
     async def help_handler(message: Message) -> None:

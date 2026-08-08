@@ -477,18 +477,22 @@ bot_user_cards = sa.Table(
         "status IN ('reserved', 'delivered', 'failed')",
         name="bot_user_cards_status_check",
     ),
-    sa.UniqueConstraint(
-        "telegram_user_id",
-        "entry_id",
-        name="bot_user_cards_telegram_user_id_entry_id_key",
-    ),
-    sa.UniqueConstraint(
-        "telegram_user_id",
-        "scheduled_slot",
-        name="bot_user_cards_telegram_user_id_scheduled_slot_key",
-    ),
 )
 
+sa.Index(
+    "bot_user_cards_user_entry_active_uidx",
+    bot_user_cards.c.telegram_user_id,
+    bot_user_cards.c.entry_id,
+    unique=True,
+    postgresql_where=sa.text("status IN ('delivered', 'reserved')"),
+)
+sa.Index(
+    "bot_user_cards_user_slot_active_uidx",
+    bot_user_cards.c.telegram_user_id,
+    bot_user_cards.c.scheduled_slot,
+    unique=True,
+    postgresql_where=sa.text("status IN ('delivered', 'reserved')"),
+)
 sa.Index(
     "bot_user_cards_user_status_idx",
     bot_user_cards.c.telegram_user_id,

@@ -20,7 +20,7 @@ DEFAULT_SOURCE_DIR = ROOT / "source" / "oxford_api" / "translations_en_ru"
 DEFAULT_WORDS_JSON = ROOT / "data" / "enriched" / "words.json"
 
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
-LOGGER = logging.getLogger("vocabulary.oxford_import")
+LOGGER = logging.getLogger("tgbot.oxford_import")
 
 US_REGION_MARKERS = {
     "american",

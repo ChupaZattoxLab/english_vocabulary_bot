@@ -1,7 +1,6 @@
 import hashlib
 import io
 import os
-import sys
 import tempfile
 import unittest
 import urllib.error
@@ -10,10 +9,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "scripts" / "import"))
-
-from download_oald_audio import (  # noqa: E402
+from download_oald_audio import (
     AudioConversionError,
     AudioDownloadError,
     AudioRateLimitError,
@@ -25,8 +21,8 @@ from download_oald_audio import (  # noqa: E402
     transcode_audio_to_voice,
     validate_voice_payload,
 )
-from import_oald_postgres import import_entries, load_entries  # noqa: E402
-from test_import_oald_postgres import oald_row, write_rows  # noqa: E402
+from import_oald_postgres import import_entries, load_entries
+from test_import_oald_postgres import oald_row, write_rows
 
 
 class FakeHeaders:

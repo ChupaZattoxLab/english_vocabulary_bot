@@ -1,19 +1,17 @@
 import json
 import os
-import sys
 import tempfile
 import unittest
 import uuid
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "scripts" / "import"))
-
-from import_oald_postgres import (  # noqa: E402
+from import_oald_postgres import (
     OaldValidationError,
     import_entries,
     load_entries,
 )
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def oald_row(
@@ -166,7 +164,7 @@ class OaldJsonTests(unittest.TestCase):
         row["cefr"] = "z9"
         write_rows(self.json_path, [row])
 
-        with self.assertLogs("vocabulary.oald_import", level="ERROR"):
+        with self.assertLogs("tgbot.oald_import", level="ERROR"):
             entries, stats = load_entries(self.json_path)
         self.assertEqual(entries, [])
         self.assertEqual(stats["invalid_rows"], 1)

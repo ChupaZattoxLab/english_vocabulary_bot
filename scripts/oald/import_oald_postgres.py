@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create an OALD PostgreSQL database and incrementally import words.json."""
+"""Incrementally import OALD words.json into an already-migrated PostgreSQL database."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from urllib.parse import urlparse
 
 try:
     from .oald_preflight import require_oald_schema
-except ImportError:
+except ImportError:  # running as a plain script
     from oald_preflight import require_oald_schema  # type: ignore[no-redef]
 
 
@@ -42,7 +42,7 @@ EXPECTED_FIELDS = {
     "translations",
 }
 
-LOGGER = logging.getLogger("vocabulary.oald_import")
+LOGGER = logging.getLogger("tgbot.oald_import")
 
 UPSERT_ENTRY_SQL = """
 INSERT INTO oald_entries (

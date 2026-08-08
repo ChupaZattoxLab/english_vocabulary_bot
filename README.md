@@ -15,10 +15,10 @@ tgbot/                 # runtime bot package
 scripts/
   cli.py               # uv run start|stop|migrate|test|lint|…
   restore-oald-seed.sh # Docker first-boot seed restore
-  import/              # offline OALD/Oxford build & import helpers
+  oald/                # offline OALD/Oxford build & import helpers
 tests/
   tgbot/               # bot unit/integration tests
-  import/              # import-script tests
+  oald/                # OALD/Oxford import-script tests
   test_migrations.py   # Alembic baseline tests
 alembic/               # migration revisions
 compose.yaml           # local Postgres 16
@@ -77,7 +77,7 @@ data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts/
 
 Without these parts Postgres still starts; `scripts/restore-oald-seed.sh` skips restore
 and you get an empty schema after migrations. The bot will start, but there will be
-nothing to send until you restore a dump or rebuild via `scripts/import/`.
+nothing to send until you restore a dump or rebuild via `scripts/oald/`.
 
 If the volume was already created without the seed, either add the parts and recreate
 the volume, or restore a dump manually:

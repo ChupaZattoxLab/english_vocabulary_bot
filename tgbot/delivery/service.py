@@ -19,18 +19,13 @@ from aiogram.types import BufferedInputFile, Message
 from tgbot.db import Database, ReservedAudio, ReservedCard
 from tgbot.delivery.card_template import CardTemplate, CardTemplateError
 
-LOGGER = logging.getLogger("vocabulary.bot.delivery")
+LOGGER = logging.getLogger("tgbot.delivery")
 
 
 @dataclass(frozen=True)
 class DeliveryOutcome:
     status: str
     card: ReservedCard | None = None
-
-
-def send_method(card: ReservedCard) -> str:
-    """Return the Telegram media method for prepared card audio."""
-    return "voice"
 
 
 def dialect_caption(dialect: str) -> str:
@@ -176,15 +171,83 @@ class CardDeliveryService:
             await asyncio.sleep(float(exc.retry_after))
             await bot.send_message(chat_id=chat_id, text=text)
 
-    async def _send_reserved(
+    async def deliver(
+        self,
+        bot: Bot,
+        *,
+        telegram_user_id: int,
+        chat_id: int,
+        scheduled_slot: datetime,
+        require_active: bool = True,
+    ) -> DeliveryOutcome:
+        card = await self.database.reserve_card(
+            telegram_user_id,
+            scheduled_slot,
+            require_active=require_active,
+        )
+        if card is None:
+            return DeliveryOutcome("skipped")
+
+        text_sent = False
+        try:
+            rendered = self.render_card(card)
+            await self._send_card_text(bot, chat_id=chat_id, text=rendered)
+            text_sent = True
+            message = await self._send_reserved_voices(
+                bot,
+                chat_id=chat_id,
+                card=card,
+            )
+            await self.database.finish_delivery(
+                card.history_id,
+                delivered=True,
+                telegram_message_id=message.message_id,
+            )
+            return DeliveryOutcome("delivered", card)
+        except TelegramForbiddenError as exc:
+            if text_sent:
+                await self.database.finish_delivery(
+                    card.history_id,
+                    delivered=True,
+                )
+            else:
+                await self.database.finish_delivery(
+                    card.history_id,
+                    delivered=False,
+                    error_type=classify_delivery_error(exc),
+                    error_message=str(exc),
+                )
+            await self.database.deactivate_user(telegram_user_id)
+            LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
+            return DeliveryOutcome("delivered" if text_sent else "failed", card)
+        except Exception as exc:  # noqa: BLE001
+            if text_sent:
+                await self.database.finish_delivery(
+                    card.history_id,
+                    delivered=True,
+                )
+                LOGGER.exception(
+                    "Card voice delivery failed after text for user %s; "
+                    "counting as delivered",
+                    telegram_user_id,
+                )
+                return DeliveryOutcome("delivered", card)
+            await self.database.finish_delivery(
+                card.history_id,
+                delivered=False,
+                error_type=classify_delivery_error(exc),
+                error_message=str(exc),
+            )
+            LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
+            return DeliveryOutcome("failed", card)
+
+    async def _send_reserved_voices(
         self,
         bot: Bot,
         *,
         chat_id: int,
         card: ReservedCard,
     ) -> Message:
-        rendered = self.render_card(card)
-        await self._send_card_text(bot, chat_id=chat_id, text=rendered)
         primary_dialect = "US" if card.dialect == "BOTH" else card.dialect
         message = await self._send_voice_attachment(
             bot,
@@ -212,55 +275,19 @@ class CardDeliveryService:
             )
         return message
 
+    async def _send_reserved(
+        self,
+        bot: Bot,
+        *,
+        chat_id: int,
+        card: ReservedCard,
+    ) -> Message:
+        rendered = self.render_card(card)
+        await self._send_card_text(bot, chat_id=chat_id, text=rendered)
+        return await self._send_reserved_voices(bot, chat_id=chat_id, card=card)
+
     async def send_preview(
         self, bot: Bot, *, chat_id: int, card: ReservedCard
     ) -> Message:
         """Send a card without creating or changing delivery history."""
         return await self._send_reserved(bot, chat_id=chat_id, card=card)
-
-    async def deliver(
-        self,
-        bot: Bot,
-        *,
-        telegram_user_id: int,
-        chat_id: int,
-        scheduled_slot: datetime,
-    ) -> DeliveryOutcome:
-        card = await self.database.reserve_card(
-            telegram_user_id,
-            scheduled_slot,
-        )
-        if card is None:
-            return DeliveryOutcome("skipped")
-
-        try:
-            message = await self._send_reserved(
-                bot,
-                chat_id=chat_id,
-                card=card,
-            )
-            await self.database.finish_delivery(
-                card.history_id,
-                delivered=True,
-                telegram_message_id=message.message_id,
-            )
-            return DeliveryOutcome("delivered", card)
-        except TelegramForbiddenError as exc:
-            await self.database.deactivate_user(telegram_user_id)
-            await self.database.finish_delivery(
-                card.history_id,
-                delivered=False,
-                error_type=classify_delivery_error(exc),
-                error_message=str(exc),
-            )
-            LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
-            return DeliveryOutcome("failed", card)
-        except Exception as exc:  # noqa: BLE001
-            await self.database.finish_delivery(
-                card.history_id,
-                delivered=False,
-                error_type=classify_delivery_error(exc),
-                error_message=str(exc),
-            )
-            LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
-            return DeliveryOutcome("failed", card)

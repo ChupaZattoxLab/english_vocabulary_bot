@@ -16,7 +16,7 @@ from tgbot.delivery import CardDeliveryService, CardTemplate
 from tgbot.delivery.scheduler import CardScheduler
 from tgbot.handlers import create_admin_router, create_router
 
-LOGGER = logging.getLogger("vocabulary.bot")
+LOGGER = logging.getLogger("tgbot")
 
 USER_COMMANDS = (
     BotCommand(command="start", description="Начать работу"),
@@ -91,7 +91,7 @@ async def run_bot(config: BotConfig) -> None:
         await configure_commands(bot, config)
         scheduler_task = asyncio.create_task(
             scheduler.run(bot),
-            name="vocabulary-card-scheduler",
+            name="tgbot-card-scheduler",
         )
         LOGGER.info("Starting Telegram long polling")
         await dispatcher.start_polling(

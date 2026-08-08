@@ -154,23 +154,6 @@ class ReservedCard:
     secondary_audio: ReservedAudio | None = None
 
 
-@dataclass(frozen=True)
-class AdminStats:
-    total_users: int
-    active_users: int
-    completed_users: int
-    delivered_total: int
-    delivered_today: int
-    failed_total: int
-    stored_audio_files: int
-    pending_audio_files: int
-    prepared_voice_files: int
-    pending_voice_files: int
-    users_by_dialect: dict[str, int]
-    users_by_level: dict[str, int]
-    last_runs: tuple[dict[str, Any], ...]
-
-
 def _pool_kwargs(database_url: str) -> dict[str, Any]:
     kwargs: dict[str, Any] = {
         "row_factory": dict_row,
@@ -260,7 +243,7 @@ class Database:
             min_size=1,
             max_size=pool_size,
             open=False,
-            name="vocabulary-bot",
+            name="tgbot",
         )
 
     async def open(self) -> None:
@@ -273,10 +256,6 @@ class Database:
 
     async def close(self) -> None:
         await self.pool.close()
-
-    async def ping(self) -> None:
-        async with self.pool.connection() as connection:
-            await connection.execute("SELECT 1")
 
     async def verify_schema(self) -> None:
         async with self.pool.connection() as connection:
@@ -404,9 +383,11 @@ class Database:
                     UPDATE bot_users
                     SET pronunciation = %s,
                         onboarding_completed = cardinality(selected_levels) > 0,
-                        is_active = cardinality(selected_levels) > 0,
-                        paused_at = NULL,
-                        blocked_at = NULL,
+                        is_active = CASE
+                            WHEN paused_at IS NOT NULL OR blocked_at IS NOT NULL
+                                THEN FALSE
+                            ELSE cardinality(selected_levels) > 0
+                        END,
                         updated_at = CURRENT_TIMESTAMP
                     WHERE telegram_user_id = %s
                     RETURNING *
@@ -417,6 +398,20 @@ class Database:
         if not row:
             raise DatabaseError("bot user does not exist")
         return _user_from_row(row)
+
+    async def clear_blocked_marker(self, telegram_user_id: int) -> None:
+        """Clear blocked_at after the user messages again; do not resume schedule."""
+        async with self.pool.connection() as connection:
+            await connection.execute(
+                """
+                UPDATE bot_users
+                SET blocked_at = NULL,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE telegram_user_id = %s
+                  AND blocked_at IS NOT NULL
+                """,
+                (telegram_user_id,),
+            )
 
     async def set_active(self, telegram_user_id: int, active: bool) -> bool:
         async with self.pool.connection() as connection:
@@ -464,11 +459,25 @@ class Database:
         self,
         telegram_user_id: int,
         scheduled_slot: datetime,
+        *,
+        require_active: bool = True,
     ) -> ReservedCard | None:
         async with self.pool.connection() as connection:
             async with connection.transaction():
                 await connection.execute(
                     "SELECT pg_advisory_xact_lock(%s)",
+                    (telegram_user_id,),
+                )
+                await connection.execute(
+                    """
+                    UPDATE bot_user_cards
+                    SET status = 'failed',
+                        error_type = 'stale_reservation',
+                        error_message = 'reservation timed out before delivery finished'
+                    WHERE telegram_user_id = %s
+                      AND status = 'reserved'
+                      AND created_at < CURRENT_TIMESTAMP - INTERVAL '15 minutes'
+                    """,
                     (telegram_user_id,),
                 )
                 user = await (
@@ -484,20 +493,21 @@ class Database:
                 ).fetchone()
                 if (
                     not user
-                    or not user["is_active"]
                     or not user["onboarding_completed"]
                     or not user["selected_levels"]
                     or user["pronunciation"] not in {"us", "gb", "both"}
+                    or (require_active and not user["is_active"])
                 ):
                     return None
 
                 existing = await (
                     await connection.execute(
                         """
-                        SELECT 1
+                        SELECT status
                         FROM bot_user_cards
                         WHERE telegram_user_id = %s
                           AND scheduled_slot = %s
+                          AND status IN ('delivered', 'reserved')
                         """,
                         (telegram_user_id, scheduled_slot),
                     )
@@ -586,6 +596,7 @@ class Database:
                               FROM bot_user_cards AS history
                               WHERE history.telegram_user_id = %s
                                 AND history.entry_id = entries.id
+                                AND history.status IN ('delivered', 'reserved')
                           )
                         ORDER BY random()
                         LIMIT 1
@@ -686,7 +697,6 @@ class Database:
                 UPDATE bot_users
                 SET is_active = FALSE,
                     blocked_at = CURRENT_TIMESTAMP,
-                    paused_at = NULL,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE telegram_user_id = %s
                 """,
@@ -744,7 +754,13 @@ class Database:
                 (source_url, send_method),
             )
 
-    async def claim_scheduler_run(self, scheduled_slot: datetime) -> bool:
+    async def claim_scheduler_run(
+        self,
+        scheduled_slot: datetime,
+        *,
+        grace_minutes: int = 60,
+    ) -> bool:
+        """Claim a slot, or reclaim it for retries within the grace window."""
         async with self.pool.connection() as connection:
             row = await (
                 await connection.execute(
@@ -760,15 +776,32 @@ class Database:
                         started_at = CURRENT_TIMESTAMP,
                         completed_at = NULL,
                         error_message = ''
-                    WHERE bot_scheduler_runs.status = 'failed'
-                       OR (
-                           bot_scheduler_runs.status = 'running'
-                           AND bot_scheduler_runs.started_at
-                               < CURRENT_TIMESTAMP - INTERVAL '15 minutes'
-                       )
+                    WHERE CURRENT_TIMESTAMP
+                          <= bot_scheduler_runs.scheduled_slot
+                             + make_interval(mins => %s)
+                      AND (
+                          (
+                              bot_scheduler_runs.status = 'failed'
+                              AND COALESCE(
+                                  bot_scheduler_runs.completed_at,
+                                  bot_scheduler_runs.started_at
+                              ) < CURRENT_TIMESTAMP - INTERVAL '2 minutes'
+                          )
+                          OR (
+                              bot_scheduler_runs.status = 'running'
+                              AND bot_scheduler_runs.started_at
+                                  < CURRENT_TIMESTAMP - INTERVAL '15 minutes'
+                          )
+                          OR (
+                              bot_scheduler_runs.status = 'completed'
+                              AND bot_scheduler_runs.failed_cards > 0
+                              AND bot_scheduler_runs.completed_at
+                                  < CURRENT_TIMESTAMP - INTERVAL '2 minutes'
+                          )
+                      )
                     RETURNING scheduled_slot
                     """,
-                    (scheduled_slot,),
+                    (scheduled_slot, grace_minutes),
                 )
             ).fetchone()
         return row is not None
@@ -806,107 +839,6 @@ class Database:
                     scheduled_slot,
                 ),
             )
-
-    async def admin_stats(
-        self,
-        today_start: datetime,
-        today_end: datetime,
-    ) -> AdminStats:
-        async with self.pool.connection() as connection:
-            totals = await (
-                await connection.execute(
-                    """
-                    SELECT
-                      (SELECT count(*) FROM bot_users) AS total_users,
-                      (SELECT count(*) FROM bot_users WHERE is_active)
-                        AS active_users,
-                      (SELECT count(*) FROM bot_users WHERE onboarding_completed)
-                        AS completed_users,
-                      (SELECT count(*) FROM bot_user_cards
-                       WHERE status = 'delivered') AS delivered_total,
-                      (SELECT count(*) FROM bot_user_cards
-                       WHERE status = 'delivered'
-                         AND delivered_at >= %s
-                         AND delivered_at < %s) AS delivered_today,
-                      (SELECT count(*) FROM bot_user_cards
-                       WHERE status = 'failed') AS failed_total,
-                      (SELECT count(*) FROM oald_audio_files
-                       WHERE audio_data IS NOT NULL) AS stored_audio_files,
-                      (SELECT count(*) FROM oald_audio_files
-                       WHERE audio_data IS NULL) AS pending_audio_files,
-                      (SELECT count(*)
-                       FROM oald_audio_variants AS variants
-                       JOIN oald_audio_files AS files USING (source_url)
-                       WHERE variants.variant_type = 'telegram_voice_opus'
-                         AND variants.conversion_status = 'prepared'
-                         AND variants.audio_data IS NOT NULL
-                         AND variants.source_sha256 = files.sha256)
-                        AS prepared_voice_files,
-                      (SELECT count(*) FROM oald_audio_files AS files
-                       WHERE files.audio_data IS NOT NULL
-                         AND NOT EXISTS (
-                             SELECT 1
-                             FROM oald_audio_variants AS variants
-                             WHERE variants.source_url = files.source_url
-                               AND variants.variant_type = 'telegram_voice_opus'
-                               AND variants.conversion_status = 'prepared'
-                               AND variants.audio_data IS NOT NULL
-                               AND variants.source_sha256 = files.sha256
-                         )) AS pending_voice_files
-                    """,
-                    (today_start, today_end),
-                )
-            ).fetchone()
-            dialect_rows = await (
-                await connection.execute(
-                    """
-                    SELECT pronunciation, count(*) AS users
-                    FROM bot_users
-                    WHERE onboarding_completed
-                    GROUP BY pronunciation
-                    """
-                )
-            ).fetchall()
-            level_rows = await (
-                await connection.execute(
-                    """
-                    SELECT level, count(*) AS users
-                    FROM bot_users
-                    CROSS JOIN LATERAL unnest(selected_levels) AS level
-                    GROUP BY level
-                    """
-                )
-            ).fetchall()
-            run_rows = await (
-                await connection.execute(
-                    """
-                    SELECT scheduled_slot, status, attempted_users,
-                           delivered_cards, failed_cards, skipped_users
-                    FROM bot_scheduler_runs
-                    ORDER BY scheduled_slot DESC
-                    LIMIT 3
-                    """
-                )
-            ).fetchall()
-        return AdminStats(
-            total_users=int(totals["total_users"]),
-            active_users=int(totals["active_users"]),
-            completed_users=int(totals["completed_users"]),
-            delivered_total=int(totals["delivered_total"]),
-            delivered_today=int(totals["delivered_today"]),
-            failed_total=int(totals["failed_total"]),
-            stored_audio_files=int(totals["stored_audio_files"]),
-            pending_audio_files=int(totals["pending_audio_files"]),
-            prepared_voice_files=int(totals["prepared_voice_files"]),
-            pending_voice_files=int(totals["pending_voice_files"]),
-            users_by_dialect={
-                str(row["pronunciation"]): int(row["users"])
-                for row in dialect_rows
-                if row["pronunciation"]
-            },
-            users_by_level={str(row["level"]): int(row["users"]) for row in level_rows},
-            last_runs=tuple(dict(row) for row in run_rows),
-        )
 
     async def admin_users_summary(
         self,
@@ -980,9 +912,6 @@ class Database:
                            count(cards.id) FILTER (
                                WHERE cards.status = 'delivered'
                            ) AS delivered_cards,
-                           count(cards.id) FILTER (
-                               WHERE cards.status = 'failed'
-                           ) AS failed_cards,
                            max(cards.delivered_at) FILTER (
                                WHERE cards.status = 'delivered'
                            ) AS last_successful_delivery
@@ -996,110 +925,6 @@ class Database:
                 )
             ).fetchone()
         return dict(row) if row else None
-
-    async def admin_delivery_summary(
-        self,
-        *,
-        start: datetime,
-        end: datetime,
-    ) -> dict[str, Any]:
-        async with self.pool.connection() as connection:
-            totals = await (
-                await connection.execute(
-                    """
-                    SELECT
-                        COALESCE(sum(attempted_users), 0) AS scheduled_users,
-                        COALESCE(sum(delivered_cards), 0) AS successful_users,
-                        COALESCE(sum(failed_cards), 0) AS failed_users,
-                        COALESCE(sum(skipped_users), 0) AS skipped_users,
-                        min(started_at) AS started_at,
-                        max(completed_at) AS completed_at,
-                        count(*) AS run_count,
-                        count(*) FILTER (WHERE status = 'failed') AS failed_runs,
-                        COALESCE(sum(
-                            EXTRACT(EPOCH FROM (completed_at - started_at))
-                        ) FILTER (WHERE completed_at IS NOT NULL), 0)
-                            AS total_duration_seconds,
-                        COALESCE(
-                            sum(EXTRACT(EPOCH FROM (completed_at - started_at)))
-                                FILTER (WHERE completed_at IS NOT NULL)
-                            / NULLIF(sum(delivered_cards), 0),
-                            0
-                        ) AS average_card_seconds
-                    FROM bot_scheduler_runs
-                    WHERE scheduled_slot >= %s AND scheduled_slot < %s
-                    """,
-                    (start, end),
-                )
-            ).fetchone()
-            cards = await (
-                await connection.execute(
-                    """
-                    SELECT
-                        count(*) FILTER (
-                            WHERE status = 'delivered'
-                        ) AS cards_sent,
-                        COALESCE(sum(
-                            CASE
-                                WHEN status = 'delivered' AND dialect = 'both' THEN 2
-                                WHEN status = 'delivered' THEN 1
-                                ELSE 0
-                            END
-                        ), 0) AS voices_sent,
-                        count(*) FILTER (WHERE status = 'failed') AS card_failures
-                    FROM bot_user_cards
-                    WHERE scheduled_slot >= %s AND scheduled_slot < %s
-                    """,
-                    (start, end),
-                )
-            ).fetchone()
-            reasons = await (
-                await connection.execute(
-                    """
-                    SELECT COALESCE(NULLIF(error_type, ''), 'unknown') AS reason,
-                           count(*) AS failures
-                    FROM bot_user_cards
-                    WHERE status = 'failed'
-                      AND scheduled_slot >= %s
-                      AND scheduled_slot < %s
-                    GROUP BY reason
-                    ORDER BY failures DESC, reason
-                    """,
-                    (start, end),
-                )
-            ).fetchall()
-        result = dict(totals)
-        result.update(dict(cards))
-        result["error_reasons"] = {
-            str(row["reason"]): int(row["failures"]) for row in reasons
-        }
-        return result
-
-    async def admin_failed_deliveries(
-        self,
-        *,
-        start: datetime,
-        limit: int = 20,
-    ) -> tuple[dict[str, Any], ...]:
-        async with self.pool.connection() as connection:
-            rows = await (
-                await connection.execute(
-                    """
-                    SELECT cards.id, cards.telegram_user_id, cards.entry_id,
-                           entries.word_us, entries.lexical_category,
-                           cards.error_type, cards.error_message,
-                           cards.scheduled_slot
-                    FROM bot_user_cards AS cards
-                    JOIN oald_entries AS entries ON entries.id = cards.entry_id
-                    WHERE cards.status = 'failed'
-                      AND cards.created_at >= %s
-                    ORDER BY cards.created_at DESC
-                    LIMIT %s
-                    """,
-                    (start, limit),
-                )
-            ).fetchall()
-        return tuple(dict(row) for row in rows)
 
     async def admin_content_summary(self) -> dict[str, int]:
         async with self.pool.connection() as connection:
@@ -1127,117 +952,45 @@ class Database:
                           ON variants.source_url = files.source_url
                          AND variants.variant_type = 'telegram_voice_opus'
                         GROUP BY links.entry_id
-                    ), quality AS (
-                        SELECT entries.*,
-                               COALESCE(audio.has_us_audio, FALSE) AS has_us_audio,
-                               COALESCE(audio.has_gb_audio, FALSE) AS has_gb_audio,
-                               (
-                                   btrim(COALESCE(
-                                       entries.translations #>> '{ru,main}', ''
-                                   )) <> ''
-                                   OR CASE
-                                       WHEN jsonb_typeof(
-                                           entries.translations #> '{ru,also}'
-                                       ) = 'array'
-                                       THEN jsonb_array_length(
-                                           entries.translations #> '{ru,also}'
-                                       ) > 0
-                                       ELSE FALSE
-                                   END
-                               ) AS has_translation
-                        FROM oald_entries AS entries
-                        LEFT JOIN audio ON audio.entry_id = entries.id
                     )
-                    SELECT
-                        count(*) AS total_entries,
-                        count(*) FILTER (WHERE is_active) AS active_entries,
-                        count(*) FILTER (WHERE NOT is_active) AS disabled_entries,
-                        count(*) FILTER (
-                            WHERE is_active
-                              AND btrim(word_us) <> ''
-                              AND btrim(word_gb) <> ''
-                              AND btrim(lexical_category) <> ''
-                              AND btrim(definition) <> ''
-                              AND btrim(example) <> ''
-                              AND has_translation
-                              AND (
-                                  (cardinality(ipa_us) > 0 AND has_us_audio)
-                                  OR (cardinality(ipa_gb) > 0 AND has_gb_audio)
+                    SELECT count(*) FILTER (
+                        WHERE entries.is_active
+                          AND btrim(entries.word_us) <> ''
+                          AND btrim(entries.word_gb) <> ''
+                          AND btrim(entries.lexical_category) <> ''
+                          AND btrim(entries.definition) <> ''
+                          AND btrim(entries.example) <> ''
+                          AND (
+                              btrim(COALESCE(
+                                  entries.translations #>> '{ru,main}', ''
+                              )) <> ''
+                              OR CASE
+                                  WHEN jsonb_typeof(
+                                      entries.translations #> '{ru,also}'
+                                  ) = 'array'
+                                  THEN jsonb_array_length(
+                                      entries.translations #> '{ru,also}'
+                                  ) > 0
+                                  ELSE FALSE
+                              END
+                          )
+                          AND (
+                              (
+                                  cardinality(entries.ipa_us) > 0
+                                  AND COALESCE(audio.has_us_audio, FALSE)
                               )
-                        ) AS ready_entries,
-                        count(*) FILTER (
-                            WHERE is_active
-                              AND cardinality(ipa_us) = 0
-                              AND cardinality(ipa_gb) = 0
-                        ) AS missing_ipa,
-                        count(*) FILTER (
-                            WHERE is_active AND NOT has_us_audio
-                        ) AS missing_us_audio,
-                        count(*) FILTER (
-                            WHERE is_active AND NOT has_gb_audio
-                        ) AS missing_gb_audio,
-                        count(*) FILTER (
-                            WHERE is_active
-                              AND NOT has_us_audio
-                              AND NOT has_gb_audio
-                        ) AS missing_audio,
-                        count(*) FILTER (
-                            WHERE is_active AND btrim(definition) = ''
-                        ) AS missing_definition,
-                        count(*) FILTER (
-                            WHERE is_active AND btrim(example) = ''
-                        ) AS missing_example,
-                        count(*) FILTER (
-                            WHERE is_active AND NOT has_translation
-                        ) AS missing_translation,
-                        count(*) FILTER (
-                            WHERE is_active
-                              AND cefr NOT IN ('a1','a2','b1','b2','c1','c2')
-                        ) AS missing_cefr
-                    FROM quality
+                              OR (
+                                  cardinality(entries.ipa_gb) > 0
+                                  AND COALESCE(audio.has_gb_audio, FALSE)
+                              )
+                          )
+                    ) AS ready_entries
+                    FROM oald_entries AS entries
+                    LEFT JOIN audio ON audio.entry_id = entries.id
                     """
                 )
             ).fetchone()
-        return {key: int(value) for key, value in row.items()}
-
-    async def admin_missing_entries(
-        self,
-        *,
-        audio_only: bool = False,
-        limit: int = 20,
-    ) -> tuple[dict[str, Any], ...]:
-        missing_translation = (
-            "NOT (btrim(COALESCE(translations #>> '{ru,main}', '')) <> '' "
-            "OR CASE WHEN jsonb_typeof(translations #> '{ru,also}') = 'array' "
-            "THEN jsonb_array_length(translations #> '{ru,also}') > 0 "
-            "ELSE FALSE END)"
-        )
-        condition = (
-            "NOT EXISTS ("
-            "SELECT 1 FROM oald_entry_audio_sources AS links "
-            "JOIN oald_audio_files AS files ON files.source_url = links.source_url "
-            "JOIN oald_audio_variants AS variants "
-            "ON variants.source_url = files.source_url "
-            "AND variants.variant_type = 'telegram_voice_opus' "
-            "AND variants.conversion_status = 'prepared' "
-            "AND variants.audio_data IS NOT NULL "
-            "AND variants.source_sha256 = files.sha256 "
-            "WHERE links.entry_id = entries.id)"
-            if audio_only
-            else "(cardinality(ipa_us) = 0 AND cardinality(ipa_gb) = 0) "
-            "OR btrim(definition) = '' OR btrim(example) = '' "
-            f"OR {missing_translation}"
-        )
-        query = f"""
-            SELECT id, word_us, word_gb, lexical_category, cefr
-            FROM oald_entries AS entries
-            WHERE is_active AND ({condition})
-            ORDER BY id
-            LIMIT %s
-        """
-        async with self.pool.connection() as connection:
-            rows = await (await connection.execute(query, (limit,))).fetchall()
-        return tuple(dict(row) for row in rows)
+        return {"ready_entries": int(row["ready_entries"])}
 
     async def admin_word_search(
         self,
@@ -1299,114 +1052,3 @@ class Database:
         if selected not in {"us", "gb", "both"}:
             return None
         return _card_from_row(row, dialect=selected, history_id=0)
-
-    async def admin_retry_targets(
-        self,
-        *,
-        limit: int = 50,
-    ) -> tuple[dict[str, Any], ...]:
-        async with self.pool.connection() as connection:
-            rows = await (
-                await connection.execute(
-                    """
-                    SELECT cards.id, cards.entry_id, cards.dialect,
-                           users.telegram_user_id, users.chat_id
-                    FROM bot_user_cards AS cards
-                    JOIN bot_users AS users
-                      ON users.telegram_user_id = cards.telegram_user_id
-                    WHERE cards.status = 'failed'
-                      AND users.is_active
-                      AND users.onboarding_completed
-                    ORDER BY cards.created_at
-                    LIMIT %s
-                    """,
-                    (limit,),
-                )
-            ).fetchall()
-        return tuple(dict(row) for row in rows)
-
-    async def admin_audio_summary(self, *, since: datetime) -> dict[str, int]:
-        content = await self.admin_content_summary()
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    """
-                    SELECT
-                        count(*) FILTER (
-                            WHERE variants.conversion_status = 'prepared'
-                              AND variants.audio_data IS NOT NULL
-                              AND variants.source_sha256 = files.sha256
-                        ) AS prepared_voice_files,
-                        count(*) FILTER (
-                            WHERE variants.conversion_status = 'prepared'
-                              AND variants.audio_data IS NOT NULL
-                              AND variants.source_sha256 = files.sha256
-                              AND cache.telegram_file_id IS NOT NULL
-                        ) AS cached_telegram_files,
-                        count(*) FILTER (
-                            WHERE files.download_status = 'failed'
-                              AND files.last_attempted_at >= %s
-                        ) AS download_errors_24h,
-                        count(*) FILTER (
-                            WHERE files.download_status = 'failed'
-                        ) AS failed_source_urls
-                    FROM oald_audio_files AS files
-                    LEFT JOIN oald_audio_variants AS variants
-                      ON variants.source_url = files.source_url
-                     AND variants.variant_type = 'telegram_voice_opus'
-                    LEFT JOIN bot_telegram_audio_cache AS cache
-                      ON cache.source_url = files.source_url
-                     AND cache.send_method = 'voice'
-                    """,
-                    (since,),
-                )
-            ).fetchone()
-        prepared = int(row["prepared_voice_files"])
-        cached = int(row["cached_telegram_files"])
-        return {
-            "total_entries": content["active_entries"],
-            "with_us_audio": content["active_entries"] - content["missing_us_audio"],
-            "with_gb_audio": content["active_entries"] - content["missing_gb_audio"],
-            "without_audio": content["missing_audio"],
-            "prepared_voice_files": prepared,
-            "cached_telegram_files": cached,
-            "not_cached_telegram_files": max(0, prepared - cached),
-            "download_errors_24h": int(row["download_errors_24h"]),
-            "failed_source_urls": int(row["failed_source_urls"]),
-        }
-
-    async def admin_system_summary(self, *, since: datetime) -> dict[str, Any]:
-        async with self.pool.connection() as connection:
-            row = await (
-                await connection.execute(
-                    """
-                    SELECT
-                        (SELECT count(*) FROM bot_user_cards
-                         WHERE status = 'failed' AND created_at >= %s)
-                        +
-                        (SELECT count(*) FROM bot_scheduler_runs
-                         WHERE status = 'failed' AND started_at >= %s)
-                            AS errors,
-                        (SELECT scheduled_slot FROM bot_scheduler_runs
-                         ORDER BY scheduled_slot DESC LIMIT 1)
-                            AS last_scheduled_slot,
-                        (SELECT status FROM bot_scheduler_runs
-                         ORDER BY scheduled_slot DESC LIMIT 1)
-                            AS scheduler_status,
-                        (SELECT completed_at FROM bot_scheduler_runs
-                         ORDER BY scheduled_slot DESC LIMIT 1)
-                            AS scheduler_completed_at,
-                        (SELECT attempted_users FROM bot_scheduler_runs
-                         ORDER BY scheduled_slot DESC LIMIT 1)
-                            AS last_attempted_users,
-                        (SELECT delivered_cards FROM bot_scheduler_runs
-                         ORDER BY scheduled_slot DESC LIMIT 1)
-                            AS last_delivered_cards,
-                        (SELECT failed_cards FROM bot_scheduler_runs
-                         ORDER BY scheduled_slot DESC LIMIT 1)
-                            AS last_failed_cards
-                    """,
-                    (since, since),
-                )
-            ).fetchone()
-        return dict(row)
