@@ -15,14 +15,13 @@ def admin_main_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     buttons = (
         (locale.keyboard.admin_users, "admin:users"),
-        (locale.keyboard.admin_test_card, "admin:test_card"),
         (locale.keyboard.admin_refresh, "admin:overview"),
     )
 
     for text, callback_data in buttons:
         builder.button(text=text, callback_data=callback_data)
 
-    builder.adjust(2, 1)
+    builder.adjust(2)
 
     return builder.as_markup()
 

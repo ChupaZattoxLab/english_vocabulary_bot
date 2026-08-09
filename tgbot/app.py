@@ -23,8 +23,6 @@ USER_COMMANDS = (
     BotCommand(command="start", description=locale.commands.start),
     BotCommand(command="card", description=locale.commands.card),
     BotCommand(command="settings", description=locale.commands.settings),
-    BotCommand(command="levels", description=locale.commands.levels),
-    BotCommand(command="pronunciation", description=locale.commands.pronunciation),
     BotCommand(command="pause", description=locale.commands.pause),
     BotCommand(command="resume", description=locale.commands.resume),
     BotCommand(command="help", description=locale.commands.help),
@@ -32,13 +30,9 @@ USER_COMMANDS = (
 
 ADMIN_COMMANDS = (
     BotCommand(command="admin", description=locale.commands.admin),
-    BotCommand(command="users", description=locale.commands.users),
+    BotCommand(command="stats", description=locale.commands.stats),
     BotCommand(command="user", description=locale.commands.user),
     BotCommand(command="word", description=locale.commands.word),
-    BotCommand(command="send_test", description=locale.commands.send_test),
-    BotCommand(
-        command="reload_templates", description=locale.commands.reload_templates
-    ),
 )
 
 

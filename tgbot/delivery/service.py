@@ -141,11 +141,6 @@ class CardDeliveryService:
         """Send a card without creating or changing delivery history."""
         return await self._send_reserved(bot, chat_id=chat_id, card=card)
 
-    def reload_templates(self) -> None:
-        self.template.reload()
-        if self.both_template is not self.template:
-            self.both_template.reload()
-
     def render_card(self, card: ReservedCard) -> str:
         template = self.both_template if card.dialect == "BOTH" else self.template
         return template.render(

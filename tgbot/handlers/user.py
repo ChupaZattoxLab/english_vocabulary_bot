@@ -55,18 +55,6 @@ def create_router(
             reply_markup=levels_keyboard(user.selected_levels),
         )
 
-    @router.message(Command("levels"))
-    async def levels_handler(message: Message) -> None:
-        if not message.from_user:
-            return
-
-        user = await register_user(database, message.from_user, message.chat.id)
-
-        await message.answer(
-            locale.user.pick_levels,
-            reply_markup=levels_keyboard(user.selected_levels),
-        )
-
     @router.callback_query(F.data.startswith("level:"))
     async def level_callback(callback: CallbackQuery) -> None:
         action = (callback.data or "").split(":", 1)[1]
@@ -104,18 +92,6 @@ def create_router(
             )
 
         await callback.answer()
-
-    @router.message(Command("pronunciation"))
-    async def pronunciation_handler(message: Message) -> None:
-        if not message.from_user:
-            return
-
-        await register_user(database, message.from_user, message.chat.id)
-
-        await message.answer(
-            locale.user.pick_pronunciation,
-            reply_markup=pronunciation_keyboard(),
-        )
 
     @router.callback_query(F.data.startswith("dialect:"))
     async def dialect_callback(callback: CallbackQuery) -> None:

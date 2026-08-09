@@ -185,7 +185,6 @@ class AdminHelperTests(unittest.TestCase):
             {
                 "admin:overview",
                 "admin:users",
-                "admin:test_card",
             },
         )
 

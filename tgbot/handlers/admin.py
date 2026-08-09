@@ -14,7 +14,7 @@ from tgbot.bot_config import BotConfig
 from tgbot.constants import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.db import Database
 from tgbot.db.models import VALID_LEVELS, AdminUserDetail
-from tgbot.delivery import CardDeliveryService, CardTemplateError
+from tgbot.delivery import CardDeliveryService
 from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     admin_users_keyboard,
@@ -40,8 +40,8 @@ def create_admin_router(
             reply_markup=admin_main_keyboard(),
         )
 
-    @router.message(Command("users"))
-    async def users_handler(message: Message) -> None:
+    @router.message(Command("stats"))
+    async def stats_handler(message: Message) -> None:
         if not await _is_admin(message, config):
             return
 
@@ -149,39 +149,6 @@ def create_admin_router(
         ):
             await message.answer(locale.admin.word_no_both_audio)
 
-    @router.message(Command("send_test"))
-    async def send_test_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-
-        card = await database.admin_preview_card(random_card=True)
-
-        if not card:
-            await message.answer(locale.admin.no_test_cards)
-            return
-
-        bot = message.bot
-
-        if bot is None:
-            return
-
-        await delivery.send_preview(bot, chat_id=message.chat.id, card=card)
-
-    @router.message(Command("reload_templates"))
-    async def reload_templates_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
-            return
-
-        try:
-            delivery.reload_templates()
-        except CardTemplateError as exc:
-            await message.answer(
-                locale.admin.template_error.format(error=html.escape(str(exc)))
-            )
-            return
-
-        await message.answer(locale.admin.templates_reloaded)
-
     @router.callback_query(F.data.startswith("admin:"))
     async def admin_panel_callback(callback: CallbackQuery) -> None:
         if callback.from_user.id not in config.admin_ids:
@@ -226,28 +193,6 @@ def create_admin_router(
                     await panel_message.edit_reply_markup(reply_markup=None)
                 except TelegramBadRequest:
                     pass
-                return
-
-            if action == "test_card":
-                await callback.answer(locale.admin.sending_test_card)
-                answered = True
-
-                card = await database.admin_preview_card(random_card=True)
-
-                if not card:
-                    await panel_message.answer(locale.admin.no_preview_cards)
-                    return
-
-                bot = callback.bot
-
-                if bot is None:
-                    return
-
-                await delivery.send_preview(
-                    bot,
-                    chat_id=panel_message.chat.id,
-                    card=card,
-                )
                 return
 
             if action == "overview":

@@ -19,11 +19,9 @@ class user:
         "Сначала выберите один или несколько уровней CEFR:"
     )
     settings_pick_levels = "\n\nВыберите уровни. Можно отметить несколько:"
-    pick_levels = "Выберите один или несколько уровней CEFR:"
     need_start = "Сначала отправьте /start"
     need_one_level = "Выберите хотя бы один уровень"
     pick_pronunciation_next = "Теперь выберите произношение для карточек:"
-    pick_pronunciation = "Какое произношение использовать?"
     need_level_first = "Сначала выберите хотя бы один уровень"
     onboarding_done = (
         "Настройка завершена!\n\n{settings}\n\nДля проверки можно запросить /card."
@@ -43,9 +41,7 @@ class user:
     help = (
         "<b>Команды</b>\n"
         "/start - регистрация\n"
-        "/settings - все настройки\n"
-        "/levels - уровни CEFR\n"
-        "/pronunciation - US или GB\n"
+        "/settings - уровни и произношение\n"
         "/card - получить карточку сейчас\n"
         "/pause - приостановить рассылку\n"
         "/resume - продолжить рассылку\n"
@@ -61,7 +57,6 @@ class keyboard:
     level_selected_prefix = "✅ "
 
     admin_users = "👥 Пользователи"
-    admin_test_card = "🧪 Тест-карта"
     admin_refresh = "🔄 Обновить"
     admin_back = "⬅️ Назад"
 
@@ -73,18 +68,14 @@ class commands:
     start = "Начать работу"
     card = "Получить новую карточку"
     settings = "Настройки"
-    levels = "Выбрать уровни CEFR"
-    pronunciation = "Выбрать произношение"
     pause = "Приостановить рассылку"
     resume = "Продолжить рассылку"
     help = "Помощь"
 
     admin = "Открыть админ-панель"
-    users = "Статистика пользователей"
+    stats = "Статистика пользователей"
     user = "Пользователь по Telegram ID"
     word = "Карточка слова"
-    send_test = "Тестовая карточка"
-    reload_templates = "Перезагрузить шаблоны"
 
 
 class labels:
@@ -169,13 +160,8 @@ class admin:
     word_entry_no_both_audio = (
         "Для выбранной части речи нет одновременно US и GB аудио."
     )
-    no_test_cards = "Нет карточек с готовым аудио для тестовой отправки."
-    no_preview_cards = "Нет карточек с готовым аудио для предпросмотра."
     sending_card = "Отправляю карточку…"
-    sending_test_card = "Отправляю тестовую карточку…"
 
-    template_error = "Ошибка шаблона: <code>{error}</code>"
-    templates_reloaded = "Оба шаблона карточек проверены и перезагружены."
     panel_unavailable = "Сообщение панели недоступно."
     bad_choice = "Некорректный выбор."
     already_up_to_date = "Данные уже актуальны."
