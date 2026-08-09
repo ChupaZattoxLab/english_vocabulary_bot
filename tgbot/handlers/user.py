@@ -10,10 +10,11 @@ from aiogram.types import CallbackQuery, Message, User
 
 from tgbot.bot_config import BotConfig
 from tgbot.constants import DELIVERY_STATUS_FAILED, DELIVERY_STATUS_SKIPPED
-from tgbot.db import BotUser, Database
+from tgbot.db import Database
 from tgbot.delivery import CardDeliveryService
 from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
 from tgbot.localization import locale
+from tgbot.models import ActiveUser
 
 
 def create_router(
@@ -42,7 +43,7 @@ def create_router(
             locale.user.welcome_new.format(
                 cards_per_day=len(config.schedule.send_times)
             ),
-            reply_markup=levels_keyboard(user.selected_levels),
+            reply_markup=levels_keyboard(user.settings.selected_levels),
         )
 
     @router.message(Command("settings"))
@@ -54,7 +55,7 @@ def create_router(
 
         await message.answer(
             user_settings_text(user, config) + locale.user.settings_pick_levels,
-            reply_markup=levels_keyboard(user.selected_levels),
+            reply_markup=levels_keyboard(user.settings.selected_levels),
         )
 
     @router.callback_query(F.data.startswith("level:"))
@@ -67,7 +68,7 @@ def create_router(
             return
 
         if action == "done":
-            if not user.selected_levels:
+            if not user.settings.selected_levels:
                 await callback.answer(
                     locale.user.need_one_level,
                     show_alert=True,
@@ -90,7 +91,7 @@ def create_router(
 
         if message is not None:
             await message.edit_reply_markup(
-                reply_markup=levels_keyboard(user.selected_levels)
+                reply_markup=levels_keyboard(user.settings.selected_levels)
             )
 
         await callback.answer()
@@ -104,14 +105,14 @@ def create_router(
             await callback.answer(locale.user.need_start, show_alert=True)
             return
 
-        if not user.selected_levels:
+        if not user.settings.selected_levels:
             await callback.answer(
                 locale.user.need_level_first,
                 show_alert=True,
             )
             return
 
-        user = await db.set_pronunciation(callback.from_user.id, dialect)
+        user = await db.set_dialect(callback.from_user.id, dialect)
         message = _callback_message(callback)
 
         if message is not None:
@@ -189,18 +190,17 @@ def create_router(
     return router
 
 
-async def register_user(db: Database, telegram_user: User, chat_id: int) -> BotUser:
+async def register_user(db: Database, telegram_user: User, chat_id: int) -> ActiveUser:
     return await db.upsert_user(
         telegram_user_id=telegram_user.id,
         chat_id=chat_id,
         username=telegram_user.username or "",
-        first_name=telegram_user.first_name or "",
     )
 
 
-def user_settings_text(user: BotUser, config: BotConfig) -> str:
+def user_settings_text(user: ActiveUser, config: BotConfig) -> str:
     levels = (
-        ", ".join(level.upper() for level in user.selected_levels)
+        ", ".join(level.upper() for level in user.settings.selected_levels)
         or locale.user.levels_none
     )
     state = (
@@ -209,7 +209,7 @@ def user_settings_text(user: BotUser, config: BotConfig) -> str:
 
     return locale.user_settings_lines(
         levels=levels,
-        pronunciation=locale.pronunciation_short(user.pronunciation),
+        pronunciation=locale.pronunciation_short(user.settings.dialect),
         delivery_state=state,
         schedule=config.schedule.text,
     )

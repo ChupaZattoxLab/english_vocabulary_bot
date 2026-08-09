@@ -173,10 +173,9 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             telegram_user_id=self.telegram_user_id,
             chat_id=self.telegram_user_id,
             username="integration",
-            first_name="Integration",
         )
         await self.db.toggle_level(self.telegram_user_id, "c1")
-        await self.db.set_pronunciation(self.telegram_user_id, "us")
+        await self.db.set_dialect(self.telegram_user_id, "us")
 
     async def asyncTearDown(self) -> None:
         await self.db.close()
@@ -254,25 +253,26 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_both_dialects_return_two_prepared_voice_files(self) -> None:
-        await self.db.set_pronunciation(self.telegram_user_id, "both")
+        await self.db.set_dialect(self.telegram_user_id, "both")
         card = await self.db.reserve_card(
             self.telegram_user_id,
             datetime.now(UTC),
         )
 
         self.assertIsNotNone(card)
-        self.assertEqual(card.dialect, "BOTH")
-        self.assertEqual(card.ipa_us, "/us/")
-        self.assertEqual(card.ipa_gb, "/gb/")
-        self.assertIn(card.source_url, self.us_audio_urls)
-        self.assertIsNotNone(card.secondary_audio)
-        self.assertIn(card.secondary_audio.source_url, self.gb_audio_urls)
+        self.assertTrue(card.is_both)
+        self.assertIsNotNone(card.us)
+        self.assertIsNotNone(card.gb)
+        self.assertEqual(card.us.ipa, "/us/")
+        self.assertEqual(card.gb.ipa, "/gb/")
+        self.assertIn(card.us.audio.source_url, self.us_audio_urls)
+        self.assertIn(card.gb.audio.source_url, self.gb_audio_urls)
 
-    async def test_pronunciation_change_preserves_pause(self) -> None:
+    async def test_dialect_change_preserves_pause(self) -> None:
         await self.db.set_active(self.telegram_user_id, False)
-        user = await self.db.set_pronunciation(self.telegram_user_id, "gb")
+        user = await self.db.set_dialect(self.telegram_user_id, "gb")
         self.assertFalse(user.is_active)
-        self.assertEqual(user.pronunciation, "gb")
+        self.assertEqual(user.settings.dialect, "gb")
 
     async def test_failed_card_does_not_consume_word_or_slot(self) -> None:
         slot = datetime.now(UTC)
@@ -365,7 +365,6 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             telegram_user_id=self.telegram_user_id,
             chat_id=self.telegram_user_id,
             username="integration",
-            first_name="Integration",
         )
         self.assertFalse(user.is_active)
 

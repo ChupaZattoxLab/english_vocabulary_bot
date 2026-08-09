@@ -24,10 +24,10 @@ bot_users = sa.Table(
         server_default=sa.text("''"),
     ),
     sa.Column(
-        "first_name",
+        "role",
         sa.Text,
         nullable=False,
-        server_default=sa.text("''"),
+        server_default=sa.text("'user'"),
     ),
     sa.Column(
         "selected_levels",
@@ -35,7 +35,7 @@ bot_users = sa.Table(
         nullable=False,
         server_default=sa.text("'{}'::text[]"),
     ),
-    sa.Column("pronunciation", sa.String(4)),
+    sa.Column("dialect", sa.String(4)),
     sa.Column(
         "onboarding_completed",
         sa.Boolean,
@@ -54,18 +54,15 @@ bot_users = sa.Table(
         nullable=False,
         server_default=sa.func.current_timestamp(),
     ),
-    sa.Column(
-        "updated_at",
-        postgresql.TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=sa.func.current_timestamp(),
-    ),
-    sa.Column("last_delivery_at", postgresql.TIMESTAMP(timezone=True)),
     sa.Column("paused_at", postgresql.TIMESTAMP(timezone=True)),
     sa.Column("blocked_at", postgresql.TIMESTAMP(timezone=True)),
     sa.CheckConstraint(
-        "pronunciation IS NULL OR pronunciation IN ('us', 'gb', 'both')",
-        name="bot_users_pronunciation_check",
+        "role IN ('user', 'admin')",
+        name="bot_users_role_check",
+    ),
+    sa.CheckConstraint(
+        "dialect IS NULL OR dialect IN ('us', 'gb', 'both')",
+        name="bot_users_dialect_check",
     ),
     sa.CheckConstraint(
         "selected_levels <@ ARRAY['a1','a2','b1','b2','c1']::TEXT[]",
@@ -78,3 +75,4 @@ sa.Index(
     bot_users.c.is_active,
     bot_users.c.onboarding_completed,
 )
+sa.Index("bot_users_role_idx", bot_users.c.role)

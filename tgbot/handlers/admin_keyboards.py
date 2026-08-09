@@ -7,8 +7,8 @@ from collections.abc import Sequence
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from tgbot.db.domain import AdminWordMatch
 from tgbot.localization import locale
+from tgbot.models import WordMatch
 
 
 def admin_main_keyboard() -> InlineKeyboardMarkup:
@@ -31,7 +31,7 @@ def admin_users_keyboard() -> InlineKeyboardMarkup:
 
 
 def word_categories_keyboard(
-    rows: Sequence[AdminWordMatch],
+    rows: Sequence[WordMatch],
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     category_counts: dict[str, int] = {}

@@ -13,7 +13,6 @@ from aiogram.types import CallbackQuery, Message
 from tgbot.bot_config import BotConfig
 from tgbot.constants import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.db import Database
-from tgbot.db.domain import VALID_LEVELS, AdminUserDetail
 from tgbot.delivery import CardDeliveryService
 from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
@@ -21,6 +20,7 @@ from tgbot.handlers.admin_keyboards import (
     word_categories_keyboard,
 )
 from tgbot.localization import locale
+from tgbot.models import VALID_LEVELS, AdminUser
 
 
 def create_admin_router(
@@ -32,7 +32,7 @@ def create_admin_router(
 
     @router.message(Command("admin"))
     async def admin_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
+        if not await _is_admin(message, db):
             return
 
         await message.answer(
@@ -42,14 +42,14 @@ def create_admin_router(
 
     @router.message(Command("stats"))
     async def stats_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
+        if not await _is_admin(message, db):
             return
 
         await message.answer(await _render_users(db, config))
 
     @router.message(Command("user"))
     async def user_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
+        if not await _is_admin(message, db):
             return
 
         argument = _arguments(message)
@@ -58,7 +58,7 @@ def create_admin_router(
             await message.answer(locale.admin.user_usage)
             return
 
-        user = await db.admin_user_detail(int(argument))
+        user = await db.get_admin_user(int(argument))
 
         if not user:
             await message.answer(locale.admin.user_not_found)
@@ -78,7 +78,7 @@ def create_admin_router(
             else locale.admin.placeholder
         )
         levels = (
-            ", ".join(level.upper() for level in user.selected_levels)
+            ", ".join(level.upper() for level in user.settings.selected_levels)
             or locale.admin.placeholder
         )
         send_times = ", ".join(t.strftime("%H:%M") for t in config.schedule.send_times)
@@ -89,7 +89,7 @@ def create_admin_router(
                 username=username,
                 registered=registered.strftime("%d.%m.%Y %H:%M"),
                 levels=levels,
-                pronunciation=locale.pronunciation_admin(user.pronunciation),
+                pronunciation=locale.pronunciation_admin(user.settings.dialect),
                 cards_per_day=len(config.schedule.send_times),
                 send_times=send_times,
                 timezone=html.escape(config.schedule.timezone.key),
@@ -100,7 +100,7 @@ def create_admin_router(
         )
 
     async def send_word_card(bot: Bot, chat_id: int, entry_id: int) -> bool:
-        card = await db.admin_preview_card(
+        card = await db.preview_card(
             entry_id=entry_id,
             dialect="both",
         )
@@ -113,7 +113,7 @@ def create_admin_router(
 
     @router.message(Command("word"))
     async def word_handler(message: Message) -> None:
-        if not await _is_admin(message, config):
+        if not await _is_admin(message, db):
             return
 
         word = _arguments(message)
@@ -122,7 +122,7 @@ def create_admin_router(
             await message.answer(locale.admin.word_usage)
             return
 
-        rows = await db.admin_word_search(word)
+        rows = await db.word_search(word)
 
         if not rows:
             await message.answer(locale.admin.word_not_found)
@@ -151,7 +151,7 @@ def create_admin_router(
 
     @router.callback_query(F.data.startswith("admin:"))
     async def admin_panel_callback(callback: CallbackQuery) -> None:
-        if callback.from_user.id not in config.admin_ids:
+        if not await db.is_admin(callback.from_user.id):
             await callback.answer(locale.admin.no_access, show_alert=True)
             return
 
@@ -232,8 +232,8 @@ def create_admin_router(
     return router
 
 
-async def _is_admin(message: Message, config: BotConfig) -> bool:
-    if message.from_user and message.from_user.id in config.admin_ids:
+async def _is_admin(message: Message, db: Database) -> bool:
+    if message.from_user and await db.is_admin(message.from_user.id):
         return True
 
     await message.answer(locale.admin.no_access)
@@ -244,26 +244,24 @@ async def _is_admin(message: Message, config: BotConfig) -> bool:
 async def _render_overview(db: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
 
-    users = await db.admin_users_summary(
+    users = await db.users_summary(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
             UTC
         ),
     )
-    content = await db.admin_content_summary()
 
     return locale.admin.overview.format(
         total_users=_number(users.total_users),
         active_users=_number(users.active_users),
-        ready_entries=_number(content.ready_entries),
     )
 
 
 async def _render_users(db: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
 
-    stats = await db.admin_users_summary(
+    stats = await db.users_summary(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
@@ -310,7 +308,7 @@ def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
     )
 
 
-def _delivery_state(user: AdminUserDetail) -> str:
+def _delivery_state(user: AdminUser) -> str:
     if user.blocked_at:
         return locale.admin.delivery_blocked
     if user.paused_at or not user.is_active:

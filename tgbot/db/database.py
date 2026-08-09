@@ -14,7 +14,6 @@ from tgbot.constants import (
     DB_CONNECT_TIMEOUT_SECONDS,
     DB_POOL_RECYCLE_SECONDS,
 )
-from tgbot.db.domain import DatabaseError
 from tgbot.db.mappers import as_db_row, as_db_rows, row_optional_str, row_str
 from tgbot.db.queries import (
     AdminQueries,
@@ -95,7 +94,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
             missing = MANAGED_TABLES - existing
 
             if missing:
-                raise DatabaseError(
+                raise RuntimeError(
                     "Database schema is incomplete; missing tables: "
                     f"{', '.join(sorted(missing))}. Run "
                     "`uv run migrate`."
@@ -116,7 +115,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
                 not version_table
                 or row_optional_str(as_db_row(version_table), "name") is None
             ):
-                raise DatabaseError(
+                raise RuntimeError(
                     "Database is not managed by Alembic. Run `uv run migrate`."
                 )
 
@@ -131,7 +130,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
             )
 
             if current != expected:
-                raise DatabaseError(
+                raise RuntimeError(
                     f"Database migration is {current}, expected {expected}. "
                     "Run `uv run migrate`."
                 )
@@ -143,6 +142,6 @@ def migration_head() -> str:
     head = ScriptDirectory.from_config(config).get_current_head()
 
     if head is None:
-        raise DatabaseError("Alembic has no migration head revision")
+        raise RuntimeError("Alembic has no migration head revision")
 
     return head

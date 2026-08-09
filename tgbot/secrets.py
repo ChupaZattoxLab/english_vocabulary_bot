@@ -22,7 +22,6 @@ class ConfigError(ValueError):
 @dataclass(frozen=True)
 class Secrets:
     telegram_bot_token: str = ""
-    telegram_admin_ids: str = ""
     db_url: str = ""
 
     @classmethod
@@ -30,17 +29,8 @@ class Secrets:
         source = os.environ if environ is None else environ
         return cls(
             telegram_bot_token=source.get("TELEGRAM_BOT_TOKEN", "").strip(),
-            telegram_admin_ids=source.get("TELEGRAM_ADMIN_IDS", "").strip(),
             db_url=source.get("OALD_DATABASE_URL", "").strip(),
         )
-
-    @property
-    def admin_ids(self) -> frozenset[int]:
-        return parse_admin_ids(self.telegram_admin_ids)
-
-
-def parse_admin_ids(value: str) -> frozenset[int]:
-    return frozenset(int(item.strip()) for item in value.split(",") if item.strip())
 
 
 secrets = Secrets.load()

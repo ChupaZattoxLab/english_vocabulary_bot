@@ -10,11 +10,11 @@ tgbot/                 # runtime bot package
   secrets.py           # .env / process environment secrets
   bot_config.py        # runtime bot config
   constants.py         # shared domain / runtime constants
+  models/              # dataclasses (User, Card, views, …)
   localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot
   db/                  # async SQLAlchemy Core access + Postgres tables
-    domain/            # domain dataclasses (BotUser, ReservedCard, …)
-    mappers/           # map query rows onto those dataclasses
+    mappers/           # map query rows onto models
     queries/           # users, cards, scheduler, admin queries
     tables/            # SQLAlchemy table metadata (bot/ + oald/)
     sync.py            # blocking SQLAlchemy helpers for scripts/tests
@@ -58,7 +58,6 @@ Edit `.env` with secrets only:
 
 ```env
 TELEGRAM_BOT_TOKEN=...your token...
-TELEGRAM_ADMIN_IDS=123456789
 OALD_DATABASE_URL=postgresql+psycopg://vocab_app:vocab_dev_password@127.0.0.1:5432/english_vocabulary_oald
 ```
 
@@ -130,8 +129,14 @@ uv run migrate
 uv run start
 ```
 
-You should see long polling for your bot username. In Telegram: `/start`, then `/admin`
-if your ID is in `TELEGRAM_ADMIN_IDS`.
+You should see long polling for your bot username. In Telegram: `/start`, then promote
+yourself to admin in Postgres (once):
+
+```sql
+UPDATE bot_users SET role = 'admin' WHERE telegram_user_id = YOUR_TELEGRAM_ID;
+```
+
+Restart the bot so admin commands are registered, then use `/admin`.
 
 Stop that local bot from another terminal:
 

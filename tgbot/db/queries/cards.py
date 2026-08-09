@@ -23,7 +23,6 @@ from tgbot.constants import (
     ERROR_TYPE_MAX_LEN,
     ERROR_TYPE_STALE_RESERVATION,
 )
-from tgbot.db.domain import VALID_PRONUNCIATIONS, ReservedCard
 from tgbot.db.mappers import (
     as_db_row,
     card_from_row,
@@ -43,6 +42,7 @@ from tgbot.db.tables import (
     oald_entries,
     oald_entry_audio_sources,
 )
+from tgbot.models import VALID_DIALECT_PREFERENCES, Card
 
 AudioDialect = Literal["us", "gb"]
 
@@ -53,7 +53,7 @@ class CardsQueries(EngineBound):
         telegram_user_id: int,
         scheduled_slot: datetime,
         require_active: bool = True,
-    ) -> ReservedCard | None:
+    ) -> Card | None:
         async with self.engine.begin() as connection:
             await connection.execute(
                 sa.select(sa.func.pg_advisory_xact_lock(telegram_user_id))
@@ -80,7 +80,7 @@ class CardsQueries(EngineBound):
                     await connection.execute(
                         sa.select(
                             bot_users.c.selected_levels,
-                            bot_users.c.pronunciation,
+                            bot_users.c.dialect,
                             bot_users.c.is_active,
                             bot_users.c.onboarding_completed,
                         ).where(bot_users.c.telegram_user_id == telegram_user_id)
@@ -93,12 +93,12 @@ class CardsQueries(EngineBound):
                 return None
 
             user_row = as_db_row(user)
-            pronunciation = row_optional_str(user_row, "pronunciation")
+            dialect = row_optional_str(user_row, "dialect")
 
             if (
                 not row_bool(user_row, "onboarding_completed")
                 or not user_row["selected_levels"]
-                or pronunciation not in VALID_PRONUNCIATIONS
+                or dialect not in VALID_DIALECT_PREFERENCES
                 or (require_active and not row_bool(user_row, "is_active"))
             ):
                 return None
@@ -119,7 +119,6 @@ class CardsQueries(EngineBound):
             if existing:
                 return None
 
-            dialect = pronunciation
             levels = list(row_str_sequence(user_row, "selected_levels"))
             stmt, us_audio, gb_audio = card_content_select(with_audio_data=False)
             stmt = (
@@ -187,45 +186,17 @@ class CardsQueries(EngineBound):
         error_message: str = "",
     ) -> None:
         async with self.engine.begin() as connection:
-            row = (
-                (
-                    await connection.execute(
-                        sa.update(bot_user_cards)
-                        .where(bot_user_cards.c.id == history_id)
-                        .values(
-                            status=(
-                                CARD_STATUS_DELIVERED
-                                if delivered
-                                else CARD_STATUS_FAILED
-                            ),
-                            telegram_message_id=telegram_message_id,
-                            error_type=(
-                                "" if delivered else error_type[:ERROR_TYPE_MAX_LEN]
-                            ),
-                            error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
-                            delivered_at=(
-                                sa.func.current_timestamp() if delivered else None
-                            ),
-                        )
-                        .returning(bot_user_cards.c.telegram_user_id)
-                    )
+            await connection.execute(
+                sa.update(bot_user_cards)
+                .where(bot_user_cards.c.id == history_id)
+                .values(
+                    status=(CARD_STATUS_DELIVERED if delivered else CARD_STATUS_FAILED),
+                    telegram_message_id=telegram_message_id,
+                    error_type=("" if delivered else error_type[:ERROR_TYPE_MAX_LEN]),
+                    error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
+                    delivered_at=(sa.func.current_timestamp() if delivered else None),
                 )
-                .mappings()
-                .first()
             )
-
-            if delivered and row:
-                await connection.execute(
-                    sa.update(bot_users)
-                    .where(
-                        bot_users.c.telegram_user_id
-                        == row_int(as_db_row(row), "telegram_user_id")
-                    )
-                    .values(
-                        last_delivery_at=sa.func.current_timestamp(),
-                        updated_at=sa.func.current_timestamp(),
-                    )
-                )
 
     async def cached_audio_file_id(
         self,

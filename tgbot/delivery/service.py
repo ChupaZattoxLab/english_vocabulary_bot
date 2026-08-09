@@ -31,7 +31,7 @@ from tgbot.constants import (
     SEND_KIND_TEXT,
     SEND_METHOD_VOICE,
 )
-from tgbot.db import Database, ReservedAudio, ReservedCard
+from tgbot.db import Database
 from tgbot.delivery.card_template import (
     BOTH_CARD_TEMPLATE_PATH,
     CARD_TEMPLATE_PATH,
@@ -39,6 +39,7 @@ from tgbot.delivery.card_template import (
     CardTemplateError,
 )
 from tgbot.localization import locale
+from tgbot.models import Card
 
 LOGGER = logging.getLogger("tgbot.delivery")
 
@@ -49,7 +50,7 @@ T = TypeVar("T")
 @dataclass(frozen=True)
 class DeliveryOutcome:
     status: DeliveryStatus
-    card: ReservedCard | None = None
+    card: Card | None = None
 
 
 class CardDeliveryService:
@@ -86,7 +87,7 @@ class CardDeliveryService:
             await self._send_card_text(bot, chat_id=chat_id, text=rendered)
             text_sent = True
 
-            message = await self._send_reserved_voices(
+            message = await self._send_card_voices(
                 bot,
                 chat_id=chat_id,
                 card=card,
@@ -142,30 +143,31 @@ class CardDeliveryService:
             LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
             return DeliveryOutcome(DELIVERY_STATUS_FAILED, card)
 
-    async def send_preview(self, bot: Bot, chat_id: int, card: ReservedCard) -> Message:
+    async def send_preview(self, bot: Bot, chat_id: int, card: Card) -> Message:
         """Send a card without creating or changing delivery history."""
-        return await self._send_reserved(bot, chat_id=chat_id, card=card)
+        return await self._send_card(bot, chat_id=chat_id, card=card)
 
-    def render_card(self, card: ReservedCard) -> str:
-        template = self.both_template if card.dialect == "BOTH" else self.template
+    def render_card(self, card: Card) -> str:
+        template = self.both_template if card.is_both else self.template
+        primary = card.primary
         return template.render(
             {
-                "word": card.word,
-                "word_upper": card.word.upper(),
-                "word_us": card.word_us or card.word,
-                "word_us_upper": (card.word_us or card.word).upper(),
-                "word_gb": card.word_gb or card.word,
-                "word_gb_upper": (card.word_gb or card.word).upper(),
+                "word": primary.word,
+                "word_upper": primary.word.upper(),
+                "word_us": (card.us or primary).word,
+                "word_us_upper": (card.us or primary).word.upper(),
+                "word_gb": (card.gb or primary).word,
+                "word_gb_upper": (card.gb or primary).word.upper(),
                 "lexical_category": card.lexical_category,
                 "cefr": card.cefr,
                 "definition": card.definition,
-                "ipa": card.ipa,
-                "ipa_us": card.ipa_us or card.ipa,
-                "ipa_gb": card.ipa_gb or card.ipa,
+                "ipa": primary.ipa,
+                "ipa_us": (card.us or primary).ipa,
+                "ipa_gb": (card.gb or primary).ipa,
                 "example": card.example,
                 "translation": card.translation,
-                "dialect": card.dialect,
-                "dialect_flag": locale.dialect_flag(card.dialect),
+                "dialect": primary.dialect,
+                "dialect_flag": locale.dialect_flag(primary.dialect),
                 "heading_definition": locale.labels.card_heading_definition,
                 "heading_example": locale.labels.card_heading_example,
                 "heading_translation": locale.labels.card_heading_translation,
@@ -174,52 +176,37 @@ class CardDeliveryService:
             }
         )
 
-    async def _send_reserved(
+    async def _send_card(
         self,
         bot: Bot,
         chat_id: int,
-        card: ReservedCard,
+        card: Card,
     ) -> Message:
         rendered = self.render_card(card)
 
         await self._send_card_text(bot, chat_id=chat_id, text=rendered)
 
-        return await self._send_reserved_voices(bot, chat_id=chat_id, card=card)
+        return await self._send_card_voices(bot, chat_id=chat_id, card=card)
 
-    async def _send_reserved_voices(
+    async def _send_card_voices(
         self,
         bot: Bot,
         chat_id: int,
-        card: ReservedCard,
+        card: Card,
     ) -> Message:
-        primary_dialect = "US" if card.dialect == "BOTH" else card.dialect
-
-        message = await self._send_voice_attachment(
-            bot,
-            chat_id=chat_id,
-            source_url=card.source_url,
-            audio_data=card.audio_data,
-            filename=card.filename or f"{card.word}.voice.ogg",
-            caption=voice_caption(
-                primary_dialect,
-                card.ipa_us if card.dialect == "BOTH" else card.ipa,
-            ),
-        )
-
-        if card.secondary_audio:
-            secondary: ReservedAudio = card.secondary_audio
-
+        message: Message | None = None
+        for variant in card.variants():
             message = await self._send_voice_attachment(
                 bot,
                 chat_id=chat_id,
-                source_url=secondary.source_url,
-                audio_data=secondary.audio_data,
-                filename=secondary.filename or f"{card.word}.gb.voice.ogg",
-                caption=voice_caption(
-                    secondary.dialect,
-                    card.ipa_gb,
-                ),
+                source_url=variant.audio.source_url,
+                audio_data=variant.audio.audio_data,
+                filename=variant.audio.filename or f"{variant.word}.voice.ogg",
+                caption=voice_caption(variant.dialect, variant.ipa),
             )
+
+        if message is None:
+            raise RuntimeError("card has no dialect variants to send")
 
         return message
 

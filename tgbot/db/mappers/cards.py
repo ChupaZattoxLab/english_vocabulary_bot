@@ -1,16 +1,11 @@
-"""Map query rows onto reserved card models."""
+"""Map query rows onto card models."""
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from typing import cast
 
-from tgbot.db.domain import (
-    VALID_PRONUNCIATIONS,
-    CardDialect,
-    ReservedAudio,
-    ReservedCard,
-)
+from tgbot.db.mappers.users import normalize_dialect_preference
 from tgbot.db.mappers.values import (
     as_db_row,
     row_bytes,
@@ -18,17 +13,29 @@ from tgbot.db.mappers.values import (
     row_str,
     row_str_sequence,
 )
+from tgbot.models import (
+    VALID_DIALECTS,
+    Card,
+    CardAudio,
+    Dialect,
+    DialectVariant,
+)
+
+
+def normalize_dialect(value: str) -> Dialect:
+    normalized = value.lower()
+    if normalized not in VALID_DIALECTS:
+        raise ValueError(f"unsupported dialect {value!r}")
+    return cast(Dialect, normalized)
 
 
 def card_from_row(
     row: object,
     dialect: str,
     history_id: int,
-) -> ReservedCard:
+) -> Card:
     data = as_db_row(row)
-    normalized = dialect.lower()
-    if normalized not in VALID_PRONUNCIATIONS:
-        raise ValueError(f"unsupported pronunciation {dialect!r}")
+    preference = normalize_dialect_preference(dialect)
 
     ipa_us_values = row_str_sequence(data, "ipa_us") if data["ipa_us"] else ()
     ipa_gb_values = row_str_sequence(data, "ipa_gb") if data["ipa_gb"] else ()
@@ -43,8 +50,6 @@ def card_from_row(
         gb_position if isinstance(gb_position, int) else None,
     )
 
-    primary_prefix = "gb" if normalized == "gb" else "us"
-    card_dialect = cast(CardDialect, normalized.upper())
     translations = data["translations"]
     translation_source = (
         cast(Mapping[str, object], translations)
@@ -52,34 +57,45 @@ def card_from_row(
         else None
     )
 
-    return ReservedCard(
+    include_us = preference in {"us", "both"}
+    include_gb = preference in {"gb", "both"}
+
+    return Card(
         history_id=history_id,
         entry_id=row_int(data, "entry_id"),
-        word=row_str(data, f"word_{primary_prefix}"),
         lexical_category=row_str(data, "lexical_category"),
         cefr=row_str(data, "cefr").upper(),
         definition=row_str(data, "definition"),
         example=row_str(data, "example"),
-        ipa=ipa_gb if normalized == "gb" else ipa_us,
-        dialect=card_dialect,
         translation=translation_text(translation_source),
-        source_url=row_str(data, f"{primary_prefix}_source_url"),
-        audio_data=row_bytes(data, f"{primary_prefix}_audio_data"),
-        content_type=row_str(data, f"{primary_prefix}_content_type"),
-        filename=row_str(data, f"{primary_prefix}_filename"),
-        word_us=row_str(data, "word_us"),
-        word_gb=row_str(data, "word_gb"),
-        ipa_us=ipa_us,
-        ipa_gb=ipa_gb,
-        secondary_audio=(
-            ReservedAudio(
-                dialect="GB",
-                source_url=row_str(data, "gb_source_url"),
-                audio_data=row_bytes(data, "gb_audio_data"),
-                content_type=row_str(data, "gb_content_type"),
-                filename=row_str(data, "gb_filename"),
+        us=(
+            DialectVariant(
+                dialect="us",
+                word=row_str(data, "word_us"),
+                ipa=ipa_us,
+                audio=CardAudio(
+                    source_url=row_str(data, "us_source_url"),
+                    audio_data=row_bytes(data, "us_audio_data"),
+                    content_type=row_str(data, "us_content_type"),
+                    filename=row_str(data, "us_filename"),
+                ),
             )
-            if normalized == "both"
+            if include_us
+            else None
+        ),
+        gb=(
+            DialectVariant(
+                dialect="gb",
+                word=row_str(data, "word_gb"),
+                ipa=ipa_gb,
+                audio=CardAudio(
+                    source_url=row_str(data, "gb_source_url"),
+                    audio_data=row_bytes(data, "gb_audio_data"),
+                    content_type=row_str(data, "gb_content_type"),
+                    filename=row_str(data, "gb_filename"),
+                ),
+            )
+            if include_gb
             else None
         ),
     )

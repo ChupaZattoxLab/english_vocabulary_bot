@@ -44,7 +44,6 @@ class ScheduleSettings:
 class BotConfig:
     bot_token: str
     db_url: str
-    admin_ids: frozenset[int]
     db_pool_size: int
     schedule: ScheduleSettings
 
@@ -57,13 +56,9 @@ class BotConfig:
         if not secrets.db_url:
             raise ConfigError("OALD_DATABASE_URL is required")
 
-        if not secrets.admin_ids:
-            raise ConfigError("TELEGRAM_ADMIN_IDS is required")
-
         return cls(
             bot_token=secrets.telegram_bot_token,
             db_url=secrets.db_url,
-            admin_ids=secrets.admin_ids,
             db_pool_size=DB_POOL_SIZE,
             schedule=ScheduleSettings.load(),
         )

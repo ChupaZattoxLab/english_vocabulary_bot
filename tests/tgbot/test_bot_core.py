@@ -8,7 +8,6 @@ from unittest.mock import AsyncMock, patch
 from zoneinfo import ZoneInfo
 
 from tgbot.bot_config import BotConfig
-from tgbot.db import AdminUserDetail, AdminWordMatch, ReservedAudio, ReservedCard
 from tgbot.delivery import (
     CardDeliveryService,
     CardTemplate,
@@ -21,6 +20,14 @@ from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     word_categories_keyboard,
 )
+from tgbot.models import (
+    AdminUser,
+    Card,
+    CardAudio,
+    DialectVariant,
+    UserSettings,
+    WordMatch,
+)
 from tgbot.secrets import Secrets
 
 VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
@@ -32,14 +39,13 @@ class BotConfigTests(unittest.TestCase):
         test_secrets = Secrets.load(
             {
                 "TELEGRAM_BOT_TOKEN": "token",
-                "TELEGRAM_ADMIN_IDS": "123, 456",
                 "OALD_DATABASE_URL": "postgresql+psycopg://localhost/test",
             }
         )
         with patch("tgbot.bot_config.secrets", test_secrets):
             config = BotConfig.load()
 
-        self.assertEqual(config.admin_ids, frozenset({123, 456}))
+        self.assertEqual(config.bot_token, "token")
         self.assertEqual(config.schedule.send_times, (time(13, 0), time(20, 0)))
         self.assertEqual(config.schedule.text, "13:00, 20:00 (Europe/Moscow)")
 
@@ -116,12 +122,12 @@ class CardTemplateTests(unittest.TestCase):
 class AdminHelperTests(unittest.TestCase):
     def test_user_delivery_states_are_distinct(self) -> None:
         self.assertEqual(
-            _delivery_state(make_admin_user_detail(is_active=True)),
+            _delivery_state(make_admin_user(is_active=True)),
             "включена",
         )
         self.assertEqual(
             _delivery_state(
-                make_admin_user_detail(
+                make_admin_user(
                     is_active=False,
                     paused_at=datetime.now(UTC),
                 )
@@ -130,7 +136,7 @@ class AdminHelperTests(unittest.TestCase):
         )
         self.assertEqual(
             _delivery_state(
-                make_admin_user_detail(
+                make_admin_user(
                     is_active=False,
                     blocked_at=datetime.now(UTC),
                 )
@@ -243,9 +249,9 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 send_message=AsyncMock(),
             )
             service = CardDeliveryService(db, CardTemplate(template_path))
-            card = make_reserved_card("audio/ogg", "test.voice.ogg")
+            card = make_card("audio/ogg", "test.voice.ogg")
 
-            await service._send_reserved(bot, chat_id=123, card=card)
+            await service._send_card(bot, chat_id=123, card=card)
 
             bot.send_voice.assert_awaited_once()
             bot.send_message.assert_awaited_once()
@@ -262,7 +268,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 "🇺🇸 US · <code>/test/</code>",
             )
             db.cache_audio_file_id.assert_awaited_once_with(
-                card.source_url,
+                card.primary.audio.source_url,
                 "voice",
                 "telegram-voice-id",
             )
@@ -271,7 +277,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             template_path = Path(temporary_directory) / "card.html"
             template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
-            card = make_reserved_card("audio/ogg", "test.voice.ogg")
+            card = make_card("audio/ogg", "test.voice.ogg")
             db = SimpleNamespace(
                 reserve_card=AsyncMock(return_value=card),
                 finish_delivery=AsyncMock(),
@@ -335,22 +341,32 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 CardTemplate(both_template_path),
             )
             card = replace(
-                make_reserved_card("audio/ogg", "test-us.voice.ogg"),
-                dialect="BOTH",
-                word_us="color",
-                word_gb="colour",
-                ipa_us="/us/",
-                ipa_gb="/gb/",
-                secondary_audio=ReservedAudio(
-                    dialect="GB",
-                    source_url="https://example.test/audio-gb",
-                    audio_data=b"gb-audio",
-                    content_type="audio/ogg",
-                    filename="test-gb.voice.ogg",
+                make_card("audio/ogg", "test-us.voice.ogg"),
+                us=DialectVariant(
+                    dialect="us",
+                    word="color",
+                    ipa="/us/",
+                    audio=CardAudio(
+                        source_url="https://example.test/audio-us",
+                        audio_data=b"us-audio",
+                        content_type="audio/ogg",
+                        filename="test-us.voice.ogg",
+                    ),
+                ),
+                gb=DialectVariant(
+                    dialect="gb",
+                    word="colour",
+                    ipa="/gb/",
+                    audio=CardAudio(
+                        source_url="https://example.test/audio-gb",
+                        audio_data=b"gb-audio",
+                        content_type="audio/ogg",
+                        filename="test-gb.voice.ogg",
+                    ),
                 ),
             )
 
-            await service._send_reserved(bot, chat_id=123, card=card)
+            await service._send_card(bot, chat_id=123, card=card)
 
             self.assertEqual(bot.send_voice.await_count, 2)
             bot.send_message.assert_awaited_once()
@@ -369,20 +385,17 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(db.cache_audio_file_id.await_count, 2)
 
 
-def make_admin_user_detail(**overrides: object) -> AdminUserDetail:
+def make_admin_user(**overrides: object) -> AdminUser:
     now = datetime.now(UTC)
-    user = AdminUserDetail(
+    user = AdminUser(
         telegram_user_id=1,
         chat_id=1,
         username="",
-        first_name="",
-        selected_levels=(),
-        pronunciation=None,
-        onboarding_completed=True,
-        is_active=True,
+        role="user",
         created_at=now,
-        updated_at=now,
-        last_delivery_at=None,
+        settings=UserSettings(selected_levels=(), dialect=None),
+        is_active=True,
+        onboarding_completed=True,
         paused_at=None,
         blocked_at=None,
         delivered_cards=0,
@@ -395,8 +408,8 @@ def make_word_match(
     entry_id: int,
     lexical_category: str,
     cefr: str,
-) -> AdminWordMatch:
-    return AdminWordMatch(
+) -> WordMatch:
+    return WordMatch(
         id=entry_id,
         word_us="word",
         word_gb="word",
@@ -405,25 +418,30 @@ def make_word_match(
     )
 
 
-def make_reserved_card(
+def make_card(
     content_type: str = "audio/ogg",
     filename: str = "test.voice.ogg",
-) -> ReservedCard:
-    return ReservedCard(
+) -> Card:
+    return Card(
         history_id=1,
         entry_id=1,
-        word="test",
         lexical_category="noun",
         cefr="A1",
         definition="definition",
         example="example",
-        ipa="/test/",
-        dialect="US",
         translation="тест",
-        source_url="https://example.test/audio",
-        audio_data=b"audio",
-        content_type=content_type,
-        filename=filename,
+        us=DialectVariant(
+            dialect="us",
+            word="test",
+            ipa="/test/",
+            audio=CardAudio(
+                source_url="https://example.test/audio",
+                audio_data=b"audio",
+                content_type=content_type,
+                filename=filename,
+            ),
+        ),
+        gb=None,
     )
 
 

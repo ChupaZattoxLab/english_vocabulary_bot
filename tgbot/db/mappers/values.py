@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from datetime import datetime
 from typing import cast
 
-from tgbot.db.domain import DbRow
+DbRow = Mapping[str, object]
 
 
 def as_db_row(row: object) -> DbRow:

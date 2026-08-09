@@ -73,7 +73,7 @@ async def run_bot(config: BotConfig) -> None:
 
     scheduler_task: asyncio.Task[None] | None = None
     try:
-        await configure_commands(bot, config)
+        await configure_commands(bot, db)
 
         scheduler_task = asyncio.create_task(
             scheduler.run(bot),
@@ -96,10 +96,10 @@ async def run_bot(config: BotConfig) -> None:
         await db.close()
 
 
-async def configure_commands(bot: Bot, config: BotConfig) -> None:
+async def configure_commands(bot: Bot, db: Database) -> None:
     await bot.set_my_commands(list(USER_COMMANDS))
 
-    for admin_id in config.admin_ids:
+    for admin_id in await db.admin_user_ids():
         await bot.set_my_commands(
             [*USER_COMMANDS, *ADMIN_COMMANDS],
             scope=BotCommandScopeChat(chat_id=admin_id),

@@ -1,9 +1,18 @@
 """Map SQLAlchemy/psycopg row mappings onto domain dataclasses."""
 
-from tgbot.db.mappers.admin import admin_user_detail_from_row, admin_word_match_from_row
-from tgbot.db.mappers.cards import card_from_row, selected_ipa, translation_text
-from tgbot.db.mappers.users import user_from_row
+from tgbot.db.mappers.cards import (
+    card_from_row,
+    normalize_dialect,
+    selected_ipa,
+    translation_text,
+)
+from tgbot.db.mappers.users import (
+    admin_user_from_row,
+    normalize_dialect_preference,
+    user_from_row,
+)
 from tgbot.db.mappers.values import (
+    DbRow,
     as_db_row,
     as_db_rows,
     row_bool,
@@ -15,13 +24,16 @@ from tgbot.db.mappers.values import (
     row_str,
     row_str_sequence,
 )
+from tgbot.db.mappers.views import word_match_from_row
 
 __all__ = [
-    "admin_user_detail_from_row",
-    "admin_word_match_from_row",
+    "DbRow",
+    "admin_user_from_row",
     "as_db_row",
     "as_db_rows",
     "card_from_row",
+    "normalize_dialect",
+    "normalize_dialect_preference",
     "row_bool",
     "row_bytes",
     "row_datetime",
@@ -33,4 +45,5 @@ __all__ = [
     "selected_ipa",
     "translation_text",
     "user_from_row",
+    "word_match_from_row",
 ]

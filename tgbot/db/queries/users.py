@@ -5,16 +5,15 @@ from __future__ import annotations
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from tgbot.db.domain import (
-    VALID_LEVELS,
-    VALID_PRONUNCIATIONS,
-    ActiveUser,
-    BotUser,
-    DatabaseError,
+from tgbot.db.mappers import (
+    as_db_row,
+    as_db_rows,
+    normalize_dialect_preference,
+    user_from_row,
 )
-from tgbot.db.mappers import as_db_row, as_db_rows, row_int, user_from_row
 from tgbot.db.queries.base import EngineBound
 from tgbot.db.tables import bot_users
+from tgbot.models import VALID_LEVELS, ActiveUser
 
 
 class UsersQueries(EngineBound):
@@ -23,20 +22,17 @@ class UsersQueries(EngineBound):
         telegram_user_id: int,
         chat_id: int,
         username: str,
-        first_name: str,
-    ) -> BotUser:
+    ) -> ActiveUser:
         stmt = pg_insert(bot_users).values(
             telegram_user_id=telegram_user_id,
             chat_id=chat_id,
             username=username,
-            first_name=first_name,
         )
         stmt = stmt.on_conflict_do_update(
             index_elements=[bot_users.c.telegram_user_id],
             set_={
                 "chat_id": stmt.excluded.chat_id,
                 "username": stmt.excluded.username,
-                "first_name": stmt.excluded.first_name,
                 "blocked_at": None,
                 "is_active": sa.case(
                     (
@@ -48,7 +44,6 @@ class UsersQueries(EngineBound):
                     ),
                     else_=bot_users.c.is_active,
                 ),
-                "updated_at": sa.func.current_timestamp(),
             },
         ).returning(*bot_users.c)
 
@@ -57,7 +52,7 @@ class UsersQueries(EngineBound):
 
         return user_from_row(as_db_row(row))
 
-    async def get_user(self, telegram_user_id: int) -> BotUser | None:
+    async def get_user(self, telegram_user_id: int) -> ActiveUser | None:
         async with self.engine.connect() as connection:
             row = (
                 (
@@ -73,7 +68,35 @@ class UsersQueries(EngineBound):
 
         return user_from_row(as_db_row(row)) if row else None
 
-    async def toggle_level(self, telegram_user_id: int, level: str) -> BotUser:
+    async def is_admin(self, telegram_user_id: int) -> bool:
+        async with self.engine.connect() as connection:
+            role = (
+                await connection.execute(
+                    sa.select(bot_users.c.role).where(
+                        bot_users.c.telegram_user_id == telegram_user_id
+                    )
+                )
+            ).scalar_one_or_none()
+
+        return role == "admin"
+
+    async def admin_user_ids(self) -> list[int]:
+        async with self.engine.connect() as connection:
+            rows = (
+                (
+                    await connection.execute(
+                        sa.select(bot_users.c.telegram_user_id)
+                        .where(bot_users.c.role == "admin")
+                        .order_by(bot_users.c.telegram_user_id)
+                    )
+                )
+                .scalars()
+                .all()
+            )
+
+        return [int(user_id) for user_id in rows]
+
+    async def toggle_level(self, telegram_user_id: int, level: str) -> ActiveUser:
         normalized = level.lower()
         if normalized not in VALID_LEVELS:
             raise ValueError(f"unsupported CEFR level {level!r}")
@@ -92,7 +115,6 @@ class UsersQueries(EngineBound):
                         bot_users.c.selected_levels, level_value
                     ),
                 ),
-                updated_at=sa.func.current_timestamp(),
             )
             .returning(*bot_users.c)
         )
@@ -101,25 +123,23 @@ class UsersQueries(EngineBound):
             row = (await connection.execute(stmt)).mappings().first()
 
         if not row:
-            raise DatabaseError("bot user does not exist")
+            raise RuntimeError("bot user does not exist")
 
         return user_from_row(as_db_row(row))
 
-    async def set_pronunciation(
+    async def set_dialect(
         self,
         telegram_user_id: int,
         dialect: str,
-    ) -> BotUser:
-        normalized = dialect.lower()
-        if normalized not in VALID_PRONUNCIATIONS:
-            raise ValueError(f"unsupported pronunciation {dialect!r}")
+    ) -> ActiveUser:
+        normalized = normalize_dialect_preference(dialect)
 
         has_levels = sa.func.cardinality(bot_users.c.selected_levels) > 0
         stmt = (
             sa.update(bot_users)
             .where(bot_users.c.telegram_user_id == telegram_user_id)
             .values(
-                pronunciation=normalized,
+                dialect=normalized,
                 onboarding_completed=has_levels,
                 is_active=sa.case(
                     (
@@ -131,7 +151,6 @@ class UsersQueries(EngineBound):
                     ),
                     else_=has_levels,
                 ),
-                updated_at=sa.func.current_timestamp(),
             )
             .returning(*bot_users.c)
         )
@@ -140,7 +159,7 @@ class UsersQueries(EngineBound):
             row = (await connection.execute(stmt)).mappings().first()
 
         if not row:
-            raise DatabaseError("bot user does not exist")
+            raise RuntimeError("bot user does not exist")
 
         return user_from_row(as_db_row(row))
 
@@ -153,17 +172,11 @@ class UsersQueries(EngineBound):
                     bot_users.c.telegram_user_id == telegram_user_id,
                     bot_users.c.blocked_at.is_not(None),
                 )
-                .values(
-                    blocked_at=None,
-                    updated_at=sa.func.current_timestamp(),
-                )
+                .values(blocked_at=None)
             )
 
     async def set_active(self, telegram_user_id: int, active: bool) -> bool:
-        values: dict[str, object] = {
-            "is_active": active,
-            "updated_at": sa.func.current_timestamp(),
-        }
+        values: dict[str, object] = {"is_active": active}
         if active:
             values["paused_at"] = None
             values["blocked_at"] = None
@@ -187,15 +200,12 @@ class UsersQueries(EngineBound):
             rows = (
                 (
                     await connection.execute(
-                        sa.select(
-                            bot_users.c.telegram_user_id,
-                            bot_users.c.chat_id,
-                        )
+                        sa.select(bot_users)
                         .where(
                             bot_users.c.is_active.is_(True),
                             bot_users.c.onboarding_completed.is_(True),
                             sa.func.cardinality(bot_users.c.selected_levels) > 0,
-                            bot_users.c.pronunciation.is_not(None),
+                            bot_users.c.dialect.is_not(None),
                         )
                         .order_by(bot_users.c.telegram_user_id)
                     )
@@ -204,13 +214,7 @@ class UsersQueries(EngineBound):
                 .all()
             )
 
-        return [
-            ActiveUser(
-                telegram_user_id=row_int(row, "telegram_user_id"),
-                chat_id=row_int(row, "chat_id"),
-            )
-            for row in as_db_rows(rows)
-        ]
+        return [user_from_row(row) for row in as_db_rows(rows)]
 
     async def deactivate_user(self, telegram_user_id: int) -> None:
         async with self.engine.begin() as connection:
@@ -220,6 +224,5 @@ class UsersQueries(EngineBound):
                 .values(
                     is_active=False,
                     blocked_at=sa.func.current_timestamp(),
-                    updated_at=sa.func.current_timestamp(),
                 )
             )

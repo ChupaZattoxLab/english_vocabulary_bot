@@ -16,8 +16,9 @@ from tgbot.constants import (
     DELIVERY_STATUS_FAILED,
     DELIVERY_STATUS_SKIPPED,
 )
-from tgbot.db import ActiveUser, Database
+from tgbot.db import Database
 from tgbot.delivery.service import CardDeliveryService
+from tgbot.models import ActiveUser
 
 LOGGER = logging.getLogger("tgbot.scheduler")
 
