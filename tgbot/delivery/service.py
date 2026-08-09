@@ -32,7 +32,12 @@ from tgbot.constants import (
     SEND_METHOD_VOICE,
 )
 from tgbot.db import Database, ReservedAudio, ReservedCard
-from tgbot.delivery.card_template import CardTemplate, CardTemplateError
+from tgbot.delivery.card_template import (
+    BOTH_CARD_TEMPLATE_PATH,
+    CARD_TEMPLATE_PATH,
+    CardTemplate,
+    CardTemplateError,
+)
 from tgbot.localization import locale
 
 LOGGER = logging.getLogger("tgbot.delivery")
@@ -51,12 +56,12 @@ class CardDeliveryService:
     def __init__(
         self,
         database: Database,
-        template: CardTemplate,
+        template: CardTemplate | None = None,
         both_template: CardTemplate | None = None,
     ):
         self.database = database
-        self.template = template
-        self.both_template = both_template or template
+        self.template = template or CardTemplate(CARD_TEMPLATE_PATH)
+        self.both_template = both_template or CardTemplate(BOTH_CARD_TEMPLATE_PATH)
 
     async def deliver(
         self,

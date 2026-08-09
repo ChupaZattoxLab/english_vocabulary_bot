@@ -9,6 +9,10 @@ from pathlib import Path
 
 from tgbot.constants import TELEGRAM_MESSAGE_MAX_LEN
 
+TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
+CARD_TEMPLATE_PATH = TEMPLATES_DIR / "card_template.html"
+BOTH_CARD_TEMPLATE_PATH = TEMPLATES_DIR / "card_template_both.html"
+
 ALLOWED_FIELDS = {
     "word",
     "word_upper",

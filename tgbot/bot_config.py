@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import time
-from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from tgbot.constants import (
@@ -16,12 +15,7 @@ from tgbot.constants import (
     SEND_TIMES,
     TIMEZONE,
 )
-from tgbot.secrets import PACKAGE_ROOT, ConfigError, secrets
-
-CARD_TEMPLATE_PATH = PACKAGE_ROOT / "delivery" / "templates" / "card_template.html"
-BOTH_CARD_TEMPLATE_PATH = (
-    PACKAGE_ROOT / "delivery" / "templates" / "card_template_both.html"
-)
+from tgbot.secrets import ConfigError, secrets
 
 
 @dataclass(frozen=True)
@@ -32,8 +26,6 @@ class BotConfig:
     timezone: ZoneInfo
     send_times: tuple[time, ...]
     schedule_text: str
-    card_template_path: Path
-    both_card_template_path: Path
     schedule_grace_minutes: int
     scheduler_poll_seconds: int
     delivery_concurrency: int
@@ -55,8 +47,6 @@ class BotConfig:
             timezone=ZoneInfo(TIMEZONE),
             send_times=parse_send_times(SEND_TIMES),
             schedule_text=f"{', '.join(sorted(SEND_TIMES))} ({TIMEZONE})",
-            card_template_path=CARD_TEMPLATE_PATH,
-            both_card_template_path=BOTH_CARD_TEMPLATE_PATH,
             schedule_grace_minutes=SCHEDULE_GRACE_MINUTES,
             scheduler_poll_seconds=SCHEDULER_POLL_SECONDS,
             delivery_concurrency=DELIVERY_CONCURRENCY,

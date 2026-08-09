@@ -42,10 +42,6 @@ class BotConfigTests(unittest.TestCase):
         self.assertEqual(config.admin_ids, frozenset({123, 456}))
         self.assertEqual(config.send_times, (time(13, 0), time(20, 0)))
         self.assertEqual(config.schedule_text, "13:00, 20:00 (Europe/Moscow)")
-        self.assertEqual(
-            config.both_card_template_path.name,
-            "card_template_both.html",
-        )
 
 
 class CardTemplateTests(unittest.TestCase):

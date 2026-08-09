@@ -12,7 +12,7 @@ from aiogram.types import BotCommand, BotCommandScopeChat
 
 from tgbot.bot_config import BotConfig
 from tgbot.db import Database
-from tgbot.delivery import CardDeliveryService, CardTemplate
+from tgbot.delivery import CardDeliveryService
 from tgbot.delivery.scheduler import CardScheduler
 from tgbot.handlers import create_admin_router, create_router
 from tgbot.localization import locale
@@ -37,16 +37,13 @@ ADMIN_COMMANDS = (
 
 
 async def run_bot(config: BotConfig) -> None:
-    template = CardTemplate(config.card_template_path)
-    both_template = CardTemplate(config.both_card_template_path)
-
     database = Database(
         config.database_url,
         pool_size=config.database_pool_size,
     )
     await database.open()
 
-    delivery = CardDeliveryService(database, template, both_template)
+    delivery = CardDeliveryService(database)
     scheduler = CardScheduler(
         database=database,
         delivery=delivery,
