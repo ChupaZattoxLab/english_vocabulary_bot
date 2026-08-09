@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 from zoneinfo import ZoneInfo
 
-from tgbot.bot_config import BotConfig, parse_send_times
+from tgbot.bot_config import BotConfig
 from tgbot.db import AdminUserDetail, AdminWordMatch, ReservedAudio, ReservedCard
 from tgbot.delivery import (
     CardDeliveryService,
@@ -21,7 +21,7 @@ from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     word_categories_keyboard,
 )
-from tgbot.secrets import ConfigError, Secrets
+from tgbot.secrets import Secrets
 
 VALID_TEMPLATE = """<b>{word}</b> {lexical_category} {cefr}
 {definition} {ipa} {example} {translation} {dialect}"""
@@ -40,19 +40,12 @@ class BotConfigTests(unittest.TestCase):
             config = BotConfig.load()
 
         self.assertEqual(config.admin_ids, frozenset({123, 456}))
-        self.assertEqual(
-            config.send_times,
-            (time(9, 0), time(14, 0), time(20, 0)),
-        )
-        self.assertEqual(config.schedule_text, "09:00, 14:00, 20:00 (Europe/Moscow)")
+        self.assertEqual(config.send_times, (time(13, 0), time(20, 0)))
+        self.assertEqual(config.schedule_text, "13:00, 20:00 (Europe/Moscow)")
         self.assertEqual(
             config.both_card_template_path.name,
             "card_template_both.html",
         )
-
-    def test_send_times_constant_must_match_cards_per_day(self) -> None:
-        with self.assertRaises(ConfigError):
-            parse_send_times("09:00,14:00")
 
 
 class CardTemplateTests(unittest.TestCase):

@@ -73,10 +73,9 @@ TELEGRAM_MESSAGE_MAX_LEN = 4096
 # Schedule and delivery (not env-configurable; change here, not in .env)
 # ---------------------------------------------------------------------------
 
-CARDS_PER_DAY = 3
-# Local wall-clock times; must stay unique and length == CARDS_PER_DAY.
-SEND_TIMES = "09:00,14:00,20:00"
-TIMEZONE = "Europe/Moscow"
+# Local wall-clock send slots (HH:MM). Cards/day == len(SEND_TIMES).
+SEND_TIMES = ("13:00", "20:00")
+TIMEZONE = "Europe/Moscow"  # UTC+3
 SCHEDULE_GRACE_MINUTES = 60
 SCHEDULER_POLL_SECONDS = 20
 DELIVERY_CONCURRENCY = 5
