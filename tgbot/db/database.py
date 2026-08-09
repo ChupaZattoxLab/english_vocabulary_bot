@@ -13,7 +13,6 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from tgbot.constants import (
     DB_CONNECT_TIMEOUT_SECONDS,
     DB_POOL_RECYCLE_SECONDS,
-    DB_POOL_SIZE,
 )
 from tgbot.db.models import (
     DatabaseError,
@@ -31,13 +30,16 @@ from tgbot.db.queries import (
 from tgbot.db.schema import MANAGED_TABLES
 from tgbot.secrets import PROJECT_ROOT
 
-_information_schema_tables = sa.table(
+# Postgres catalog: list of tables in the current database (not app schema).
+information_schema_tables = sa.table(
     "tables",
     sa.column("table_schema", sa.Text),
     sa.column("table_name", sa.Text),
     schema="information_schema",
 )
-_alembic_version = sa.table(
+
+# Alembic revision marker table written by migrations.
+alembic_version = sa.table(
     "alembic_version",
     sa.column("version_num", sa.Text),
 )
@@ -47,7 +49,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
     def __init__(
         self,
         db_url: str,
-        pool_size: int = DB_POOL_SIZE,
+        pool_size: int,
     ):
         connect_args: dict[str, object] = {
             "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
@@ -81,9 +83,9 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
             rows = (
                 (
                     await connection.execute(
-                        sa.select(_information_schema_tables.c.table_name).where(
-                            _information_schema_tables.c.table_schema == "public",
-                            _information_schema_tables.c.table_name.in_(
+                        sa.select(information_schema_tables.c.table_name).where(
+                            information_schema_tables.c.table_schema == "public",
+                            information_schema_tables.c.table_name.in_(
                                 list(MANAGED_TABLES)
                             ),
                         )
@@ -124,7 +126,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
                 )
 
             version = (
-                (await connection.execute(sa.select(_alembic_version.c.version_num)))
+                (await connection.execute(sa.select(alembic_version.c.version_num)))
                 .mappings()
                 .first()
             )

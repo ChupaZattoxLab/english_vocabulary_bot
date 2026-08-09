@@ -36,7 +36,6 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_JSON_PATH = ROOT / "data" / "oald" / "words.json"
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 VALID_CEFR_LEVELS = {"a1", "a2", "b1", "b2", "c1"}
-DEFAULT_CONNECT_TIMEOUT = 10
 EXPECTED_FIELDS = {
     "word_us",
     "word_gb",
@@ -256,10 +255,7 @@ def import_entries(
         entry_count = 0
         audio_reference_count = 0
         unique_audio_urls: set[str] = set()
-        with sync_connection(
-            db_url,
-            connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-        ) as connection:
+        with sync_connection(db_url) as connection:
             require_oald_schema(connection)
             LOGGER.info("Alembic-managed OALD schema is ready")
             for batch in iter_batches(entries, batch_size):
@@ -378,7 +374,6 @@ def ensure_db_exists(
         with sync_connection(
             admin_url,
             autocommit=True,
-            connect_timeout=DEFAULT_CONNECT_TIMEOUT,
         ) as connection:
             exists = connection.execute(
                 sa.text("SELECT 1 FROM pg_database WHERE datname = :name"),
@@ -411,10 +406,7 @@ def ensure_db_exists(
         raise
     except Exception:
         try:
-            with sync_connection(
-                db_url,
-                connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-            ):
+            with sync_connection(db_url):
                 return False
         except Exception as target_exc:
             raise OaldDatabaseError(

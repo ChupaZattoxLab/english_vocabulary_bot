@@ -43,7 +43,6 @@ except ImportError:  # running as a plain script
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 LOGGER = logging.getLogger("tgbot.oald_audio_download")
 DEFAULT_MAX_AUDIO_BYTES = 10 * 1024 * 1024
-DEFAULT_CONNECT_TIMEOUT = 10
 RETRYABLE_HTTP_STATUS = {408, 425, 500, 502, 503, 504}
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -433,7 +432,6 @@ def download_audio_to_postgres(
         with sync_connection(
             db_url,
             autocommit=True,
-            connect_timeout=DEFAULT_CONNECT_TIMEOUT,
         ) as connection:
             require_oald_schema(connection)
             clear_telegram_cache = sa.inspect(connection).has_table(

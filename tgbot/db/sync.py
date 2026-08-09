@@ -1,6 +1,10 @@
-"""Synchronous SQLAlchemy helpers for scripts and tests.
+"""Blocking (sync) SQLAlchemy access for CLI scripts and tests.
 
-Accepts the same ``postgresql+psycopg://`` URLs as the async bot engine.
+The Telegram bot uses async ``Database`` / ``AsyncEngine`` so it can await
+Telegram I/O without blocking. Import/download scripts and pytest helpers are
+plain synchronous code: they need a normal ``Engine`` that blocks until each
+query finishes. Same ``postgresql+psycopg://`` URLs as the bot; only the
+driver style differs (sync vs async).
 """
 
 from __future__ import annotations
@@ -12,25 +16,26 @@ from typing import Any
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine, make_url
 
+from tgbot.constants import DB_CONNECT_TIMEOUT_SECONDS
+
 
 def sync_engine(
     db_url: str,
-    *,
     autocommit: bool = False,
-    connect_timeout: int | None = None,
 ) -> Engine:
-    connect_args: dict[str, Any] = {}
-    if connect_timeout is not None:
-        connect_args["connect_timeout"] = connect_timeout
+    """Build a short-lived sync engine (caller must ``dispose()``)."""
+    connect_args: dict[str, Any] = {
+        "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
+    }
 
     url = make_url(db_url)
     if url.host == "localhost":
+        # Avoid IPv6 localhost surprises on Windows.
         connect_args["hostaddr"] = "127.0.0.1"
 
-    kwargs: dict[str, Any] = {}
-    if connect_args:
-        kwargs["connect_args"] = connect_args
+    kwargs: dict[str, Any] = {"connect_args": connect_args}
     if autocommit:
+        # Needed for CREATE/DROP DATABASE (cannot run inside a transaction).
         kwargs["isolation_level"] = "AUTOCOMMIT"
     return create_engine(db_url, **kwargs)
 
@@ -38,15 +43,15 @@ def sync_engine(
 @contextmanager
 def sync_connection(
     db_url: str,
-    *,
     autocommit: bool = False,
-    connect_timeout: int | None = None,
 ) -> Iterator[Connection]:
-    engine = sync_engine(
-        db_url,
-        autocommit=autocommit,
-        connect_timeout=connect_timeout,
-    )
+    """Open one connection, then dispose the engine.
+
+    Default: one transaction for the whole ``with`` block (``begin``).
+    ``autocommit=True``: each statement commits immediately (DDL / many small
+    writes in download scripts).
+    """
+    engine = sync_engine(db_url, autocommit=autocommit)
     try:
         if autocommit:
             with engine.connect() as connection:
