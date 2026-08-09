@@ -11,6 +11,7 @@ from import_oald_postgres import (
 )
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
+from tgbot.db.sync import sync_connection
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -140,11 +141,6 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
     database_url = TEST_OALD_DATABASE_URL
 
     def test_repeat_add_update_links_and_preserve_audio_bytes(self) -> None:
-        try:
-            import psycopg
-        except ImportError as exc:
-            self.skipTest(f"psycopg is not installed: {exc}")
-
         suffix = uuid.uuid4().hex
         first_definition_url = f"https://dictionary.example/{suffix}/lie1"
         second_definition_url = f"https://dictionary.example/{suffix}/lie2"
@@ -186,8 +182,10 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                     2,
                 )
 
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             """
                             UPDATE oald_audio_files
@@ -216,8 +214,10 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(result.entries, 3)
                 self.assertEqual(result.unique_audio_urls, 2)
 
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             """
                             SELECT definition
@@ -252,8 +252,10 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                             b"OggS-stored",
                         )
             finally:
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             """
                             DELETE FROM oald_entries

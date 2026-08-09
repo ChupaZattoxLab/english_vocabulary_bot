@@ -15,6 +15,17 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.engine import make_url
+
+from tgbot.db.schema import (
+    oald_audio_files,
+    oald_entries,
+    oald_entry_audio_sources,
+)
+from tgbot.db.sync import sync_connection
+
 try:
     from .oald_preflight import require_oald_schema
 except ImportError:  # running as a plain script
@@ -44,68 +55,6 @@ EXPECTED_FIELDS = {
 
 LOGGER = logging.getLogger("tgbot.oald_import")
 
-UPSERT_ENTRY_SQL = """
-INSERT INTO oald_entries (
-    word_us,
-    word_gb,
-    lexical_category,
-    cefr,
-    definition_url_oxford,
-    definition_url_cambridge,
-    ipa_us,
-    ipa_gb,
-    definition,
-    example,
-    audio_source_us,
-    audio_source_gb,
-    translations
-) VALUES (
-    %(word_us)s,
-    %(word_gb)s,
-    %(lexical_category)s,
-    %(cefr)s,
-    %(definition_url_oxford)s,
-    %(definition_url_cambridge)s,
-    %(ipa_us)s,
-    %(ipa_gb)s,
-    %(definition)s,
-    %(example)s,
-    %(audio_source_us)s,
-    %(audio_source_gb)s,
-    %(translations)s
-)
-ON CONFLICT (definition_url_oxford) DO UPDATE SET
-    word_us = EXCLUDED.word_us,
-    word_gb = EXCLUDED.word_gb,
-    lexical_category = EXCLUDED.lexical_category,
-    cefr = EXCLUDED.cefr,
-    definition_url_cambridge = EXCLUDED.definition_url_cambridge,
-    ipa_us = EXCLUDED.ipa_us,
-    ipa_gb = EXCLUDED.ipa_gb,
-    definition = EXCLUDED.definition,
-    example = EXCLUDED.example,
-    audio_source_us = EXCLUDED.audio_source_us,
-    audio_source_gb = EXCLUDED.audio_source_gb,
-    translations = EXCLUDED.translations,
-    updated_at = CURRENT_TIMESTAMP
-RETURNING id
-"""
-
-INSERT_AUDIO_FILE_SQL = """
-INSERT INTO oald_audio_files (source_url)
-VALUES (%s)
-ON CONFLICT (source_url) DO NOTHING
-"""
-
-INSERT_AUDIO_LINK_SQL = """
-INSERT INTO oald_entry_audio_sources (
-    entry_id,
-    dialect,
-    source_position,
-    source_url
-) VALUES (%s, %s, %s, %s)
-"""
-
 
 class OaldValidationError(ValueError):
     """Raised when OALD JSON does not match the expected schema."""
@@ -131,7 +80,7 @@ class OaldEntry:
     audio_source_gb: list[str]
     translations: dict[str, Any]
 
-    def parameters(self, jsonb_factory: Any) -> dict[str, Any]:
+    def values(self) -> dict[str, Any]:
         return {
             "word_us": self.word_us,
             "word_gb": self.word_gb,
@@ -145,7 +94,7 @@ class OaldEntry:
             "example": self.example,
             "audio_source_us": self.audio_source_us,
             "audio_source_gb": self.audio_source_gb,
-            "translations": jsonb_factory(self.translations),
+            "translations": self.translations,
         }
 
     def audio_references(self) -> Iterator[tuple[str, int, str]]:
@@ -301,67 +250,93 @@ def import_entries(
     database_url: str,
     batch_size: int = 500,
 ) -> ImportResult:
-    psycopg = _load_psycopg()
     try:
-        from psycopg.types.json import Jsonb
-
         entry_count = 0
         audio_reference_count = 0
         unique_audio_urls: set[str] = set()
-        with psycopg.connect(
+        with sync_connection(
             database_url,
             connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-            **connection_options(database_url),
         ) as connection:
-            with connection.cursor() as cursor:
-                require_oald_schema(cursor)
-                LOGGER.info("Alembic-managed OALD schema is ready")
-                for batch in iter_batches(entries, batch_size):
-                    imported_ids: list[int] = []
-                    links: list[tuple[int, str, int, str]] = []
-                    batch_urls: set[str] = set()
+            require_oald_schema(connection)
+            LOGGER.info("Alembic-managed OALD schema is ready")
+            for batch in iter_batches(entries, batch_size):
+                imported_ids: list[int] = []
+                links: list[dict[str, Any]] = []
+                batch_urls: set[str] = set()
 
-                    for entry in batch:
-                        cursor.execute(
-                            UPSERT_ENTRY_SQL,
-                            entry.parameters(Jsonb),
+                for entry in batch:
+                    stmt = (
+                        pg_insert(oald_entries)
+                        .values(**entry.values())
+                        .on_conflict_do_update(
+                            index_elements=[oald_entries.c.definition_url_oxford],
+                            set_={
+                                "word_us": sa.text("EXCLUDED.word_us"),
+                                "word_gb": sa.text("EXCLUDED.word_gb"),
+                                "lexical_category": sa.text(
+                                    "EXCLUDED.lexical_category"
+                                ),
+                                "cefr": sa.text("EXCLUDED.cefr"),
+                                "definition_url_cambridge": sa.text(
+                                    "EXCLUDED.definition_url_cambridge"
+                                ),
+                                "ipa_us": sa.text("EXCLUDED.ipa_us"),
+                                "ipa_gb": sa.text("EXCLUDED.ipa_gb"),
+                                "definition": sa.text("EXCLUDED.definition"),
+                                "example": sa.text("EXCLUDED.example"),
+                                "audio_source_us": sa.text("EXCLUDED.audio_source_us"),
+                                "audio_source_gb": sa.text("EXCLUDED.audio_source_gb"),
+                                "translations": sa.text("EXCLUDED.translations"),
+                                "updated_at": sa.func.current_timestamp(),
+                            },
                         )
-                        result = cursor.fetchone()
-                        if result is None:
-                            raise OaldDatabaseError(
-                                "entry upsert did not return a database ID"
-                            )
-                        entry_id = int(result[0])
-                        imported_ids.append(entry_id)
-                        for dialect, position, source_url in entry.audio_references():
-                            links.append((entry_id, dialect, position, source_url))
-                            batch_urls.add(source_url)
-
-                    if imported_ids:
-                        cursor.execute(
-                            """
-                            DELETE FROM oald_entry_audio_sources
-                            WHERE entry_id = ANY(%s)
-                            """,
-                            (imported_ids,),
-                        )
-                    if batch_urls:
-                        cursor.executemany(
-                            INSERT_AUDIO_FILE_SQL,
-                            [(source_url,) for source_url in sorted(batch_urls)],
-                        )
-                    if links:
-                        cursor.executemany(INSERT_AUDIO_LINK_SQL, links)
-
-                    entry_count += len(batch)
-                    audio_reference_count += len(links)
-                    unique_audio_urls.update(batch_urls)
-                    LOGGER.info(
-                        "Imported batch=%s; entries=%s; audio references=%s",
-                        f"{len(batch):,}",
-                        f"{entry_count:,}",
-                        f"{audio_reference_count:,}",
+                        .returning(oald_entries.c.id)
                     )
+                    entry_id = connection.execute(stmt).scalar_one()
+                    imported_ids.append(int(entry_id))
+                    for dialect, position, source_url in entry.audio_references():
+                        links.append(
+                            {
+                                "entry_id": entry_id,
+                                "dialect": dialect,
+                                "source_position": position,
+                                "source_url": source_url,
+                            }
+                        )
+                        batch_urls.add(source_url)
+
+                if imported_ids:
+                    connection.execute(
+                        sa.delete(oald_entry_audio_sources).where(
+                            oald_entry_audio_sources.c.entry_id.in_(imported_ids)
+                        )
+                    )
+                if batch_urls:
+                    connection.execute(
+                        pg_insert(oald_audio_files)
+                        .values(
+                            [
+                                {"source_url": source_url}
+                                for source_url in sorted(batch_urls)
+                            ]
+                        )
+                        .on_conflict_do_nothing(
+                            index_elements=[oald_audio_files.c.source_url]
+                        )
+                    )
+                if links:
+                    connection.execute(sa.insert(oald_entry_audio_sources), links)
+
+                entry_count += len(batch)
+                audio_reference_count += len(links)
+                unique_audio_urls.update(batch_urls)
+                LOGGER.info(
+                    "Imported batch=%s; entries=%s; audio references=%s",
+                    f"{len(batch):,}",
+                    f"{entry_count:,}",
+                    f"{audio_reference_count:,}",
+                )
 
         return ImportResult(
             entries=entry_count,
@@ -370,7 +345,7 @@ def import_entries(
         )
     except OaldDatabaseError:
         raise
-    except psycopg.Error as exc:
+    except Exception as exc:
         raise OaldDatabaseError(
             "PostgreSQL OALD import failed; the transaction was rolled back"
         ) from exc
@@ -381,68 +356,65 @@ def ensure_database_exists(
     admin_database_url: str | None = None,
 ) -> bool:
     """Ensure the target database exists; return True when it was created."""
-    psycopg = _load_psycopg()
     try:
         from psycopg import sql
-        from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
-        target_parameters = conninfo_to_dict(database_url)
-        target_database = target_parameters.get("dbname")
-        if not isinstance(target_database, str) or not target_database:
+        target_url = make_url(database_url)
+        target_database = target_url.database
+        if not target_database:
             raise OaldDatabaseError(
                 "the target database URL must include a database name"
             )
-        if admin_database_url:
-            admin_connection_info = admin_database_url
-        else:
-            admin_parameters = {
-                key: value
-                for key, value in target_parameters.items()
-                if isinstance(value, str)
-            }
-            admin_parameters["dbname"] = "postgres"
-            if admin_parameters.get("host") == "localhost" and not admin_parameters.get(
-                "hostaddr"
-            ):
-                admin_parameters["hostaddr"] = "127.0.0.1"
-            admin_connection_info = make_conninfo(**admin_parameters)
 
-        with psycopg.connect(
-            admin_connection_info,
+        if admin_database_url:
+            admin_url = admin_database_url
+        else:
+            admin_url = target_url.set(database="postgres").render_as_string(
+                hide_password=False
+            )
+
+        with sync_connection(
+            admin_url,
             autocommit=True,
             connect_timeout=DEFAULT_CONNECT_TIMEOUT,
         ) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT 1 FROM pg_database WHERE datname = %s",
-                    (target_database,),
+            exists = connection.execute(
+                sa.text("SELECT 1 FROM pg_database WHERE datname = :name"),
+                {"name": target_database},
+            ).first()
+            if exists:
+                return False
+            raw = connection.connection.driver_connection
+            if raw is None:
+                raise OaldDatabaseError(
+                    "could not create the target database; provide "
+                    "--admin-database-url for a role allowed to create "
+                    "databases"
                 )
-                if cursor.fetchone():
-                    return False
-                try:
+            try:
+                with raw.cursor() as cursor:
                     cursor.execute(
                         sql.SQL("CREATE DATABASE {}").format(
                             sql.Identifier(target_database)
                         )
                     )
-                except psycopg.Error as exc:
-                    raise OaldDatabaseError(
-                        "could not create the target database; provide "
-                        "--admin-database-url for a role allowed to create "
-                        "databases"
-                    ) from exc
+            except Exception as create_exc:
+                raise OaldDatabaseError(
+                    "could not create the target database; provide "
+                    "--admin-database-url for a role allowed to create "
+                    "databases"
+                ) from create_exc
         return True
     except OaldDatabaseError:
         raise
-    except psycopg.Error:
+    except Exception:
         try:
-            with psycopg.connect(
+            with sync_connection(
                 database_url,
                 connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-                **connection_options(database_url),
             ):
                 return False
-        except psycopg.Error as target_exc:
+        except Exception as target_exc:
             raise OaldDatabaseError(
                 "could not connect to the target or administrative PostgreSQL database"
             ) from target_exc
@@ -594,20 +566,6 @@ def validate_translations(value: Any, row_number: int) -> dict[str, Any]:
 
 def normalize_text(value: str) -> str:
     return unicodedata.normalize("NFC", value.strip())
-
-
-def connection_options(database_url: str) -> dict[str, Any]:
-    if urlparse(database_url).hostname == "localhost":
-        return {"hostaddr": "127.0.0.1"}
-    return {}
-
-
-def _load_psycopg() -> Any:
-    try:
-        import psycopg
-    except ImportError as exc:
-        raise OaldDatabaseError("psycopg is not installed; run: uv sync") from exc
-    return psycopg
 
 
 def configure_logging(level: str) -> None:

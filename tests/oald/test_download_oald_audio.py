@@ -24,6 +24,7 @@ from import_oald_postgres import import_entries, load_entries
 from test_import_oald_postgres import oald_row, write_rows
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
+from tgbot.db.sync import sync_connection
 
 
 class OaldAudioDownloadTests(unittest.TestCase):
@@ -199,11 +200,6 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
     database_url = TEST_OALD_DATABASE_URL
 
     def test_download_store_skip_and_force(self) -> None:
-        try:
-            import psycopg
-        except ImportError as exc:
-            self.skipTest(f"psycopg is not installed: {exc}")
-
         suffix = uuid.uuid4().hex
         definition_url = f"https://dictionary.example/{suffix}"
         audio_url = f"https://audio.example/{suffix}.ogg"
@@ -252,8 +248,10 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                     transcode_voice=transcode,
                     sleep=lambda _: None,
                 )
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             "DELETE FROM oald_audio_variants WHERE source_url = %s",
                             (audio_url,),
@@ -301,8 +299,10 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(fetch.call_count, 2)
                 self.assertEqual(transcode.call_count, 3)
 
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             """
                             SELECT audio_data, content_type, filename, size_bytes,
@@ -342,8 +342,10 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(stored_voice[6], "prepared")
                 self.assertEqual(stored_voice[7], 2)
             finally:
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             """
                             DELETE FROM oald_entries

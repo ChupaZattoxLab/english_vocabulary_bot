@@ -29,7 +29,7 @@ from tgbot.db.models import (
     row_str,
 )
 from tgbot.db.schema import MANAGED_TABLES
-from tgbot.secrets import PROJECT_ROOT, sqlalchemy_db_url
+from tgbot.secrets import PROJECT_ROOT
 
 _information_schema_tables = sa.table(
     "tables",
@@ -57,7 +57,7 @@ class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
             connect_args["hostaddr"] = "127.0.0.1"
 
         self.engine: AsyncEngine = create_async_engine(
-            sqlalchemy_db_url(database_url),
+            database_url,
             pool_size=pool_size,
             # Headroom for concurrent deliveries + scheduler bookkeeping.
             max_overflow=pool_size,

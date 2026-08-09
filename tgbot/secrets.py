@@ -31,19 +31,12 @@ class Secrets:
         return cls(
             telegram_bot_token=source.get("TELEGRAM_BOT_TOKEN", "").strip(),
             telegram_admin_ids=source.get("TELEGRAM_ADMIN_IDS", "").strip(),
-            db_url=sqlalchemy_db_url(source.get("OALD_DATABASE_URL", "").strip()),
+            db_url=source.get("OALD_DATABASE_URL", "").strip(),
         )
 
     @property
     def admin_ids(self) -> frozenset[int]:
         return parse_admin_ids(self.telegram_admin_ids)
-
-
-def sqlalchemy_db_url(value: str) -> str:
-    """Ensure SQLAlchemy uses the psycopg3 driver."""
-    if value.startswith("postgresql://"):
-        return "postgresql+psycopg://" + value.removeprefix("postgresql://")
-    return value
 
 
 def parse_admin_ids(value: str) -> frozenset[int]:

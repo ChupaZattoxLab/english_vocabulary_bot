@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import MutableMapping
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Literal
 
 import sqlalchemy as sa
@@ -67,7 +67,7 @@ class CardsMixin(EngineBound):
                     bot_user_cards.c.status == CARD_STATUS_RESERVED,
                     bot_user_cards.c.created_at
                     < sa.func.current_timestamp()
-                    - sa.func.make_interval(mins=CARD_RESERVATION_TIMEOUT_MINUTES),
+                    - timedelta(minutes=CARD_RESERVATION_TIMEOUT_MINUTES),
                 )
                 .values(
                     status=CARD_STATUS_FAILED,

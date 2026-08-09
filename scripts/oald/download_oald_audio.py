@@ -18,6 +18,23 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
+import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.engine import Connection
+
+from tgbot.constants import (
+    AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+    SEND_METHOD_VOICE,
+)
+from tgbot.db.schema import (
+    bot_telegram_audio_cache,
+    oald_audio_files,
+    oald_audio_variants,
+    oald_entries,
+    oald_entry_audio_sources,
+)
+from tgbot.db.sync import sync_connection
+
 try:
     from .oald_preflight import require_oald_schema
 except ImportError:  # running as a plain script
@@ -38,144 +55,6 @@ REQUEST_HEADERS = {
     "Accept": "audio/ogg,audio/mpeg,audio/*;q=0.9,*/*;q=0.1",
     "Referer": "https://www.oxfordlearnersdictionaries.com/",
 }
-
-CANDIDATE_SQL = """
-SELECT
-    files.source_url,
-    min(entries.word_us) AS example_word,
-    array_agg(DISTINCT links.dialect ORDER BY links.dialect) AS dialects,
-    files.audio_data IS NOT NULL AS has_original
-FROM oald_audio_files AS files
-JOIN oald_entry_audio_sources AS links
-  ON links.source_url = files.source_url
-JOIN oald_entries AS entries
-  ON entries.id = links.entry_id
-LEFT JOIN oald_audio_variants AS variants
-  ON variants.source_url = files.source_url
- AND variants.variant_type = 'telegram_voice_opus'
-WHERE links.dialect = ANY(%s)
-  AND (
-      %s
-      OR files.audio_data IS NULL
-      OR variants.audio_data IS NULL
-      OR variants.source_sha256 <> files.sha256
-  )
-  AND (%s::text[] IS NULL OR files.source_url = ANY(%s::text[]))
-GROUP BY files.source_url, files.audio_data IS NOT NULL
-ORDER BY files.source_url
-LIMIT %s
-"""
-
-LOAD_STORED_AUDIO_SQL = """
-SELECT audio_data, content_type, filename, sha256, last_http_status
-FROM oald_audio_files
-WHERE source_url = %s AND audio_data IS NOT NULL
-"""
-
-STORE_SUCCESS_SQL = """
-UPDATE oald_audio_files
-SET audio_data = %s,
-    content_type = %s,
-    filename = %s,
-    size_bytes = %s,
-    sha256 = %s,
-    download_status = 'downloaded',
-    last_http_status = %s,
-    last_error = '',
-    attempt_count = attempt_count + %s,
-    last_attempted_at = CURRENT_TIMESTAMP,
-    downloaded_at = CURRENT_TIMESTAMP,
-    updated_at = CURRENT_TIMESTAMP
-WHERE source_url = %s
-"""
-
-STORE_FAILURE_SQL = """
-UPDATE oald_audio_files
-SET download_status = CASE
-        WHEN audio_data IS NULL THEN %s
-        ELSE 'downloaded'
-    END,
-    last_http_status = %s,
-    last_error = %s,
-    attempt_count = attempt_count + %s,
-    last_attempted_at = CURRENT_TIMESTAMP,
-    updated_at = CURRENT_TIMESTAMP
-WHERE source_url = %s
-"""
-
-STORE_VOICE_SUCCESS_SQL = """
-INSERT INTO oald_audio_variants (
-    source_url, variant_type, source_sha256, audio_data, content_type,
-    filename, size_bytes, sha256, conversion_status, last_error,
-    attempt_count, converted_at
-) VALUES (
-    %s, 'telegram_voice_opus', %s, %s, 'audio/ogg',
-    %s, %s, %s, 'prepared', '', 1, CURRENT_TIMESTAMP
-)
-ON CONFLICT (source_url, variant_type) DO UPDATE SET
-    source_sha256 = EXCLUDED.source_sha256,
-    audio_data = EXCLUDED.audio_data,
-    content_type = EXCLUDED.content_type,
-    filename = EXCLUDED.filename,
-    size_bytes = EXCLUDED.size_bytes,
-    sha256 = EXCLUDED.sha256,
-    conversion_status = 'prepared',
-    last_error = '',
-    attempt_count = oald_audio_variants.attempt_count + 1,
-    converted_at = CURRENT_TIMESTAMP,
-    updated_at = CURRENT_TIMESTAMP
-"""
-
-STORE_VOICE_FAILURE_SQL = """
-INSERT INTO oald_audio_variants (
-    source_url, variant_type, source_sha256, conversion_status,
-    last_error, attempt_count
-) VALUES (%s, 'telegram_voice_opus', %s, 'failed', %s, 1)
-ON CONFLICT (source_url, variant_type) DO UPDATE SET
-    source_sha256 = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.source_sha256
-        ELSE EXCLUDED.source_sha256
-    END,
-    audio_data = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.audio_data
-        ELSE NULL
-    END,
-    content_type = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.content_type
-        ELSE ''
-    END,
-    filename = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.filename
-        ELSE ''
-    END,
-    size_bytes = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.size_bytes
-        ELSE NULL
-    END,
-    sha256 = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.sha256
-        ELSE ''
-    END,
-    conversion_status = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-         AND oald_audio_variants.audio_data IS NOT NULL THEN 'prepared'
-        ELSE 'failed'
-    END,
-    last_error = EXCLUDED.last_error,
-    attempt_count = oald_audio_variants.attempt_count + 1,
-    converted_at = CASE
-        WHEN oald_audio_variants.source_sha256 = EXCLUDED.source_sha256
-            THEN oald_audio_variants.converted_at
-        ELSE NULL
-    END,
-    updated_at = CURRENT_TIMESTAMP
-"""
 
 
 class OaldAudioError(RuntimeError):
@@ -547,134 +426,132 @@ def download_audio_to_postgres(
     transcode_voice: Callable[..., VoiceAudio] = transcode_audio_to_voice,
     sleep: Callable[[float], None] = time.sleep,
 ) -> DownloadStats:
-    psycopg = _load_psycopg()
     selected_dialects = dialects or ["us", "gb"]
     stats = DownloadStats()
     try:
-        with psycopg.connect(
+        with sync_connection(
             database_url,
             autocommit=True,
             connect_timeout=DEFAULT_CONNECT_TIMEOUT,
-            **connection_options(database_url),
         ) as connection:
-            with connection.cursor() as cursor:
-                require_oald_schema(cursor)
-                cursor.execute("SELECT to_regclass('public.bot_telegram_audio_cache')")
-                clear_telegram_cache = cursor.fetchone()[0] is not None
-                candidates = load_candidates(
-                    cursor,
-                    dialects=selected_dialects,
-                    force=force,
-                    limit=limit,
-                    source_urls=source_urls,
-                )
-                stats.candidates = len(candidates)
+            require_oald_schema(connection)
+            clear_telegram_cache = sa.inspect(connection).has_table(
+                "bot_telegram_audio_cache"
+            )
+            candidates = load_candidates(
+                connection,
+                dialects=selected_dialects,
+                force=force,
+                limit=limit,
+                source_urls=source_urls,
+            )
+            stats.candidates = len(candidates)
+            LOGGER.info(
+                "Audio candidates=%s dialects=%s force=%s",
+                f"{stats.candidates:,}",
+                ",".join(selected_dialects),
+                force,
+            )
+
+            network_requests = 0
+            for position, candidate in enumerate(candidates, start=1):
+                needs_download = force or not candidate.has_original
                 LOGGER.info(
-                    "Audio candidates=%s dialects=%s force=%s",
+                    "[%s/%s] Preparing %s (%s): %s",
+                    f"{position:,}",
                     f"{stats.candidates:,}",
-                    ",".join(selected_dialects),
-                    force,
+                    candidate.example_word,
+                    ",".join(candidate.dialects),
+                    candidate.source_url,
                 )
-
-                network_requests = 0
-                for position, candidate in enumerate(candidates, start=1):
-                    needs_download = force or not candidate.has_original
-                    LOGGER.info(
-                        "[%s/%s] Preparing %s (%s): %s",
-                        f"{position:,}",
-                        f"{stats.candidates:,}",
-                        candidate.example_word,
-                        ",".join(candidate.dialects),
-                        candidate.source_url,
-                    )
-                    try:
-                        if needs_download:
-                            if network_requests and request_delay:
-                                sleep(request_delay)
-                            network_requests += 1
-                            audio, attempts = download_with_retries(
-                                candidate.source_url,
-                                timeout=timeout,
-                                max_bytes=max_audio_bytes,
-                                retries=retries,
-                                retry_backoff=retry_backoff,
-                                fetch_audio=fetch_audio,
-                                sleep=sleep,
-                            )
-                            store_success(cursor, candidate, audio, attempts)
-                            stats.downloaded += 1
-                            stats.stored_bytes += len(audio.data)
-                            LOGGER.info(
-                                "Stored original %s: filename=%s bytes=%s type=%s",
-                                candidate.example_word,
-                                audio.filename,
-                                f"{len(audio.data):,}",
-                                audio.content_type,
-                            )
-                        else:
-                            audio = load_stored_audio(cursor, candidate)
-                            stats.reused_originals += 1
-                            LOGGER.info(
-                                "Using stored original for %s; no HTTP request",
-                                candidate.example_word,
-                            )
-
-                        try:
-                            voice = transcode_voice(
-                                audio,
-                                timeout=timeout,
-                                max_bytes=max_audio_bytes,
-                            )
-                            store_voice_success(
-                                cursor,
-                                candidate,
-                                audio,
-                                voice,
-                                clear_telegram_cache=clear_telegram_cache,
-                            )
-                            stats.voices_prepared += 1
-                            stats.voice_bytes += len(voice.data)
-                            LOGGER.info(
-                                "Stored Telegram voice for %s: filename=%s bytes=%s",
-                                candidate.example_word,
-                                voice.filename,
-                                f"{len(voice.data):,}",
-                            )
-                        except AudioConversionError as exc:
-                            store_voice_failure(cursor, candidate, audio, exc)
-                            stats.conversion_failed += 1
-                            LOGGER.error(
-                                "Voice conversion failed for %s (%s): %s",
-                                candidate.example_word,
-                                ",".join(candidate.dialects),
-                                exc,
-                            )
-                            if fail_fast:
-                                raise
-                    except AudioRateLimitError as exc:
-                        store_failure(cursor, candidate, exc, keep_pending=True)
-                        stats.rate_limited = True
-                        LOGGER.error(
-                            "OALD rate limit reached for %s. The run stopped "
-                            "without waiting; rerun the same command later.",
+                try:
+                    if needs_download:
+                        if network_requests and request_delay:
+                            sleep(request_delay)
+                        network_requests += 1
+                        audio, attempts = download_with_retries(
+                            candidate.source_url,
+                            timeout=timeout,
+                            max_bytes=max_audio_bytes,
+                            retries=retries,
+                            retry_backoff=retry_backoff,
+                            fetch_audio=fetch_audio,
+                            sleep=sleep,
+                        )
+                        store_success(connection, candidate, audio, attempts)
+                        stats.downloaded += 1
+                        stats.stored_bytes += len(audio.data)
+                        LOGGER.info(
+                            "Stored original %s: filename=%s bytes=%s type=%s",
+                            candidate.example_word,
+                            audio.filename,
+                            f"{len(audio.data):,}",
+                            audio.content_type,
+                        )
+                    else:
+                        audio = load_stored_audio(connection, candidate)
+                        stats.reused_originals += 1
+                        LOGGER.info(
+                            "Using stored original for %s; no HTTP request",
                             candidate.example_word,
                         )
-                        break
-                    except AudioDownloadError as exc:
-                        store_failure(cursor, candidate, exc)
-                        stats.failed += 1
+
+                    try:
+                        voice = transcode_voice(
+                            audio,
+                            timeout=timeout,
+                            max_bytes=max_audio_bytes,
+                        )
+                        store_voice_success(
+                            connection,
+                            candidate,
+                            audio,
+                            voice,
+                            clear_telegram_cache=clear_telegram_cache,
+                        )
+                        stats.voices_prepared += 1
+                        stats.voice_bytes += len(voice.data)
+                        LOGGER.info(
+                            "Stored Telegram voice for %s: filename=%s bytes=%s",
+                            candidate.example_word,
+                            voice.filename,
+                            f"{len(voice.data):,}",
+                        )
+                    except AudioConversionError as exc:
+                        store_voice_failure(connection, candidate, audio, exc)
+                        stats.conversion_failed += 1
                         LOGGER.error(
-                            "Audio download failed for %s (%s): %s",
+                            "Voice conversion failed for %s (%s): %s",
                             candidate.example_word,
                             ",".join(candidate.dialects),
                             exc,
                         )
                         if fail_fast:
                             raise
+                except AudioRateLimitError as exc:
+                    store_failure(connection, candidate, exc, keep_pending=True)
+                    stats.rate_limited = True
+                    LOGGER.error(
+                        "OALD rate limit reached for %s. The run stopped "
+                        "without waiting; rerun the same command later.",
+                        candidate.example_word,
+                    )
+                    break
+                except AudioDownloadError as exc:
+                    store_failure(connection, candidate, exc)
+                    stats.failed += 1
+                    LOGGER.error(
+                        "Audio download failed for %s (%s): %s",
+                        candidate.example_word,
+                        ",".join(candidate.dialects),
+                        exc,
+                    )
+                    if fail_fast:
+                        raise
         return stats
     except (AudioDownloadError, AudioConversionError):
         raise
-    except psycopg.Error as exc:
+    except Exception as exc:
         raise OaldAudioDatabaseError(
             "PostgreSQL audio operation failed; verify the database URL and "
             "run import_oald_postgres.py first"
@@ -682,120 +559,266 @@ def download_audio_to_postgres(
 
 
 def load_candidates(
-    cursor: Any,
+    connection: Connection,
     dialects: list[str],
     force: bool,
     limit: int | None,
     source_urls: list[str] | None = None,
 ) -> list[AudioCandidate]:
     sql_limit = limit if limit is not None else 2_147_483_647
-    cursor.execute(
-        CANDIDATE_SQL,
-        (dialects, force, source_urls, source_urls, sql_limit),
+    needs_work = sa.or_(
+        sa.literal(force),
+        oald_audio_files.c.audio_data.is_(None),
+        oald_audio_variants.c.audio_data.is_(None),
+        oald_audio_variants.c.source_sha256 != oald_audio_files.c.sha256,
     )
+    url_filter = sa.true()
+    if source_urls is not None:
+        url_filter = oald_audio_files.c.source_url.in_(source_urls)
+
+    stmt = (
+        sa.select(
+            oald_audio_files.c.source_url,
+            sa.func.min(oald_entries.c.word_us).label("example_word"),
+            sa.func.array_agg(sa.distinct(oald_entry_audio_sources.c.dialect)).label(
+                "dialects"
+            ),
+            oald_audio_files.c.audio_data.is_not(None).label("has_original"),
+        )
+        .select_from(
+            oald_audio_files.join(
+                oald_entry_audio_sources,
+                oald_entry_audio_sources.c.source_url == oald_audio_files.c.source_url,
+            )
+            .join(
+                oald_entries,
+                oald_entries.c.id == oald_entry_audio_sources.c.entry_id,
+            )
+            .outerjoin(
+                oald_audio_variants,
+                sa.and_(
+                    oald_audio_variants.c.source_url == oald_audio_files.c.source_url,
+                    oald_audio_variants.c.variant_type
+                    == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+                ),
+            )
+        )
+        .where(
+            oald_entry_audio_sources.c.dialect.in_(dialects),
+            needs_work,
+            url_filter,
+        )
+        .group_by(
+            oald_audio_files.c.source_url,
+            oald_audio_files.c.audio_data.is_not(None),
+        )
+        .order_by(oald_audio_files.c.source_url)
+        .limit(sql_limit)
+    )
+    rows = connection.execute(stmt).all()
     return [
         AudioCandidate(
-            source_url=str(row[0]),
-            example_word=str(row[1]),
-            dialects=tuple(row[2]),
-            has_original=bool(row[3]),
+            source_url=str(row.source_url),
+            example_word=str(row.example_word),
+            dialects=tuple(row.dialects or ()),
+            has_original=bool(row.has_original),
         )
-        for row in cursor.fetchall()
+        for row in rows
     ]
 
 
 def store_success(
-    cursor: Any,
+    connection: Connection,
     candidate: AudioCandidate,
     audio: DownloadedAudio,
     attempts: int,
 ) -> None:
-    cursor.execute(
-        STORE_SUCCESS_SQL,
-        (
-            audio.data,
-            audio.content_type,
-            audio.filename,
-            len(audio.data),
-            audio.sha256,
-            audio.http_status,
-            attempts,
-            candidate.source_url,
-        ),
+    connection.execute(
+        sa.update(oald_audio_files)
+        .where(oald_audio_files.c.source_url == candidate.source_url)
+        .values(
+            audio_data=audio.data,
+            content_type=audio.content_type,
+            filename=audio.filename,
+            size_bytes=len(audio.data),
+            sha256=audio.sha256,
+            download_status="downloaded",
+            last_http_status=audio.http_status,
+            last_error="",
+            attempt_count=oald_audio_files.c.attempt_count + attempts,
+            last_attempted_at=sa.func.current_timestamp(),
+            downloaded_at=sa.func.current_timestamp(),
+            updated_at=sa.func.current_timestamp(),
+        )
     )
 
 
 def store_failure(
-    cursor: Any,
+    connection: Connection,
     candidate: AudioCandidate,
     error: AudioDownloadError,
     keep_pending: bool = False,
 ) -> None:
-    cursor.execute(
-        STORE_FAILURE_SQL,
-        (
-            "pending" if keep_pending else "failed",
-            error.status_code,
-            str(error)[:2000],
-            error.attempts,
-            candidate.source_url,
-        ),
+    pending_or_failed = "pending" if keep_pending else "failed"
+    connection.execute(
+        sa.update(oald_audio_files)
+        .where(oald_audio_files.c.source_url == candidate.source_url)
+        .values(
+            download_status=sa.case(
+                (oald_audio_files.c.audio_data.is_(None), pending_or_failed),
+                else_="downloaded",
+            ),
+            last_http_status=error.status_code,
+            last_error=str(error)[:2000],
+            attempt_count=oald_audio_files.c.attempt_count + error.attempts,
+            last_attempted_at=sa.func.current_timestamp(),
+            updated_at=sa.func.current_timestamp(),
+        )
     )
 
 
 def store_voice_success(
-    cursor: Any,
+    connection: Connection,
     candidate: AudioCandidate,
     original: DownloadedAudio,
     voice: VoiceAudio,
     clear_telegram_cache: bool = False,
 ) -> None:
-    cursor.execute(
-        STORE_VOICE_SUCCESS_SQL,
-        (
-            candidate.source_url,
-            original.sha256,
-            voice.data,
-            voice.filename,
-            len(voice.data),
-            voice.sha256,
-        ),
+    stmt = pg_insert(oald_audio_variants).values(
+        source_url=candidate.source_url,
+        variant_type=AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+        source_sha256=original.sha256,
+        audio_data=voice.data,
+        content_type="audio/ogg",
+        filename=voice.filename,
+        size_bytes=len(voice.data),
+        sha256=voice.sha256,
+        conversion_status="prepared",
+        last_error="",
+        attempt_count=1,
+        converted_at=sa.func.current_timestamp(),
     )
+    stmt = stmt.on_conflict_do_update(
+        index_elements=[
+            oald_audio_variants.c.source_url,
+            oald_audio_variants.c.variant_type,
+        ],
+        set_={
+            "source_sha256": stmt.excluded.source_sha256,
+            "audio_data": stmt.excluded.audio_data,
+            "content_type": stmt.excluded.content_type,
+            "filename": stmt.excluded.filename,
+            "size_bytes": stmt.excluded.size_bytes,
+            "sha256": stmt.excluded.sha256,
+            "conversion_status": "prepared",
+            "last_error": "",
+            "attempt_count": oald_audio_variants.c.attempt_count + 1,
+            "converted_at": sa.func.current_timestamp(),
+            "updated_at": sa.func.current_timestamp(),
+        },
+    )
+    connection.execute(stmt)
     if clear_telegram_cache:
-        cursor.execute(
-            """
-            DELETE FROM bot_telegram_audio_cache
-            WHERE source_url = %s AND send_method = 'voice'
-            """,
-            (candidate.source_url,),
+        connection.execute(
+            sa.delete(bot_telegram_audio_cache).where(
+                bot_telegram_audio_cache.c.source_url == candidate.source_url,
+                bot_telegram_audio_cache.c.send_method == SEND_METHOD_VOICE,
+            )
         )
 
 
 def store_voice_failure(
-    cursor: Any,
+    connection: Connection,
     candidate: AudioCandidate,
     original: DownloadedAudio,
     error: AudioConversionError,
 ) -> None:
-    cursor.execute(
-        STORE_VOICE_FAILURE_SQL,
-        (candidate.source_url, original.sha256, str(error)[:2000]),
+    same_sha = oald_audio_variants.c.source_sha256 == sa.text("EXCLUDED.source_sha256")
+    stmt = pg_insert(oald_audio_variants).values(
+        source_url=candidate.source_url,
+        variant_type=AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+        source_sha256=original.sha256,
+        conversion_status="failed",
+        last_error=str(error)[:2000],
+        attempt_count=1,
     )
+    stmt = stmt.on_conflict_do_update(
+        index_elements=[
+            oald_audio_variants.c.source_url,
+            oald_audio_variants.c.variant_type,
+        ],
+        set_={
+            "source_sha256": sa.case(
+                (same_sha, oald_audio_variants.c.source_sha256),
+                else_=sa.text("EXCLUDED.source_sha256"),
+            ),
+            "audio_data": sa.case(
+                (same_sha, oald_audio_variants.c.audio_data),
+                else_=None,
+            ),
+            "content_type": sa.case(
+                (same_sha, oald_audio_variants.c.content_type),
+                else_="",
+            ),
+            "filename": sa.case(
+                (same_sha, oald_audio_variants.c.filename),
+                else_="",
+            ),
+            "size_bytes": sa.case(
+                (same_sha, oald_audio_variants.c.size_bytes),
+                else_=None,
+            ),
+            "sha256": sa.case(
+                (same_sha, oald_audio_variants.c.sha256),
+                else_="",
+            ),
+            "conversion_status": sa.case(
+                (
+                    sa.and_(same_sha, oald_audio_variants.c.audio_data.is_not(None)),
+                    "prepared",
+                ),
+                else_="failed",
+            ),
+            "last_error": sa.text("EXCLUDED.last_error"),
+            "attempt_count": oald_audio_variants.c.attempt_count + 1,
+            "converted_at": sa.case(
+                (same_sha, oald_audio_variants.c.converted_at),
+                else_=None,
+            ),
+            "updated_at": sa.func.current_timestamp(),
+        },
+    )
+    connection.execute(stmt)
 
 
-def load_stored_audio(cursor: Any, candidate: AudioCandidate) -> DownloadedAudio:
-    cursor.execute(LOAD_STORED_AUDIO_SQL, (candidate.source_url,))
-    row = cursor.fetchone()
+def load_stored_audio(
+    connection: Connection,
+    candidate: AudioCandidate,
+) -> DownloadedAudio:
+    row = connection.execute(
+        sa.select(
+            oald_audio_files.c.audio_data,
+            oald_audio_files.c.content_type,
+            oald_audio_files.c.filename,
+            oald_audio_files.c.sha256,
+            oald_audio_files.c.last_http_status,
+        ).where(
+            oald_audio_files.c.source_url == candidate.source_url,
+            oald_audio_files.c.audio_data.is_not(None),
+        )
+    ).first()
     if row is None:
         raise OaldAudioDatabaseError(
             f"stored audio disappeared for {candidate.source_url}"
         )
     return DownloadedAudio(
-        data=bytes(row[0]),
-        content_type=str(row[1]),
-        filename=str(row[2]),
-        sha256=str(row[3]).strip(),
-        http_status=int(row[4]) if row[4] is not None else None,
+        data=bytes(row.audio_data),
+        content_type=str(row.content_type),
+        filename=str(row.filename),
+        sha256=str(row.sha256).strip(),
+        http_status=int(row.last_http_status)
+        if row.last_http_status is not None
+        else None,
     )
 
 
@@ -876,12 +899,6 @@ def detected_audio_content_type(data: bytes) -> str:
     return ""
 
 
-def connection_options(database_url: str) -> dict[str, str]:
-    if urlparse(database_url).hostname == "localhost":
-        return {"hostaddr": "127.0.0.1"}
-    return {}
-
-
 def _ffmpeg_executable() -> str:
     try:
         import imageio_ffmpeg
@@ -893,14 +910,6 @@ def _ffmpeg_executable() -> str:
         return str(imageio_ffmpeg.get_ffmpeg_exe())
     except RuntimeError as exc:
         raise AudioConversionError(f"FFmpeg is unavailable: {exc}") from exc
-
-
-def _load_psycopg() -> Any:
-    try:
-        import psycopg
-    except ImportError as exc:
-        raise OaldAudioDatabaseError("psycopg is not installed; run: uv sync") from exc
-    return psycopg
 
 
 def configure_logging(level: str) -> None:

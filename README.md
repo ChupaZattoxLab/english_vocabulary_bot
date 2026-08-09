@@ -56,7 +56,7 @@ Edit `.env` with secrets only:
 ```env
 TELEGRAM_BOT_TOKEN=...your token...
 TELEGRAM_ADMIN_IDS=123456789
-OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5432/english_vocabulary_oald
+OALD_DATABASE_URL=postgresql+psycopg://vocab_app:vocab_dev_password@127.0.0.1:5432/english_vocabulary_oald
 ```
 
 Schedule, card templates, and pool sizes live in `tgbot/constants.py` (not `.env`).
@@ -69,7 +69,7 @@ set **both** of these in `.env` **before** starting Compose:
 
 ```env
 POSTGRES_PORT=5433
-OALD_DATABASE_URL=postgresql://vocab_app:vocab_dev_password@127.0.0.1:5433/english_vocabulary_oald
+OALD_DATABASE_URL=postgresql+psycopg://vocab_app:vocab_dev_password@127.0.0.1:5433/english_vocabulary_oald
 ```
 
 `POSTGRES_PORT` is read by Docker Compose only; the bot uses `OALD_DATABASE_URL`.
@@ -156,12 +156,14 @@ uv run lint       # ruff check --fix + format check
 uv run typecheck  # pyright on tgbot + scripts/oald
 ```
 
-Set `TEST_OALD_DATABASE_URL` to run PostgreSQL integration tests. The role must be
-allowed to create temporary databases.
+Set `TEST_OALD_DATABASE_URL` (same `postgresql+psycopg://` form as
+`OALD_DATABASE_URL`) to run PostgreSQL integration tests. The role must be
+allowed to create temporary databases. OALD/Oxford import scripts expect
+`uv run migrate` first (including `oxford_lexical_entries`).
 
 ## Database migrations
 
-Alembic manages all eight application/OALD tables. Canonical table metadata lives in
+Alembic manages all nine application/OALD tables. Canonical table metadata lives in
 `tgbot/db/schema/`.
 
 ```powershell

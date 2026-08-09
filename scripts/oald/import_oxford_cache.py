@@ -15,6 +15,17 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import insert as pg_insert
+
+from tgbot.db.schema import oxford_lexical_entries
+from tgbot.db.sync import sync_connection
+
+try:
+    from .oald_preflight import require_oxford_schema
+except ImportError:  # running as a plain script
+    from oald_preflight import require_oxford_schema  # type: ignore[no-redef]
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SOURCE_DIR = ROOT / "source" / "oxford_api" / "translations_en_ru"
 DEFAULT_WORDS_JSON = ROOT / "data" / "enriched" / "words.json"
@@ -54,107 +65,6 @@ DATASET_POS_BY_OXFORD_CATEGORY: dict[str, set[str]] = {
     "numeral": {"number", "ordinal number"},
     "other": {"infinitive marker"},
 }
-
-CREATE_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS oxford_lexical_entries (
-    source_lexical_key TEXT PRIMARY KEY,
-    word_us TEXT NOT NULL,
-    word_gb TEXT NOT NULL,
-    lexical_category TEXT NOT NULL,
-    ipa_us TEXT[] NOT NULL,
-    ipa_gb TEXT[] NOT NULL,
-    definition TEXT NOT NULL DEFAULT '',
-    example TEXT NOT NULL DEFAULT '',
-    audio_source_us TEXT[] NOT NULL,
-    audio_source_gb TEXT[] NOT NULL,
-    translations TEXT[] NOT NULL,
-    CONSTRAINT oxford_lexical_entries_us_pronunciation_check
-        CHECK (cardinality(ipa_us) = cardinality(audio_source_us)),
-    CONSTRAINT oxford_lexical_entries_gb_pronunciation_check
-        CHECK (cardinality(ipa_gb) = cardinality(audio_source_gb))
-)
-"""
-
-CREATE_INDEX_SQL = (
-    """
-    CREATE INDEX IF NOT EXISTS oxford_lexical_entries_word_us_idx
-    ON oxford_lexical_entries (word_us)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oxford_lexical_entries_word_gb_idx
-    ON oxford_lexical_entries (word_gb)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oxford_lexical_entries_category_idx
-    ON oxford_lexical_entries (lexical_category)
-    """,
-    """
-    CREATE INDEX IF NOT EXISTS oxford_lexical_entries_translations_idx
-    ON oxford_lexical_entries USING GIN (translations)
-    """,
-)
-
-UPSERT_SQL = """
-INSERT INTO oxford_lexical_entries (
-    source_lexical_key,
-    word_us,
-    word_gb,
-    lexical_category,
-    ipa_us,
-    ipa_gb,
-    definition,
-    example,
-    audio_source_us,
-    audio_source_gb,
-    translations
-) VALUES (
-    %(source_lexical_key)s,
-    %(word_us)s,
-    %(word_gb)s,
-    %(lexical_category)s,
-    %(ipa_us)s,
-    %(ipa_gb)s,
-    %(definition)s,
-    %(example)s,
-    %(audio_source_us)s,
-    %(audio_source_gb)s,
-    %(translations)s
-)
-ON CONFLICT (source_lexical_key) DO UPDATE SET
-    word_us = EXCLUDED.word_us,
-    word_gb = EXCLUDED.word_gb,
-    lexical_category = EXCLUDED.lexical_category,
-    ipa_us = EXCLUDED.ipa_us,
-    ipa_gb = EXCLUDED.ipa_gb,
-    definition = EXCLUDED.definition,
-    example = EXCLUDED.example,
-    audio_source_us = EXCLUDED.audio_source_us,
-    audio_source_gb = EXCLUDED.audio_source_gb,
-    translations = EXCLUDED.translations
-WHERE (
-    oxford_lexical_entries.word_us,
-    oxford_lexical_entries.word_gb,
-    oxford_lexical_entries.lexical_category,
-    oxford_lexical_entries.ipa_us,
-    oxford_lexical_entries.ipa_gb,
-    oxford_lexical_entries.definition,
-    oxford_lexical_entries.example,
-    oxford_lexical_entries.audio_source_us,
-    oxford_lexical_entries.audio_source_gb,
-    oxford_lexical_entries.translations
-) IS DISTINCT FROM (
-    EXCLUDED.word_us,
-    EXCLUDED.word_gb,
-    EXCLUDED.lexical_category,
-    EXCLUDED.ipa_us,
-    EXCLUDED.ipa_gb,
-    EXCLUDED.definition,
-    EXCLUDED.example,
-    EXCLUDED.audio_source_us,
-    EXCLUDED.audio_source_gb,
-    EXCLUDED.translations
-)
-"""
 
 
 class OxfordCacheError(ValueError):
@@ -461,39 +371,66 @@ def import_rows(
     database_url: str,
     batch_size: int = 500,
 ) -> int:
-    try:
-        import psycopg
-    except ImportError as exc:
-        raise OxfordDatabaseError("psycopg is not installed; run: uv sync") from exc
-
     processed = 0
     try:
-        with psycopg.connect(database_url) as connection:
-            with connection.cursor() as cursor:
-                ensure_schema(cursor)
-                LOGGER.info("PostgreSQL table and indexes are ready")
-                for batch in iter_batches(rows, batch_size):
-                    cursor.executemany(
-                        UPSERT_SQL,
-                        [row.as_parameters() for row in batch],
-                    )
-                    processed += len(batch)
-                    LOGGER.info(
-                        "Upserted batch of %s rows; processed=%s",
-                        f"{len(batch):,}",
-                        f"{processed:,}",
-                    )
-    except psycopg.Error as exc:
+        with sync_connection(database_url) as connection:
+            require_oxford_schema(connection)
+            LOGGER.info("Alembic-managed Oxford cache schema is ready")
+            for batch in iter_batches(rows, batch_size):
+                values = [row.as_parameters() for row in batch]
+                stmt = pg_insert(oxford_lexical_entries).values(values)
+                stmt = stmt.on_conflict_do_update(
+                    index_elements=[oxford_lexical_entries.c.source_lexical_key],
+                    set_={
+                        "word_us": stmt.excluded.word_us,
+                        "word_gb": stmt.excluded.word_gb,
+                        "lexical_category": stmt.excluded.lexical_category,
+                        "ipa_us": stmt.excluded.ipa_us,
+                        "ipa_gb": stmt.excluded.ipa_gb,
+                        "definition": stmt.excluded.definition,
+                        "example": stmt.excluded.example,
+                        "audio_source_us": stmt.excluded.audio_source_us,
+                        "audio_source_gb": stmt.excluded.audio_source_gb,
+                        "translations": stmt.excluded.translations,
+                    },
+                    where=sa.tuple_(
+                        oxford_lexical_entries.c.word_us,
+                        oxford_lexical_entries.c.word_gb,
+                        oxford_lexical_entries.c.lexical_category,
+                        oxford_lexical_entries.c.ipa_us,
+                        oxford_lexical_entries.c.ipa_gb,
+                        oxford_lexical_entries.c.definition,
+                        oxford_lexical_entries.c.example,
+                        oxford_lexical_entries.c.audio_source_us,
+                        oxford_lexical_entries.c.audio_source_gb,
+                        oxford_lexical_entries.c.translations,
+                    ).is_distinct_from(
+                        sa.tuple_(
+                            stmt.excluded.word_us,
+                            stmt.excluded.word_gb,
+                            stmt.excluded.lexical_category,
+                            stmt.excluded.ipa_us,
+                            stmt.excluded.ipa_gb,
+                            stmt.excluded.definition,
+                            stmt.excluded.example,
+                            stmt.excluded.audio_source_us,
+                            stmt.excluded.audio_source_gb,
+                            stmt.excluded.translations,
+                        )
+                    ),
+                )
+                connection.execute(stmt)
+                processed += len(batch)
+                LOGGER.info(
+                    "Upserted batch of %s rows; processed=%s",
+                    f"{len(batch):,}",
+                    f"{processed:,}",
+                )
+    except Exception as exc:
         raise OxfordDatabaseError(
             "PostgreSQL import failed; check the server and connection settings"
         ) from exc
     return processed
-
-
-def ensure_schema(cursor: Any) -> None:
-    cursor.execute(CREATE_TABLE_SQL)
-    for statement in CREATE_INDEX_SQL:
-        cursor.execute(statement)
 
 
 def log_summary(file_stats: Counter[str], row_stats: Counter[str]) -> None:

@@ -6,6 +6,7 @@ from psycopg.types.json import Jsonb
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db import Database
+from tgbot.db.sync import sync_connection
 
 
 @requires_oald_database
@@ -13,7 +14,6 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
     database_url = TEST_OALD_DATABASE_URL
 
     async def asyncSetUp(self) -> None:
-        import psycopg
 
         self.suffix = uuid.uuid4().hex
         self.telegram_user_id = int("8" + self.suffix[:15], 16) % 8_000_000_000 + 1
@@ -34,8 +34,10 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.scheduler_slots: list[datetime] = []
         self.database = Database(self.database_url, pool_size=2)
         await self.database.open()
-        with psycopg.connect(self.database_url) as connection:
-            with connection.cursor() as cursor:
+        with sync_connection(self.database_url) as connection:
+            raw = connection.connection.driver_connection
+            assert raw is not None
+            with raw.cursor() as cursor:
                 for index in range(2):
                     cursor.execute(
                         """
@@ -122,11 +124,12 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         await self.database.set_pronunciation(self.telegram_user_id, "us")
 
     async def asyncTearDown(self) -> None:
-        import psycopg
 
         await self.database.close()
-        with psycopg.connect(self.database_url) as connection:
-            with connection.cursor() as cursor:
+        with sync_connection(self.database_url) as connection:
+            raw = connection.connection.driver_connection
+            assert raw is not None
+            with raw.cursor() as cursor:
                 cursor.execute(
                     "DELETE FROM bot_users WHERE telegram_user_id = %s",
                     (self.telegram_user_id,),
@@ -256,7 +259,6 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(allowed)
 
     async def test_scheduler_reclaims_failed_run_within_grace(self) -> None:
-        import psycopg
 
         slot = datetime.now(UTC) - timedelta(minutes=10)
         self.scheduler_slots.append(slot)
@@ -271,8 +273,10 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(
             await self.database.claim_scheduler_run(slot, grace_minutes=60)
         )
-        with psycopg.connect(self.database_url) as connection:
-            with connection.cursor() as cursor:
+        with sync_connection(self.database_url) as connection:
+            raw = connection.connection.driver_connection
+            assert raw is not None
+            with raw.cursor() as cursor:
                 cursor.execute(
                     """
                     UPDATE bot_scheduler_runs
@@ -289,8 +293,10 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             failed=0,
             skipped=0,
         )
-        with psycopg.connect(self.database_url) as connection:
-            with connection.cursor() as cursor:
+        with sync_connection(self.database_url) as connection:
+            raw = connection.connection.driver_connection
+            assert raw is not None
+            with raw.cursor() as cursor:
                 cursor.execute(
                     """
                     UPDATE bot_scheduler_runs

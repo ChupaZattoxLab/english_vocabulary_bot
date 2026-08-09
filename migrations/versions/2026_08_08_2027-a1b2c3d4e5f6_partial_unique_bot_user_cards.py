@@ -9,7 +9,6 @@ Failed delivery rows must not block retrying the same word or schedule slot.
 
 from typing import Sequence, Union
 
-import sqlalchemy as sa
 from alembic import op
 
 revision: str = "a1b2c3d4e5f6"
@@ -21,35 +20,37 @@ _ACTIVE_STATUSES = "status IN ('delivered', 'reserved')"
 
 
 def upgrade() -> None:
-    op.drop_constraint(
-        "bot_user_cards_telegram_user_id_entry_id_key",
-        "bot_user_cards",
-        type_="unique",
+    op.execute(
+        """
+        ALTER TABLE bot_user_cards
+            DROP CONSTRAINT IF EXISTS bot_user_cards_telegram_user_id_entry_id_key
+        """
     )
-    op.drop_constraint(
-        "bot_user_cards_telegram_user_id_scheduled_slot_key",
-        "bot_user_cards",
-        type_="unique",
+    op.execute(
+        """
+        ALTER TABLE bot_user_cards
+            DROP CONSTRAINT IF EXISTS bot_user_cards_telegram_user_id_scheduled_slot_key
+        """
     )
-    op.create_index(
-        "bot_user_cards_user_entry_active_uidx",
-        "bot_user_cards",
-        ["telegram_user_id", "entry_id"],
-        unique=True,
-        postgresql_where=sa.text(_ACTIVE_STATUSES),
+    op.execute(
+        f"""
+        CREATE UNIQUE INDEX IF NOT EXISTS bot_user_cards_user_entry_active_uidx
+        ON bot_user_cards (telegram_user_id, entry_id)
+        WHERE {_ACTIVE_STATUSES}
+        """
     )
-    op.create_index(
-        "bot_user_cards_user_slot_active_uidx",
-        "bot_user_cards",
-        ["telegram_user_id", "scheduled_slot"],
-        unique=True,
-        postgresql_where=sa.text(_ACTIVE_STATUSES),
+    op.execute(
+        f"""
+        CREATE UNIQUE INDEX IF NOT EXISTS bot_user_cards_user_slot_active_uidx
+        ON bot_user_cards (telegram_user_id, scheduled_slot)
+        WHERE {_ACTIVE_STATUSES}
+        """
     )
 
 
 def downgrade() -> None:
-    op.drop_index("bot_user_cards_user_slot_active_uidx", table_name="bot_user_cards")
-    op.drop_index("bot_user_cards_user_entry_active_uidx", table_name="bot_user_cards")
+    op.execute("DROP INDEX IF EXISTS bot_user_cards_user_slot_active_uidx")
+    op.execute("DROP INDEX IF EXISTS bot_user_cards_user_entry_active_uidx")
     op.create_unique_constraint(
         "bot_user_cards_telegram_user_id_entry_id_key",
         "bot_user_cards",

@@ -13,6 +13,8 @@ from import_oxford_cache import (
     parse_cache_files,
 )
 
+from tgbot.db.sync import sync_connection
+
 
 class OxfordCacheParserTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -235,11 +237,6 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
     database_url = os.environ.get("TEST_DATABASE_URL", "")
 
     def test_repeat_add_and_update_are_incremental(self) -> None:
-        try:
-            import psycopg
-        except ImportError as exc:
-            self.skipTest(f"psycopg is not installed: {exc}")
-
         suffix = uuid.uuid4().hex
         first_word = f"integration-{suffix}"
         second_word = f"integration-new-{suffix}"
@@ -304,8 +301,10 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                 )
                 self.assertEqual(import_rows(current_rows(), self.database_url), 2)
 
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             """
                             SELECT source_lexical_key, translations
@@ -321,8 +320,10 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                 first_stored = next(row for row in stored if row[0] == keys[0])
                 self.assertEqual(first_stored[1], ["первый", "обновлённый"])
             finally:
-                with psycopg.connect(self.database_url) as connection:
-                    with connection.cursor() as cursor:
+                with sync_connection(self.database_url) as connection:
+                    raw = connection.connection.driver_connection
+                    assert raw is not None
+                    with raw.cursor() as cursor:
                         cursor.execute(
                             "DELETE FROM oxford_lexical_entries "
                             "WHERE source_lexical_key = ANY(%s)",

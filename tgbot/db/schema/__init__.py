@@ -15,6 +15,7 @@ from tgbot.db.schema.oald import (
     oald_audio_variants,
     oald_entries,
     oald_entry_audio_sources,
+    oxford_lexical_entries,
 )
 
 MANAGED_TABLES = frozenset(metadata.tables)
@@ -30,4 +31,5 @@ __all__ = [
     "oald_audio_variants",
     "oald_entries",
     "oald_entry_audio_sources",
+    "oxford_lexical_entries",
 ]

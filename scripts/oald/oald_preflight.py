@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
+
+import sqlalchemy as sa
+from sqlalchemy.engine import Connection
 
 OALD_TABLES = frozenset(
     {
@@ -14,27 +16,25 @@ OALD_TABLES = frozenset(
     }
 )
 
+OXFORD_TABLES = frozenset({"oxford_lexical_entries"})
+
 
 class SchemaNotMigratedError(RuntimeError):
     """Raised when a build script runs before Alembic migrations."""
 
 
-def require_oald_schema(cursor: Any) -> None:
-    require_tables(cursor, OALD_TABLES)
+def require_oald_schema(connection: Connection) -> None:
+    require_tables(connection, OALD_TABLES)
 
 
-def require_tables(cursor: Any, table_names: Iterable[str]) -> None:
+def require_oxford_schema(connection: Connection) -> None:
+    require_tables(connection, OXFORD_TABLES)
+
+
+def require_tables(connection: Connection, table_names: Iterable[str]) -> None:
     expected = set(table_names)
-    cursor.execute(
-        """
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = 'public'
-          AND table_name = ANY(%s)
-        """,
-        (list(expected),),
-    )
-    existing = {str(row[0]) for row in cursor.fetchall()}
+    inspector = sa.inspect(connection)
+    existing = {name for name in expected if inspector.has_table(name)}
     missing = expected - existing
     if missing:
         raise SchemaNotMigratedError(

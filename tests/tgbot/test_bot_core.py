@@ -33,7 +33,7 @@ class BotConfigTests(unittest.TestCase):
             {
                 "TELEGRAM_BOT_TOKEN": "token",
                 "TELEGRAM_ADMIN_IDS": "123, 456",
-                "OALD_DATABASE_URL": "postgresql://localhost/test",
+                "OALD_DATABASE_URL": "postgresql+psycopg://localhost/test",
             }
         )
         with patch("tgbot.bot_config.secrets", test_secrets):

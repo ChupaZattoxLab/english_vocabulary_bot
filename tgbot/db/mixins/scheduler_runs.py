@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
@@ -29,26 +29,26 @@ class SchedulerMixin(EngineBound):
         """Claim a slot, or reclaim it for retries within the grace window."""
         runs = bot_scheduler_runs
         within_grace = sa.func.current_timestamp() <= (
-            runs.c.scheduled_slot + sa.func.make_interval(mins=grace_minutes)
+            runs.c.scheduled_slot + timedelta(minutes=grace_minutes)
         )
         failed_ready = sa.and_(
             runs.c.status == SCHEDULER_STATUS_FAILED,
             sa.func.coalesce(runs.c.completed_at, runs.c.started_at)
             < sa.func.current_timestamp()
-            - sa.func.make_interval(mins=SCHEDULER_RETRY_COOLDOWN_MINUTES),
+            - timedelta(minutes=SCHEDULER_RETRY_COOLDOWN_MINUTES),
         )
         stale_running = sa.and_(
             runs.c.status == SCHEDULER_STATUS_RUNNING,
             runs.c.started_at
             < sa.func.current_timestamp()
-            - sa.func.make_interval(mins=SCHEDULER_STALE_RUNNING_MINUTES),
+            - timedelta(minutes=SCHEDULER_STALE_RUNNING_MINUTES),
         )
         completed_with_failures = sa.and_(
             runs.c.status == SCHEDULER_STATUS_COMPLETED,
             runs.c.failed_cards > 0,
             runs.c.completed_at
             < sa.func.current_timestamp()
-            - sa.func.make_interval(mins=SCHEDULER_RETRY_COOLDOWN_MINUTES),
+            - timedelta(minutes=SCHEDULER_RETRY_COOLDOWN_MINUTES),
         )
 
         stmt = pg_insert(runs).values(scheduled_slot=scheduled_slot)
