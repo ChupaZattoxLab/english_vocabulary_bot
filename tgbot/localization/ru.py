@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from tgbot.models import Dialect
+
 
 class user:
     settings_title = "<b>Ваши настройки</b>"
@@ -182,12 +184,15 @@ def pronunciation_admin(value: str | None) -> str:
     )
 
 
-def dialect_flag(dialect: str) -> str:
-    return labels.dialect_flags.get(dialect.upper(), "")
 
 
-def dialect_caption(dialect: str) -> str:
-    normalized = dialect.upper()
+
+def dialect_flag(dialect: Dialect | str) -> str:
+    return labels.dialect_flags.get(str(dialect).upper(), "")
+
+
+def dialect_caption(dialect: Dialect | str) -> str:
+    normalized = str(dialect).upper()
     return labels.dialect_captions.get(normalized, normalized)
 
 

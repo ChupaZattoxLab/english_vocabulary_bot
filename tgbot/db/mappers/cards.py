@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import cast
 
-from tgbot.db.mappers.users import normalize_dialect_preference
 from tgbot.db.mappers.values import (
     as_db_row,
     row_bytes,
@@ -14,28 +13,19 @@ from tgbot.db.mappers.values import (
     row_str_sequence,
 )
 from tgbot.models import (
-    VALID_DIALECTS,
     Card,
     CardAudio,
-    Dialect,
+    DialectPreference,
     DialectVariant,
 )
 
 
-def normalize_dialect(value: str) -> Dialect:
-    normalized = value.lower()
-    if normalized not in VALID_DIALECTS:
-        raise ValueError(f"unsupported dialect {value!r}")
-    return cast(Dialect, normalized)
-
-
 def card_from_row(
     row: object,
-    dialect: str,
-    history_id: int,
+    preference: DialectPreference,
+    user_card_id: int,
 ) -> Card:
     data = as_db_row(row)
-    preference = normalize_dialect_preference(dialect)
 
     ipa_us_values = row_str_sequence(data, "ipa_us") if data["ipa_us"] else ()
     ipa_gb_values = row_str_sequence(data, "ipa_gb") if data["ipa_gb"] else ()
@@ -61,7 +51,7 @@ def card_from_row(
     include_gb = preference in {"gb", "both"}
 
     return Card(
-        history_id=history_id,
+        user_card_id=user_card_id,
         entry_id=row_int(data, "entry_id"),
         lexical_category=row_str(data, "lexical_category"),
         cefr=row_str(data, "cefr").upper(),

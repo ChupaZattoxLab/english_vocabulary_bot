@@ -15,6 +15,7 @@ from tgbot.constants import (
     DELIVERY_STATUS_DELIVERED,
     DELIVERY_STATUS_FAILED,
     DELIVERY_STATUS_SKIPPED,
+    SCHEDULE_GRACE_MINUTES,
 )
 from tgbot.db import Database
 from tgbot.delivery.service import CardDeliveryService
@@ -50,7 +51,6 @@ class CardScheduler:
                     now,
                     timezone_value=self.config.schedule.timezone,
                     send_times=self.config.schedule.send_times,
-                    grace_minutes=self.config.schedule.grace_minutes,
                 ):
                     await self.run_slot(bot, scheduled_slot)
 
@@ -68,10 +68,7 @@ class CardScheduler:
         LOGGER.info("Scheduler stopped")
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
-        claimed = await self.db.claim_scheduler_run(
-            scheduled_slot,
-            grace_minutes=self.config.schedule.grace_minutes,
-        )
+        claimed = await self.db.claim_scheduler_run(scheduled_slot)
         if not claimed:
             return
 
@@ -80,7 +77,7 @@ class CardScheduler:
         error_message = ""
 
         try:
-            users = await self.db.active_users()
+            users = await self.db.get_active_users()
             attempted = len(users)
             semaphore = asyncio.Semaphore(self.config.schedule.delivery_concurrency)
             statuses = await asyncio.gather(
@@ -106,10 +103,10 @@ class CardScheduler:
         finally:
             await self.db.finish_scheduler_run(
                 scheduled_slot,
-                attempted=attempted,
-                delivered=delivered,
-                failed=failed,
-                skipped=skipped,
+                attempted_users=attempted,
+                delivered_cards=delivered,
+                failed_cards=failed,
+                skipped_users=skipped,
                 error_message=error_message,
             )
 
@@ -133,7 +130,6 @@ class CardScheduler:
                 outcome = await self.delivery.deliver(
                     bot,
                     telegram_user_id=user.telegram_user_id,
-                    chat_id=user.chat_id,
                     scheduled_slot=scheduled_slot,
                 )
                 return outcome.status
@@ -150,11 +146,10 @@ def due_schedule_slots(
     now: datetime,
     timezone_value: ZoneInfo,
     send_times: tuple[time, ...],
-    grace_minutes: int,
 ) -> tuple[datetime, ...]:
     """Return due UTC slots inside the grace window, including yesterday."""
     local_now = now.astimezone(timezone_value)
-    grace = timedelta(minutes=grace_minutes)
+    grace = timedelta(minutes=SCHEDULE_GRACE_MINUTES)
     candidate_dates = (local_now.date() - timedelta(days=1), local_now.date())
     slots: list[datetime] = []
 

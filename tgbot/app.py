@@ -99,7 +99,7 @@ async def run_bot(config: BotConfig) -> None:
 async def configure_commands(bot: Bot, db: Database) -> None:
     await bot.set_my_commands(list(USER_COMMANDS))
 
-    for admin_id in await db.admin_user_ids():
+    for admin_id in await db.get_admin_user_ids():
         await bot.set_my_commands(
             [*USER_COMMANDS, *ADMIN_COMMANDS],
             scope=BotCommandScopeChat(chat_id=admin_id),

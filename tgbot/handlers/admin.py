@@ -6,6 +6,7 @@ import html
 from datetime import UTC, datetime, time, timedelta
 
 from aiogram import Bot, F, Router
+from aiogram.enums import ChatType
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message
@@ -29,6 +30,8 @@ def create_admin_router(
     config: BotConfig,
 ) -> Router:
     router = Router(name="tgbot-admin")
+    router.message.filter(F.chat.type == ChatType.PRIVATE)
+    router.callback_query.filter(F.message.chat.type == ChatType.PRIVATE)
 
     @router.message(Command("admin"))
     async def admin_handler(message: Message) -> None:
@@ -99,15 +102,16 @@ def create_admin_router(
             )
         )
 
-    async def send_word_card(bot: Bot, chat_id: int, entry_id: int) -> bool:
-        card = await db.preview_card(
-            entry_id=entry_id,
-            dialect="both",
-        )
+    async def send_word_card(bot: Bot, telegram_user_id: int, entry_id: int) -> bool:
+        card = await db.get_preview_card(entry_id=entry_id)
         if not card:
             return False
 
-        await delivery.send_preview(bot, chat_id=chat_id, card=card)
+        await delivery.send_preview(
+            bot,
+            telegram_user_id=telegram_user_id,
+            card=card,
+        )
 
         return True
 
@@ -122,7 +126,7 @@ def create_admin_router(
             await message.answer(locale.admin.word_usage)
             return
 
-        rows = await db.word_search(word)
+        rows = await db.get_word_matches(word)
 
         if not rows:
             await message.answer(locale.admin.word_not_found)
@@ -139,12 +143,12 @@ def create_admin_router(
         match = rows[0]
         bot = message.bot
 
-        if bot is None:
+        if bot is None or message.from_user is None:
             return
 
         if not await send_word_card(
             bot,
-            chat_id=message.chat.id,
+            telegram_user_id=message.from_user.id,
             entry_id=match.id,
         ):
             await message.answer(locale.admin.word_no_both_audio)
@@ -183,7 +187,7 @@ def create_admin_router(
 
                 if not await send_word_card(
                     bot,
-                    chat_id=panel_message.chat.id,
+                    telegram_user_id=callback.from_user.id,
                     entry_id=int(entry_id),
                 ):
                     await panel_message.answer(locale.admin.word_entry_no_both_audio)
@@ -244,7 +248,7 @@ async def _is_admin(message: Message, db: Database) -> bool:
 async def _render_overview(db: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
 
-    users = await db.users_summary(
+    users = await db.get_audience_stats(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
@@ -261,7 +265,7 @@ async def _render_overview(db: Database, config: BotConfig) -> str:
 async def _render_users(db: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
 
-    stats = await db.users_summary(
+    stats = await db.get_audience_stats(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(

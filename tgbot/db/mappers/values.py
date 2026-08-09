@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from datetime import datetime
-from typing import cast
+from typing import Any, cast
 
-DbRow = Mapping[str, object]
+DbRow = Mapping[Any, object]
 
 
 def as_db_row(row: object) -> DbRow:

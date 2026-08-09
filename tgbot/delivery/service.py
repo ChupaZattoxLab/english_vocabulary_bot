@@ -39,7 +39,7 @@ from tgbot.delivery.card_template import (
     CardTemplateError,
 )
 from tgbot.localization import locale
-from tgbot.models import Card
+from tgbot.models import Card, Dialect
 
 LOGGER = logging.getLogger("tgbot.delivery")
 
@@ -68,14 +68,11 @@ class CardDeliveryService:
         self,
         bot: Bot,
         telegram_user_id: int,
-        chat_id: int,
-        scheduled_slot: datetime,
-        require_active: bool = True,
+        scheduled_slot: datetime | None = None,
     ) -> DeliveryOutcome:
         card = await self.db.reserve_card(
             telegram_user_id,
             scheduled_slot,
-            require_active=require_active,
         )
         if card is None:
             return DeliveryOutcome(DELIVERY_STATUS_SKIPPED)
@@ -84,16 +81,20 @@ class CardDeliveryService:
 
         try:
             rendered = self.render_card(card)
-            await self._send_card_text(bot, chat_id=chat_id, text=rendered)
+            await self._send_card_text(
+                bot,
+                telegram_user_id=telegram_user_id,
+                text=rendered,
+            )
             text_sent = True
 
             message = await self._send_card_voices(
                 bot,
-                chat_id=chat_id,
+                telegram_user_id=telegram_user_id,
                 card=card,
             )
             await self.db.finish_delivery(
-                card.history_id,
+                card.user_card_id,
                 delivered=True,
                 telegram_message_id=message.message_id,
             )
@@ -102,12 +103,12 @@ class CardDeliveryService:
         except TelegramForbiddenError as exc:
             if text_sent:
                 await self.db.finish_delivery(
-                    card.history_id,
+                    card.user_card_id,
                     delivered=True,
                 )
             else:
                 await self.db.finish_delivery(
-                    card.history_id,
+                    card.user_card_id,
                     delivered=False,
                     error_type=classify_delivery_error(exc),
                     error_message=str(exc),
@@ -124,7 +125,7 @@ class CardDeliveryService:
         except Exception as exc:  # noqa: BLE001
             if text_sent:
                 await self.db.finish_delivery(
-                    card.history_id,
+                    card.user_card_id,
                     delivered=True,
                 )
                 LOGGER.exception(
@@ -135,7 +136,7 @@ class CardDeliveryService:
                 return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
 
             await self.db.finish_delivery(
-                card.history_id,
+                card.user_card_id,
                 delivered=False,
                 error_type=classify_delivery_error(exc),
                 error_message=str(exc),
@@ -143,9 +144,14 @@ class CardDeliveryService:
             LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
             return DeliveryOutcome(DELIVERY_STATUS_FAILED, card)
 
-    async def send_preview(self, bot: Bot, chat_id: int, card: Card) -> Message:
-        """Send a card without creating or changing delivery history."""
-        return await self._send_card(bot, chat_id=chat_id, card=card)
+    async def send_preview(self, bot: Bot, telegram_user_id: int, card: Card) -> None:
+        """Send GB, US, and both variants for admin visual QA."""
+        for preference in ("gb", "us", "both"):
+            await self._send_card(
+                bot,
+                telegram_user_id=telegram_user_id,
+                card=card.for_preference(preference),
+            )
 
     def render_card(self, card: Card) -> str:
         template = self.both_template if card.is_both else self.template
@@ -179,26 +185,34 @@ class CardDeliveryService:
     async def _send_card(
         self,
         bot: Bot,
-        chat_id: int,
+        telegram_user_id: int,
         card: Card,
     ) -> Message:
         rendered = self.render_card(card)
 
-        await self._send_card_text(bot, chat_id=chat_id, text=rendered)
+        await self._send_card_text(
+            bot,
+            telegram_user_id=telegram_user_id,
+            text=rendered,
+        )
 
-        return await self._send_card_voices(bot, chat_id=chat_id, card=card)
+        return await self._send_card_voices(
+            bot,
+            telegram_user_id=telegram_user_id,
+            card=card,
+        )
 
     async def _send_card_voices(
         self,
         bot: Bot,
-        chat_id: int,
+        telegram_user_id: int,
         card: Card,
     ) -> Message:
         message: Message | None = None
         for variant in card.variants():
             message = await self._send_voice_attachment(
                 bot,
-                chat_id=chat_id,
+                telegram_user_id=telegram_user_id,
                 source_url=variant.audio.source_url,
                 audio_data=variant.audio.audio_data,
                 filename=variant.audio.filename or f"{variant.word}.voice.ogg",
@@ -210,16 +224,21 @@ class CardDeliveryService:
 
         return message
 
-    async def _send_card_text(self, bot: Bot, chat_id: int, text: str) -> None:
+    async def _send_card_text(
+        self,
+        bot: Bot,
+        telegram_user_id: int,
+        text: str,
+    ) -> None:
         await _call_with_retry_after(
-            lambda: bot.send_message(chat_id=chat_id, text=text),
+            lambda: bot.send_message(chat_id=telegram_user_id, text=text),
             kind=SEND_KIND_TEXT,
         )
 
     async def _send_voice_attachment(
         self,
         bot: Bot,
-        chat_id: int,
+        telegram_user_id: int,
         source_url: str,
         audio_data: bytes,
         filename: str,
@@ -228,19 +247,14 @@ class CardDeliveryService:
         async def send(file_reference: str | BufferedInputFile) -> Message:
             return await _call_with_retry_after(
                 lambda: bot.send_voice(
-                    chat_id=chat_id,
+                    chat_id=telegram_user_id,
                     voice=file_reference,
                     caption=caption,
                 ),
                 kind=SEND_METHOD_VOICE,
             )
 
-        method = SEND_METHOD_VOICE
-
-        cached_file_id = await self.db.cached_audio_file_id(
-            source_url,
-            method,
-        )
+        cached_file_id = await self.db.get_cached_audio_file_id(source_url)
 
         if cached_file_id:
             try:
@@ -250,22 +264,21 @@ class CardDeliveryService:
                     "Telegram rejected cached file_id for %s; uploading bytes again",
                     source_url,
                 )
-                await self.db.clear_cached_audio_file_id(source_url, method)
+                await self.db.clear_cached_audio_file_id(source_url)
 
         upload = BufferedInputFile(audio_data, filename=filename)
         message = await send(upload)
 
         if message.voice:
-            await self.db.cache_audio_file_id(
+            await self.db.set_cached_audio_file_id(
                 source_url,
-                method,
                 message.voice.file_id,
             )
 
         return message
 
 
-def voice_caption(dialect: str, ipa: str) -> str:
+def voice_caption(dialect: Dialect, ipa: str) -> str:
     label = locale.dialect_caption(dialect)
     transcription = ipa.strip()
 

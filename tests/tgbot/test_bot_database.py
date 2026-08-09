@@ -171,7 +171,6 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                         )
         await self.db.upsert_user(
             telegram_user_id=self.telegram_user_id,
-            chat_id=self.telegram_user_id,
             username="integration",
         )
         await self.db.toggle_level(self.telegram_user_id, "c1")
@@ -246,10 +245,10 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(await self.db.claim_scheduler_run(slot))
         await self.db.finish_scheduler_run(
             slot,
-            attempted=1,
-            delivered=1,
-            failed=0,
-            skipped=0,
+            attempted_users=1,
+            delivered_cards=1,
+            failed_cards=0,
+            skipped_users=0,
         )
 
     async def test_both_dialects_return_two_prepared_voice_files(self) -> None:
@@ -284,13 +283,13 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(first)
         self.assertIsNotNone(second)
         await self.db.finish_delivery(
-            first.history_id,
+            first.user_card_id,
             delivered=False,
             error_type="technical_error",
             error_message="boom",
         )
         await self.db.finish_delivery(
-            second.history_id,
+            second.user_card_id,
             delivered=True,
             telegram_message_id=1,
         )
@@ -304,26 +303,22 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             self.telegram_user_id,
             datetime.now(UTC),
         )
-        allowed = await self.db.reserve_card(
-            self.telegram_user_id,
-            datetime.now(UTC),
-            require_active=False,
-        )
+        allowed = await self.db.reserve_card(self.telegram_user_id)
         self.assertIsNone(denied)
         self.assertIsNotNone(allowed)
 
     async def test_scheduler_reclaims_failed_run_within_grace(self) -> None:
         slot = datetime.now(UTC) - timedelta(minutes=10)
         self.scheduler_slots.append(slot)
-        self.assertTrue(await self.db.claim_scheduler_run(slot, grace_minutes=60))
+        self.assertTrue(await self.db.claim_scheduler_run(slot))
         await self.db.finish_scheduler_run(
             slot,
-            attempted=1,
-            delivered=0,
-            failed=1,
-            skipped=0,
+            attempted_users=1,
+            delivered_cards=0,
+            failed_cards=1,
+            skipped_users=0,
         )
-        self.assertFalse(await self.db.claim_scheduler_run(slot, grace_minutes=60))
+        self.assertFalse(await self.db.claim_scheduler_run(slot))
         with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
             assert raw is not None
@@ -336,13 +331,13 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                     """,
                     (slot,),
                 )
-        self.assertTrue(await self.db.claim_scheduler_run(slot, grace_minutes=60))
+        self.assertTrue(await self.db.claim_scheduler_run(slot))
         await self.db.finish_scheduler_run(
             slot,
-            attempted=1,
-            delivered=1,
-            failed=0,
-            skipped=0,
+            attempted_users=1,
+            delivered_cards=1,
+            failed_cards=0,
+            skipped_users=0,
         )
         with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
@@ -356,14 +351,13 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                     """,
                     (slot,),
                 )
-        self.assertFalse(await self.db.claim_scheduler_run(slot, grace_minutes=60))
+        self.assertFalse(await self.db.claim_scheduler_run(slot))
 
     async def test_block_keeps_paused_state(self) -> None:
         await self.db.set_active(self.telegram_user_id, False)
         await self.db.deactivate_user(self.telegram_user_id)
         user = await self.db.upsert_user(
             telegram_user_id=self.telegram_user_id,
-            chat_id=self.telegram_user_id,
             username="integration",
         )
         self.assertFalse(user.is_active)

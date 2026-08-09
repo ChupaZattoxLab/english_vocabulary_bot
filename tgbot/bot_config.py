@@ -10,7 +10,6 @@ from zoneinfo import ZoneInfo
 from tgbot.constants import (
     DB_POOL_SIZE,
     DELIVERY_CONCURRENCY,
-    SCHEDULE_GRACE_MINUTES,
     SCHEDULER_POLL_SECONDS,
     SEND_TIMES,
     TIMEZONE,
@@ -23,7 +22,6 @@ class ScheduleSettings:
     timezone: ZoneInfo
     send_times: tuple[time, ...]
     text: str
-    grace_minutes: int
     poll_seconds: int
     delivery_concurrency: int
 
@@ -34,7 +32,6 @@ class ScheduleSettings:
             timezone=ZoneInfo(TIMEZONE),
             send_times=send_times,
             text=f"{', '.join(sorted(SEND_TIMES))} ({TIMEZONE})",
-            grace_minutes=SCHEDULE_GRACE_MINUTES,
             poll_seconds=SCHEDULER_POLL_SECONDS,
             delivery_concurrency=DELIVERY_CONCURRENCY,
         )

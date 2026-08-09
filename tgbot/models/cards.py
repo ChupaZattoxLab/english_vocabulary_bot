@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
-from tgbot.models.types import Dialect
+from tgbot.models.types import Dialect, DialectPreference
 
 
 @dataclass(frozen=True)
@@ -25,7 +25,7 @@ class DialectVariant:
 
 @dataclass(frozen=True)
 class Card:
-    history_id: int
+    user_card_id: int
     entry_id: int
     lexical_category: str
     cefr: str
@@ -49,3 +49,15 @@ class Card:
 
     def variants(self) -> tuple[DialectVariant, ...]:
         return tuple(variant for variant in (self.us, self.gb) if variant is not None)
+
+    def for_preference(self, preference: DialectPreference) -> Card:
+        """Return a view of this card for a user dialect preference."""
+        us = self.us if preference in {"us", "both"} else None
+        gb = self.gb if preference in {"gb", "both"} else None
+
+        if preference in {"us", "both"} and us is None:
+            raise ValueError("card has no US variant")
+        if preference in {"gb", "both"} and gb is None:
+            raise ValueError("card has no GB variant")
+
+        return replace(self, us=us, gb=gb)

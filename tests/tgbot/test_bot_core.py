@@ -211,7 +211,6 @@ class SchedulerTests(unittest.TestCase):
             datetime(2026, 8, 1, 7, 30, tzinfo=UTC),
             timezone_value=ZoneInfo("Europe/Amsterdam"),
             send_times=(time(9), time(14), time(20)),
-            grace_minutes=60,
         )
 
         self.assertEqual(
@@ -224,7 +223,6 @@ class SchedulerTests(unittest.TestCase):
             datetime(2026, 8, 1, 10, 30, tzinfo=UTC),
             timezone_value=ZoneInfo("Europe/Amsterdam"),
             send_times=(time(9), time(14), time(20)),
-            grace_minutes=60,
         )
         self.assertEqual(slots, ())
 
@@ -235,8 +233,8 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             template_path = Path(temporary_directory) / "card.html"
             template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
             db = SimpleNamespace(
-                cached_audio_file_id=AsyncMock(return_value=None),
-                cache_audio_file_id=AsyncMock(),
+                get_cached_audio_file_id=AsyncMock(return_value=None),
+                set_cached_audio_file_id=AsyncMock(),
                 clear_cached_audio_file_id=AsyncMock(),
             )
             bot = SimpleNamespace(
@@ -251,7 +249,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             service = CardDeliveryService(db, CardTemplate(template_path))
             card = make_card("audio/ogg", "test.voice.ogg")
 
-            await service._send_card(bot, chat_id=123, card=card)
+            await service._send_card(bot, telegram_user_id=123, card=card)
 
             bot.send_voice.assert_awaited_once()
             bot.send_message.assert_awaited_once()
@@ -267,9 +265,8 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 bot.send_voice.await_args.kwargs["caption"],
                 "🇺🇸 US · <code>/test/</code>",
             )
-            db.cache_audio_file_id.assert_awaited_once_with(
+            db.set_cached_audio_file_id.assert_awaited_once_with(
                 card.primary.audio.source_url,
-                "voice",
                 "telegram-voice-id",
             )
 
@@ -282,8 +279,8 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 reserve_card=AsyncMock(return_value=card),
                 finish_delivery=AsyncMock(),
                 deactivate_user=AsyncMock(),
-                cached_audio_file_id=AsyncMock(return_value=None),
-                cache_audio_file_id=AsyncMock(),
+                get_cached_audio_file_id=AsyncMock(return_value=None),
+                set_cached_audio_file_id=AsyncMock(),
                 clear_cached_audio_file_id=AsyncMock(),
             )
             bot = SimpleNamespace(
@@ -295,13 +292,12 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             outcome = await service.deliver(
                 bot,
                 telegram_user_id=1,
-                chat_id=1,
                 scheduled_slot=datetime.now(UTC),
             )
 
             self.assertEqual(outcome.status, "delivered")
             db.finish_delivery.assert_awaited_once_with(
-                card.history_id,
+                card.user_card_id,
                 delivered=True,
             )
 
@@ -316,8 +312,8 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 encoding="utf-8",
             )
             db = SimpleNamespace(
-                cached_audio_file_id=AsyncMock(return_value=None),
-                cache_audio_file_id=AsyncMock(),
+                get_cached_audio_file_id=AsyncMock(return_value=None),
+                set_cached_audio_file_id=AsyncMock(),
                 clear_cached_audio_file_id=AsyncMock(),
             )
             bot = SimpleNamespace(
@@ -366,7 +362,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 ),
             )
 
-            await service._send_card(bot, chat_id=123, card=card)
+            await service._send_card(bot, telegram_user_id=123, card=card)
 
             self.assertEqual(bot.send_voice.await_count, 2)
             bot.send_message.assert_awaited_once()
@@ -382,14 +378,13 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 second_call.kwargs["caption"],
                 "🇬🇧 GB · <code>/gb/</code>",
             )
-            self.assertEqual(db.cache_audio_file_id.await_count, 2)
+            self.assertEqual(db.set_cached_audio_file_id.await_count, 2)
 
 
 def make_admin_user(**overrides: object) -> AdminUser:
     now = datetime.now(UTC)
     user = AdminUser(
         telegram_user_id=1,
-        chat_id=1,
         username="",
         role="user",
         created_at=now,
@@ -423,7 +418,7 @@ def make_card(
     filename: str = "test.voice.ogg",
 ) -> Card:
     return Card(
-        history_id=1,
+        user_card_id=1,
         entry_id=1,
         lexical_category="noun",
         cefr="A1",

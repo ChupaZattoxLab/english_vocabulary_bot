@@ -16,20 +16,22 @@ from tgbot.constants import (
     SCHEDULER_STATUS_FAILED,
     SCHEDULER_STATUS_RUNNING,
 )
-from tgbot.db.queries.base import EngineBound
+from tgbot.db.queries.base import DbSession
 from tgbot.db.tables import bot_scheduler_runs
 
 
-class SchedulerQueries(EngineBound):
-    async def claim_scheduler_run(
-        self,
-        scheduled_slot: datetime,
-        grace_minutes: int = SCHEDULE_GRACE_MINUTES,
-    ) -> bool:
-        """Claim a slot, or reclaim it for retries within the grace window."""
+class SchedulerQueries(DbSession):
+    async def claim_scheduler_run(self, scheduled_slot: datetime) -> bool:
+        """Try to own a send slot for this process.
+
+        Inserts a running row, or reclaims a failed/stale/partially-failed run
+        while still inside SCHEDULE_GRACE_MINUTES. Returns False if another
+        worker already holds a fresh claim.
+        """
         runs = bot_scheduler_runs
+
         within_grace = sa.func.current_timestamp() <= (
-            runs.c.scheduled_slot + timedelta(minutes=grace_minutes)
+            runs.c.scheduled_slot + timedelta(minutes=SCHEDULE_GRACE_MINUTES)
         )
         failed_ready = sa.and_(
             runs.c.status == SCHEDULER_STATUS_FAILED,
@@ -70,35 +72,32 @@ class SchedulerQueries(EngineBound):
             ),
         ).returning(runs.c.scheduled_slot)
 
-        async with self.engine.begin() as connection:
-            row = (await connection.execute(stmt)).mappings().first()
-
-        return row is not None
+        return (await self.execute_fetch_first(stmt)) is not None
 
     async def finish_scheduler_run(
         self,
         scheduled_slot: datetime,
-        attempted: int,
-        delivered: int,
-        failed: int,
-        skipped: int,
+        attempted_users: int,
+        delivered_cards: int,
+        failed_cards: int,
+        skipped_users: int,
         error_message: str = "",
     ) -> None:
-        async with self.engine.begin() as connection:
-            await connection.execute(
-                sa.update(bot_scheduler_runs)
-                .where(bot_scheduler_runs.c.scheduled_slot == scheduled_slot)
-                .values(
-                    status=(
-                        SCHEDULER_STATUS_FAILED
-                        if error_message
-                        else SCHEDULER_STATUS_COMPLETED
-                    ),
-                    attempted_users=attempted,
-                    delivered_cards=delivered,
-                    failed_cards=failed,
-                    skipped_users=skipped,
-                    error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
-                    completed_at=sa.func.current_timestamp(),
-                )
+        """Mark the slot completed, or failed when ``error_message`` is set."""
+        await self.execute(
+            sa.update(bot_scheduler_runs)
+            .where(bot_scheduler_runs.c.scheduled_slot == scheduled_slot)
+            .values(
+                status=(
+                    SCHEDULER_STATUS_FAILED
+                    if error_message
+                    else SCHEDULER_STATUS_COMPLETED
+                ),
+                attempted_users=attempted_users,
+                delivered_cards=delivered_cards,
+                failed_cards=failed_cards,
+                skipped_users=skipped_users,
+                error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
+                completed_at=sa.func.current_timestamp(),
             )
+        )

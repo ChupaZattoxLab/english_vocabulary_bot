@@ -16,7 +16,6 @@ bot_users = sa.Table(
         primary_key=True,
         autoincrement=False,
     ),
-    sa.Column("chat_id", sa.BigInteger, nullable=False),
     sa.Column(
         "username",
         sa.Text,

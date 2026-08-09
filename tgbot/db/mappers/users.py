@@ -57,7 +57,6 @@ def user_from_row(row: object) -> ActiveUser:
 
     return ActiveUser(
         telegram_user_id=row_int(data, "telegram_user_id"),
-        chat_id=row_int(data, "chat_id"),
         username=row_str(data, "username"),
         role=_role_from_row(row_optional_str(data, "role")),
         created_at=row_datetime(data, "created_at"),
@@ -75,7 +74,6 @@ def admin_user_from_row(row: object) -> AdminUser:
 
     return AdminUser(
         telegram_user_id=base.telegram_user_id,
-        chat_id=base.chat_id,
         username=base.username,
         role=base.role,
         created_at=base.created_at,

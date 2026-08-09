@@ -2,7 +2,6 @@
 
 from tgbot.db.mappers.cards import (
     card_from_row,
-    normalize_dialect,
     selected_ipa,
     translation_text,
 )
@@ -32,7 +31,6 @@ __all__ = [
     "as_db_row",
     "as_db_rows",
     "card_from_row",
-    "normalize_dialect",
     "normalize_dialect_preference",
     "row_bool",
     "row_bytes",

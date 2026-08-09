@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 # ---------------------------------------------------------------------------
-# bot_user_cards.status values and statuses that still "own" a word/slot
+# bot_user_cards.status values and statuses that still occupy a word/slot
 # ---------------------------------------------------------------------------
 
 CARD_STATUS_RESERVED = "reserved"
 CARD_STATUS_DELIVERED = "delivered"
 CARD_STATUS_FAILED = "failed"
-CARD_ACTIVE_STATUSES = (CARD_STATUS_DELIVERED, CARD_STATUS_RESERVED)
+# Statuses that still occupy the per-user entry/slot unique indexes.
+CARD_OCCUPIED_STATUSES = (CARD_STATUS_DELIVERED, CARD_STATUS_RESERVED)
 
 # ---------------------------------------------------------------------------
 # bot_scheduler_runs.status values

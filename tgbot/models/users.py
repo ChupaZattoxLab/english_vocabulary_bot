@@ -11,7 +11,6 @@ from tgbot.models.types import DialectPreference, UserRole
 @dataclass(frozen=True)
 class User:
     telegram_user_id: int
-    chat_id: int
     username: str
     role: UserRole
     created_at: datetime

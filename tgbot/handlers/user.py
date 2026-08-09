@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from typing import cast
 
 from aiogram import F, Router
+from aiogram.enums import ChatType
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message, User
 
@@ -14,7 +15,13 @@ from tgbot.db import Database
 from tgbot.delivery import CardDeliveryService
 from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
 from tgbot.localization import locale
-from tgbot.models import ActiveUser
+from tgbot.models import (
+    VALID_DIALECT_PREFERENCES,
+    VALID_LEVELS,
+    ActiveUser,
+    CefrLevel,
+    DialectPreference,
+)
 
 
 def create_router(
@@ -23,13 +30,15 @@ def create_router(
     config: BotConfig,
 ) -> Router:
     router = Router(name="tgbot")
+    router.message.filter(F.chat.type == ChatType.PRIVATE)
+    router.callback_query.filter(F.message.chat.type == ChatType.PRIVATE)
 
     @router.message(CommandStart())
     async def start_handler(message: Message) -> None:
         if not message.from_user:
             return
 
-        user = await register_user(db, message.from_user, message.chat.id)
+        user = await register_user(db, message.from_user)
 
         if user.onboarding_completed:
             await message.answer(
@@ -51,7 +60,7 @@ def create_router(
         if not message.from_user:
             return
 
-        user = await register_user(db, message.from_user, message.chat.id)
+        user = await register_user(db, message.from_user)
 
         await message.answer(
             user_settings_text(user, config) + locale.user.settings_pick_levels,
@@ -86,7 +95,14 @@ def create_router(
             await callback.answer()
             return
 
-        user = await db.toggle_level(callback.from_user.id, action)
+        if action not in VALID_LEVELS:
+            await callback.answer()
+            return
+
+        user = await db.toggle_level(
+            callback.from_user.id,
+            cast(CefrLevel, action),
+        )
         message = _callback_message(callback)
 
         if message is not None:
@@ -112,7 +128,14 @@ def create_router(
             )
             return
 
-        user = await db.set_dialect(callback.from_user.id, dialect)
+        if dialect not in VALID_DIALECT_PREFERENCES:
+            await callback.answer()
+            return
+
+        user = await db.set_dialect(
+            callback.from_user.id,
+            cast(DialectPreference, dialect),
+        )
         message = _callback_message(callback)
 
         if message is not None:
@@ -167,9 +190,6 @@ def create_router(
         outcome = await delivery.deliver(
             bot,
             telegram_user_id=message.from_user.id,
-            chat_id=message.chat.id,
-            scheduled_slot=datetime.now(UTC),
-            require_active=False,
         )
 
         if outcome.status == DELIVERY_STATUS_SKIPPED:
@@ -190,10 +210,9 @@ def create_router(
     return router
 
 
-async def register_user(db: Database, telegram_user: User, chat_id: int) -> ActiveUser:
+async def register_user(db: Database, telegram_user: User) -> ActiveUser:
     return await db.upsert_user(
         telegram_user_id=telegram_user.id,
-        chat_id=chat_id,
         username=telegram_user.username or "",
     )
 
