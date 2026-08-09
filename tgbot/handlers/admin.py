@@ -64,9 +64,9 @@ def create_admin_router(
             await message.answer(locale.admin.user_not_found)
             return
 
-        registered = user.created_at.astimezone(config.timezone)
+        registered = user.created_at.astimezone(config.schedule.timezone)
         last_text = (
-            user.last_successful_delivery.astimezone(config.timezone).strftime(
+            user.last_successful_delivery.astimezone(config.schedule.timezone).strftime(
                 "%d.%m.%Y %H:%M"
             )
             if user.last_successful_delivery
@@ -81,7 +81,9 @@ def create_admin_router(
             ", ".join(level.upper() for level in user.selected_levels)
             or locale.admin.placeholder
         )
-        send_times = ", ".join(t.strftime("%H:%M") for t in config.send_times)
+        send_times = ", ".join(
+            t.strftime("%H:%M") for t in config.schedule.send_times
+        )
 
         await message.answer(
             locale.admin.user_detail.format(
@@ -90,9 +92,9 @@ def create_admin_router(
                 registered=registered.strftime("%d.%m.%Y %H:%M"),
                 levels=levels,
                 pronunciation=locale.pronunciation_admin(user.pronunciation),
-                cards_per_day=len(config.send_times),
+                cards_per_day=len(config.schedule.send_times),
                 send_times=send_times,
-                timezone=html.escape(config.timezone.key),
+                timezone=html.escape(config.schedule.timezone.key),
                 delivery_state=_delivery_state(user),
                 delivered_cards=_number(user.delivered_cards),
                 last_delivery=last_text,
@@ -299,8 +301,10 @@ async def _render_users(database: Database, config: BotConfig) -> str:
 
 
 def _local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
-    local_now = datetime.now(config.timezone)
-    local_start = datetime.combine(local_now.date(), time.min, tzinfo=config.timezone)
+    local_now = datetime.now(config.schedule.timezone)
+    local_start = datetime.combine(
+        local_now.date(), time.min, tzinfo=config.schedule.timezone
+    )
 
     return (
         local_now,

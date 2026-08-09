@@ -39,7 +39,9 @@ def create_router(
             return
 
         await message.answer(
-            locale.user.welcome_new.format(cards_per_day=len(config.send_times)),
+            locale.user.welcome_new.format(
+                cards_per_day=len(config.schedule.send_times)
+            ),
             reply_markup=levels_keyboard(user.selected_levels),
         )
 
@@ -211,7 +213,7 @@ def user_settings_text(user: BotUser, config: BotConfig) -> str:
         levels=levels,
         pronunciation=locale.pronunciation_short(user.pronunciation),
         delivery_state=state,
-        schedule=config.schedule_text,
+        schedule=config.schedule.text,
     )
 
 

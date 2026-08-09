@@ -40,16 +40,16 @@ class CardScheduler:
     async def run(self, bot: Bot) -> None:
         LOGGER.info(
             "Scheduler started: %s",
-            self.config.schedule_text,
+            self.config.schedule.text,
         )
         while not self._stop_event.is_set():
             try:
                 now = datetime.now(UTC)
                 for scheduled_slot in due_schedule_slots(
                     now,
-                    timezone_value=self.config.timezone,
-                    send_times=self.config.send_times,
-                    grace_minutes=self.config.schedule_grace_minutes,
+                    timezone_value=self.config.schedule.timezone,
+                    send_times=self.config.schedule.send_times,
+                    grace_minutes=self.config.schedule.grace_minutes,
                 ):
                     await self.run_slot(bot, scheduled_slot)
 
@@ -59,7 +59,7 @@ class CardScheduler:
             try:
                 await asyncio.wait_for(
                     self._stop_event.wait(),
-                    timeout=self.config.scheduler_poll_seconds,
+                    timeout=self.config.schedule.poll_seconds,
                 )
             except TimeoutError:
                 continue
@@ -69,7 +69,7 @@ class CardScheduler:
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
         claimed = await self.database.claim_scheduler_run(
             scheduled_slot,
-            grace_minutes=self.config.schedule_grace_minutes,
+            grace_minutes=self.config.schedule.grace_minutes,
         )
         if not claimed:
             return
@@ -81,7 +81,7 @@ class CardScheduler:
         try:
             users = await self.database.active_users()
             attempted = len(users)
-            semaphore = asyncio.Semaphore(self.config.delivery_concurrency)
+            semaphore = asyncio.Semaphore(self.config.schedule.delivery_concurrency)
             statuses = await asyncio.gather(
                 *(
                     self._deliver_to_user(

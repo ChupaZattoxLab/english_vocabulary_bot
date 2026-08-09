@@ -79,12 +79,12 @@ TIMEZONE = "Europe/Moscow"  # UTC+3
 SCHEDULE_GRACE_MINUTES = 60
 SCHEDULER_POLL_SECONDS = 20
 DELIVERY_CONCURRENCY = 5
-DATABASE_POOL_SIZE = 5
 
 # ---------------------------------------------------------------------------
 # Database connection settings
 # ---------------------------------------------------------------------------
 
+DATABASE_POOL_SIZE = 5
 DATABASE_CONNECT_TIMEOUT_SECONDS = 10
 # Recycle pooled connections before Postgres/NAT idle timeouts (seconds).
 DATABASE_POOL_RECYCLE_SECONDS = 1800

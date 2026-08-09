@@ -23,13 +23,8 @@ class BotConfig:
     bot_token: str
     database_url: str
     admin_ids: frozenset[int]
-    timezone: ZoneInfo
-    send_times: tuple[time, ...]
-    schedule_text: str
-    schedule_grace_minutes: int
-    scheduler_poll_seconds: int
-    delivery_concurrency: int
     database_pool_size: int
+    schedule: ScheduleSettings
 
     @classmethod
     def load(cls) -> BotConfig:
@@ -44,13 +39,30 @@ class BotConfig:
             bot_token=secrets.telegram_bot_token,
             database_url=secrets.db_url,
             admin_ids=secrets.admin_ids,
-            timezone=ZoneInfo(TIMEZONE),
-            send_times=parse_send_times(SEND_TIMES),
-            schedule_text=f"{', '.join(sorted(SEND_TIMES))} ({TIMEZONE})",
-            schedule_grace_minutes=SCHEDULE_GRACE_MINUTES,
-            scheduler_poll_seconds=SCHEDULER_POLL_SECONDS,
-            delivery_concurrency=DELIVERY_CONCURRENCY,
             database_pool_size=DATABASE_POOL_SIZE,
+            schedule=ScheduleSettings.load(),
+        )
+
+
+@dataclass(frozen=True)
+class ScheduleSettings:
+    timezone: ZoneInfo
+    send_times: tuple[time, ...]
+    text: str
+    grace_minutes: int
+    poll_seconds: int
+    delivery_concurrency: int
+
+    @classmethod
+    def load(cls) -> ScheduleSettings:
+        send_times = parse_send_times(SEND_TIMES)
+        return cls(
+            timezone=ZoneInfo(TIMEZONE),
+            send_times=send_times,
+            text=f"{', '.join(sorted(SEND_TIMES))} ({TIMEZONE})",
+            grace_minutes=SCHEDULE_GRACE_MINUTES,
+            poll_seconds=SCHEDULER_POLL_SECONDS,
+            delivery_concurrency=DELIVERY_CONCURRENCY,
         )
 
 
