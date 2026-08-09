@@ -70,6 +70,7 @@ async def run_bot(config: BotConfig) -> None:
         token=config.bot_token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
+
     scheduler_task: asyncio.Task[None] | None = None
     try:
         await configure_commands(bot, config)
@@ -85,6 +86,7 @@ async def run_bot(config: BotConfig) -> None:
             allowed_updates=dispatcher.resolve_used_update_types(),
             close_bot_session=False,
         )
+
     finally:
         scheduler.stop()
         if scheduler_task:
@@ -98,14 +100,7 @@ async def configure_commands(bot: Bot, config: BotConfig) -> None:
     await bot.set_my_commands(list(USER_COMMANDS))
 
     for admin_id in config.admin_ids:
-        try:
-            await bot.set_my_commands(
-                [*USER_COMMANDS, *ADMIN_COMMANDS],
-                scope=BotCommandScopeChat(chat_id=admin_id),
-            )
-        except Exception:  # noqa: BLE001
-            LOGGER.warning(
-                "Could not configure admin command scope for %s",
-                admin_id,
-                exc_info=True,
-            )
+        await bot.set_my_commands(
+            [*USER_COMMANDS, *ADMIN_COMMANDS],
+            scope=BotCommandScopeChat(chat_id=admin_id),
+        )
