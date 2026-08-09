@@ -120,7 +120,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.json.is_file():
         LOGGER.error("OALD JSON file does not exist: %s", args.json)
         return 2
-    if not args.dry_run and not args.database_url:
+    if not args.dry_run and not args.db_url:
         LOGGER.error(
             "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
         )
@@ -134,15 +134,15 @@ def main(argv: list[str] | None = None) -> int:
             LOGGER.info("Dry-run complete; no database changes made")
             return 0
 
-        created = ensure_database_exists(
-            args.database_url,
-            admin_database_url=args.admin_database_url,
+        created = ensure_db_exists(
+            args.db_url,
+            admin_db_url=args.admin_db_url,
         )
         if created:
             LOGGER.info("Created target OALD PostgreSQL database")
         result = import_entries(
             entries,
-            args.database_url,
+            args.db_url,
             batch_size=args.batch_size,
         )
         LOGGER.info(
@@ -167,11 +167,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--database-url",
+        dest="db_url",
         default=os.environ.get("OALD_DATABASE_URL"),
         help="Target PostgreSQL URL; defaults to OALD_DATABASE_URL",
     )
     parser.add_argument(
         "--admin-database-url",
+        dest="admin_db_url",
         default=os.environ.get("OALD_ADMIN_DATABASE_URL"),
         help=(
             "Optional PostgreSQL admin URL used only to create a missing "
@@ -247,7 +249,7 @@ def load_entries(
 
 def import_entries(
     entries: Iterable[OaldEntry],
-    database_url: str,
+    db_url: str,
     batch_size: int = 500,
 ) -> ImportResult:
     try:
@@ -255,7 +257,7 @@ def import_entries(
         audio_reference_count = 0
         unique_audio_urls: set[str] = set()
         with sync_connection(
-            database_url,
+            db_url,
             connect_timeout=DEFAULT_CONNECT_TIMEOUT,
         ) as connection:
             require_oald_schema(connection)
@@ -351,23 +353,23 @@ def import_entries(
         ) from exc
 
 
-def ensure_database_exists(
-    database_url: str,
-    admin_database_url: str | None = None,
+def ensure_db_exists(
+    db_url: str,
+    admin_db_url: str | None = None,
 ) -> bool:
     """Ensure the target database exists; return True when it was created."""
     try:
         from psycopg import sql
 
-        target_url = make_url(database_url)
+        target_url = make_url(db_url)
         target_database = target_url.database
         if not target_database:
             raise OaldDatabaseError(
                 "the target database URL must include a database name"
             )
 
-        if admin_database_url:
-            admin_url = admin_database_url
+        if admin_db_url:
+            admin_url = admin_db_url
         else:
             admin_url = target_url.set(database="postgres").render_as_string(
                 hide_password=False
@@ -410,7 +412,7 @@ def ensure_database_exists(
     except Exception:
         try:
             with sync_connection(
-                database_url,
+                db_url,
                 connect_timeout=DEFAULT_CONNECT_TIMEOUT,
             ):
                 return False

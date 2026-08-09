@@ -130,7 +130,7 @@ class DownloadStats:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     configure_logging(args.log_level)
-    if not args.database_url:
+    if not args.db_url:
         LOGGER.error(
             "PostgreSQL URL is required: use --database-url or set OALD_DATABASE_URL"
         )
@@ -138,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         stats = download_audio_to_postgres(
-            args.database_url,
+            args.db_url,
             dialects=args.dialects,
             limit=args.limit,
             force=args.force,
@@ -173,6 +173,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--database-url",
+        dest="db_url",
         default=os.environ.get("OALD_DATABASE_URL"),
         help="OALD PostgreSQL URL; defaults to OALD_DATABASE_URL",
     )
@@ -411,7 +412,7 @@ def download_with_retries(
 
 
 def download_audio_to_postgres(
-    database_url: str,
+    db_url: str,
     dialects: list[str] | None = None,
     limit: int | None = None,
     force: bool = False,
@@ -430,7 +431,7 @@ def download_audio_to_postgres(
     stats = DownloadStats()
     try:
         with sync_connection(
-            database_url,
+            db_url,
             autocommit=True,
             connect_timeout=DEFAULT_CONNECT_TIMEOUT,
         ) as connection:

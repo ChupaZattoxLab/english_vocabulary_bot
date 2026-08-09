@@ -24,7 +24,7 @@ from tgbot.localization import locale
 
 
 def create_admin_router(
-    database: Database,
+    db: Database,
     delivery: CardDeliveryService,
     config: BotConfig,
 ) -> Router:
@@ -36,7 +36,7 @@ def create_admin_router(
             return
 
         await message.answer(
-            await _render_overview(database, config),
+            await _render_overview(db, config),
             reply_markup=admin_main_keyboard(),
         )
 
@@ -45,7 +45,7 @@ def create_admin_router(
         if not await _is_admin(message, config):
             return
 
-        await message.answer(await _render_users(database, config))
+        await message.answer(await _render_users(db, config))
 
     @router.message(Command("user"))
     async def user_handler(message: Message) -> None:
@@ -58,7 +58,7 @@ def create_admin_router(
             await message.answer(locale.admin.user_usage)
             return
 
-        user = await database.admin_user_detail(int(argument))
+        user = await db.admin_user_detail(int(argument))
 
         if not user:
             await message.answer(locale.admin.user_not_found)
@@ -102,7 +102,7 @@ def create_admin_router(
         )
 
     async def send_word_card(bot: Bot, chat_id: int, entry_id: int) -> bool:
-        card = await database.admin_preview_card(
+        card = await db.admin_preview_card(
             entry_id=entry_id,
             dialect="both",
         )
@@ -124,7 +124,7 @@ def create_admin_router(
             await message.answer(locale.admin.word_usage)
             return
 
-        rows = await database.admin_word_search(word)
+        rows = await db.admin_word_search(word)
 
         if not rows:
             await message.answer(locale.admin.word_not_found)
@@ -198,13 +198,13 @@ def create_admin_router(
                 return
 
             if action == "overview":
-                text = await _render_overview(database, config)
+                text = await _render_overview(db, config)
                 keyboard = admin_main_keyboard()
             elif action == "users":
-                text = await _render_users(database, config)
+                text = await _render_users(db, config)
                 keyboard = admin_users_keyboard()
             else:
-                text = await _render_overview(database, config)
+                text = await _render_overview(db, config)
                 keyboard = admin_main_keyboard()
 
             try:
@@ -243,17 +243,17 @@ async def _is_admin(message: Message, config: BotConfig) -> bool:
     return False
 
 
-async def _render_overview(database: Database, config: BotConfig) -> str:
+async def _render_overview(db: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
 
-    users = await database.admin_users_summary(
+    users = await db.admin_users_summary(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
             UTC
         ),
     )
-    content = await database.admin_content_summary()
+    content = await db.admin_content_summary()
 
     return locale.admin.overview.format(
         total_users=_number(users.total_users),
@@ -262,10 +262,10 @@ async def _render_overview(database: Database, config: BotConfig) -> str:
     )
 
 
-async def _render_users(database: Database, config: BotConfig) -> str:
+async def _render_users(db: Database, config: BotConfig) -> str:
     local_now, today_start = _local_day_bounds(config)
 
-    stats = await database.admin_users_summary(
+    stats = await db.admin_users_summary(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(

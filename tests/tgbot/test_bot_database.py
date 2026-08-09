@@ -24,12 +24,12 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.database_name = f"vocab_bot_{uuid.uuid4().hex}"
+        cls.db_name = f"vocab_bot_{uuid.uuid4().hex}"
         base_url = make_url(TEST_OALD_DATABASE_URL)
         cls.admin_url = base_url.set(database="postgres").render_as_string(
             hide_password=False
         )
-        cls.database_url = base_url.set(database=cls.database_name).render_as_string(
+        cls.db_url = base_url.set(database=cls.db_name).render_as_string(
             hide_password=False
         )
 
@@ -39,12 +39,12 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             with raw.cursor() as cursor:
                 cursor.execute(
                     sql.SQL("CREATE DATABASE {}").format(
-                        sql.Identifier(cls.database_name)
+                        sql.Identifier(cls.db_name)
                     )
                 )
 
         config = Config(str(PROJECT_ROOT / "alembic.ini"))
-        with patch.dict(os.environ, {"OALD_DATABASE_URL": cls.database_url}):
+        with patch.dict(os.environ, {"OALD_DATABASE_URL": cls.db_url}):
             import tgbot.secrets as app_secrets
 
             app_secrets.secrets = app_secrets.Secrets.load()
@@ -63,11 +63,11 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                     WHERE datname = %s
                       AND pid <> pg_backend_pid()
                     """,
-                    (cls.database_name,),
+                    (cls.db_name,),
                 )
                 cursor.execute(
                     sql.SQL("DROP DATABASE IF EXISTS {}").format(
-                        sql.Identifier(cls.database_name)
+                        sql.Identifier(cls.db_name)
                     )
                 )
 
@@ -89,9 +89,9 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.audio_urls = [*self.us_audio_urls, *self.gb_audio_urls]
         self.entry_ids: list[int] = []
         self.scheduler_slots: list[datetime] = []
-        self.database = Database(self.database_url, pool_size=2)
-        await self.database.open()
-        with sync_connection(self.database_url) as connection:
+        self.db = Database(self.db_url, pool_size=2)
+        await self.db.open()
+        with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
             assert raw is not None
             with raw.cursor() as cursor:
@@ -171,18 +171,18 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                                 "1" * 64,
                             ),
                         )
-        await self.database.upsert_user(
+        await self.db.upsert_user(
             telegram_user_id=self.telegram_user_id,
             chat_id=self.telegram_user_id,
             username="integration",
             first_name="Integration",
         )
-        await self.database.toggle_level(self.telegram_user_id, "c1")
-        await self.database.set_pronunciation(self.telegram_user_id, "us")
+        await self.db.toggle_level(self.telegram_user_id, "c1")
+        await self.db.set_pronunciation(self.telegram_user_id, "us")
 
     async def asyncTearDown(self) -> None:
-        await self.database.close()
-        with sync_connection(self.database_url) as connection:
+        await self.db.close()
+        with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
             assert raw is not None
             with raw.cursor() as cursor:
@@ -217,19 +217,19 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_cards_never_repeat_and_slot_is_idempotent(self) -> None:
         first_slot = datetime.now(UTC)
-        first = await self.database.reserve_card(
+        first = await self.db.reserve_card(
             self.telegram_user_id,
             first_slot,
         )
-        same_slot = await self.database.reserve_card(
+        same_slot = await self.db.reserve_card(
             self.telegram_user_id,
             first_slot,
         )
-        second = await self.database.reserve_card(
+        second = await self.db.reserve_card(
             self.telegram_user_id,
             first_slot + timedelta(hours=1),
         )
-        exhausted = await self.database.reserve_card(
+        exhausted = await self.db.reserve_card(
             self.telegram_user_id,
             first_slot + timedelta(hours=2),
         )
@@ -245,9 +245,9 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             seconds=int(self.suffix[:6], 16)
         )
         self.scheduler_slots.append(slot)
-        self.assertTrue(await self.database.claim_scheduler_run(slot))
-        self.assertFalse(await self.database.claim_scheduler_run(slot))
-        await self.database.finish_scheduler_run(
+        self.assertTrue(await self.db.claim_scheduler_run(slot))
+        self.assertFalse(await self.db.claim_scheduler_run(slot))
+        await self.db.finish_scheduler_run(
             slot,
             attempted=1,
             delivered=1,
@@ -256,8 +256,8 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_both_dialects_return_two_prepared_voice_files(self) -> None:
-        await self.database.set_pronunciation(self.telegram_user_id, "both")
-        card = await self.database.reserve_card(
+        await self.db.set_pronunciation(self.telegram_user_id, "both")
+        card = await self.db.reserve_card(
             self.telegram_user_id,
             datetime.now(UTC),
         )
@@ -271,42 +271,42 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn(card.secondary_audio.source_url, self.gb_audio_urls)
 
     async def test_pronunciation_change_preserves_pause(self) -> None:
-        await self.database.set_active(self.telegram_user_id, False)
-        user = await self.database.set_pronunciation(self.telegram_user_id, "gb")
+        await self.db.set_active(self.telegram_user_id, False)
+        user = await self.db.set_pronunciation(self.telegram_user_id, "gb")
         self.assertFalse(user.is_active)
         self.assertEqual(user.pronunciation, "gb")
 
     async def test_failed_card_does_not_consume_word_or_slot(self) -> None:
         slot = datetime.now(UTC)
-        first = await self.database.reserve_card(self.telegram_user_id, slot)
-        second = await self.database.reserve_card(
+        first = await self.db.reserve_card(self.telegram_user_id, slot)
+        second = await self.db.reserve_card(
             self.telegram_user_id,
             slot + timedelta(hours=1),
         )
         self.assertIsNotNone(first)
         self.assertIsNotNone(second)
-        await self.database.finish_delivery(
+        await self.db.finish_delivery(
             first.history_id,
             delivered=False,
             error_type="technical_error",
             error_message="boom",
         )
-        await self.database.finish_delivery(
+        await self.db.finish_delivery(
             second.history_id,
             delivered=True,
             telegram_message_id=1,
         )
-        retry = await self.database.reserve_card(self.telegram_user_id, slot)
+        retry = await self.db.reserve_card(self.telegram_user_id, slot)
         self.assertIsNotNone(retry)
         self.assertEqual(retry.entry_id, first.entry_id)
 
     async def test_paused_user_can_reserve_one_off_card(self) -> None:
-        await self.database.set_active(self.telegram_user_id, False)
-        denied = await self.database.reserve_card(
+        await self.db.set_active(self.telegram_user_id, False)
+        denied = await self.db.reserve_card(
             self.telegram_user_id,
             datetime.now(UTC),
         )
-        allowed = await self.database.reserve_card(
+        allowed = await self.db.reserve_card(
             self.telegram_user_id,
             datetime.now(UTC),
             require_active=False,
@@ -317,8 +317,8 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
     async def test_scheduler_reclaims_failed_run_within_grace(self) -> None:
         slot = datetime.now(UTC) - timedelta(minutes=10)
         self.scheduler_slots.append(slot)
-        self.assertTrue(await self.database.claim_scheduler_run(slot, grace_minutes=60))
-        await self.database.finish_scheduler_run(
+        self.assertTrue(await self.db.claim_scheduler_run(slot, grace_minutes=60))
+        await self.db.finish_scheduler_run(
             slot,
             attempted=1,
             delivered=0,
@@ -326,9 +326,9 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             skipped=0,
         )
         self.assertFalse(
-            await self.database.claim_scheduler_run(slot, grace_minutes=60)
+            await self.db.claim_scheduler_run(slot, grace_minutes=60)
         )
-        with sync_connection(self.database_url) as connection:
+        with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
             assert raw is not None
             with raw.cursor() as cursor:
@@ -340,15 +340,15 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                     """,
                     (slot,),
                 )
-        self.assertTrue(await self.database.claim_scheduler_run(slot, grace_minutes=60))
-        await self.database.finish_scheduler_run(
+        self.assertTrue(await self.db.claim_scheduler_run(slot, grace_minutes=60))
+        await self.db.finish_scheduler_run(
             slot,
             attempted=1,
             delivered=1,
             failed=0,
             skipped=0,
         )
-        with sync_connection(self.database_url) as connection:
+        with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
             assert raw is not None
             with raw.cursor() as cursor:
@@ -361,13 +361,13 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                     (slot,),
                 )
         self.assertFalse(
-            await self.database.claim_scheduler_run(slot, grace_minutes=60)
+            await self.db.claim_scheduler_run(slot, grace_minutes=60)
         )
 
     async def test_block_keeps_paused_state(self) -> None:
-        await self.database.set_active(self.telegram_user_id, False)
-        await self.database.deactivate_user(self.telegram_user_id)
-        user = await self.database.upsert_user(
+        await self.db.set_active(self.telegram_user_id, False)
+        await self.db.deactivate_user(self.telegram_user_id)
+        user = await self.db.upsert_user(
             telegram_user_id=self.telegram_user_id,
             chat_id=self.telegram_user_id,
             username="integration",

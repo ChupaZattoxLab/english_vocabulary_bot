@@ -8,7 +8,7 @@ from datetime import time
 from zoneinfo import ZoneInfo
 
 from tgbot.constants import (
-    DATABASE_POOL_SIZE,
+    DB_POOL_SIZE,
     DELIVERY_CONCURRENCY,
     SCHEDULE_GRACE_MINUTES,
     SCHEDULER_POLL_SECONDS,
@@ -16,32 +16,6 @@ from tgbot.constants import (
     TIMEZONE,
 )
 from tgbot.secrets import ConfigError, secrets
-
-
-@dataclass(frozen=True)
-class BotConfig:
-    bot_token: str
-    database_url: str
-    admin_ids: frozenset[int]
-    database_pool_size: int
-    schedule: ScheduleSettings
-
-    @classmethod
-    def load(cls) -> BotConfig:
-        """Build runtime config from the module ``secrets`` singleton."""
-        if not secrets.telegram_bot_token:
-            raise ConfigError("TELEGRAM_BOT_TOKEN is required")
-
-        if not secrets.db_url:
-            raise ConfigError("OALD_DATABASE_URL is required")
-
-        return cls(
-            bot_token=secrets.telegram_bot_token,
-            database_url=secrets.db_url,
-            admin_ids=secrets.admin_ids,
-            database_pool_size=DATABASE_POOL_SIZE,
-            schedule=ScheduleSettings.load(),
-        )
 
 
 @dataclass(frozen=True)
@@ -63,6 +37,32 @@ class ScheduleSettings:
             grace_minutes=SCHEDULE_GRACE_MINUTES,
             poll_seconds=SCHEDULER_POLL_SECONDS,
             delivery_concurrency=DELIVERY_CONCURRENCY,
+        )
+
+
+@dataclass(frozen=True)
+class BotConfig:
+    bot_token: str
+    db_url: str
+    admin_ids: frozenset[int]
+    db_pool_size: int
+    schedule: ScheduleSettings
+
+    @classmethod
+    def load(cls) -> BotConfig:
+        """Build runtime config from the module ``secrets`` singleton."""
+        if not secrets.telegram_bot_token:
+            raise ConfigError("TELEGRAM_BOT_TOKEN is required")
+
+        if not secrets.db_url:
+            raise ConfigError("OALD_DATABASE_URL is required")
+
+        return cls(
+            bot_token=secrets.telegram_bot_token,
+            db_url=secrets.db_url,
+            admin_ids=secrets.admin_ids,
+            db_pool_size=DB_POOL_SIZE,
+            schedule=ScheduleSettings.load(),
         )
 
 

@@ -14,7 +14,7 @@ from sqlalchemy.engine import Connection, Engine, make_url
 
 
 def sync_engine(
-    database_url: str,
+    db_url: str,
     *,
     autocommit: bool = False,
     connect_timeout: int | None = None,
@@ -23,7 +23,7 @@ def sync_engine(
     if connect_timeout is not None:
         connect_args["connect_timeout"] = connect_timeout
 
-    url = make_url(database_url)
+    url = make_url(db_url)
     if url.host == "localhost":
         connect_args["hostaddr"] = "127.0.0.1"
 
@@ -32,18 +32,18 @@ def sync_engine(
         kwargs["connect_args"] = connect_args
     if autocommit:
         kwargs["isolation_level"] = "AUTOCOMMIT"
-    return create_engine(database_url, **kwargs)
+    return create_engine(db_url, **kwargs)
 
 
 @contextmanager
 def sync_connection(
-    database_url: str,
+    db_url: str,
     *,
     autocommit: bool = False,
     connect_timeout: int | None = None,
 ) -> Iterator[Connection]:
     engine = sync_engine(
-        database_url,
+        db_url,
         autocommit=autocommit,
         connect_timeout=connect_timeout,
     )

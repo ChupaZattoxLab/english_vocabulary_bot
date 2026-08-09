@@ -230,7 +230,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             template_path = Path(temporary_directory) / "card.html"
             template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
-            database = SimpleNamespace(
+            db = SimpleNamespace(
                 cached_audio_file_id=AsyncMock(return_value=None),
                 cache_audio_file_id=AsyncMock(),
                 clear_cached_audio_file_id=AsyncMock(),
@@ -244,7 +244,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 send_message=AsyncMock(),
             )
-            service = CardDeliveryService(database, CardTemplate(template_path))
+            service = CardDeliveryService(db, CardTemplate(template_path))
             card = make_reserved_card("audio/ogg", "test.voice.ogg")
 
             await service._send_reserved(bot, chat_id=123, card=card)
@@ -263,7 +263,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 bot.send_voice.await_args.kwargs["caption"],
                 "🇺🇸 US · <code>/test/</code>",
             )
-            database.cache_audio_file_id.assert_awaited_once_with(
+            db.cache_audio_file_id.assert_awaited_once_with(
                 card.source_url,
                 "voice",
                 "telegram-voice-id",
@@ -274,7 +274,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             template_path = Path(temporary_directory) / "card.html"
             template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
             card = make_reserved_card("audio/ogg", "test.voice.ogg")
-            database = SimpleNamespace(
+            db = SimpleNamespace(
                 reserve_card=AsyncMock(return_value=card),
                 finish_delivery=AsyncMock(),
                 deactivate_user=AsyncMock(),
@@ -286,7 +286,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 send_message=AsyncMock(),
                 send_voice=AsyncMock(side_effect=RuntimeError("voice failed")),
             )
-            service = CardDeliveryService(database, CardTemplate(template_path))
+            service = CardDeliveryService(db, CardTemplate(template_path))
 
             outcome = await service.deliver(
                 bot,
@@ -296,7 +296,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             )
 
             self.assertEqual(outcome.status, "delivered")
-            database.finish_delivery.assert_awaited_once_with(
+            db.finish_delivery.assert_awaited_once_with(
                 card.history_id,
                 delivered=True,
             )
@@ -311,7 +311,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 "{definition} {ipa_us} {ipa_gb} {example} {translation}",
                 encoding="utf-8",
             )
-            database = SimpleNamespace(
+            db = SimpleNamespace(
                 cached_audio_file_id=AsyncMock(return_value=None),
                 cache_audio_file_id=AsyncMock(),
                 clear_cached_audio_file_id=AsyncMock(),
@@ -332,7 +332,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 send_message=AsyncMock(),
             )
             service = CardDeliveryService(
-                database,
+                db,
                 CardTemplate(template_path),
                 CardTemplate(both_template_path),
             )
@@ -368,7 +368,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 second_call.kwargs["caption"],
                 "🇬🇧 GB · <code>/gb/</code>",
             )
-            self.assertEqual(database.cache_audio_file_id.await_count, 2)
+            self.assertEqual(db.cache_audio_file_id.await_count, 2)
 
 
 def make_admin_user_detail(**overrides: object) -> AdminUserDetail:

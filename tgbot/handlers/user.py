@@ -17,7 +17,7 @@ from tgbot.localization import locale
 
 
 def create_router(
-    database: Database,
+    db: Database,
     delivery: CardDeliveryService,
     config: BotConfig,
 ) -> Router:
@@ -28,7 +28,7 @@ def create_router(
         if not message.from_user:
             return
 
-        user = await register_user(database, message.from_user, message.chat.id)
+        user = await register_user(db, message.from_user, message.chat.id)
 
         if user.onboarding_completed:
             await message.answer(
@@ -50,7 +50,7 @@ def create_router(
         if not message.from_user:
             return
 
-        user = await register_user(database, message.from_user, message.chat.id)
+        user = await register_user(db, message.from_user, message.chat.id)
 
         await message.answer(
             user_settings_text(user, config) + locale.user.settings_pick_levels,
@@ -60,7 +60,7 @@ def create_router(
     @router.callback_query(F.data.startswith("level:"))
     async def level_callback(callback: CallbackQuery) -> None:
         action = (callback.data or "").split(":", 1)[1]
-        user = await database.get_user(callback.from_user.id)
+        user = await db.get_user(callback.from_user.id)
 
         if not user:
             await callback.answer(locale.user.need_start, show_alert=True)
@@ -85,7 +85,7 @@ def create_router(
             await callback.answer()
             return
 
-        user = await database.toggle_level(callback.from_user.id, action)
+        user = await db.toggle_level(callback.from_user.id, action)
         message = _callback_message(callback)
 
         if message is not None:
@@ -98,7 +98,7 @@ def create_router(
     @router.callback_query(F.data.startswith("dialect:"))
     async def dialect_callback(callback: CallbackQuery) -> None:
         dialect = (callback.data or "").split(":", 1)[1]
-        user = await database.get_user(callback.from_user.id)
+        user = await db.get_user(callback.from_user.id)
 
         if not user:
             await callback.answer(locale.user.need_start, show_alert=True)
@@ -111,7 +111,7 @@ def create_router(
             )
             return
 
-        user = await database.set_pronunciation(callback.from_user.id, dialect)
+        user = await db.set_pronunciation(callback.from_user.id, dialect)
         message = _callback_message(callback)
 
         if message is not None:
@@ -128,7 +128,7 @@ def create_router(
         if not message.from_user:
             return
 
-        changed = await database.set_active(message.from_user.id, False)
+        changed = await db.set_active(message.from_user.id, False)
 
         await message.answer(
             locale.user.paused if changed else locale.user.need_onboarding
@@ -139,7 +139,7 @@ def create_router(
         if not message.from_user:
             return
 
-        changed = await database.set_active(message.from_user.id, True)
+        changed = await db.set_active(message.from_user.id, True)
 
         await message.answer(
             locale.user.resumed if changed else locale.user.need_onboarding
@@ -150,13 +150,13 @@ def create_router(
         if not message.from_user:
             return
 
-        user = await database.get_user(message.from_user.id)
+        user = await db.get_user(message.from_user.id)
 
         if not user or not user.onboarding_completed:
             await message.answer(locale.user.need_onboarding)
             return
 
-        await database.clear_blocked_marker(message.from_user.id)
+        await db.clear_blocked_marker(message.from_user.id)
 
         bot = message.bot
 
@@ -190,9 +190,9 @@ def create_router(
 
 
 async def register_user(
-    database: Database, telegram_user: User, chat_id: int
+    db: Database, telegram_user: User, chat_id: int
 ) -> BotUser:
-    return await database.upsert_user(
+    return await db.upsert_user(
         telegram_user_id=telegram_user.id,
         chat_id=chat_id,
         username=telegram_user.username or "",

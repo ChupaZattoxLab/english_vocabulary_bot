@@ -197,7 +197,7 @@ class OaldAudioDownloadTests(unittest.TestCase):
 
 @requires_oald_database
 class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
-    database_url = TEST_OALD_DATABASE_URL
+    db_url = TEST_OALD_DATABASE_URL
 
     def test_download_store_skip_and_force(self) -> None:
         suffix = uuid.uuid4().hex
@@ -237,9 +237,9 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
             entries, _ = load_entries(json_path, strict=True)
 
             try:
-                import_entries(entries, self.database_url)
+                import_entries(entries, self.db_url)
                 first = download_audio_to_postgres(
-                    self.database_url,
+                    self.db_url,
                     dialects=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
@@ -248,7 +248,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                     transcode_voice=transcode,
                     sleep=lambda _: None,
                 )
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:
@@ -257,7 +257,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                             (audio_url,),
                         )
                 backfill = download_audio_to_postgres(
-                    self.database_url,
+                    self.db_url,
                     dialects=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
@@ -267,7 +267,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                     sleep=lambda _: None,
                 )
                 second = download_audio_to_postgres(
-                    self.database_url,
+                    self.db_url,
                     dialects=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
@@ -277,7 +277,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                     sleep=lambda _: None,
                 )
                 forced = download_audio_to_postgres(
-                    self.database_url,
+                    self.db_url,
                     dialects=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
@@ -299,7 +299,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(fetch.call_count, 2)
                 self.assertEqual(transcode.call_count, 3)
 
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:
@@ -342,7 +342,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(stored_voice[6], "prepared")
                 self.assertEqual(stored_voice[7], 2)
             finally:
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:

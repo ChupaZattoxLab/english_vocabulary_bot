@@ -84,10 +84,10 @@ DELIVERY_CONCURRENCY = 5
 # Database connection settings
 # ---------------------------------------------------------------------------
 
-DATABASE_POOL_SIZE = 5
-DATABASE_CONNECT_TIMEOUT_SECONDS = 10
+DB_POOL_SIZE = 5
+DB_CONNECT_TIMEOUT_SECONDS = 10
 # Recycle pooled connections before Postgres/NAT idle timeouts (seconds).
-DATABASE_POOL_RECYCLE_SECONDS = 1800
+DB_POOL_RECYCLE_SECONDS = 1800
 
 # ---------------------------------------------------------------------------
 # Admin stats windows for "new users" (today / week / month)

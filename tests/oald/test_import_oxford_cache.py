@@ -234,7 +234,7 @@ class OxfordCacheParserTests(unittest.TestCase):
     "TEST_DATABASE_URL is not set",
 )
 class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
-    database_url = os.environ.get("TEST_DATABASE_URL", "")
+    db_url = os.environ.get("TEST_DATABASE_URL", "")
 
     def test_repeat_add_and_update_are_incremental(self) -> None:
         suffix = uuid.uuid4().hex
@@ -273,8 +273,8 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                 return rows
 
             try:
-                self.assertEqual(import_rows(current_rows(), self.database_url), 1)
-                self.assertEqual(import_rows(current_rows(), self.database_url), 1)
+                self.assertEqual(import_rows(current_rows(), self.db_url), 1)
+                self.assertEqual(import_rows(current_rows(), self.db_url), 1)
 
                 second_entry = {
                     "pronunciations": [pronunciation("new", "British English")],
@@ -287,7 +287,7 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                         [lexical_entry(second_word, "adjective", [second_entry])],
                     ),
                 )
-                self.assertEqual(import_rows(current_rows(), self.database_url), 2)
+                self.assertEqual(import_rows(current_rows(), self.db_url), 2)
 
                 first_entry["senses"][0]["translations"].append(
                     translation("обновлённый")
@@ -299,9 +299,9 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                         [lexical_entry(first_word, "noun", [first_entry])],
                     ),
                 )
-                self.assertEqual(import_rows(current_rows(), self.database_url), 2)
+                self.assertEqual(import_rows(current_rows(), self.db_url), 2)
 
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:
@@ -320,7 +320,7 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                 first_stored = next(row for row in stored if row[0] == keys[0])
                 self.assertEqual(first_stored[1], ["первый", "обновлённый"])
             finally:
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:

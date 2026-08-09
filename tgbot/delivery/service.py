@@ -55,11 +55,11 @@ class DeliveryOutcome:
 class CardDeliveryService:
     def __init__(
         self,
-        database: Database,
+        db: Database,
         template: CardTemplate | None = None,
         both_template: CardTemplate | None = None,
     ):
-        self.database = database
+        self.db = db
         self.template = template or CardTemplate(CARD_TEMPLATE_PATH)
         self.both_template = both_template or CardTemplate(BOTH_CARD_TEMPLATE_PATH)
 
@@ -71,7 +71,7 @@ class CardDeliveryService:
         scheduled_slot: datetime,
         require_active: bool = True,
     ) -> DeliveryOutcome:
-        card = await self.database.reserve_card(
+        card = await self.db.reserve_card(
             telegram_user_id,
             scheduled_slot,
             require_active=require_active,
@@ -91,7 +91,7 @@ class CardDeliveryService:
                 chat_id=chat_id,
                 card=card,
             )
-            await self.database.finish_delivery(
+            await self.db.finish_delivery(
                 card.history_id,
                 delivered=True,
                 telegram_message_id=message.message_id,
@@ -100,19 +100,19 @@ class CardDeliveryService:
 
         except TelegramForbiddenError as exc:
             if text_sent:
-                await self.database.finish_delivery(
+                await self.db.finish_delivery(
                     card.history_id,
                     delivered=True,
                 )
             else:
-                await self.database.finish_delivery(
+                await self.db.finish_delivery(
                     card.history_id,
                     delivered=False,
                     error_type=classify_delivery_error(exc),
                     error_message=str(exc),
                 )
 
-            await self.database.deactivate_user(telegram_user_id)
+            await self.db.deactivate_user(telegram_user_id)
             LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
 
             return DeliveryOutcome(
@@ -122,7 +122,7 @@ class CardDeliveryService:
 
         except Exception as exc:  # noqa: BLE001
             if text_sent:
-                await self.database.finish_delivery(
+                await self.db.finish_delivery(
                     card.history_id,
                     delivered=True,
                 )
@@ -133,7 +133,7 @@ class CardDeliveryService:
                 )
                 return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
 
-            await self.database.finish_delivery(
+            await self.db.finish_delivery(
                 card.history_id,
                 delivered=False,
                 error_type=classify_delivery_error(exc),
@@ -250,7 +250,7 @@ class CardDeliveryService:
 
         method = SEND_METHOD_VOICE
 
-        cached_file_id = await self.database.cached_audio_file_id(
+        cached_file_id = await self.db.cached_audio_file_id(
             source_url,
             method,
         )
@@ -263,13 +263,13 @@ class CardDeliveryService:
                     "Telegram rejected cached file_id for %s; uploading bytes again",
                     source_url,
                 )
-                await self.database.clear_cached_audio_file_id(source_url, method)
+                await self.db.clear_cached_audio_file_id(source_url, method)
 
         upload = BufferedInputFile(audio_data, filename=filename)
         message = await send(upload)
 
         if message.voice:
-            await self.database.cache_audio_file_id(
+            await self.db.cache_audio_file_id(
                 source_url,
                 method,
                 message.voice.file_id,

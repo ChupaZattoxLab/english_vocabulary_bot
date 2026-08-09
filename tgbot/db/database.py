@@ -11,9 +11,9 @@ from alembic.script import ScriptDirectory
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from tgbot.constants import (
-    DATABASE_CONNECT_TIMEOUT_SECONDS,
-    DATABASE_POOL_RECYCLE_SECONDS,
-    DATABASE_POOL_SIZE,
+    DB_CONNECT_TIMEOUT_SECONDS,
+    DB_POOL_RECYCLE_SECONDS,
+    DB_POOL_SIZE,
 )
 from tgbot.db.mixins import (
     AdminMixin,
@@ -46,23 +46,23 @@ _alembic_version = sa.table(
 class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
     def __init__(
         self,
-        database_url: str,
-        pool_size: int = DATABASE_POOL_SIZE,
+        db_url: str,
+        pool_size: int = DB_POOL_SIZE,
     ):
         connect_args: dict[str, object] = {
-            "connect_timeout": DATABASE_CONNECT_TIMEOUT_SECONDS,
+            "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
         }
-        parsed = urlparse(database_url)
+        parsed = urlparse(db_url)
         if parsed.hostname == "localhost":
             connect_args["hostaddr"] = "127.0.0.1"
 
         self.engine: AsyncEngine = create_async_engine(
-            database_url,
+            db_url,
             pool_size=pool_size,
             # Headroom for concurrent deliveries + scheduler bookkeeping.
             max_overflow=pool_size,
             pool_pre_ping=True,
-            pool_recycle=DATABASE_POOL_RECYCLE_SECONDS,
+            pool_recycle=DB_POOL_RECYCLE_SECONDS,
             connect_args=connect_args,
         )
 

@@ -37,15 +37,15 @@ ADMIN_COMMANDS = (
 
 
 async def run_bot(config: BotConfig) -> None:
-    database = Database(
-        config.database_url,
-        pool_size=config.database_pool_size,
+    db = Database(
+        config.db_url,
+        pool_size=config.db_pool_size,
     )
-    await database.open()
+    await db.open()
 
-    delivery = CardDeliveryService(database)
+    delivery = CardDeliveryService(db)
     scheduler = CardScheduler(
-        database=database,
+        db=db,
         delivery=delivery,
         config=config,
     )
@@ -53,14 +53,14 @@ async def run_bot(config: BotConfig) -> None:
     dispatcher = Dispatcher()
     dispatcher.include_router(
         create_router(
-            database=database,
+            db=db,
             delivery=delivery,
             config=config,
         )
     )
     dispatcher.include_router(
         create_admin_router(
-            database=database,
+            db=db,
             delivery=delivery,
             config=config,
         )
@@ -91,7 +91,7 @@ async def run_bot(config: BotConfig) -> None:
             await scheduler_task
 
         await bot.session.close()
-        await database.close()
+        await db.close()
 
 
 async def configure_commands(bot: Bot, config: BotConfig) -> None:

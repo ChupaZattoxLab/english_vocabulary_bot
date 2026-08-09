@@ -138,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.words_json.is_file():
         LOGGER.error("Definition JSON does not exist: %s", args.words_json)
         return 2
-    if not args.dry_run and not args.database_url:
+    if not args.dry_run and not args.db_url:
         LOGGER.error(
             "PostgreSQL URL is required: use --database-url or set DATABASE_URL"
         )
@@ -158,7 +158,7 @@ def main(argv: list[str] | None = None) -> int:
             LOGGER.info("Dry-run complete; no database changes made")
             return 0
 
-        imported = import_rows(rows, args.database_url, batch_size=args.batch_size)
+        imported = import_rows(rows, args.db_url, batch_size=args.batch_size)
         LOGGER.info("Oxford import complete: %s rows processed", f"{imported:,}")
         return 0
     except (OxfordCacheError, OxfordDatabaseError) as exc:
@@ -182,6 +182,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--database-url",
+        dest="db_url",
         default=os.environ.get("DATABASE_URL"),
         help="PostgreSQL URL; defaults to DATABASE_URL",
     )
@@ -368,12 +369,12 @@ def build_rows(
 
 def import_rows(
     rows: Iterable[OxfordRow],
-    database_url: str,
+    db_url: str,
     batch_size: int = 500,
 ) -> int:
     processed = 0
     try:
-        with sync_connection(database_url) as connection:
+        with sync_connection(db_url) as connection:
             require_oxford_schema(connection)
             LOGGER.info("Alembic-managed Oxford cache schema is ready")
             for batch in iter_batches(rows, batch_size):

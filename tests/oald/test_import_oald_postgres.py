@@ -138,7 +138,7 @@ class OaldJsonTests(unittest.TestCase):
 
 @requires_oald_database
 class OaldPostgreSqlIntegrationTests(unittest.TestCase):
-    database_url = TEST_OALD_DATABASE_URL
+    db_url = TEST_OALD_DATABASE_URL
 
     def test_repeat_add_update_links_and_preserve_audio_bytes(self) -> None:
         suffix = uuid.uuid4().hex
@@ -174,15 +174,15 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                 write_rows(json_path, rows)
                 entries, _ = load_entries(json_path, strict=True)
                 self.assertEqual(
-                    import_entries(entries, self.database_url).entries,
+                    import_entries(entries, self.db_url).entries,
                     2,
                 )
                 self.assertEqual(
-                    import_entries(entries, self.database_url).entries,
+                    import_entries(entries, self.db_url).entries,
                     2,
                 )
 
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:
@@ -210,11 +210,11 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                 )
                 write_rows(json_path, rows)
                 updated_entries, _ = load_entries(json_path, strict=True)
-                result = import_entries(updated_entries, self.database_url)
+                result = import_entries(updated_entries, self.db_url)
                 self.assertEqual(result.entries, 3)
                 self.assertEqual(result.unique_audio_urls, 2)
 
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:
@@ -252,7 +252,7 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                             b"OggS-stored",
                         )
             finally:
-                with sync_connection(self.database_url) as connection:
+                with sync_connection(self.db_url) as connection:
                     raw = connection.connection.driver_connection
                     assert raw is not None
                     with raw.cursor() as cursor:

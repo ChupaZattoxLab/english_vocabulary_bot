@@ -25,11 +25,11 @@ LOGGER = logging.getLogger("tgbot.scheduler")
 class CardScheduler:
     def __init__(
         self,
-        database: Database,
+        db: Database,
         delivery: CardDeliveryService,
         config: BotConfig,
     ):
-        self.database = database
+        self.db = db
         self.delivery = delivery
         self.config = config
         self._stop_event = asyncio.Event()
@@ -67,7 +67,7 @@ class CardScheduler:
         LOGGER.info("Scheduler stopped")
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
-        claimed = await self.database.claim_scheduler_run(
+        claimed = await self.db.claim_scheduler_run(
             scheduled_slot,
             grace_minutes=self.config.schedule.grace_minutes,
         )
@@ -79,7 +79,7 @@ class CardScheduler:
         error_message = ""
 
         try:
-            users = await self.database.active_users()
+            users = await self.db.active_users()
             attempted = len(users)
             semaphore = asyncio.Semaphore(self.config.schedule.delivery_concurrency)
             statuses = await asyncio.gather(
@@ -103,7 +103,7 @@ class CardScheduler:
             LOGGER.exception("Scheduled slot %s failed", scheduled_slot.isoformat())
 
         finally:
-            await self.database.finish_scheduler_run(
+            await self.db.finish_scheduler_run(
                 scheduled_slot,
                 attempted=attempted,
                 delivered=delivered,

@@ -20,15 +20,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 @requires_oald_database
 class AlembicIntegrationTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.database_name = f"vocab_alembic_{uuid.uuid4().hex}"
+        self.db_name = f"vocab_alembic_{uuid.uuid4().hex}"
         base_url = make_url(TEST_OALD_DATABASE_URL)
         self.admin_url = base_url.set(database="postgres").render_as_string(
             hide_password=False
         )
-        self.database_url = base_url.set(database=self.database_name).render_as_string(
+        self.db_url = base_url.set(database=self.db_name).render_as_string(
             hide_password=False
         )
-        self.sqlalchemy_url = self.database_url
+        self.sqlalchemy_url = self.db_url
 
         with sync_connection(self.admin_url, autocommit=True) as connection:
             raw = connection.connection.driver_connection
@@ -36,7 +36,7 @@ class AlembicIntegrationTests(unittest.TestCase):
             with raw.cursor() as cursor:
                 cursor.execute(
                     sql.SQL("CREATE DATABASE {}").format(
-                        sql.Identifier(self.database_name)
+                        sql.Identifier(self.db_name)
                     )
                 )
 
@@ -52,11 +52,11 @@ class AlembicIntegrationTests(unittest.TestCase):
                     WHERE datname = %s
                       AND pid <> pg_backend_pid()
                     """,
-                    (self.database_name,),
+                    (self.db_name,),
                 )
                 cursor.execute(
                     sql.SQL("DROP DATABASE IF EXISTS {}").format(
-                        sql.Identifier(self.database_name)
+                        sql.Identifier(self.db_name)
                     )
                 )
 
@@ -64,7 +64,7 @@ class AlembicIntegrationTests(unittest.TestCase):
         config = Config(str(PROJECT_ROOT / "alembic.ini"))
         with patch.dict(
             os.environ,
-            {"OALD_DATABASE_URL": self.database_url},
+            {"OALD_DATABASE_URL": self.db_url},
         ):
             import tgbot.secrets as app_secrets
 
