@@ -117,7 +117,7 @@ class AlembicIntegrationTests(unittest.TestCase):
                     sa.text("SELECT version_num FROM alembic_version")
                 )
             self.assertEqual(count, 1)
-            self.assertEqual(version, "c7d8e9f0a1b2")
+            self.assertEqual(version, "d8e9f0a1b2c3")
         finally:
             engine.dispose()
 

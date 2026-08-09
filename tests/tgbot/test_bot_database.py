@@ -1,20 +1,77 @@
+import os
 import unittest
 import uuid
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from unittest.mock import patch
 
+from alembic import command
+from alembic.config import Config
+from psycopg import sql
 from psycopg.types.json import Jsonb
+from sqlalchemy.engine import make_url
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db import Database
 from tgbot.db.sync import sync_connection
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
 
 @requires_oald_database
 class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
-    database_url = TEST_OALD_DATABASE_URL
+    """Run against an empty migrated database so CEFR pools stay isolated."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.database_name = f"vocab_bot_{uuid.uuid4().hex}"
+        base_url = make_url(TEST_OALD_DATABASE_URL)
+        cls.admin_url = base_url.set(database="postgres").render_as_string(
+            hide_password=False
+        )
+        cls.database_url = base_url.set(database=cls.database_name).render_as_string(
+            hide_password=False
+        )
+
+        with sync_connection(cls.admin_url, autocommit=True) as connection:
+            raw = connection.connection.driver_connection
+            assert raw is not None
+            with raw.cursor() as cursor:
+                cursor.execute(
+                    sql.SQL("CREATE DATABASE {}").format(
+                        sql.Identifier(cls.database_name)
+                    )
+                )
+
+        config = Config(str(PROJECT_ROOT / "alembic.ini"))
+        with patch.dict(os.environ, {"OALD_DATABASE_URL": cls.database_url}):
+            import tgbot.secrets as app_secrets
+
+            app_secrets.secrets = app_secrets.Secrets.load()
+            command.upgrade(config, "head")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        with sync_connection(cls.admin_url, autocommit=True) as connection:
+            raw = connection.connection.driver_connection
+            assert raw is not None
+            with raw.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT pg_terminate_backend(pid)
+                    FROM pg_stat_activity
+                    WHERE datname = %s
+                      AND pid <> pg_backend_pid()
+                    """,
+                    (cls.database_name,),
+                )
+                cursor.execute(
+                    sql.SQL("DROP DATABASE IF EXISTS {}").format(
+                        sql.Identifier(cls.database_name)
+                    )
+                )
 
     async def asyncSetUp(self) -> None:
-
         self.suffix = uuid.uuid4().hex
         self.telegram_user_id = int("8" + self.suffix[:15], 16) % 8_000_000_000 + 1
         self.definition_urls = [
@@ -47,7 +104,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                             ipa_us, ipa_gb, definition, example,
                             audio_source_us, audio_source_gb, translations
                         ) VALUES (
-                            %s, %s, 'noun', 'c2', %s, '',
+                            %s, %s, 'noun', 'c1', %s, '',
                             ARRAY['/us/'], ARRAY['/gb/'], %s, %s,
                             ARRAY[%s], ARRAY[%s], %s
                         ) RETURNING id
@@ -120,11 +177,10 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             username="integration",
             first_name="Integration",
         )
-        await self.database.toggle_level(self.telegram_user_id, "c2")
+        await self.database.toggle_level(self.telegram_user_id, "c1")
         await self.database.set_pronunciation(self.telegram_user_id, "us")
 
     async def asyncTearDown(self) -> None:
-
         await self.database.close()
         with sync_connection(self.database_url) as connection:
             raw = connection.connection.driver_connection
@@ -259,7 +315,6 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(allowed)
 
     async def test_scheduler_reclaims_failed_run_within_grace(self) -> None:
-
         slot = datetime.now(UTC) - timedelta(minutes=10)
         self.scheduler_slots.append(slot)
         self.assertTrue(await self.database.claim_scheduler_run(slot, grace_minutes=60))

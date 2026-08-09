@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal, cast
 
-CefrLevel = Literal["a1", "a2", "b1", "b2", "c1", "c2"]
+CefrLevel = Literal["a1", "a2", "b1", "b2", "c1"]
 Pronunciation = Literal["us", "gb", "both"]
 CardDialect = Literal["US", "GB", "BOTH"]
 
-VALID_LEVELS: tuple[CefrLevel, ...] = ("a1", "a2", "b1", "b2", "c1", "c2")
+VALID_LEVELS: tuple[CefrLevel, ...] = ("a1", "a2", "b1", "b2", "c1")
 VALID_PRONUNCIATIONS: frozenset[Pronunciation] = frozenset({"us", "gb", "both"})
 
 DbRow = Mapping[str, object]

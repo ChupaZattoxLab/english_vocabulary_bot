@@ -35,7 +35,7 @@ except ImportError:  # running as a plain script
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_JSON_PATH = ROOT / "data" / "oald" / "words.json"
 LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
-VALID_CEFR_LEVELS = {"a1", "a2", "b1", "b2", "c1", "c2"}
+VALID_CEFR_LEVELS = {"a1", "a2", "b1", "b2", "c1"}
 DEFAULT_CONNECT_TIMEOUT = 10
 EXPECTED_FIELDS = {
     "word_us",

@@ -68,7 +68,7 @@ bot_users = sa.Table(
         name="bot_users_pronunciation_check",
     ),
     sa.CheckConstraint(
-        "selected_levels <@ ARRAY['a1','a2','b1','b2','c1','c2']::TEXT[]",
+        "selected_levels <@ ARRAY['a1','a2','b1','b2','c1']::TEXT[]",
         name="bot_users_levels_check",
     ),
 )

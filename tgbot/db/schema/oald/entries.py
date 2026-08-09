@@ -78,7 +78,7 @@ oald_entries = sa.Table(
         server_default=sa.func.current_timestamp(),
     ),
     sa.CheckConstraint(
-        "cefr IN ('a1', 'a2', 'b1', 'b2', 'c1', 'c2')",
+        "cefr IN ('a1', 'a2', 'b1', 'b2', 'c1')",
         name="oald_entries_cefr_check",
     ),
     sa.CheckConstraint(
