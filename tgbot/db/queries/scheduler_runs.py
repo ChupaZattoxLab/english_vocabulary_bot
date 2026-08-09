@@ -16,11 +16,11 @@ from tgbot.constants import (
     SCHEDULER_STATUS_FAILED,
     SCHEDULER_STATUS_RUNNING,
 )
-from tgbot.db.mixins.base import EngineBound
+from tgbot.db.queries.base import EngineBound
 from tgbot.db.schema import bot_scheduler_runs
 
 
-class SchedulerMixin(EngineBound):
+class SchedulerQueries(EngineBound):
     async def claim_scheduler_run(
         self,
         scheduled_slot: datetime,

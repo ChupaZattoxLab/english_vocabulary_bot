@@ -15,18 +15,18 @@ from tgbot.constants import (
     DB_POOL_RECYCLE_SECONDS,
     DB_POOL_SIZE,
 )
-from tgbot.db.mixins import (
-    AdminMixin,
-    CardsMixin,
-    SchedulerMixin,
-    UsersMixin,
-)
 from tgbot.db.models import (
     DatabaseError,
     as_db_row,
     as_db_rows,
     row_optional_str,
     row_str,
+)
+from tgbot.db.queries import (
+    AdminQueries,
+    CardsQueries,
+    SchedulerQueries,
+    UsersQueries,
 )
 from tgbot.db.schema import MANAGED_TABLES
 from tgbot.secrets import PROJECT_ROOT
@@ -43,7 +43,7 @@ _alembic_version = sa.table(
 )
 
 
-class Database(UsersMixin, CardsMixin, SchedulerMixin, AdminMixin):
+class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
     def __init__(
         self,
         db_url: str,

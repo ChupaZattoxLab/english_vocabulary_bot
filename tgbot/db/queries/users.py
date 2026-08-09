@@ -5,7 +5,6 @@ from __future__ import annotations
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from tgbot.db.mixins.base import EngineBound
 from tgbot.db.models import (
     VALID_LEVELS,
     VALID_PRONUNCIATIONS,
@@ -17,10 +16,11 @@ from tgbot.db.models import (
     row_int,
     user_from_row,
 )
+from tgbot.db.queries.base import EngineBound
 from tgbot.db.schema import bot_users
 
 
-class UsersMixin(EngineBound):
+class UsersQueries(EngineBound):
     async def upsert_user(
         self,
         telegram_user_id: int,

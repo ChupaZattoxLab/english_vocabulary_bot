@@ -11,8 +11,8 @@ from tgbot.constants import (
     AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
     CARD_STATUS_DELIVERED,
 )
-from tgbot.db.mixins.base import EngineBound
-from tgbot.db.mixins.cards import card_content_select, hydrate_card_audio
+from tgbot.db.queries.base import EngineBound
+from tgbot.db.queries.cards import card_content_select, hydrate_card_audio
 from tgbot.db.models import (
     VALID_PRONUNCIATIONS,
     AdminContentSummary,
@@ -38,7 +38,7 @@ from tgbot.db.schema import (
 )
 
 
-class AdminMixin(EngineBound):
+class AdminQueries(EngineBound):
     async def admin_users_summary(
         self,
         today_start: datetime,

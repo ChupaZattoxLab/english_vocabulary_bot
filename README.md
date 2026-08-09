@@ -13,7 +13,7 @@ tgbot/                 # runtime bot package
   localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot
   db/                  # async SQLAlchemy Core access + schema metadata
-    mixins/            # users, cards, scheduler, admin queries
+    queries/           # users, cards, scheduler, admin queries
     schema/            # SQLAlchemy table metadata (bot/ + oald/)
   delivery/            # card templates, send logic, scheduler
   handlers/            # Telegram user/admin commands and keyboards

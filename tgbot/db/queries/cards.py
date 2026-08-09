@@ -23,7 +23,7 @@ from tgbot.constants import (
     ERROR_TYPE_MAX_LEN,
     ERROR_TYPE_STALE_RESERVATION,
 )
-from tgbot.db.mixins.base import EngineBound
+from tgbot.db.queries.base import EngineBound
 from tgbot.db.models import (
     VALID_PRONUNCIATIONS,
     ReservedCard,
@@ -48,7 +48,7 @@ from tgbot.db.schema import (
 AudioDialect = Literal["us", "gb"]
 
 
-class CardsMixin(EngineBound):
+class CardsQueries(EngineBound):
     async def reserve_card(
         self,
         telegram_user_id: int,

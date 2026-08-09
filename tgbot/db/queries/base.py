@@ -1,4 +1,4 @@
-"""Shared base for database mixins that require an async SQLAlchemy engine."""
+"""Shared base for query helpers that require an async SQLAlchemy engine."""
 
 from __future__ import annotations
 
