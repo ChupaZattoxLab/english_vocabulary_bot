@@ -5,19 +5,16 @@ from __future__ import annotations
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from tgbot.db.models import (
+from tgbot.db.domain import (
     VALID_LEVELS,
     VALID_PRONUNCIATIONS,
     ActiveUser,
     BotUser,
     DatabaseError,
-    as_db_row,
-    as_db_rows,
-    row_int,
-    user_from_row,
 )
+from tgbot.db.mappers import as_db_row, as_db_rows, row_int, user_from_row
 from tgbot.db.queries.base import EngineBound
-from tgbot.db.schema import bot_users
+from tgbot.db.tables import bot_users
 
 
 class UsersQueries(EngineBound):

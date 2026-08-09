@@ -11,15 +11,15 @@ from tgbot.constants import (
     AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
     CARD_STATUS_DELIVERED,
 )
-from tgbot.db.queries.base import EngineBound
-from tgbot.db.queries.cards import card_content_select, hydrate_card_audio
-from tgbot.db.models import (
+from tgbot.db.domain import (
     VALID_PRONUNCIATIONS,
     AdminContentSummary,
     AdminUserDetail,
     AdminUsersSummary,
     AdminWordMatch,
     ReservedCard,
+)
+from tgbot.db.mappers import (
     admin_user_detail_from_row,
     admin_word_match_from_row,
     as_db_row,
@@ -28,7 +28,9 @@ from tgbot.db.models import (
     row_int,
     row_str,
 )
-from tgbot.db.schema import (
+from tgbot.db.queries.base import EngineBound
+from tgbot.db.queries.cards import card_content_select, hydrate_card_audio
+from tgbot.db.tables import (
     bot_user_cards,
     bot_users,
     oald_audio_files,

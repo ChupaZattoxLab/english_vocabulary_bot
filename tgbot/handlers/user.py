@@ -189,9 +189,7 @@ def create_router(
     return router
 
 
-async def register_user(
-    db: Database, telegram_user: User, chat_id: int
-) -> BotUser:
+async def register_user(db: Database, telegram_user: User, chat_id: int) -> BotUser:
     return await db.upsert_user(
         telegram_user_id=telegram_user.id,
         chat_id=chat_id,

@@ -19,12 +19,12 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.engine import make_url
 
-from tgbot.db.schema import (
+from tgbot.db.sync import sync_connection
+from tgbot.db.tables import (
     oald_audio_files,
     oald_entries,
     oald_entry_audio_sources,
 )
-from tgbot.db.sync import sync_connection
 
 try:
     from .oald_preflight import require_oald_schema

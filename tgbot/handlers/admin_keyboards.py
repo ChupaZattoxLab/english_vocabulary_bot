@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from tgbot.db.models import AdminWordMatch
+from tgbot.db.domain import AdminWordMatch
 from tgbot.localization import locale
 
 

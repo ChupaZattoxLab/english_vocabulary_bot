@@ -11,8 +11,8 @@ from psycopg import sql
 from sqlalchemy.engine import make_url
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
-from tgbot.db.schema import MANAGED_TABLES, metadata, oald_entries
 from tgbot.db.sync import sync_connection
+from tgbot.db.tables import MANAGED_TABLES, metadata, oald_entries
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -35,9 +35,7 @@ class AlembicIntegrationTests(unittest.TestCase):
             assert raw is not None
             with raw.cursor() as cursor:
                 cursor.execute(
-                    sql.SQL("CREATE DATABASE {}").format(
-                        sql.Identifier(self.db_name)
-                    )
+                    sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.db_name))
                 )
 
     def tearDown(self) -> None:

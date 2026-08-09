@@ -26,14 +26,14 @@ from tgbot.constants import (
     AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
     SEND_METHOD_VOICE,
 )
-from tgbot.db.schema import (
+from tgbot.db.sync import sync_connection
+from tgbot.db.tables import (
     bot_telegram_audio_cache,
     oald_audio_files,
     oald_audio_variants,
     oald_entries,
     oald_entry_audio_sources,
 )
-from tgbot.db.sync import sync_connection
 
 try:
     from .oald_preflight import require_oald_schema

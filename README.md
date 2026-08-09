@@ -12,9 +12,12 @@ tgbot/                 # runtime bot package
   constants.py         # shared domain / runtime constants
   localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot
-  db/                  # async SQLAlchemy Core access + schema metadata
+  db/                  # async SQLAlchemy Core access + Postgres tables
+    domain/            # domain dataclasses (BotUser, ReservedCard, …)
+    mappers/           # map query rows onto those dataclasses
     queries/           # users, cards, scheduler, admin queries
-    schema/            # SQLAlchemy table metadata (bot/ + oald/)
+    tables/            # SQLAlchemy table metadata (bot/ + oald/)
+    sync.py            # blocking SQLAlchemy helpers for scripts/tests
   delivery/            # card templates, send logic, scheduler
   handlers/            # Telegram user/admin commands and keyboards
 scripts/
@@ -164,7 +167,7 @@ allowed to create temporary databases. OALD/Oxford import scripts expect
 ## Database migrations
 
 Alembic manages all nine application/OALD tables. Canonical table metadata lives in
-`tgbot/db/schema/`.
+`tgbot/db/tables/`.
 
 ```powershell
 uv run migrate

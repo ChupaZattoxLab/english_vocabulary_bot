@@ -14,20 +14,15 @@ from tgbot.constants import (
     DB_CONNECT_TIMEOUT_SECONDS,
     DB_POOL_RECYCLE_SECONDS,
 )
-from tgbot.db.models import (
-    DatabaseError,
-    as_db_row,
-    as_db_rows,
-    row_optional_str,
-    row_str,
-)
+from tgbot.db.domain import DatabaseError
+from tgbot.db.mappers import as_db_row, as_db_rows, row_optional_str, row_str
 from tgbot.db.queries import (
     AdminQueries,
     CardsQueries,
     SchedulerQueries,
     UsersQueries,
 )
-from tgbot.db.schema import MANAGED_TABLES
+from tgbot.db.tables import MANAGED_TABLES
 from tgbot.secrets import PROJECT_ROOT
 
 # Postgres catalog: list of tables in the current database (not app schema).

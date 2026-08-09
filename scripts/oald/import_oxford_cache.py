@@ -18,8 +18,8 @@ from urllib.parse import quote
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from tgbot.db.schema import oxford_lexical_entries
 from tgbot.db.sync import sync_connection
+from tgbot.db.tables import oxford_lexical_entries
 
 try:
     from .oald_preflight import require_oxford_schema

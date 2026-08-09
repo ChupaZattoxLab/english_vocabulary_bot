@@ -38,9 +38,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             assert raw is not None
             with raw.cursor() as cursor:
                 cursor.execute(
-                    sql.SQL("CREATE DATABASE {}").format(
-                        sql.Identifier(cls.db_name)
-                    )
+                    sql.SQL("CREATE DATABASE {}").format(sql.Identifier(cls.db_name))
                 )
 
         config = Config(str(PROJECT_ROOT / "alembic.ini"))
@@ -325,9 +323,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             failed=1,
             skipped=0,
         )
-        self.assertFalse(
-            await self.db.claim_scheduler_run(slot, grace_minutes=60)
-        )
+        self.assertFalse(await self.db.claim_scheduler_run(slot, grace_minutes=60))
         with sync_connection(self.db_url) as connection:
             raw = connection.connection.driver_connection
             assert raw is not None
@@ -360,9 +356,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
                     """,
                     (slot,),
                 )
-        self.assertFalse(
-            await self.db.claim_scheduler_run(slot, grace_minutes=60)
-        )
+        self.assertFalse(await self.db.claim_scheduler_run(slot, grace_minutes=60))
 
     async def test_block_keeps_paused_state(self) -> None:
         await self.db.set_active(self.telegram_user_id, False)

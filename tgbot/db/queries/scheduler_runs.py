@@ -17,7 +17,7 @@ from tgbot.constants import (
     SCHEDULER_STATUS_RUNNING,
 )
 from tgbot.db.queries.base import EngineBound
-from tgbot.db.schema import bot_scheduler_runs
+from tgbot.db.tables import bot_scheduler_runs
 
 
 class SchedulerQueries(EngineBound):

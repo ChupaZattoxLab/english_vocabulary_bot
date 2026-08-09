@@ -13,7 +13,7 @@ from aiogram.types import CallbackQuery, Message
 from tgbot.bot_config import BotConfig
 from tgbot.constants import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.db import Database
-from tgbot.db.models import VALID_LEVELS, AdminUserDetail
+from tgbot.db.domain import VALID_LEVELS, AdminUserDetail
 from tgbot.delivery import CardDeliveryService
 from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
@@ -81,9 +81,7 @@ def create_admin_router(
             ", ".join(level.upper() for level in user.selected_levels)
             or locale.admin.placeholder
         )
-        send_times = ", ".join(
-            t.strftime("%H:%M") for t in config.schedule.send_times
-        )
+        send_times = ", ".join(t.strftime("%H:%M") for t in config.schedule.send_times)
 
         await message.answer(
             locale.admin.user_detail.format(

@@ -23,10 +23,8 @@ from tgbot.constants import (
     ERROR_TYPE_MAX_LEN,
     ERROR_TYPE_STALE_RESERVATION,
 )
-from tgbot.db.queries.base import EngineBound
-from tgbot.db.models import (
-    VALID_PRONUNCIATIONS,
-    ReservedCard,
+from tgbot.db.domain import VALID_PRONUNCIATIONS, ReservedCard
+from tgbot.db.mappers import (
     as_db_row,
     card_from_row,
     row_bool,
@@ -35,7 +33,8 @@ from tgbot.db.models import (
     row_str,
     row_str_sequence,
 )
-from tgbot.db.schema import (
+from tgbot.db.queries.base import EngineBound
+from tgbot.db.tables import (
     bot_telegram_audio_cache,
     bot_user_cards,
     bot_users,

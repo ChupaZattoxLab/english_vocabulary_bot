@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sqlalchemy as sa
 
-from tgbot.db.schema.base import metadata
+from tgbot.db.tables.base import metadata
 
 oald_entry_audio_sources = sa.Table(
     "oald_entry_audio_sources",

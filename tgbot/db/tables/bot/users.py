@@ -5,7 +5,7 @@ from __future__ import annotations
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-from tgbot.db.schema.base import metadata
+from tgbot.db.tables.base import metadata
 
 bot_users = sa.Table(
     "bot_users",
