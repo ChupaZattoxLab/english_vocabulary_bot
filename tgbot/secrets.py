@@ -40,22 +40,7 @@ class Secrets:
 
 
 def parse_admin_ids(value: str) -> frozenset[int]:
-    if not value.strip():
-        return frozenset()
-
-    try:
-        result = frozenset(
-            int(item.strip()) for item in value.split(",") if item.strip()
-        )
-    except ValueError as exc:
-        raise ConfigError(
-            "TELEGRAM_ADMIN_IDS must contain comma-separated integers"
-        ) from exc
-
-    if any(admin_id <= 0 for admin_id in result):
-        raise ConfigError("TELEGRAM_ADMIN_IDS must contain positive user IDs")
-
-    return result
+    return frozenset(int(item.strip()) for item in value.split(",") if item.strip())
 
 
 secrets = Secrets.load()
