@@ -20,7 +20,6 @@ def camel_to_snake(name: str) -> str:
 
 def varchar_enum(
     enum_cls: type[PyEnum],
-    *,
     name: str,
 ) -> sa.Enum:
     """VARCHAR-backed enum; ``name`` is also the CHECK constraint name."""

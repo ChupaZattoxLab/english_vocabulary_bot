@@ -7,46 +7,47 @@ from datetime import datetime, timedelta
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from tgbot.constants import (
-    ERROR_MESSAGE_MAX_LEN,
-    SCHEDULE_GRACE_MINUTES,
-    SCHEDULER_RETRY_COOLDOWN_MINUTES,
-    SCHEDULER_STALE_RUNNING_MINUTES,
-    SCHEDULER_STATUS_COMPLETED,
-    SCHEDULER_STATUS_FAILED,
-    SCHEDULER_STATUS_RUNNING,
-)
 from tgbot.db.queries.base import DbSession
 from tgbot.db.tables import bot_scheduler_runs
+from tgbot.db.types import (
+    ERROR_MESSAGE_MAX_LEN,
+    SCHEDULER_RETRY_COOLDOWN_MINUTES,
+    SCHEDULER_STALE_RUNNING_MINUTES,
+    SchedulerRunStatus,
+)
 
 
 class SchedulerQueries(DbSession):
-    async def claim_scheduler_run(self, scheduled_slot: datetime) -> bool:
+    async def claim_scheduler_run(
+        self,
+        scheduled_slot: datetime,
+        grace_minutes: int,
+    ) -> bool:
         """Try to own a send slot for this process.
 
         Inserts a running row, or reclaims a failed/stale/partially-failed run
-        while still inside SCHEDULE_GRACE_MINUTES. Returns False if another
+        while still inside ``grace_minutes``. Returns False if another
         worker already holds a fresh claim.
         """
         runs = bot_scheduler_runs
 
         within_grace = sa.func.current_timestamp() <= (
-            runs.c.scheduled_slot + timedelta(minutes=SCHEDULE_GRACE_MINUTES)
+            runs.c.scheduled_slot + timedelta(minutes=grace_minutes)
         )
         failed_ready = sa.and_(
-            runs.c.status == SCHEDULER_STATUS_FAILED,
+            runs.c.status == SchedulerRunStatus.FAILED,
             sa.func.coalesce(runs.c.completed_at, runs.c.started_at)
             < sa.func.current_timestamp()
             - timedelta(minutes=SCHEDULER_RETRY_COOLDOWN_MINUTES),
         )
         stale_running = sa.and_(
-            runs.c.status == SCHEDULER_STATUS_RUNNING,
+            runs.c.status == SchedulerRunStatus.RUNNING,
             runs.c.started_at
             < sa.func.current_timestamp()
             - timedelta(minutes=SCHEDULER_STALE_RUNNING_MINUTES),
         )
         completed_with_failures = sa.and_(
-            runs.c.status == SCHEDULER_STATUS_COMPLETED,
+            runs.c.status == SchedulerRunStatus.COMPLETED,
             runs.c.failed_cards > 0,
             runs.c.completed_at
             < sa.func.current_timestamp()
@@ -57,7 +58,7 @@ class SchedulerQueries(DbSession):
         stmt = stmt.on_conflict_do_update(
             index_elements=[runs.c.scheduled_slot],
             set_={
-                "status": SCHEDULER_STATUS_RUNNING,
+                "status": SchedulerRunStatus.RUNNING,
                 "attempted_users": 0,
                 "delivered_cards": 0,
                 "failed_cards": 0,
@@ -89,9 +90,9 @@ class SchedulerQueries(DbSession):
             .where(bot_scheduler_runs.c.scheduled_slot == scheduled_slot)
             .values(
                 status=(
-                    SCHEDULER_STATUS_FAILED
+                    SchedulerRunStatus.FAILED
                     if error_message
-                    else SCHEDULER_STATUS_COMPLETED
+                    else SchedulerRunStatus.COMPLETED
                 ),
                 attempted_users=attempted_users,
                 delivered_cards=delivered_cards,

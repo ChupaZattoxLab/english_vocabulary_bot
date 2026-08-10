@@ -96,13 +96,13 @@ class labels:
     pronunciation_admin_unknown = "не выбран"
 
     dialect_flags = {
-        "US": "🇺🇸",
-        "GB": "🇬🇧",
-        "BOTH": "🇺🇸 + 🇬🇧",
+        "us": "🇺🇸",
+        "gb": "🇬🇧",
+        "both": "🇺🇸 + 🇬🇧",
     }
     dialect_captions = {
-        "US": "🇺🇸 US",
-        "GB": "🇬🇧 GB",
+        "us": "🇺🇸 US",
+        "gb": "🇬🇧 GB",
     }
 
     card_heading_definition = "Definition"
@@ -185,11 +185,11 @@ def pronunciation_admin(value: str | None) -> str:
 
 
 def dialect_flag(dialect: Dialect | str) -> str:
-    return labels.dialect_flags.get(str(dialect).upper(), "")
+    return labels.dialect_flags.get(str(dialect).lower(), "")
 
 
 def dialect_caption(dialect: Dialect | str) -> str:
-    normalized = str(dialect).upper()
+    normalized = str(dialect).lower()
     return labels.dialect_captions.get(normalized, normalized)
 
 

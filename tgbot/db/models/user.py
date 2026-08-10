@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, cast
 
-from tgbot.db.models.types import (
+from tgbot.db.types import (
     DialectPreference,
     UserRole,
 )

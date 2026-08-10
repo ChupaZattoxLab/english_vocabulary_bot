@@ -9,8 +9,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.models.types import CefrLevel
 from tgbot.db.tables.base import Base, varchar_enum
+from tgbot.db.types import CefrLevel
 
 
 class OaldEntry(Base):

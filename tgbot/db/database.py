@@ -10,10 +10,6 @@ from alembic.config import Config as AlembicConfig
 from alembic.script import ScriptDirectory
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
-from tgbot.constants import (
-    DB_CONNECT_TIMEOUT_SECONDS,
-    DB_POOL_RECYCLE_SECONDS,
-)
 from tgbot.db.queries import (
     AdminQueries,
     CardsQueries,
@@ -21,6 +17,10 @@ from tgbot.db.queries import (
     UsersQueries,
 )
 from tgbot.db.tables import MANAGED_TABLES
+from tgbot.db.types import (
+    DB_CONNECT_TIMEOUT_SECONDS,
+    DB_POOL_RECYCLE_SECONDS,
+)
 from tgbot.secrets import PROJECT_ROOT
 
 # Postgres catalog: list of tables in the current database (not app schema).

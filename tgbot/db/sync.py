@@ -16,7 +16,7 @@ from typing import Any
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine, make_url
 
-from tgbot.constants import DB_CONNECT_TIMEOUT_SECONDS
+from tgbot.db.types import DB_CONNECT_TIMEOUT_SECONDS
 
 
 def sync_engine(

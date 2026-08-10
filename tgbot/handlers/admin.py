@@ -12,7 +12,6 @@ from aiogram.filters import Command
 from aiogram.types import CallbackQuery, Message
 
 from tgbot.bot_config import BotConfig
-from tgbot.constants import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.db import Database
 from tgbot.db.models import VALID_LEVELS, AdminUser
 from tgbot.delivery import CardDeliveryService
@@ -21,6 +20,7 @@ from tgbot.handlers.admin_keyboards import (
     admin_users_keyboard,
     word_categories_keyboard,
 )
+from tgbot.handlers.types import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
 from tgbot.localization import locale
 
 

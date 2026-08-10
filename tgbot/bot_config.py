@@ -1,4 +1,4 @@
-"""Runtime bot configuration assembled from secrets and constants."""
+"""Runtime bot configuration assembled from secrets and types."""
 
 from __future__ import annotations
 
@@ -9,14 +9,15 @@ from zoneinfo import ZoneInfo
 
 from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
 
-from tgbot.constants import (
+from tgbot.secrets import ConfigError, secrets
+from tgbot.types import (
     DB_POOL_SIZE,
     DELIVERY_CONCURRENCY,
+    SCHEDULE_GRACE_MINUTES,
     SCHEDULER_POLL_SECONDS,
     SEND_TIMES,
     TIMEZONE,
 )
-from tgbot.secrets import ConfigError, secrets
 
 
 class ScheduleSettings(BaseModel):
@@ -27,6 +28,7 @@ class ScheduleSettings(BaseModel):
     text: str
     poll_seconds: int
     delivery_concurrency: int
+    grace_minutes: int
 
     @classmethod
     def load(cls) -> Self:
@@ -37,6 +39,7 @@ class ScheduleSettings(BaseModel):
             text=f"{', '.join(sorted(SEND_TIMES))} ({TIMEZONE})",
             poll_seconds=SCHEDULER_POLL_SECONDS,
             delivery_concurrency=DELIVERY_CONCURRENCY,
+            grace_minutes=SCHEDULE_GRACE_MINUTES,
         )
 
 

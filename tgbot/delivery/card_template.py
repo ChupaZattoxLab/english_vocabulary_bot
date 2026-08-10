@@ -7,42 +7,33 @@ import string
 from collections.abc import Mapping
 from pathlib import Path
 
-from tgbot.constants import TELEGRAM_MESSAGE_MAX_LEN
+from tgbot.delivery.types import TELEGRAM_MESSAGE_MAX_LEN
 
-TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
-CARD_TEMPLATE_PATH = TEMPLATES_DIR / "card_template.html"
-BOTH_CARD_TEMPLATE_PATH = TEMPLATES_DIR / "card_template_both.html"
-
-ALLOWED_FIELDS = {
-    "word",
-    "word_upper",
-    "word_us",
-    "word_us_upper",
-    "word_gb",
-    "word_gb_upper",
-    "lexical_category",
-    "cefr",
-    "definition",
-    "ipa",
-    "ipa_us",
-    "ipa_gb",
-    "example",
-    "translation",
-    "dialect",
-    "dialect_flag",
-    "heading_definition",
-    "heading_example",
-    "heading_translation",
-    "flag_us",
-    "flag_gb",
-}
-REQUIRED_FIELDS = {
-    "lexical_category",
-    "cefr",
-    "definition",
-    "example",
-    "translation",
-}
+# Placeholders aligned with oald_entries / Card fields (+ display helpers).
+WORD_FIELDS = frozenset({"word", "word_us", "word_gb"})
+IPA_FIELDS = frozenset({"ipa", "ipa_us", "ipa_gb"})
+BOTH_IPA_FIELDS = IPA_FIELDS - {"ipa"}
+REQUIRED_FIELDS = frozenset(
+    {
+        "lexical_category",
+        "cefr",
+        "definition",
+        "example",
+        "translation",
+    }
+)
+DISPLAY_FIELDS = frozenset(
+    {
+        "dialect",
+        "dialect_flag",
+        "heading_definition",
+        "heading_example",
+        "heading_translation",
+        "flag_us",
+        "flag_gb",
+    }
+)
+ALLOWED_FIELDS = WORD_FIELDS | IPA_FIELDS | REQUIRED_FIELDS | DISPLAY_FIELDS
 
 
 class CardTemplateError(ValueError):
@@ -58,86 +49,77 @@ class CardTemplate:
 
     def render(self, values: Mapping[str, str]) -> str:
         self.load_if_changed()
-
         escaped = {
             field: html.escape(str(values.get(field, "")), quote=False)
             for field in ALLOWED_FIELDS
         }
         rendered = self.template.format_map(escaped)
-
         if len(rendered) > TELEGRAM_MESSAGE_MAX_LEN:
             raise CardTemplateError(
                 "rendered card exceeds Telegram's "
                 f"{TELEGRAM_MESSAGE_MAX_LEN}-character text limit"
             )
-
         return rendered
 
-    def reload(self) -> None:
-        """Validate and reload the template even when its timestamp is unchanged."""
-        self.mtime_ns = -1
-        self.load_if_changed()
-
     def load_if_changed(self) -> None:
+        """Reload from disk when the template file mtime changes."""
         try:
-            stat = self.path.stat()
+            mtime_ns = self.path.stat().st_mtime_ns
         except OSError as exc:
             raise CardTemplateError(
                 f"could not read card template {self.path}: {exc}"
             ) from exc
 
-        if stat.st_mtime_ns == self.mtime_ns:
+        if mtime_ns == self.mtime_ns:
             return
 
-        template = self.path.read_text(encoding="utf-8").strip()
+        self.template = load_template(self.path)
+        self.mtime_ns = mtime_ns
 
-        if not template:
-            raise CardTemplateError("card template must not be empty")
 
-        fields: set[str] = set()
+def load_template(path: Path) -> str:
+    """Read and validate a card template file."""
+    try:
+        template = path.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        raise CardTemplateError(f"could not read card template {path}: {exc}") from exc
 
-        try:
-            parts = string.Formatter().parse(template)
-            for _, field_name, format_spec, conversion in parts:
-                if field_name is None:
-                    continue
-                if field_name not in ALLOWED_FIELDS:
-                    raise CardTemplateError(
-                        f"unsupported card template field {field_name!r}"
-                    )
-                if format_spec or conversion:
-                    raise CardTemplateError(
-                        "format specifications and conversions are not allowed"
-                    )
-                fields.add(field_name)
-        except ValueError as exc:
-            raise CardTemplateError(f"invalid card template: {exc}") from exc
+    if not template:
+        raise CardTemplateError("card template must not be empty")
 
-        missing = sorted(REQUIRED_FIELDS - fields)
+    fields = template_fields(template)
+    missing = sorted(REQUIRED_FIELDS - fields)
+    if missing:
+        raise CardTemplateError(
+            f"card template is missing required fields: {', '.join(missing)}"
+        )
+    if not fields & WORD_FIELDS:
+        raise CardTemplateError("card template must contain at least one word field")
+    if "ipa" not in fields and not BOTH_IPA_FIELDS.issubset(fields):
+        raise CardTemplateError(
+            "card template must contain {ipa}, or both {ipa_us} and {ipa_gb}"
+        )
+    return template
 
-        if missing:
-            raise CardTemplateError(
-                f"card template is missing required fields: {', '.join(missing)}"
-            )
 
-        if not fields.intersection(
-            {
-                "word",
-                "word_upper",
-                "word_us",
-                "word_us_upper",
-                "word_gb",
-                "word_gb_upper",
-            }
+def template_fields(template: str) -> set[str]:
+    """Collect `{field}` names; reject unknown or formatted placeholders."""
+    fields: set[str] = set()
+    try:
+        for _, field_name, format_spec, conversion in string.Formatter().parse(
+            template
         ):
-            raise CardTemplateError(
-                "card template must contain at least one word field"
-            )
-
-        if "ipa" not in fields and not {"ipa_us", "ipa_gb"}.issubset(fields):
-            raise CardTemplateError(
-                "card template must contain {ipa}, or both {ipa_us} and {ipa_gb}"
-            )
-
-        self.template = template
-        self.mtime_ns = stat.st_mtime_ns
+            if field_name is None:
+                continue
+            if field_name not in ALLOWED_FIELDS:
+                raise CardTemplateError(
+                    f"unsupported card template field {field_name!r}"
+                )
+            if format_spec or conversion:
+                raise CardTemplateError(
+                    "format specifications and conversions are not allowed"
+                )
+            fields.add(field_name)
+    except ValueError as exc:
+        raise CardTemplateError(f"invalid card template: {exc}") from exc
+    return fields

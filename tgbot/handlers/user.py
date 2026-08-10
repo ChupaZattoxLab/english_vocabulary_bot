@@ -8,7 +8,6 @@ from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message, User
 
 from tgbot.bot_config import BotConfig
-from tgbot.constants import DELIVERY_STATUS_FAILED, DELIVERY_STATUS_SKIPPED
 from tgbot.db import Database
 from tgbot.db.models import (
     VALID_DIALECT_PREFERENCES,
@@ -17,7 +16,7 @@ from tgbot.db.models import (
     CefrLevel,
     DialectPreference,
 )
-from tgbot.delivery import CardDeliveryService
+from tgbot.delivery import CardDeliveryService, DeliveryStatus
 from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
 from tgbot.localization import locale
 
@@ -190,11 +189,11 @@ def create_router(
             telegram_user_id=message.from_user.id,
         )
 
-        if outcome.status == DELIVERY_STATUS_SKIPPED:
+        if outcome.status == DeliveryStatus.SKIPPED:
             await message.answer(locale.user.no_cards_left)
             return
 
-        if outcome.status == DELIVERY_STATUS_FAILED:
+        if outcome.status == DeliveryStatus.FAILED:
             await message.answer(locale.user.card_send_failed)
             return
 

@@ -1,4 +1,4 @@
-"""Three-times-daily, restart-safe card scheduling."""
+"""Daily send-slot scheduler (restart-safe via bot_scheduler_runs)."""
 
 from __future__ import annotations
 
@@ -11,15 +11,10 @@ from zoneinfo import ZoneInfo
 from aiogram import Bot
 
 from tgbot.bot_config import BotConfig
-from tgbot.constants import (
-    DELIVERY_STATUS_DELIVERED,
-    DELIVERY_STATUS_FAILED,
-    DELIVERY_STATUS_SKIPPED,
-    SCHEDULE_GRACE_MINUTES,
-)
 from tgbot.db import Database
 from tgbot.db.models import ActiveUser
 from tgbot.delivery.service import CardDeliveryService
+from tgbot.delivery.types import DeliveryStatus
 
 LOGGER = logging.getLogger("tgbot.scheduler")
 
@@ -40,10 +35,7 @@ class CardScheduler:
         self.stop_event.set()
 
     async def run(self, bot: Bot) -> None:
-        LOGGER.info(
-            "Scheduler started: %s",
-            self.config.schedule.text,
-        )
+        LOGGER.info("Scheduler started: %s", self.config.schedule.text)
         while not self.stop_event.is_set():
             try:
                 now = datetime.now(UTC)
@@ -51,9 +43,9 @@ class CardScheduler:
                     now,
                     timezone_value=self.config.schedule.timezone,
                     send_times=self.config.schedule.send_times,
+                    grace_minutes=self.config.schedule.grace_minutes,
                 ):
                     await self.run_slot(bot, scheduled_slot)
-
             except Exception:  # noqa: BLE001
                 LOGGER.exception("Scheduler iteration failed; it will retry")
 
@@ -68,7 +60,10 @@ class CardScheduler:
         LOGGER.info("Scheduler stopped")
 
     async def run_slot(self, bot: Bot, scheduled_slot: datetime) -> None:
-        claimed = await self.db.claim_scheduler_run(scheduled_slot)
+        claimed = await self.db.claim_scheduler_run(
+            scheduled_slot,
+            grace_minutes=self.config.schedule.grace_minutes,
+        )
         if not claimed:
             return
 
@@ -82,24 +77,17 @@ class CardScheduler:
             semaphore = asyncio.Semaphore(self.config.schedule.delivery_concurrency)
             statuses = await asyncio.gather(
                 *(
-                    self.deliver_to_user(
-                        bot,
-                        user,
-                        scheduled_slot,
-                        semaphore,
-                    )
+                    self.deliver_to_user(bot, user, scheduled_slot, semaphore)
                     for user in users
                 )
             )
             counts = Counter(statuses)
-            delivered = counts[DELIVERY_STATUS_DELIVERED]
-            failed = counts[DELIVERY_STATUS_FAILED]
-            skipped = counts[DELIVERY_STATUS_SKIPPED]
-
+            delivered = counts[DeliveryStatus.DELIVERED]
+            failed = counts[DeliveryStatus.FAILED]
+            skipped = counts[DeliveryStatus.SKIPPED]
         except Exception as exc:  # noqa: BLE001
             error_message = str(exc)
             LOGGER.exception("Scheduled slot %s failed", scheduled_slot.isoformat())
-
         finally:
             await self.db.finish_scheduler_run(
                 scheduled_slot,
@@ -124,7 +112,7 @@ class CardScheduler:
         user: ActiveUser,
         scheduled_slot: datetime,
         semaphore: asyncio.Semaphore,
-    ) -> str:
+    ) -> DeliveryStatus:
         async with semaphore:
             try:
                 outcome = await self.delivery.deliver(
@@ -133,23 +121,23 @@ class CardScheduler:
                     scheduled_slot=scheduled_slot,
                 )
                 return outcome.status
-
             except Exception:  # noqa: BLE001
                 LOGGER.exception(
                     "Unexpected scheduled delivery error for user %s",
                     user.telegram_user_id,
                 )
-                return DELIVERY_STATUS_FAILED
+                return DeliveryStatus.FAILED
 
 
 def due_schedule_slots(
     now: datetime,
     timezone_value: ZoneInfo,
     send_times: tuple[time, ...],
+    grace_minutes: int,
 ) -> tuple[datetime, ...]:
     """Return due UTC slots inside the grace window, including yesterday."""
     local_now = now.astimezone(timezone_value)
-    grace = timedelta(minutes=SCHEDULE_GRACE_MINUTES)
+    grace = timedelta(minutes=grace_minutes)
     candidate_dates = (local_now.date() - timedelta(days=1), local_now.date())
     slots: list[datetime] = []
 

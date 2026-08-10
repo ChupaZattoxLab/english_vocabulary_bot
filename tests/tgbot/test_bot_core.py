@@ -83,9 +83,9 @@ class CardTemplateTests(unittest.TestCase):
         with self.assertRaises(CardTemplateError):
             CardTemplate(self.path)
 
-    def test_word_upper_can_replace_word(self) -> None:
+    def test_word_can_be_used_as_title(self) -> None:
         self.path.write_text(
-            "{dialect_flag} <b>{word_upper}</b> {lexical_category} {cefr} "
+            "{dialect_flag} <b>{word}</b> {lexical_category} {cefr} "
             "{definition} {ipa} {example} {translation}",
             encoding="utf-8",
         )
@@ -93,7 +93,7 @@ class CardTemplateTests(unittest.TestCase):
         rendered = template.render(
             {
                 "dialect_flag": "🇺🇸",
-                "word_upper": "APPLE",
+                "word": "APPLE",
                 "lexical_category": "noun",
                 "cefr": "A1",
                 "definition": "fruit",
@@ -104,21 +104,21 @@ class CardTemplateTests(unittest.TestCase):
         )
         self.assertIn("🇺🇸 <b>APPLE</b>", rendered)
 
-    def test_both_template_accepts_both_ipa_fields(self) -> None:
+    def test_both_template_accepts_dialect_word_fields(self) -> None:
         self.path.write_text(
-            "{word_us_upper} {word_gb_upper} {lexical_category} {cefr} "
+            "{word_us} {word_gb} {lexical_category} {cefr} "
             "{definition} {ipa_us} {ipa_gb} {example} {translation}",
             encoding="utf-8",
         )
         CardTemplate(self.path)
 
-    def test_explicit_reload_validates_changed_template(self) -> None:
+    def test_render_reloads_when_template_file_changes(self) -> None:
         self.path.write_text(VALID_TEMPLATE, encoding="utf-8")
         template = CardTemplate(self.path)
         self.path.write_text("{word}", encoding="utf-8")
 
         with self.assertRaises(CardTemplateError):
-            template.reload()
+            template.render({})
 
 
 class AdminHelperTests(unittest.TestCase):
@@ -213,6 +213,7 @@ class SchedulerTests(unittest.TestCase):
             datetime(2026, 8, 1, 7, 30, tzinfo=UTC),
             timezone_value=ZoneInfo("Europe/Amsterdam"),
             send_times=(time(9), time(14), time(20)),
+            grace_minutes=60,
         )
 
         self.assertEqual(
@@ -225,6 +226,7 @@ class SchedulerTests(unittest.TestCase):
             datetime(2026, 8, 1, 10, 30, tzinfo=UTC),
             timezone_value=ZoneInfo("Europe/Amsterdam"),
             send_times=(time(9), time(14), time(20)),
+            grace_minutes=60,
         )
         self.assertEqual(slots, ())
 
@@ -248,7 +250,17 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 send_message=AsyncMock(),
             )
-            service = CardDeliveryService(db, CardTemplate(template_path))
+            with (
+                patch(
+                    "tgbot.delivery.service.CARD_TEMPLATE_PATH",
+                    template_path,
+                ),
+                patch(
+                    "tgbot.delivery.service.BOTH_CARD_TEMPLATE_PATH",
+                    template_path,
+                ),
+            ):
+                service = CardDeliveryService(db)
             card = make_card("audio/ogg", "test.voice.ogg")
 
             await service.send_card(bot, telegram_user_id=123, card=card)
@@ -289,7 +301,17 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 send_message=AsyncMock(),
                 send_voice=AsyncMock(side_effect=RuntimeError("voice failed")),
             )
-            service = CardDeliveryService(db, CardTemplate(template_path))
+            with (
+                patch(
+                    "tgbot.delivery.service.CARD_TEMPLATE_PATH",
+                    template_path,
+                ),
+                patch(
+                    "tgbot.delivery.service.BOTH_CARD_TEMPLATE_PATH",
+                    template_path,
+                ),
+            ):
+                service = CardDeliveryService(db)
 
             outcome = await service.deliver(
                 bot,
@@ -309,7 +331,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             both_template_path = Path(temporary_directory) / "card_both.html"
             template_path.write_text(VALID_TEMPLATE, encoding="utf-8")
             both_template_path.write_text(
-                "{word_us_upper} {word_gb_upper} {lexical_category} {cefr} "
+                "{word_us} {word_gb} {lexical_category} {cefr} "
                 "{definition} {ipa_us} {ipa_gb} {example} {translation}",
                 encoding="utf-8",
             )
@@ -333,11 +355,17 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 ),
                 send_message=AsyncMock(),
             )
-            service = CardDeliveryService(
-                db,
-                CardTemplate(template_path),
-                CardTemplate(both_template_path),
-            )
+            with (
+                patch(
+                    "tgbot.delivery.service.CARD_TEMPLATE_PATH",
+                    template_path,
+                ),
+                patch(
+                    "tgbot.delivery.service.BOTH_CARD_TEMPLATE_PATH",
+                    both_template_path,
+                ),
+            ):
+                service = CardDeliveryService(db)
             card = replace(
                 make_card("audio/ogg", "test-us.voice.ogg"),
                 word_us="color",

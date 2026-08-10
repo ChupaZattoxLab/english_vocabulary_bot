@@ -6,7 +6,6 @@ from datetime import datetime
 
 import sqlalchemy as sa
 
-from tgbot.constants import CARD_STATUS_DELIVERED
 from tgbot.db.models import (
     AdminUser,
     AudienceStats,
@@ -25,6 +24,7 @@ from tgbot.db.queries.base import (
 )
 from tgbot.db.queries.cards import card_content_select, hydrate_card_audio
 from tgbot.db.tables import bot_user_cards, bot_users, oald_entries
+from tgbot.db.types import CardStatus
 
 
 class AdminQueries(DbSession):
@@ -115,7 +115,7 @@ class AdminQueries(DbSession):
         telegram_user_id: int,
     ) -> AdminUser | None:
         """User row plus delivered-card count and last successful delivery time."""
-        delivered = bot_user_cards.c.status == CARD_STATUS_DELIVERED
+        delivered = bot_user_cards.c.status == CardStatus.DELIVERED
         row = await self.fetch_first(
             sa.select(
                 bot_users,

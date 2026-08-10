@@ -6,7 +6,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 from typing import Any, cast
 
-from tgbot.db.models.types import Dialect, DialectPreference
+from tgbot.db.types import Dialect, DialectPreference
 
 
 @dataclass(frozen=True)
@@ -77,7 +77,6 @@ class Card:
 
 def card_from_row(
     row: object,
-    *,
     preference: DialectPreference = DialectPreference.BOTH,
     user_card_id: int = 0,
 ) -> Card:

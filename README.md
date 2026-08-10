@@ -8,19 +8,22 @@ Offline-friendly Telegram bot that sends OALD-backed vocabulary cards from Postg
 tgbot/                 # runtime bot package
   app.py               # aiogram bootstrap / long polling
   secrets.py           # .env secrets (pydantic-settings)
-  bot_config.py        # runtime bot config
-  constants.py         # shared domain / runtime constants
+  bot_config.py        # runtime bot config from secrets + types
+  types.py             # schedule defaults, pool size (tgbot root only)
   localization/        # Telegram UI strings (default: ru)
   __main__.py          # python -m tgbot
   db/
+    types.py           # StrEnums + pool/timeouts (db/ only; re-exported via models)
     database.py        # async engine + schema/version checks
-    models/            # domain dataclasses + StrEnums (User, Card, …)
+    models/            # domain dataclasses (User, Card, …) + public enum re-exports
     queries/           # users, cards, scheduler, admin queries
     tables/            # declarative Mapped models (bot/ + oald/)
       base.py          # DeclarativeBase, tablename helper, varchar_enum
     sync.py            # blocking SQLAlchemy helpers for scripts/tests
   delivery/            # card templates, send logic, scheduler
+    types.py           # template paths, DeliveryStatus (delivery/ only)
   handlers/            # Telegram user/admin commands and keyboards
+    types.py           # admin stats windows (handlers/ only)
 scripts/
   cli.py               # uv run start|stop|migrate|test|lint|…
   restore-oald-seed.sh # Docker first-boot seed restore
@@ -62,7 +65,9 @@ TELEGRAM_BOT_TOKEN=...your token...
 OALD_DATABASE_URL=postgresql+psycopg://vocab_app:vocab_dev_password@127.0.0.1:5432/english_vocabulary_oald
 ```
 
-Schedule, card templates, and pool sizes live in `tgbot/constants.py` (not `.env`).
+Schedule defaults live in `tgbot/types.py`; template paths in
+`tgbot/delivery/types.py`; DB pool timeouts in `tgbot/db/types.py` (not `.env`).
+Each `types.py` is package-private (imported only inside its folder).
 Admins are stored in `bot_users.role`, not in `.env`.
 
 `OALD_DATABASE_URL` in `.env.example` matches Compose defaults

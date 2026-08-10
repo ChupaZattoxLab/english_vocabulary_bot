@@ -7,8 +7,8 @@ from typing import cast
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.models.types import Dialect
 from tgbot.db.tables.base import Base, varchar_enum
+from tgbot.db.types import Dialect
 
 
 class OaldEntryAudioSource(Base):

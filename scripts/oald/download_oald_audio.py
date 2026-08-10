@@ -22,10 +22,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.engine import Connection
 
-from tgbot.constants import (
-    AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
-    SEND_METHOD_VOICE,
-)
+from tgbot.db.models import AudioVariantType, TelegramSendMethod
 from tgbot.db.sync import sync_connection
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
@@ -598,7 +595,7 @@ def load_candidates(
                 sa.and_(
                     oald_audio_variants.c.source_url == oald_audio_files.c.source_url,
                     oald_audio_variants.c.variant_type
-                    == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+                    == AudioVariantType.TELEGRAM_VOICE_OPUS,
                 ),
             )
         )
@@ -685,7 +682,7 @@ def store_voice_success(
 ) -> None:
     stmt = pg_insert(oald_audio_variants).values(
         source_url=candidate.source_url,
-        variant_type=AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+        variant_type=AudioVariantType.TELEGRAM_VOICE_OPUS,
         source_sha256=original.sha256,
         audio_data=voice.data,
         content_type="audio/ogg",
@@ -721,7 +718,7 @@ def store_voice_success(
         connection.execute(
             sa.delete(bot_telegram_audio_cache).where(
                 bot_telegram_audio_cache.c.source_url == candidate.source_url,
-                bot_telegram_audio_cache.c.send_method == SEND_METHOD_VOICE,
+                bot_telegram_audio_cache.c.send_method == TelegramSendMethod.VOICE,
             )
         )
 
@@ -735,7 +732,7 @@ def store_voice_failure(
     same_sha = oald_audio_variants.c.source_sha256 == sa.text("EXCLUDED.source_sha256")
     stmt = pg_insert(oald_audio_variants).values(
         source_url=candidate.source_url,
-        variant_type=AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
+        variant_type=AudioVariantType.TELEGRAM_VOICE_OPUS,
         source_sha256=original.sha256,
         conversion_status="failed",
         last_error=str(error)[:2000],

@@ -11,19 +11,6 @@ from sqlalchemy import FromClause, Select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncConnection
 
-from tgbot.constants import (
-    AUDIO_CONVERSION_PREPARED,
-    AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
-    CARD_OCCUPIED_STATUSES,
-    CARD_RESERVATION_TIMEOUT_MINUTES,
-    CARD_STATUS_DELIVERED,
-    CARD_STATUS_FAILED,
-    CARD_STATUS_RESERVED,
-    ERROR_MESSAGE_MAX_LEN,
-    ERROR_TYPE_MAX_LEN,
-    ERROR_TYPE_STALE_RESERVATION,
-    SEND_METHOD_VOICE,
-)
 from tgbot.db.models import (
     VALID_DIALECT_PREFERENCES,
     Card,
@@ -41,6 +28,17 @@ from tgbot.db.tables import (
     oald_audio_variants,
     oald_entries,
     oald_entry_audio_sources,
+)
+from tgbot.db.types import (
+    CARD_OCCUPIED_STATUSES,
+    CARD_RESERVATION_TIMEOUT_MINUTES,
+    ERROR_MESSAGE_MAX_LEN,
+    ERROR_TYPE_MAX_LEN,
+    ERROR_TYPE_STALE_RESERVATION,
+    AudioConversionStatus,
+    AudioVariantType,
+    CardStatus,
+    TelegramSendMethod,
 )
 
 
@@ -71,13 +69,13 @@ class CardsQueries(DbSession):
                 sa.update(bot_user_cards)
                 .where(
                     bot_user_cards.c.telegram_user_id == telegram_user_id,
-                    bot_user_cards.c.status == CARD_STATUS_RESERVED,
+                    bot_user_cards.c.status == CardStatus.RESERVED,
                     bot_user_cards.c.created_at
                     < sa.func.current_timestamp()
                     - timedelta(minutes=CARD_RESERVATION_TIMEOUT_MINUTES),
                 )
                 .values(
-                    status=CARD_STATUS_FAILED,
+                    status=CardStatus.FAILED,
                     error_type=ERROR_TYPE_STALE_RESERVATION,
                     error_message=("reservation timed out before delivery finished"),
                 )
@@ -194,7 +192,7 @@ class CardsQueries(DbSession):
             sa.update(bot_user_cards)
             .where(bot_user_cards.c.id == user_card_id)
             .values(
-                status=(CARD_STATUS_DELIVERED if delivered else CARD_STATUS_FAILED),
+                status=(CardStatus.DELIVERED if delivered else CardStatus.FAILED),
                 telegram_message_id=telegram_message_id,
                 error_type=("" if delivered else error_type[:ERROR_TYPE_MAX_LEN]),
                 error_message=error_message[:ERROR_MESSAGE_MAX_LEN],
@@ -207,7 +205,7 @@ class CardsQueries(DbSession):
         row = await self.fetch_first(
             sa.select(bot_telegram_audio_cache.c.telegram_file_id).where(
                 bot_telegram_audio_cache.c.source_url == source_url,
-                bot_telegram_audio_cache.c.send_method == SEND_METHOD_VOICE,
+                bot_telegram_audio_cache.c.send_method == TelegramSendMethod.VOICE,
             )
         )
         return str(row["telegram_file_id"]) if row else None
@@ -220,7 +218,7 @@ class CardsQueries(DbSession):
         """Remember Telegram file_id after a successful voice upload."""
         stmt = pg_insert(bot_telegram_audio_cache).values(
             source_url=source_url,
-            send_method=SEND_METHOD_VOICE,
+            send_method=TelegramSendMethod.VOICE,
             telegram_file_id=telegram_file_id,
         )
         stmt = stmt.on_conflict_do_update(
@@ -240,7 +238,7 @@ class CardsQueries(DbSession):
         await self.execute(
             sa.delete(bot_telegram_audio_cache).where(
                 bot_telegram_audio_cache.c.source_url == source_url,
-                bot_telegram_audio_cache.c.send_method == SEND_METHOD_VOICE,
+                bot_telegram_audio_cache.c.send_method == TelegramSendMethod.VOICE,
             )
         )
 
@@ -304,8 +302,8 @@ def prepared_audio_lateral(dialect: Dialect) -> FromClause:
                 voice,
                 sa.and_(
                     voice.c.source_url == files.c.source_url,
-                    voice.c.variant_type == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
-                    voice.c.conversion_status == AUDIO_CONVERSION_PREPARED,
+                    voice.c.variant_type == AudioVariantType.TELEGRAM_VOICE_OPUS,
+                    voice.c.conversion_status == AudioConversionStatus.PREPARED,
                     voice.c.source_sha256 == files.c.sha256,
                 ),
             )
@@ -369,8 +367,10 @@ async def hydrate_card_audio(
                 oald_audio_variants.c.filename,
             ).where(
                 oald_audio_variants.c.source_url == source_url,
-                oald_audio_variants.c.variant_type == AUDIO_VARIANT_TELEGRAM_VOICE_OPUS,
-                oald_audio_variants.c.conversion_status == AUDIO_CONVERSION_PREPARED,
+                oald_audio_variants.c.variant_type
+                == AudioVariantType.TELEGRAM_VOICE_OPUS,
+                oald_audio_variants.c.conversion_status
+                == AudioConversionStatus.PREPARED,
                 oald_audio_variants.c.audio_data.is_not(None),
             ),
         )
