@@ -10,6 +10,7 @@ dependencies = [
     "psycopg[binary]>=3,<4",
     "alembic>=1.19.0,<2",
     "sqlalchemy>=2.0.51,<3",
+    "sqlalchemy-utils>=0.41,<1",
     "psutil>=7.2.2,<8",
     "python-dotenv>=1,<2",
     "pydantic>=2,<3",
@@ -29,6 +30,7 @@ typecheck = "scripts.cli:typecheck"
 [dependency-groups]
 dev = [
     "pytest>=8.3.4,<9",
+    "pytest-asyncio>=0.25,<1",
     "ruff>=0.16.2",
     "pyright>=1.1.400",
 ]
@@ -43,6 +45,7 @@ packages = ["tgbot", "scripts"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["scripts/oald", "."]
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 88

@@ -17,7 +17,6 @@ from urllib.parse import urlparse
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from sqlalchemy.engine import make_url
 
 from tgbot.db.sync import sync_connection
 from tgbot.db.tables import (
@@ -355,63 +354,17 @@ def ensure_db_exists(
 ) -> bool:
     """Ensure the target database exists; return True when it was created."""
     try:
-        from psycopg import sql
+        from tgbot.db.sync import ensure_database_exists
 
-        target_url = make_url(db_url)
-        target_database = target_url.database
-        if not target_database:
-            raise OaldDatabaseError(
-                "the target database URL must include a database name"
-            )
-
-        if admin_db_url:
-            admin_url = admin_db_url
-        else:
-            admin_url = target_url.set(database="postgres").render_as_string(
-                hide_password=False
-            )
-
-        with sync_connection(
-            admin_url,
-            autocommit=True,
-        ) as connection:
-            exists = connection.execute(
-                sa.text("SELECT 1 FROM pg_database WHERE datname = :name"),
-                {"name": target_database},
-            ).first()
-            if exists:
-                return False
-            raw = connection.connection.driver_connection
-            if raw is None:
-                raise OaldDatabaseError(
-                    "could not create the target database; provide "
-                    "--admin-database-url for a role allowed to create "
-                    "databases"
-                )
-            try:
-                with raw.cursor() as cursor:
-                    cursor.execute(
-                        sql.SQL("CREATE DATABASE {}").format(
-                            sql.Identifier(target_database)
-                        )
-                    )
-            except Exception as create_exc:
-                raise OaldDatabaseError(
-                    "could not create the target database; provide "
-                    "--admin-database-url for a role allowed to create "
-                    "databases"
-                ) from create_exc
-        return True
-    except OaldDatabaseError:
-        raise
-    except Exception:
-        try:
-            with sync_connection(db_url):
-                return False
-        except Exception as target_exc:
-            raise OaldDatabaseError(
-                "could not connect to the target or administrative PostgreSQL database"
-            ) from target_exc
+        return ensure_database_exists(db_url, admin_db_url)
+    except ValueError as exc:
+        raise OaldDatabaseError(str(exc)) from exc
+    except Exception as exc:
+        raise OaldDatabaseError(
+            "could not create the target database; provide "
+            "--admin-database-url for a role allowed to create "
+            "databases"
+        ) from exc
 
 
 def log_input_summary(stats: Counter[str]) -> None:

@@ -31,9 +31,10 @@ scripts/
   restore-oald-seed.sh # Docker first-boot seed restore
   oald/                # offline OALD/Oxford build & import helpers
 tests/
-  tgbot/               # bot unit/integration tests
+  tgbot/               # bot unit tests + factories
+    factories.py
+    queries/           # DB query tests (needs TEST_OALD_DATABASE_URL)
   oald/                # OALD/Oxford import-script tests
-  test_migrations.py   # Alembic upgrade tests
 migrations/            # Alembic migration revisions
 alembic.ini            # Alembic config (script_location → migrations/)
 compose.yaml           # local Postgres 16
