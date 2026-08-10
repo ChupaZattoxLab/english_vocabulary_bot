@@ -26,7 +26,7 @@ from tgbot.delivery import (
 )
 from tgbot.delivery.scheduler import due_schedule_slots
 from tgbot.handlers.admin import delivery_state
-from tgbot.handlers.admin_keyboards import (
+from tgbot.handlers.keyboard import (
     admin_main_keyboard,
     word_categories_keyboard,
 )

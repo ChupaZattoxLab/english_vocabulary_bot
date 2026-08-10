@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+from contextlib import suppress
 from datetime import UTC, datetime, time, timedelta
 
 from aiogram import Bot, F, Router
@@ -13,11 +14,17 @@ from aiogram.types import CallbackQuery, Message
 
 from tgbot.bot_config import BotConfig
 from tgbot.db import Database
-from tgbot.db.models import VALID_LEVELS, AdminUser
+from tgbot.db.models import VALID_LEVELS, AdminUser, AudienceStats
 from tgbot.delivery import CardDeliveryService
-from tgbot.handlers.admin_keyboards import (
+from tgbot.handlers.helpers import (
+    callback_message,
+    command_arguments,
+    format_levels,
+    format_number,
+)
+from tgbot.handlers.keyboard import (
     admin_main_keyboard,
-    admin_users_keyboard,
+    admin_section_keyboard,
     word_categories_keyboard,
 )
 from tgbot.handlers.types import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
@@ -37,7 +44,6 @@ def create_admin_router(
     async def admin_handler(message: Message) -> None:
         if not await require_admin(message, db):
             return
-
         await message.answer(
             await render_overview(db, config),
             reply_markup=admin_main_keyboard(),
@@ -47,7 +53,6 @@ def create_admin_router(
     async def stats_handler(message: Message) -> None:
         if not await require_admin(message, db):
             return
-
         await message.answer(await render_users(db, config))
 
     @router.message(Command("user"))
@@ -56,20 +61,19 @@ def create_admin_router(
             return
 
         argument = command_arguments(message)
-
         if not argument.isdigit():
             await message.answer(locale.admin.user_usage)
             return
 
         user = await db.get_admin_user(int(argument))
-
         if not user:
             await message.answer(locale.admin.user_not_found)
             return
 
-        registered = user.created_at.astimezone(config.schedule.timezone)
+        timezone = config.schedule.timezone
+        registered = user.created_at.astimezone(timezone)
         last_text = (
-            user.last_successful_delivery.astimezone(config.schedule.timezone).strftime(
+            user.last_successful_delivery.astimezone(timezone).strftime(
                 "%d.%m.%Y %H:%M"
             )
             if user.last_successful_delivery
@@ -80,10 +84,6 @@ def create_admin_router(
             if user.username
             else locale.admin.placeholder
         )
-        levels = (
-            ", ".join(level.upper() for level in user.settings.selected_levels)
-            or locale.admin.placeholder
-        )
         send_times = ", ".join(t.strftime("%H:%M") for t in config.schedule.send_times)
 
         await message.answer(
@@ -91,11 +91,14 @@ def create_admin_router(
                 telegram_user_id=user.telegram_user_id,
                 username=username,
                 registered=registered.strftime("%d.%m.%Y %H:%M"),
-                levels=levels,
+                levels=format_levels(
+                    user.settings.selected_levels,
+                    locale.admin.placeholder,
+                ),
                 pronunciation=locale.pronunciation_admin(user.settings.dialect),
                 cards_per_day=len(config.schedule.send_times),
                 send_times=send_times,
-                timezone=html.escape(config.schedule.timezone.key),
+                timezone=html.escape(timezone.key),
                 delivery_state=delivery_state(user),
                 delivered_cards=format_number(user.delivered_cards),
                 last_delivery=last_text,
@@ -103,55 +106,39 @@ def create_admin_router(
         )
 
     async def send_word_card(bot: Bot, telegram_user_id: int, entry_id: int) -> bool:
-        card = await db.get_preview_card(entry_id=entry_id)
+        card = await db.get_preview_card(entry_id)
         if not card:
             return False
-
-        await delivery.send_preview(
-            bot,
-            telegram_user_id=telegram_user_id,
-            card=card,
-        )
-
+        await delivery.send_preview(bot, telegram_user_id, card)
         return True
 
     @router.message(Command("word"))
     async def word_handler(message: Message) -> None:
-        if not await require_admin(message, db):
+        if not await require_admin(message, db) or not message.from_user:
             return
 
         word = command_arguments(message)
-
         if not word:
             await message.answer(locale.admin.word_usage)
             return
 
         rows = await db.get_word_matches(word)
+        if len(rows) == 1:
+            bot = message.bot
+            if bot is None:
+                return
+            if not await send_word_card(bot, message.from_user.id, rows[0].id):
+                await message.answer(locale.admin.word_no_both_audio)
+            return
 
         if not rows:
             await message.answer(locale.admin.word_not_found)
             return
 
-        if len(rows) > 1:
-            await message.answer(
-                locale.admin.word_pick_category.format(word=html.escape(word)),
-                reply_markup=word_categories_keyboard(rows),
-            )
-            return
-
-        assert len(rows) == 1
-        match = rows[0]
-        bot = message.bot
-
-        if bot is None or message.from_user is None:
-            return
-
-        if not await send_word_card(
-            bot,
-            telegram_user_id=message.from_user.id,
-            entry_id=match.id,
-        ):
-            await message.answer(locale.admin.word_no_both_audio)
+        await message.answer(
+            locale.admin.word_pick_category.format(word=html.escape(word)),
+            reply_markup=word_categories_keyboard(rows),
+        )
 
     @router.callback_query(F.data.startswith("admin:"))
     async def admin_panel_callback(callback: CallbackQuery) -> None:
@@ -160,78 +147,49 @@ def create_admin_router(
             return
 
         panel_message = callback_message(callback)
-
         if panel_message is None:
             await callback.answer(locale.admin.panel_unavailable, show_alert=True)
             return
 
-        action = (callback.data or "admin:overview").split(":", 1)[1]
-        answered = False
-
-        try:
-            if action.startswith("word:"):
-                entry_id = action.removeprefix("word:")
-
-                if not entry_id.isdigit():
-                    await callback.answer(locale.admin.bad_choice, show_alert=True)
-                    answered = True
-                    return
-
-                await callback.answer(locale.admin.sending_card)
-                answered = True
-
-                bot = callback.bot
-
-                if bot is None:
-                    return
-
-                if not await send_word_card(
-                    bot,
-                    telegram_user_id=callback.from_user.id,
-                    entry_id=int(entry_id),
-                ):
-                    await panel_message.answer(locale.admin.word_entry_no_both_audio)
-                    return
-
-                try:
-                    await panel_message.edit_reply_markup(reply_markup=None)
-                except TelegramBadRequest:
-                    pass
+        action = (callback.data or "admin:overview").removeprefix("admin:")
+        if action.startswith("word:"):
+            entry_id = action.removeprefix("word:")
+            if not entry_id.isdigit():
+                await callback.answer(locale.admin.bad_choice, show_alert=True)
                 return
 
-            if action == "overview":
-                text = await render_overview(db, config)
-                keyboard = admin_main_keyboard()
-            elif action == "users":
-                text = await render_users(db, config)
-                keyboard = admin_users_keyboard()
-            else:
-                text = await render_overview(db, config)
-                keyboard = admin_main_keyboard()
+            await callback.answer(locale.admin.sending_card)
+            bot = callback.bot
+            if bot is None:
+                return
+            if not await send_word_card(
+                bot,
+                callback.from_user.id,
+                int(entry_id),
+            ):
+                await panel_message.answer(locale.admin.word_entry_no_both_audio)
+                return
 
-            try:
-                await panel_message.edit_text(text, reply_markup=keyboard)
-            except TelegramBadRequest as exc:
-                if "message is not modified" not in str(exc).lower():
-                    raise
-                if not answered:
-                    await callback.answer(locale.admin.already_up_to_date)
-                    answered = True
+            with suppress(TelegramBadRequest):
+                await panel_message.edit_reply_markup(reply_markup=None)
+            return
 
-        except Exception as exc:  # noqa: BLE001
-            if not answered:
-                await callback.answer(
-                    locale.admin.panel_update_failed,
-                    show_alert=True,
-                )
-                answered = True
-            await panel_message.answer(
-                locale.admin.panel_error.format(error=html.escape(str(exc)[:300]))
-            )
+        if action == "users":
+            text = await render_users(db, config)
+            keyboard = admin_section_keyboard("users")
+        else:
+            text = await render_overview(db, config)
+            keyboard = admin_main_keyboard()
 
-        finally:
-            if not answered:
-                await callback.answer()
+        try:
+            await panel_message.edit_text(text, reply_markup=keyboard)
+        except TelegramBadRequest as exc:
+            if "message is not modified" not in str(exc).lower():
+                raise
+            await callback.answer(locale.admin.already_up_to_date)
+            return
+
+        await callback.answer()
 
     return router
 
@@ -239,16 +197,13 @@ def create_admin_router(
 async def require_admin(message: Message, db: Database) -> bool:
     if message.from_user and await db.is_admin(message.from_user.id):
         return True
-
     await message.answer(locale.admin.no_access)
-
     return False
 
 
-async def render_overview(db: Database, config: BotConfig) -> str:
+async def audience_stats(db: Database, config: BotConfig) -> AudienceStats:
     local_now, today_start = local_day_bounds(config)
-
-    users = await db.get_audience_stats(
+    return await db.get_audience_stats(
         today_start=today_start,
         week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
         month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
@@ -256,6 +211,9 @@ async def render_overview(db: Database, config: BotConfig) -> str:
         ),
     )
 
+
+async def render_overview(db: Database, config: BotConfig) -> str:
+    users = await audience_stats(db, config)
     return locale.admin.overview.format(
         total_users=format_number(users.total_users),
         active_users=format_number(users.active_users),
@@ -263,16 +221,7 @@ async def render_overview(db: Database, config: BotConfig) -> str:
 
 
 async def render_users(db: Database, config: BotConfig) -> str:
-    local_now, today_start = local_day_bounds(config)
-
-    stats = await db.get_audience_stats(
-        today_start=today_start,
-        week_start=(local_now - timedelta(days=ADMIN_STATS_WEEK_DAYS)).astimezone(UTC),
-        month_start=(local_now - timedelta(days=ADMIN_STATS_MONTH_DAYS)).astimezone(
-            UTC
-        ),
-    )
-
+    stats = await audience_stats(db, config)
     levels = "\n".join(
         f"{level.upper()}: {format_number(stats.levels.get(level, 0))}"
         for level in VALID_LEVELS
@@ -284,7 +233,6 @@ async def render_users(db: Database, config: BotConfig) -> str:
         )
         or locale.admin.none
     )
-
     return locale.admin.users_panel.format(
         total_users=format_number(stats.total_users),
         active_users=format_number(stats.active_users),
@@ -303,13 +251,11 @@ async def render_users(db: Database, config: BotConfig) -> str:
 def local_day_bounds(config: BotConfig) -> tuple[datetime, datetime]:
     local_now = datetime.now(config.schedule.timezone)
     local_start = datetime.combine(
-        local_now.date(), time.min, tzinfo=config.schedule.timezone
+        local_now.date(),
+        time.min,
+        tzinfo=config.schedule.timezone,
     )
-
-    return (
-        local_now,
-        local_start.astimezone(UTC),
-    )
+    return local_now, local_start.astimezone(UTC)
 
 
 def delivery_state(user: AdminUser) -> str:
@@ -318,19 +264,3 @@ def delivery_state(user: AdminUser) -> str:
     if user.paused_at or not user.is_active:
         return locale.admin.delivery_paused
     return locale.admin.delivery_active
-
-
-def command_arguments(message: Message) -> str:
-    text = message.text or ""
-
-    return text.split(maxsplit=1)[1].strip() if len(text.split(maxsplit=1)) == 2 else ""
-
-
-def format_number(value: int) -> str:
-    return f"{value:,}".replace(",", " ")
-
-
-def callback_message(callback: CallbackQuery) -> Message | None:
-    message = callback.message
-
-    return message if isinstance(message, Message) else None

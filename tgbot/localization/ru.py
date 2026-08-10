@@ -166,8 +166,6 @@ class admin:
     panel_unavailable = "Сообщение панели недоступно."
     bad_choice = "Некорректный выбор."
     already_up_to_date = "Данные уже актуальны."
-    panel_update_failed = "Не удалось обновить раздел."
-    panel_error = "Ошибка admin panel: <code>{error}</code>"
 
 
 def pronunciation_short(value: str | None) -> str:

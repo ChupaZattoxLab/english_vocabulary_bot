@@ -22,7 +22,9 @@ tgbot/                 # runtime bot package
     sync.py            # blocking SQLAlchemy helpers for scripts/tests
   delivery/            # card templates, send logic, scheduler
     types.py           # template paths, DeliveryStatus (delivery/ only)
-  handlers/            # Telegram user/admin commands and keyboards
+  handlers/            # Telegram user/admin commands
+    keyboard/          # inline keyboards (levels, pronunciation, admin, words)
+    helpers.py
     types.py           # admin stats windows (handlers/ only)
 scripts/
   cli.py               # uv run start|stop|migrate|test|lint|…
