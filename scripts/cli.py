@@ -18,7 +18,7 @@ PID_FILE = PROJECT_ROOT / ".bot.pid"
 
 def start() -> int:
     """Start one bot process and record it for ``uv run stop``."""
-    existing = _read_process()
+    existing = read_process()
     if existing is not None:
         print(f"Bot is already running (PID {existing.pid}).")
         return 1
@@ -41,12 +41,12 @@ def start() -> int:
     try:
         return bot_main()
     finally:
-        _remove_pid_file(process.pid)
+        remove_pid_file(process.pid)
 
 
 def stop() -> int:
     """Stop the bot process recorded by ``uv run start``."""
-    process = _read_process()
+    process = read_process()
     if process is None:
         PID_FILE.unlink(missing_ok=True)
         print("Bot is not running.")
@@ -67,13 +67,13 @@ def stop() -> int:
         return 2
     finally:
         if not psutil.pid_exists(pid):
-            _remove_pid_file()
+            remove_pid_file()
 
     print(f"Bot stopped (PID {pid}).")
     return 0
 
 
-def _read_process(path: Path = PID_FILE) -> psutil.Process | None:
+def read_process(path: Path = PID_FILE) -> psutil.Process | None:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
         process = psutil.Process(int(payload["pid"]))
@@ -92,9 +92,9 @@ def _read_process(path: Path = PID_FILE) -> psutil.Process | None:
         return None
 
 
-def _remove_pid_file(expected_pid: int | None = None) -> None:
+def remove_pid_file(expected_pid: int | None = None) -> None:
     if expected_pid is not None:
-        process = _read_process()
+        process = read_process()
         if process is not None and process.pid != expected_pid:
             return
 

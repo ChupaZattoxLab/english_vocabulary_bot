@@ -8,6 +8,14 @@ from unittest.mock import AsyncMock, patch
 from zoneinfo import ZoneInfo
 
 from tgbot.bot_config import BotConfig
+from tgbot.db.models import (
+    AdminUser,
+    Card,
+    CardAudio,
+    DialectVariant,
+    UserSettings,
+    WordMatch,
+)
 from tgbot.delivery import (
     CardDeliveryService,
     CardTemplate,
@@ -15,18 +23,10 @@ from tgbot.delivery import (
     classify_delivery_error,
 )
 from tgbot.delivery.scheduler import due_schedule_slots
-from tgbot.handlers.admin import _delivery_state
+from tgbot.handlers.admin import delivery_state
 from tgbot.handlers.admin_keyboards import (
     admin_main_keyboard,
     word_categories_keyboard,
-)
-from tgbot.models import (
-    AdminUser,
-    Card,
-    CardAudio,
-    DialectVariant,
-    UserSettings,
-    WordMatch,
 )
 from tgbot.secrets import Secrets
 
@@ -122,11 +122,11 @@ class CardTemplateTests(unittest.TestCase):
 class AdminHelperTests(unittest.TestCase):
     def test_user_delivery_states_are_distinct(self) -> None:
         self.assertEqual(
-            _delivery_state(make_admin_user(is_active=True)),
+            delivery_state(make_admin_user(is_active=True)),
             "включена",
         )
         self.assertEqual(
-            _delivery_state(
+            delivery_state(
                 make_admin_user(
                     is_active=False,
                     paused_at=datetime.now(UTC),
@@ -135,7 +135,7 @@ class AdminHelperTests(unittest.TestCase):
             "приостановлена",
         )
         self.assertEqual(
-            _delivery_state(
+            delivery_state(
                 make_admin_user(
                     is_active=False,
                     blocked_at=datetime.now(UTC),
@@ -249,7 +249,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             service = CardDeliveryService(db, CardTemplate(template_path))
             card = make_card("audio/ogg", "test.voice.ogg")
 
-            await service._send_card(bot, telegram_user_id=123, card=card)
+            await service.send_card(bot, telegram_user_id=123, card=card)
 
             bot.send_voice.assert_awaited_once()
             bot.send_message.assert_awaited_once()
@@ -338,6 +338,8 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
             )
             card = replace(
                 make_card("audio/ogg", "test-us.voice.ogg"),
+                word_us="color",
+                word_gb="colour",
                 us=DialectVariant(
                     dialect="us",
                     word="color",
@@ -362,7 +364,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 ),
             )
 
-            await service._send_card(bot, telegram_user_id=123, card=card)
+            await service.send_card(bot, telegram_user_id=123, card=card)
 
             self.assertEqual(bot.send_voice.await_count, 2)
             bot.send_message.assert_awaited_once()
@@ -420,6 +422,8 @@ def make_card(
     return Card(
         user_card_id=1,
         entry_id=1,
+        word_us="test",
+        word_gb="test",
         lexical_category="noun",
         cefr="A1",
         definition="definition",

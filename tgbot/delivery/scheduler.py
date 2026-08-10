@@ -18,8 +18,8 @@ from tgbot.constants import (
     SCHEDULE_GRACE_MINUTES,
 )
 from tgbot.db import Database
+from tgbot.db.models import ActiveUser
 from tgbot.delivery.service import CardDeliveryService
-from tgbot.models import ActiveUser
 
 LOGGER = logging.getLogger("tgbot.scheduler")
 
@@ -34,17 +34,17 @@ class CardScheduler:
         self.db = db
         self.delivery = delivery
         self.config = config
-        self._stop_event = asyncio.Event()
+        self.stop_event = asyncio.Event()
 
     def stop(self) -> None:
-        self._stop_event.set()
+        self.stop_event.set()
 
     async def run(self, bot: Bot) -> None:
         LOGGER.info(
             "Scheduler started: %s",
             self.config.schedule.text,
         )
-        while not self._stop_event.is_set():
+        while not self.stop_event.is_set():
             try:
                 now = datetime.now(UTC)
                 for scheduled_slot in due_schedule_slots(
@@ -59,7 +59,7 @@ class CardScheduler:
 
             try:
                 await asyncio.wait_for(
-                    self._stop_event.wait(),
+                    self.stop_event.wait(),
                     timeout=self.config.schedule.poll_seconds,
                 )
             except TimeoutError:
@@ -82,7 +82,7 @@ class CardScheduler:
             semaphore = asyncio.Semaphore(self.config.schedule.delivery_concurrency)
             statuses = await asyncio.gather(
                 *(
-                    self._deliver_to_user(
+                    self.deliver_to_user(
                         bot,
                         user,
                         scheduled_slot,
@@ -118,7 +118,7 @@ class CardScheduler:
             skipped,
         )
 
-    async def _deliver_to_user(
+    async def deliver_to_user(
         self,
         bot: Bot,
         user: ActiveUser,

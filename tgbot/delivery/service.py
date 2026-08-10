@@ -6,7 +6,6 @@ import asyncio
 import html
 import logging
 from collections.abc import Awaitable, Callable
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal, TypeVar
 
@@ -17,6 +16,7 @@ from aiogram.exceptions import (
     TelegramRetryAfter,
 )
 from aiogram.types import BufferedInputFile, Message
+from pydantic import BaseModel, ConfigDict
 
 from tgbot.constants import (
     DELIVERY_STATUS_DELIVERED,
@@ -32,6 +32,7 @@ from tgbot.constants import (
     SEND_METHOD_VOICE,
 )
 from tgbot.db import Database
+from tgbot.db.models import Card, Dialect
 from tgbot.delivery.card_template import (
     BOTH_CARD_TEMPLATE_PATH,
     CARD_TEMPLATE_PATH,
@@ -39,7 +40,6 @@ from tgbot.delivery.card_template import (
     CardTemplateError,
 )
 from tgbot.localization import locale
-from tgbot.models import Card, Dialect
 
 LOGGER = logging.getLogger("tgbot.delivery")
 
@@ -47,8 +47,9 @@ DeliveryStatus = Literal["delivered", "failed", "skipped"]
 T = TypeVar("T")
 
 
-@dataclass(frozen=True)
-class DeliveryOutcome:
+class DeliveryOutcome(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     status: DeliveryStatus
     card: Card | None = None
 
@@ -75,20 +76,20 @@ class CardDeliveryService:
             scheduled_slot,
         )
         if card is None:
-            return DeliveryOutcome(DELIVERY_STATUS_SKIPPED)
+            return DeliveryOutcome(status=DELIVERY_STATUS_SKIPPED)
 
         text_sent = False
 
         try:
             rendered = self.render_card(card)
-            await self._send_card_text(
+            await self.send_card_text(
                 bot,
                 telegram_user_id=telegram_user_id,
                 text=rendered,
             )
             text_sent = True
 
-            message = await self._send_card_voices(
+            message = await self.send_card_voices(
                 bot,
                 telegram_user_id=telegram_user_id,
                 card=card,
@@ -98,7 +99,7 @@ class CardDeliveryService:
                 delivered=True,
                 telegram_message_id=message.message_id,
             )
-            return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
+            return DeliveryOutcome(status=DELIVERY_STATUS_DELIVERED, card=card)
 
         except TelegramForbiddenError as exc:
             if text_sent:
@@ -118,8 +119,10 @@ class CardDeliveryService:
             LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
 
             return DeliveryOutcome(
-                DELIVERY_STATUS_DELIVERED if text_sent else DELIVERY_STATUS_FAILED,
-                card,
+                status=(
+                    DELIVERY_STATUS_DELIVERED if text_sent else DELIVERY_STATUS_FAILED
+                ),
+                card=card,
             )
 
         except Exception as exc:  # noqa: BLE001
@@ -133,7 +136,7 @@ class CardDeliveryService:
                     "counting as delivered",
                     telegram_user_id,
                 )
-                return DeliveryOutcome(DELIVERY_STATUS_DELIVERED, card)
+                return DeliveryOutcome(status=DELIVERY_STATUS_DELIVERED, card=card)
 
             await self.db.finish_delivery(
                 card.user_card_id,
@@ -142,12 +145,12 @@ class CardDeliveryService:
                 error_message=str(exc),
             )
             LOGGER.exception("Card delivery failed for user %s", telegram_user_id)
-            return DeliveryOutcome(DELIVERY_STATUS_FAILED, card)
+            return DeliveryOutcome(status=DELIVERY_STATUS_FAILED, card=card)
 
     async def send_preview(self, bot: Bot, telegram_user_id: int, card: Card) -> None:
         """Send GB, US, and both variants for admin visual QA."""
         for preference in ("gb", "us", "both"):
-            await self._send_card(
+            await self.send_card(
                 bot,
                 telegram_user_id=telegram_user_id,
                 card=card.for_preference(preference),
@@ -160,10 +163,10 @@ class CardDeliveryService:
             {
                 "word": primary.word,
                 "word_upper": primary.word.upper(),
-                "word_us": (card.us or primary).word,
-                "word_us_upper": (card.us or primary).word.upper(),
-                "word_gb": (card.gb or primary).word,
-                "word_gb_upper": (card.gb or primary).word.upper(),
+                "word_us": card.word_us,
+                "word_us_upper": card.word_us.upper(),
+                "word_gb": card.word_gb,
+                "word_gb_upper": card.word_gb.upper(),
                 "lexical_category": card.lexical_category,
                 "cefr": card.cefr,
                 "definition": card.definition,
@@ -182,7 +185,7 @@ class CardDeliveryService:
             }
         )
 
-    async def _send_card(
+    async def send_card(
         self,
         bot: Bot,
         telegram_user_id: int,
@@ -190,19 +193,19 @@ class CardDeliveryService:
     ) -> Message:
         rendered = self.render_card(card)
 
-        await self._send_card_text(
+        await self.send_card_text(
             bot,
             telegram_user_id=telegram_user_id,
             text=rendered,
         )
 
-        return await self._send_card_voices(
+        return await self.send_card_voices(
             bot,
             telegram_user_id=telegram_user_id,
             card=card,
         )
 
-    async def _send_card_voices(
+    async def send_card_voices(
         self,
         bot: Bot,
         telegram_user_id: int,
@@ -210,7 +213,7 @@ class CardDeliveryService:
     ) -> Message:
         message: Message | None = None
         for variant in card.variants():
-            message = await self._send_voice_attachment(
+            message = await self.send_voice_attachment(
                 bot,
                 telegram_user_id=telegram_user_id,
                 source_url=variant.audio.source_url,
@@ -224,18 +227,18 @@ class CardDeliveryService:
 
         return message
 
-    async def _send_card_text(
+    async def send_card_text(
         self,
         bot: Bot,
         telegram_user_id: int,
         text: str,
     ) -> None:
-        await _call_with_retry_after(
+        await call_with_retry_after(
             lambda: bot.send_message(chat_id=telegram_user_id, text=text),
             kind=SEND_KIND_TEXT,
         )
 
-    async def _send_voice_attachment(
+    async def send_voice_attachment(
         self,
         bot: Bot,
         telegram_user_id: int,
@@ -245,7 +248,7 @@ class CardDeliveryService:
         caption: str | None,
     ) -> Message:
         async def send(file_reference: str | BufferedInputFile) -> Message:
-            return await _call_with_retry_after(
+            return await call_with_retry_after(
                 lambda: bot.send_voice(
                     chat_id=telegram_user_id,
                     voice=file_reference,
@@ -311,7 +314,7 @@ def classify_delivery_error(exc: Exception) -> str:
     return ERROR_TYPE_TECHNICAL
 
 
-async def _call_with_retry_after(
+async def call_with_retry_after(
     operation: Callable[[], Awaitable[T]],
     kind: str,
 ) -> T:

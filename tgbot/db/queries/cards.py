@@ -24,12 +24,13 @@ from tgbot.constants import (
     ERROR_TYPE_STALE_RESERVATION,
     SEND_METHOD_VOICE,
 )
-from tgbot.db.mappers import (
+from tgbot.db.models import (
+    VALID_DIALECT_PREFERENCES,
+    Card,
+    Dialect,
+    DialectPreference,
+    card_delivery_prefs_from_row,
     card_from_row,
-    row_bool,
-    row_int,
-    row_optional_str,
-    row_str_sequence,
 )
 from tgbot.db.queries.base import DbSession, mapping_first
 from tgbot.db.tables import (
@@ -40,12 +41,6 @@ from tgbot.db.tables import (
     oald_audio_variants,
     oald_entries,
     oald_entry_audio_sources,
-)
-from tgbot.models import (
-    VALID_DIALECT_PREFERENCES,
-    Card,
-    Dialect,
-    DialectPreference,
 )
 
 
@@ -101,16 +96,16 @@ class CardsQueries(DbSession):
             if not user:
                 return None
 
-            raw_preference = row_optional_str(user, "dialect")
+            prefs = card_delivery_prefs_from_row(user)
             if (
-                not row_bool(user, "onboarding_completed")
-                or not user["selected_levels"]
-                or raw_preference not in VALID_DIALECT_PREFERENCES
-                or (require_active and not row_bool(user, "is_active"))
+                not prefs.onboarding_completed
+                or not prefs.selected_levels
+                or prefs.dialect not in VALID_DIALECT_PREFERENCES
+                or (require_active and not prefs.is_active)
             ):
                 return None
 
-            preference = cast(DialectPreference, raw_preference)
+            preference = cast(DialectPreference, prefs.dialect)
 
             # One occupied card per scheduled slot.
             existing = await mapping_first(
@@ -125,7 +120,7 @@ class CardsQueries(DbSession):
                 return None
 
             # Pick a random unseen entry that has prepared audio for the preference.
-            levels = list(row_str_sequence(user, "selected_levels"))
+            levels = list(prefs.selected_levels)
             stmt, us_audio, gb_audio = card_content_select()
             stmt = (
                 stmt.where(
@@ -163,7 +158,7 @@ class CardsQueries(DbSession):
                 sa.insert(bot_user_cards)
                 .values(
                     telegram_user_id=telegram_user_id,
-                    entry_id=row_int(card_row, "entry_id"),
+                    entry_id=int(card_row["entry_id"]),
                     dialect=preference,
                     source_url=source_url,
                     source_url_gb=source_url_gb,
@@ -177,7 +172,7 @@ class CardsQueries(DbSession):
             return card_from_row(
                 card_row,
                 preference=preference,
-                user_card_id=row_int(user_card, "id"),
+                user_card_id=int(user_card["id"]),
             )
 
     async def finish_delivery(

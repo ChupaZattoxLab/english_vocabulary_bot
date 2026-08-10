@@ -7,8 +7,8 @@ from collections.abc import Sequence
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from tgbot.db.models import WordMatch
 from tgbot.localization import locale
-from tgbot.models import WordMatch
 
 
 def admin_main_keyboard() -> InlineKeyboardMarkup:
@@ -27,7 +27,7 @@ def admin_main_keyboard() -> InlineKeyboardMarkup:
 
 
 def admin_users_keyboard() -> InlineKeyboardMarkup:
-    return _back_and_refresh("users")
+    return back_and_refresh("users")
 
 
 def word_categories_keyboard(
@@ -37,15 +37,14 @@ def word_categories_keyboard(
     category_counts: dict[str, int] = {}
 
     for row in rows:
-        category = row.lexical_category.strip() or locale.keyboard.unknown_category
+        category = row.lexical_category
         category_counts[category] = category_counts.get(category, 0) + 1
 
     for row in rows:
-        category = row.lexical_category.strip() or locale.keyboard.unknown_category
+        category = row.lexical_category
         text = category
         if category_counts[category] > 1:
-            cefr = row.cefr.upper()
-            text = f"{category} · {cefr or locale.keyboard.dash} · #{row.id}"
+            text = f"{category} · {row.cefr.upper()} · #{row.id}"
         builder.button(text=text, callback_data=f"admin:word:{row.id}")
 
     builder.adjust(2)
@@ -53,7 +52,7 @@ def word_categories_keyboard(
     return builder.as_markup()
 
 
-def _back_and_refresh(section: str) -> InlineKeyboardMarkup:
+def back_and_refresh(section: str) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     builder.button(text=locale.keyboard.admin_back, callback_data="admin:overview")

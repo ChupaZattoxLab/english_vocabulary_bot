@@ -312,7 +312,7 @@ def transcode_audio_to_voice(
     ffmpeg_executable: str | None = None,
     run: Callable[..., Any] = subprocess.run,
 ) -> VoiceAudio:
-    executable = ffmpeg_executable or _ffmpeg_executable()
+    executable = ffmpeg_executable or resolve_ffmpeg_executable()
     command = [
         executable,
         "-nostdin",
@@ -898,7 +898,7 @@ def detected_audio_content_type(data: bytes) -> str:
     return ""
 
 
-def _ffmpeg_executable() -> str:
+def resolve_ffmpeg_executable() -> str:
     try:
         import imageio_ffmpeg
     except ImportError as exc:

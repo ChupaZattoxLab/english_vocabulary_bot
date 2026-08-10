@@ -7,10 +7,14 @@ from typing import cast
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from tgbot.db.mappers import as_db_rows, user_from_row
+from tgbot.db.models import (
+    ActiveUser,
+    CefrLevel,
+    DialectPreference,
+    active_user_from_row,
+)
 from tgbot.db.queries.base import DbSession
 from tgbot.db.tables import bot_users
-from tgbot.models import ActiveUser, CefrLevel, DialectPreference
 
 
 class UsersQueries(DbSession):
@@ -46,13 +50,13 @@ class UsersQueries(DbSession):
             },
         ).returning(*bot_users.c)
 
-        return user_from_row(await self.execute_fetch_exactly_one(stmt))
+        return active_user_from_row(await self.execute_fetch_exactly_one(stmt))
 
     async def get_user(self, telegram_user_id: int) -> ActiveUser | None:
         row = await self.fetch_first(
             sa.select(bot_users).where(bot_users.c.telegram_user_id == telegram_user_id)
         )
-        return user_from_row(row) if row else None
+        return active_user_from_row(row) if row else None
 
     async def is_admin(self, telegram_user_id: int) -> bool:
         role = await self.fetch_scalar(
@@ -95,7 +99,7 @@ class UsersQueries(DbSession):
             .returning(*bot_users.c)
         )
 
-        return user_from_row(await self.execute_fetch_exactly_one(stmt))
+        return active_user_from_row(await self.execute_fetch_exactly_one(stmt))
 
     async def set_dialect(
         self,
@@ -129,7 +133,7 @@ class UsersQueries(DbSession):
             .returning(*bot_users.c)
         )
 
-        return user_from_row(await self.execute_fetch_exactly_one(stmt))
+        return active_user_from_row(await self.execute_fetch_exactly_one(stmt))
 
     async def clear_blocked_marker(self, telegram_user_id: int) -> None:
         """Clear blocked_at after the user messages again; do not resume schedule."""
@@ -179,7 +183,7 @@ class UsersQueries(DbSession):
             .order_by(bot_users.c.telegram_user_id)
         )
 
-        return [user_from_row(row) for row in as_db_rows(rows)]
+        return [active_user_from_row(row) for row in rows]
 
     async def deactivate_user(self, telegram_user_id: int) -> None:
         """Mark unreachable (bot blocked): stop delivery and set blocked_at."""

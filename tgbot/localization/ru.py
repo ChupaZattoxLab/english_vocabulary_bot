@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from tgbot.models import Dialect
+from tgbot.db.models import Dialect
 
 
 class user:

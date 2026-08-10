@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
 from datetime import time
+from typing import Self
 from zoneinfo import ZoneInfo
+
+from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
 
 from tgbot.constants import (
     DB_POOL_SIZE,
@@ -17,8 +19,9 @@ from tgbot.constants import (
 from tgbot.secrets import ConfigError, secrets
 
 
-@dataclass(frozen=True)
-class ScheduleSettings:
+class ScheduleSettings(BaseModel):
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
     timezone: ZoneInfo
     send_times: tuple[time, ...]
     text: str
@@ -26,7 +29,7 @@ class ScheduleSettings:
     delivery_concurrency: int
 
     @classmethod
-    def load(cls) -> ScheduleSettings:
+    def load(cls) -> Self:
         send_times = parse_send_times(SEND_TIMES)
         return cls(
             timezone=ZoneInfo(TIMEZONE),
@@ -37,28 +40,43 @@ class ScheduleSettings:
         )
 
 
-@dataclass(frozen=True)
-class BotConfig:
+class BotConfig(BaseModel):
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
     bot_token: str
     db_url: str
     db_pool_size: int
     schedule: ScheduleSettings
 
+    @field_validator("bot_token")
     @classmethod
-    def load(cls) -> BotConfig:
+    def require_bot_token(cls, value: str) -> str:
+        if not value:
+            raise ValueError("TELEGRAM_BOT_TOKEN is required")
+        return value
+
+    @field_validator("db_url")
+    @classmethod
+    def require_db_url(cls, value: str) -> str:
+        if not value:
+            raise ValueError("OALD_DATABASE_URL is required")
+        return value
+
+    @classmethod
+    def load(cls) -> Self:
         """Build runtime config from the module ``secrets`` singleton."""
-        if not secrets.telegram_bot_token:
-            raise ConfigError("TELEGRAM_BOT_TOKEN is required")
-
-        if not secrets.db_url:
-            raise ConfigError("OALD_DATABASE_URL is required")
-
-        return cls(
-            bot_token=secrets.telegram_bot_token,
-            db_url=secrets.db_url,
-            db_pool_size=DB_POOL_SIZE,
-            schedule=ScheduleSettings.load(),
-        )
+        try:
+            return cls(
+                bot_token=secrets.telegram_bot_token,
+                db_url=secrets.db_url,
+                db_pool_size=DB_POOL_SIZE,
+                schedule=ScheduleSettings.load(),
+            )
+        except ValidationError as exc:
+            message = str(exc.errors()[0].get("msg", exc))
+            if message.startswith("Value error, "):
+                message = message.removeprefix("Value error, ")
+            raise ConfigError(message) from exc
 
 
 def parse_send_times(values: Sequence[str] = SEND_TIMES) -> tuple[time, ...]:

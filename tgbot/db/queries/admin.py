@@ -7,12 +7,13 @@ from datetime import datetime
 import sqlalchemy as sa
 
 from tgbot.constants import CARD_STATUS_DELIVERED
-from tgbot.db.mappers import (
+from tgbot.db.models import (
+    AdminUser,
+    AudienceStats,
+    Card,
+    WordMatch,
     admin_user_from_row,
-    as_db_rows,
     card_from_row,
-    row_int,
-    row_str,
     word_match_from_row,
 )
 from tgbot.db.queries.base import (
@@ -23,7 +24,6 @@ from tgbot.db.queries.base import (
 )
 from tgbot.db.queries.cards import card_content_select, hydrate_card_audio
 from tgbot.db.tables import bot_user_cards, bot_users, oald_entries
-from tgbot.models import AdminUser, AudienceStats, Card, WordMatch
 
 
 class AdminQueries(DbSession):
@@ -94,20 +94,19 @@ class AdminQueries(DbSession):
             )
 
         return AudienceStats(
-            total_users=row_int(totals, "total_users"),
-            active_users=row_int(totals, "active_users"),
-            paused_users=row_int(totals, "paused_users"),
-            blocked_users=row_int(totals, "blocked_users"),
-            new_today=row_int(totals, "new_today"),
-            new_week=row_int(totals, "new_week"),
-            new_month=row_int(totals, "new_month"),
+            total_users=int(totals["total_users"]),
+            active_users=int(totals["active_users"]),
+            paused_users=int(totals["paused_users"]),
+            blocked_users=int(totals["blocked_users"]),
+            new_today=int(totals["new_today"]),
+            new_week=int(totals["new_week"]),
+            new_month=int(totals["new_month"]),
             levels={
-                row_str(row, "level"): row_int(row, "users")
-                for row in as_db_rows(levels)
+                str(row["level"]): int(row["users"]) for row in levels
             },
             dialects={
-                row_str(row, "dialect"): row_int(row, "users")
-                for row in as_db_rows(dialects)
+                str(row["dialect"]): int(row["users"])
+                for row in dialects
                 if row["dialect"]
             },
         )
@@ -162,7 +161,7 @@ class AdminQueries(DbSession):
             .limit(limit)
         )
 
-        return tuple(word_match_from_row(row) for row in as_db_rows(rows))
+        return tuple(word_match_from_row(row) for row in rows)
 
     async def get_preview_card(self, entry_id: int | None = None) -> Card | None:
         """Card with both US and GB audio for admin QA (no bot_user_cards row).
@@ -196,4 +195,4 @@ class AdminQueries(DbSession):
             data = dict(row)
             await hydrate_card_audio(connection, data, "both")
 
-        return card_from_row(data, preference="both", user_card_id=0)
+        return card_from_row(data)

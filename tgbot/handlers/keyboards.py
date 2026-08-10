@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from tgbot.db.models import VALID_LEVELS
 from tgbot.localization import locale
-from tgbot.models import VALID_LEVELS
 
 LEVELS = tuple(level.upper() for level in VALID_LEVELS)
 

@@ -12,16 +12,16 @@ from aiogram.types import CallbackQuery, Message, User
 from tgbot.bot_config import BotConfig
 from tgbot.constants import DELIVERY_STATUS_FAILED, DELIVERY_STATUS_SKIPPED
 from tgbot.db import Database
-from tgbot.delivery import CardDeliveryService
-from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
-from tgbot.localization import locale
-from tgbot.models import (
+from tgbot.db.models import (
     VALID_DIALECT_PREFERENCES,
     VALID_LEVELS,
     ActiveUser,
     CefrLevel,
     DialectPreference,
 )
+from tgbot.delivery import CardDeliveryService
+from tgbot.handlers.keyboards import levels_keyboard, pronunciation_keyboard
+from tgbot.localization import locale
 
 
 def create_router(
@@ -84,7 +84,7 @@ def create_router(
                 )
                 return
 
-            message = _callback_message(callback)
+            message = callback_message(callback)
 
             if message is not None:
                 await message.edit_text(
@@ -103,7 +103,7 @@ def create_router(
             callback.from_user.id,
             cast(CefrLevel, action),
         )
-        message = _callback_message(callback)
+        message = callback_message(callback)
 
         if message is not None:
             await message.edit_reply_markup(
@@ -136,7 +136,7 @@ def create_router(
             callback.from_user.id,
             cast(DialectPreference, dialect),
         )
-        message = _callback_message(callback)
+        message = callback_message(callback)
 
         if message is not None:
             await message.edit_text(
@@ -234,7 +234,7 @@ def user_settings_text(user: ActiveUser, config: BotConfig) -> str:
     )
 
 
-def _callback_message(callback: CallbackQuery) -> Message | None:
+def callback_message(callback: CallbackQuery) -> Message | None:
     message = callback.message
 
     return message if isinstance(message, Message) else None

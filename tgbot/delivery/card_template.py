@@ -52,18 +52,18 @@ class CardTemplateError(ValueError):
 class CardTemplate:
     def __init__(self, path: Path):
         self.path = path
-        self._mtime_ns = -1
-        self._template = ""
-        self._load_if_changed()
+        self.mtime_ns = -1
+        self.template = ""
+        self.load_if_changed()
 
     def render(self, values: Mapping[str, str]) -> str:
-        self._load_if_changed()
+        self.load_if_changed()
 
         escaped = {
             field: html.escape(str(values.get(field, "")), quote=False)
             for field in ALLOWED_FIELDS
         }
-        rendered = self._template.format_map(escaped)
+        rendered = self.template.format_map(escaped)
 
         if len(rendered) > TELEGRAM_MESSAGE_MAX_LEN:
             raise CardTemplateError(
@@ -75,10 +75,10 @@ class CardTemplate:
 
     def reload(self) -> None:
         """Validate and reload the template even when its timestamp is unchanged."""
-        self._mtime_ns = -1
-        self._load_if_changed()
+        self.mtime_ns = -1
+        self.load_if_changed()
 
-    def _load_if_changed(self) -> None:
+    def load_if_changed(self) -> None:
         try:
             stat = self.path.stat()
         except OSError as exc:
@@ -86,7 +86,7 @@ class CardTemplate:
                 f"could not read card template {self.path}: {exc}"
             ) from exc
 
-        if stat.st_mtime_ns == self._mtime_ns:
+        if stat.st_mtime_ns == self.mtime_ns:
             return
 
         template = self.path.read_text(encoding="utf-8").strip()
@@ -139,5 +139,5 @@ class CardTemplate:
                 "card template must contain {ipa}, or both {ipa_us} and {ipa_gb}"
             )
 
-        self._template = template
-        self._mtime_ns = stat.st_mtime_ns
+        self.template = template
+        self.mtime_ns = stat.st_mtime_ns

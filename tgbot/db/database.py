@@ -14,7 +14,6 @@ from tgbot.constants import (
     DB_CONNECT_TIMEOUT_SECONDS,
     DB_POOL_RECYCLE_SECONDS,
 )
-from tgbot.db.mappers import as_db_row, as_db_rows, row_optional_str, row_str
 from tgbot.db.queries import (
     AdminQueries,
     CardsQueries,
@@ -88,9 +87,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
                 .mappings()
                 .all()
             )
-            existing = {
-                row_str(as_db_row(row), "table_name") for row in as_db_rows(rows)
-            }
+            existing = {str(row["table_name"]) for row in rows}
             missing = MANAGED_TABLES - existing
 
             if missing:
@@ -113,7 +110,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
             )
             if (
                 not version_table
-                or row_optional_str(as_db_row(version_table), "name") is None
+                or version_table["name"] is None
             ):
                 raise RuntimeError(
                     "Database is not managed by Alembic. Run `uv run migrate`."
@@ -126,7 +123,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
             )
             expected = migration_head()
             current = (
-                row_str(as_db_row(version), "version_num") if version else "<none>"
+                str(version["version_num"]) if version else "<none>"
             )
 
             if current != expected:
