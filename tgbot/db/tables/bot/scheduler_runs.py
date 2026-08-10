@@ -2,64 +2,61 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+from typing import cast
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.tables.base import metadata
+from tgbot.db.models.types import SchedulerRunStatus
+from tgbot.db.tables.base import Base, varchar_enum
 
-bot_scheduler_runs = sa.Table(
-    "bot_scheduler_runs",
-    metadata,
-    sa.Column(
-        "scheduled_slot",
+
+class BotSchedulerRun(Base):
+    scheduled_slot: Mapped[datetime] = mapped_column(
         postgresql.TIMESTAMP(timezone=True),
         primary_key=True,
-    ),
-    sa.Column(
-        "status",
-        sa.Text,
-        nullable=False,
+    )
+
+    status: Mapped[SchedulerRunStatus] = mapped_column(
+        varchar_enum(SchedulerRunStatus, name="bot_scheduler_runs_status_check"),
         server_default=sa.text("'running'"),
-    ),
-    sa.Column(
-        "attempted_users",
+    )
+
+    attempted_users: Mapped[int] = mapped_column(
         sa.Integer,
-        nullable=False,
         server_default=sa.text("0"),
-    ),
-    sa.Column(
-        "delivered_cards",
+    )
+
+    delivered_cards: Mapped[int] = mapped_column(
         sa.Integer,
-        nullable=False,
         server_default=sa.text("0"),
-    ),
-    sa.Column(
-        "failed_cards",
+    )
+
+    failed_cards: Mapped[int] = mapped_column(
         sa.Integer,
-        nullable=False,
         server_default=sa.text("0"),
-    ),
-    sa.Column(
-        "skipped_users",
+    )
+
+    skipped_users: Mapped[int] = mapped_column(
         sa.Integer,
-        nullable=False,
         server_default=sa.text("0"),
-    ),
-    sa.Column(
-        "started_at",
+    )
+
+    started_at: Mapped[datetime] = mapped_column(
         postgresql.TIMESTAMP(timezone=True),
-        nullable=False,
         server_default=sa.func.current_timestamp(),
-    ),
-    sa.Column("completed_at", postgresql.TIMESTAMP(timezone=True)),
-    sa.Column(
-        "error_message",
+    )
+
+    completed_at: Mapped[datetime | None] = mapped_column(
+        postgresql.TIMESTAMP(timezone=True),
+    )
+
+    error_message: Mapped[str] = mapped_column(
         sa.Text,
-        nullable=False,
         server_default=sa.text("''"),
-    ),
-    sa.CheckConstraint(
-        "status IN ('running', 'completed', 'failed')",
-        name="bot_scheduler_runs_status_check",
-    ),
-)
+    )
+
+
+bot_scheduler_runs = cast(sa.Table, BotSchedulerRun.__table__)

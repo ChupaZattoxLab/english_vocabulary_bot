@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import cast
-
 from aiogram import F, Router
 from aiogram.enums import ChatType
 from aiogram.filters import Command, CommandStart
@@ -101,7 +99,7 @@ def create_router(
 
         user = await db.toggle_level(
             callback.from_user.id,
-            cast(CefrLevel, action),
+            CefrLevel(action),
         )
         message = callback_message(callback)
 
@@ -134,7 +132,7 @@ def create_router(
 
         user = await db.set_dialect(
             callback.from_user.id,
-            cast(DialectPreference, dialect),
+            DialectPreference(dialect),
         )
         message = callback_message(callback)
 

@@ -148,9 +148,15 @@ class CardsQueries(DbSession):
             await hydrate_card_audio(connection, card_row, preference)
 
             source_url = card_row[
-                "gb_source_url" if preference == "gb" else "us_source_url"
+                "gb_source_url"
+                if preference == DialectPreference.GB
+                else "us_source_url"
             ]
-            source_url_gb = card_row["gb_source_url"] if preference == "both" else None
+            source_url_gb = (
+                card_row["gb_source_url"]
+                if preference == DialectPreference.BOTH
+                else None
+            )
 
             # Persist the reservation before returning the card payload.
             user_card = await mapping_first(
@@ -247,8 +253,8 @@ def card_content_select() -> tuple[Select[Any], FromClause, FromClause]:
     lateral aliases, then load bytes via hydrate_card_audio so random picks do
     not drag large audio_data through ORDER BY random().
     """
-    us_audio = prepared_audio_lateral("us")
-    gb_audio = prepared_audio_lateral("gb")
+    us_audio = prepared_audio_lateral(Dialect.US)
+    gb_audio = prepared_audio_lateral(Dialect.GB)
 
     statement = sa.select(
         oald_entries.c.id.label("entry_id"),
@@ -322,10 +328,10 @@ def preference_audio_ready(
     gb_audio: FromClause,
 ) -> sa.ColumnElement[bool]:
     """WHERE fragment: required dialect(s) have a prepared voice source_url."""
-    if preference == "us":
+    if preference == DialectPreference.US:
         return us_audio.c.source_url.is_not(None)
 
-    if preference == "gb":
+    if preference == DialectPreference.GB:
         return gb_audio.c.source_url.is_not(None)
 
     return sa.and_(
@@ -345,10 +351,10 @@ async def hydrate_card_audio(
     audio_data for the final source_url(s) only.
     """
     prefixes: list[Dialect] = []
-    if preference in {"us", "both"}:
-        prefixes.append("us")
-    if preference in {"gb", "both"}:
-        prefixes.append("gb")
+    if preference in {DialectPreference.US, DialectPreference.BOTH}:
+        prefixes.append(Dialect.US)
+    if preference in {DialectPreference.GB, DialectPreference.BOTH}:
+        prefixes.append(Dialect.GB)
 
     for prefix in prefixes:
         source_url = card_row.get(f"{prefix}_source_url")

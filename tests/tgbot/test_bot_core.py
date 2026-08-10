@@ -12,7 +12,9 @@ from tgbot.db.models import (
     AdminUser,
     Card,
     CardAudio,
+    Dialect,
     DialectVariant,
+    UserRole,
     UserSettings,
     WordMatch,
 )
@@ -341,7 +343,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 word_us="color",
                 word_gb="colour",
                 us=DialectVariant(
-                    dialect="us",
+                    dialect=Dialect.US,
                     word="color",
                     ipa="/us/",
                     audio=CardAudio(
@@ -352,7 +354,7 @@ class VoiceDeliveryTests(unittest.IsolatedAsyncioTestCase):
                     ),
                 ),
                 gb=DialectVariant(
-                    dialect="gb",
+                    dialect=Dialect.GB,
                     word="colour",
                     ipa="/gb/",
                     audio=CardAudio(
@@ -388,7 +390,7 @@ def make_admin_user(**overrides: object) -> AdminUser:
     user = AdminUser(
         telegram_user_id=1,
         username="",
-        role="user",
+        role=UserRole.USER,
         created_at=now,
         settings=UserSettings(selected_levels=(), dialect=None),
         is_active=True,
@@ -430,7 +432,7 @@ def make_card(
         example="example",
         translation="тест",
         us=DialectVariant(
-            dialect="us",
+            dialect=Dialect.US,
             word="test",
             ipa="/test/",
             audio=CardAudio(

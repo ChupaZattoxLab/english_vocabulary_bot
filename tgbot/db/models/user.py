@@ -8,8 +8,6 @@ from datetime import datetime
 from typing import Any, cast
 
 from tgbot.db.models.types import (
-    VALID_DIALECT_PREFERENCES,
-    VALID_ROLES,
     DialectPreference,
     UserRole,
 )
@@ -47,6 +45,7 @@ class AdminUser(ActiveUser):
 @dataclass(frozen=True)
 class CardDeliveryPrefs:
     """Subset of bot_users columns checked before reserving a card."""
+
     selected_levels: tuple[str, ...]
     dialect: DialectPreference | None
     is_active: bool
@@ -56,14 +55,16 @@ class CardDeliveryPrefs:
 def active_user_from_row(row: object) -> ActiveUser:
     """Like ravenspedia ``table_to_response_form``: mapping row → ActiveUser."""
     data = dict(cast(Mapping[Any, Any], row))
-    role = str(data.get("role") or "user").lower()
-    if role not in VALID_ROLES:
-        raise ValueError(f"unsupported user role {data.get('role')!r}")
+    role_raw = str(data.get("role") or UserRole.USER).lower()
+    try:
+        role = UserRole(role_raw)
+    except ValueError as exc:
+        raise ValueError(f"unsupported user role {data.get('role')!r}") from exc
 
     return ActiveUser(
         telegram_user_id=int(data["telegram_user_id"]),
         username=str(data.get("username") or ""),
-        role=cast(UserRole, role),
+        role=role,
         created_at=data["created_at"],
         settings=user_settings_from_row(data),
         is_active=bool(data["is_active"]),
@@ -97,10 +98,15 @@ def user_settings_from_row(row: Mapping[Any, Any]) -> UserSettings:
     raw_dialect = row.get("dialect")
     dialect: DialectPreference | None = None
     if raw_dialect is not None:
-        normalized = str(raw_dialect).lower()
-        if normalized not in VALID_DIALECT_PREFERENCES:
-            raise ValueError(f"unsupported dialect preference {raw_dialect!r}")
-        dialect = cast(DialectPreference, normalized)
+        if isinstance(raw_dialect, DialectPreference):
+            dialect = raw_dialect
+        else:
+            try:
+                dialect = DialectPreference(str(raw_dialect).lower())
+            except ValueError as exc:
+                raise ValueError(
+                    f"unsupported dialect preference {raw_dialect!r}"
+                ) from exc
 
     levels = row.get("selected_levels") or ()
     return UserSettings(
@@ -114,7 +120,10 @@ def card_delivery_prefs_from_row(row: object) -> CardDeliveryPrefs:
     raw_dialect = data.get("dialect")
     dialect: DialectPreference | None = None
     if raw_dialect is not None:
-        dialect = cast(DialectPreference, str(raw_dialect).lower())
+        if isinstance(raw_dialect, DialectPreference):
+            dialect = raw_dialect
+        else:
+            dialect = DialectPreference(str(raw_dialect).lower())
 
     levels = data.get("selected_levels") or ()
     return CardDeliveryPrefs(

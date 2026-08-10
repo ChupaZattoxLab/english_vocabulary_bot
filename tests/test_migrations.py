@@ -12,7 +12,7 @@ from sqlalchemy.engine import make_url
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db.sync import sync_connection
-from tgbot.db.tables import MANAGED_TABLES, metadata, oald_entries
+from tgbot.db.tables import MANAGED_TABLES, oald_entries
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,18 +80,19 @@ class AlembicIntegrationTests(unittest.TestCase):
                 set(MANAGED_TABLES) | {"alembic_version"},
             )
             self.assertNotIn(
-                "bot_users_telegram_user_id_seq",
+                "bot_user_telegram_user_id_seq",
                 inspector.get_sequence_names(),
             )
         finally:
             engine.dispose()
 
-    def test_upgrade_adopts_complete_legacy_schema_without_data_loss(
+    def test_upgrade_preserves_data_on_repeated_upgrade(
         self,
     ) -> None:
+        self.upgrade_head()
+
         engine = sa.create_engine(self.sqlalchemy_url)
         try:
-            metadata.create_all(engine)
             with engine.begin() as connection:
                 connection.execute(
                     oald_entries.insert().values(
@@ -115,7 +116,7 @@ class AlembicIntegrationTests(unittest.TestCase):
                     sa.text("SELECT version_num FROM alembic_version")
                 )
             self.assertEqual(count, 1)
-            self.assertEqual(version, "d8e9f0a1b2c3")
+            self.assertEqual(version, "f2a3b4c5d6e7")
         finally:
             engine.dispose()
 

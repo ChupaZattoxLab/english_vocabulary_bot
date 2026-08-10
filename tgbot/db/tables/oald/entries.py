@@ -2,119 +2,132 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+from typing import Any, cast
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.tables.base import metadata
+from tgbot.db.models.types import CefrLevel
+from tgbot.db.tables.base import Base, varchar_enum
 
-oald_entries = sa.Table(
-    "oald_entries",
-    metadata,
-    sa.Column(
-        "id",
+
+class OaldEntry(Base):
+    __tablename__ = "oald_entries"  # type: ignore[assignment]
+    __table_args__ = (
+        sa.Index(
+            "oald_entries_word_us_category_idx",
+            "word_us",
+            "lexical_category",
+        ),
+        sa.Index(
+            "oald_entries_translations_idx",
+            "translations",
+            postgresql_using="gin",
+        ),
+        sa.Index(
+            "oald_entries_active_idx",
+            "is_active",
+            "cefr",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(
         sa.BigInteger,
         sa.Identity(always=True),
         primary_key=True,
-    ),
-    sa.Column("word_us", sa.Text, nullable=False),
-    sa.Column("word_gb", sa.Text, nullable=False),
-    sa.Column("lexical_category", sa.Text, nullable=False),
-    sa.Column("cefr", sa.String(2), nullable=False),
-    sa.Column("definition_url_oxford", sa.Text, nullable=False, unique=True),
-    sa.Column(
-        "definition_url_cambridge",
-        sa.Text,
-        nullable=False,
-        server_default=sa.text("''"),
-    ),
-    sa.Column(
-        "ipa_us",
-        postgresql.ARRAY(sa.Text),
-        nullable=False,
-        server_default=sa.text("'{}'::text[]"),
-    ),
-    sa.Column(
-        "ipa_gb",
-        postgresql.ARRAY(sa.Text),
-        nullable=False,
-        server_default=sa.text("'{}'::text[]"),
-    ),
-    sa.Column("definition", sa.Text, nullable=False),
-    sa.Column("example", sa.Text, nullable=False),
-    sa.Column(
-        "audio_source_us",
-        postgresql.ARRAY(sa.Text),
-        nullable=False,
-        server_default=sa.text("'{}'::text[]"),
-    ),
-    sa.Column(
-        "audio_source_gb",
-        postgresql.ARRAY(sa.Text),
-        nullable=False,
-        server_default=sa.text("'{}'::text[]"),
-    ),
-    sa.Column(
-        "translations",
-        postgresql.JSONB,
-        nullable=False,
-        server_default=sa.text("'{}'::jsonb"),
-    ),
-    sa.Column(
-        "is_active",
-        sa.Boolean,
-        nullable=False,
-        server_default=sa.true(),
-    ),
-    sa.Column(
-        "created_at",
-        postgresql.TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=sa.func.current_timestamp(),
-    ),
-    sa.Column(
-        "updated_at",
-        postgresql.TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=sa.func.current_timestamp(),
-    ),
-    sa.CheckConstraint(
-        "cefr IN ('a1', 'a2', 'b1', 'b2', 'c1')",
-        name="oald_entries_cefr_check",
-    ),
-    sa.CheckConstraint(
-        "btrim(word_us) <> ''",
-        name="oald_entries_word_us_check",
-    ),
-    sa.CheckConstraint(
-        "btrim(word_gb) <> ''",
-        name="oald_entries_word_gb_check",
-    ),
-    sa.CheckConstraint(
-        "btrim(lexical_category) <> ''",
-        name="oald_entries_category_check",
-    ),
-    sa.CheckConstraint(
-        "btrim(definition_url_oxford) <> ''",
-        name="oald_entries_definition_url_check",
-    ),
-)
+    )
 
-sa.Index("oald_entries_word_us_idx", oald_entries.c.word_us)
-sa.Index("oald_entries_word_gb_idx", oald_entries.c.word_gb)
-sa.Index("oald_entries_category_idx", oald_entries.c.lexical_category)
-sa.Index("oald_entries_cefr_idx", oald_entries.c.cefr)
-sa.Index(
-    "oald_entries_word_us_category_idx",
-    oald_entries.c.word_us,
-    oald_entries.c.lexical_category,
-)
-sa.Index(
-    "oald_entries_translations_idx",
-    oald_entries.c.translations,
-    postgresql_using="gin",
-)
-sa.Index(
-    "oald_entries_active_idx",
-    oald_entries.c.is_active,
-    oald_entries.c.cefr,
-)
+    word_us: Mapped[str] = mapped_column(
+        sa.Text,
+        sa.CheckConstraint(
+            "btrim(word_us) <> ''",
+            name="oald_entries_word_us_check",
+        ),
+        index=True,
+    )
+
+    word_gb: Mapped[str] = mapped_column(
+        sa.Text,
+        sa.CheckConstraint(
+            "btrim(word_gb) <> ''",
+            name="oald_entries_word_gb_check",
+        ),
+        index=True,
+    )
+
+    lexical_category: Mapped[str] = mapped_column(
+        sa.Text,
+        sa.CheckConstraint(
+            "btrim(lexical_category) <> ''",
+            name="oald_entries_category_check",
+        ),
+        index=True,
+    )
+
+    cefr: Mapped[CefrLevel] = mapped_column(
+        varchar_enum(CefrLevel, name="oald_entries_cefr_check"),
+        index=True,
+    )
+
+    definition_url_oxford: Mapped[str] = mapped_column(
+        sa.Text,
+        sa.CheckConstraint(
+            "btrim(definition_url_oxford) <> ''",
+            name="oald_entries_definition_url_check",
+        ),
+        unique=True,
+    )
+
+    definition_url_cambridge: Mapped[str] = mapped_column(
+        sa.Text,
+        server_default=sa.text("''"),
+    )
+
+    ipa_us: Mapped[list[str]] = mapped_column(
+        postgresql.ARRAY(sa.Text),
+        server_default=sa.text("'{}'::text[]"),
+    )
+
+    ipa_gb: Mapped[list[str]] = mapped_column(
+        postgresql.ARRAY(sa.Text),
+        server_default=sa.text("'{}'::text[]"),
+    )
+
+    definition: Mapped[str] = mapped_column(sa.Text)
+
+    example: Mapped[str] = mapped_column(sa.Text)
+
+    audio_source_us: Mapped[list[str]] = mapped_column(
+        postgresql.ARRAY(sa.Text),
+        server_default=sa.text("'{}'::text[]"),
+    )
+
+    audio_source_gb: Mapped[list[str]] = mapped_column(
+        postgresql.ARRAY(sa.Text),
+        server_default=sa.text("'{}'::text[]"),
+    )
+
+    translations: Mapped[dict[str, Any]] = mapped_column(
+        postgresql.JSONB,
+        server_default=sa.text("'{}'::jsonb"),
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        sa.Boolean,
+        server_default=sa.true(),
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        postgresql.TIMESTAMP(timezone=True),
+        server_default=sa.func.current_timestamp(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        postgresql.TIMESTAMP(timezone=True),
+        server_default=sa.func.current_timestamp(),
+    )
+
+
+oald_entries = cast(sa.Table, OaldEntry.__table__)

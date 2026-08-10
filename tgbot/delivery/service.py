@@ -32,7 +32,7 @@ from tgbot.constants import (
     SEND_METHOD_VOICE,
 )
 from tgbot.db import Database
-from tgbot.db.models import Card, Dialect
+from tgbot.db.models import Card, Dialect, DialectPreference
 from tgbot.delivery.card_template import (
     BOTH_CARD_TEMPLATE_PATH,
     CARD_TEMPLATE_PATH,
@@ -149,7 +149,11 @@ class CardDeliveryService:
 
     async def send_preview(self, bot: Bot, telegram_user_id: int, card: Card) -> None:
         """Send GB, US, and both variants for admin visual QA."""
-        for preference in ("gb", "us", "both"):
+        for preference in (
+            DialectPreference.GB,
+            DialectPreference.US,
+            DialectPreference.BOTH,
+        ):
             await self.send_card(
                 bot,
                 telegram_user_id=telegram_user_id,

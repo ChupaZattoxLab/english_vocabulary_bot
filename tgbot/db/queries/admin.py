@@ -11,6 +11,7 @@ from tgbot.db.models import (
     AdminUser,
     AudienceStats,
     Card,
+    DialectPreference,
     WordMatch,
     admin_user_from_row,
     card_from_row,
@@ -101,9 +102,7 @@ class AdminQueries(DbSession):
             new_today=int(totals["new_today"]),
             new_week=int(totals["new_week"]),
             new_month=int(totals["new_month"]),
-            levels={
-                str(row["level"]): int(row["users"]) for row in levels
-            },
+            levels={str(row["level"]): int(row["users"]) for row in levels},
             dialects={
                 str(row["dialect"]): int(row["users"])
                 for row in dialects
@@ -193,6 +192,6 @@ class AdminQueries(DbSession):
 
             # Fetch voice blobs for both dialects after the metadata row is chosen.
             data = dict(row)
-            await hydrate_card_audio(connection, data, "both")
+            await hydrate_card_audio(connection, data, DialectPreference.BOTH)
 
         return card_from_row(data)

@@ -108,10 +108,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
                 .mappings()
                 .first()
             )
-            if (
-                not version_table
-                or version_table["name"] is None
-            ):
+            if not version_table or version_table["name"] is None:
                 raise RuntimeError(
                     "Database is not managed by Alembic. Run `uv run migrate`."
                 )
@@ -122,9 +119,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
                 .first()
             )
             expected = migration_head()
-            current = (
-                str(version["version_num"]) if version else "<none>"
-            )
+            current = str(version["version_num"]) if version else "<none>"
 
             if current != expected:
                 raise RuntimeError(

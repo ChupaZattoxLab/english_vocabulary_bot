@@ -56,12 +56,20 @@ class Card:
 
     def for_preference(self, preference: DialectPreference) -> Card:
         """Return a view of this card for a user dialect preference."""
-        us = self.us if preference in {"us", "both"} else None
-        gb = self.gb if preference in {"gb", "both"} else None
+        us = (
+            self.us
+            if preference in {DialectPreference.US, DialectPreference.BOTH}
+            else None
+        )
+        gb = (
+            self.gb
+            if preference in {DialectPreference.GB, DialectPreference.BOTH}
+            else None
+        )
 
-        if preference in {"us", "both"} and us is None:
+        if preference in {DialectPreference.US, DialectPreference.BOTH} and us is None:
             raise ValueError("card has no US variant")
-        if preference in {"gb", "both"} and gb is None:
+        if preference in {DialectPreference.GB, DialectPreference.BOTH} and gb is None:
             raise ValueError("card has no GB variant")
 
         return replace(self, us=us, gb=gb)
@@ -70,7 +78,7 @@ class Card:
 def card_from_row(
     row: object,
     *,
-    preference: DialectPreference = "both",
+    preference: DialectPreference = DialectPreference.BOTH,
     user_card_id: int = 0,
 ) -> Card:
     """Build a Card from an oald entry + audio mapping row.
@@ -81,8 +89,8 @@ def card_from_row(
     data = dict(cast(Mapping[Any, Any], row))
     word_us = str(data["word_us"])
     word_gb = str(data["word_gb"])
-    include_us = preference in {"us", "both"}
-    include_gb = preference in {"gb", "both"}
+    include_us = preference in {DialectPreference.US, DialectPreference.BOTH}
+    include_gb = preference in {DialectPreference.GB, DialectPreference.BOTH}
 
     return Card(
         user_card_id=user_card_id,
@@ -96,26 +104,26 @@ def card_from_row(
         translation=russian_translation(data.get("translations")),
         us=(
             DialectVariant(
-                dialect="us",
+                dialect=Dialect.US,
                 word=word_us,
                 ipa=ipa_at_position(
                     data.get("ipa_us") or (),
                     data.get("us_source_position"),
                 ),
-                audio=card_audio_from_row(data, prefix="us"),
+                audio=card_audio_from_row(data, prefix=Dialect.US),
             )
             if include_us
             else None
         ),
         gb=(
             DialectVariant(
-                dialect="gb",
+                dialect=Dialect.GB,
                 word=word_gb,
                 ipa=ipa_at_position(
                     data.get("ipa_gb") or (),
                     data.get("gb_source_position"),
                 ),
-                audio=card_audio_from_row(data, prefix="gb"),
+                audio=card_audio_from_row(data, prefix=Dialect.GB),
             )
             if include_gb
             else None

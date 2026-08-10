@@ -13,6 +13,7 @@ from sqlalchemy.engine import make_url
 
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db import Database
+from tgbot.db.models import CefrLevel, DialectPreference
 from tgbot.db.sync import sync_connection
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -173,8 +174,8 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
             telegram_user_id=self.telegram_user_id,
             username="integration",
         )
-        await self.db.toggle_level(self.telegram_user_id, "c1")
-        await self.db.set_dialect(self.telegram_user_id, "us")
+        await self.db.toggle_level(self.telegram_user_id, CefrLevel.C1)
+        await self.db.set_dialect(self.telegram_user_id, DialectPreference.US)
 
     async def asyncTearDown(self) -> None:
         await self.db.close()
@@ -252,7 +253,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_both_dialects_return_two_prepared_voice_files(self) -> None:
-        await self.db.set_dialect(self.telegram_user_id, "both")
+        await self.db.set_dialect(self.telegram_user_id, DialectPreference.BOTH)
         card = await self.db.reserve_card(
             self.telegram_user_id,
             datetime.now(UTC),
@@ -269,7 +270,7 @@ class BotDatabaseIntegrationTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_dialect_change_preserves_pause(self) -> None:
         await self.db.set_active(self.telegram_user_id, False)
-        user = await self.db.set_dialect(self.telegram_user_id, "gb")
+        user = await self.db.set_dialect(self.telegram_user_id, DialectPreference.GB)
         self.assertFalse(user.is_active)
         self.assertEqual(user.settings.dialect, "gb")
 

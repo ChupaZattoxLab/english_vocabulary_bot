@@ -2,30 +2,37 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+from typing import cast
+
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.tables.base import metadata
+from tgbot.db.models.types import TelegramSendMethod
+from tgbot.db.tables.base import Base, varchar_enum
 
-bot_telegram_audio_cache = sa.Table(
-    "bot_telegram_audio_cache",
-    metadata,
-    sa.Column(
-        "source_url",
+
+class BotTelegramAudioCache(Base):
+    __tablename__ = "bot_telegram_audio_cache"  # type: ignore[assignment]
+
+    source_url: Mapped[str] = mapped_column(
         sa.Text,
         sa.ForeignKey("oald_audio_files.source_url"),
         primary_key=True,
-    ),
-    sa.Column("send_method", sa.Text, primary_key=True),
-    sa.Column("telegram_file_id", sa.Text, nullable=False),
-    sa.Column(
-        "updated_at",
+    )
+
+    send_method: Mapped[TelegramSendMethod] = mapped_column(
+        varchar_enum(TelegramSendMethod, name="bot_audio_cache_method_check"),
+        primary_key=True,
+    )
+
+    telegram_file_id: Mapped[str] = mapped_column(sa.Text)
+
+    updated_at: Mapped[datetime] = mapped_column(
         postgresql.TIMESTAMP(timezone=True),
-        nullable=False,
         server_default=sa.func.current_timestamp(),
-    ),
-    sa.CheckConstraint(
-        "send_method IN ('voice', 'audio', 'document')",
-        name="bot_audio_cache_method_check",
-    ),
-)
+    )
+
+
+bot_telegram_audio_cache = cast(sa.Table, BotTelegramAudioCache.__table__)

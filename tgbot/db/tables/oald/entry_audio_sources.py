@@ -2,42 +2,42 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 import sqlalchemy as sa
+from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.tables.base import metadata
+from tgbot.db.models.types import Dialect
+from tgbot.db.tables.base import Base, varchar_enum
 
-oald_entry_audio_sources = sa.Table(
-    "oald_entry_audio_sources",
-    metadata,
-    sa.Column(
-        "entry_id",
+
+class OaldEntryAudioSource(Base):
+    entry_id: Mapped[int] = mapped_column(
         sa.BigInteger,
         sa.ForeignKey("oald_entries.id", ondelete="CASCADE"),
         primary_key=True,
-    ),
-    sa.Column("dialect", sa.String(2), primary_key=True),
-    sa.Column("source_position", sa.Integer, primary_key=True),
-    sa.Column(
-        "source_url",
+    )
+
+    dialect: Mapped[Dialect] = mapped_column(
+        varchar_enum(Dialect, name="oald_entry_audio_dialect_check"),
+        primary_key=True,
+        index=True,
+    )
+
+    source_position: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.CheckConstraint(
+            "source_position >= 0",
+            name="oald_entry_audio_position_check",
+        ),
+        primary_key=True,
+    )
+
+    source_url: Mapped[str] = mapped_column(
         sa.Text,
         sa.ForeignKey("oald_audio_files.source_url"),
-        nullable=False,
-    ),
-    sa.CheckConstraint(
-        "dialect IN ('us', 'gb')",
-        name="oald_entry_audio_dialect_check",
-    ),
-    sa.CheckConstraint(
-        "source_position >= 0",
-        name="oald_entry_audio_position_check",
-    ),
-)
+        index=True,
+    )
 
-sa.Index(
-    "oald_entry_audio_source_url_idx",
-    oald_entry_audio_sources.c.source_url,
-)
-sa.Index(
-    "oald_entry_audio_dialect_idx",
-    oald_entry_audio_sources.c.dialect,
-)
+
+oald_entry_audio_sources = cast(sa.Table, OaldEntryAudioSource.__table__)
