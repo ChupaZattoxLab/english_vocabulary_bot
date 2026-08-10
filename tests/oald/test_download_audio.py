@@ -8,7 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
 
-from download_oald_audio import (
+from scripts.oald.download_audio import (
     AudioConversionError,
     AudioDownloadError,
     AudioRateLimitError,
@@ -20,9 +20,8 @@ from download_oald_audio import (
     transcode_audio_to_voice,
     validate_voice_payload,
 )
-from import_oald_postgres import import_entries, load_entries
-from test_import_oald_postgres import oald_row, write_rows
-
+from scripts.oald.import_oald import import_entries, load_entries
+from tests.oald.test_import_oald import oald_row, write_rows
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db.sync import sync_connection
 

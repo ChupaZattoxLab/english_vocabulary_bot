@@ -7,16 +7,24 @@ from collections.abc import Iterable
 import sqlalchemy as sa
 from sqlalchemy.engine import Connection
 
+from tgbot.db.tables import (
+    oald_audio_files,
+    oald_audio_variants,
+    oald_entries,
+    oald_entry_audio_sources,
+    oxford_lexical_entries,
+)
+
 OALD_TABLES = frozenset(
     {
-        "oald_entries",
-        "oald_audio_files",
-        "oald_entry_audio_sources",
-        "oald_audio_variants",
+        oald_entries.name,
+        oald_audio_files.name,
+        oald_entry_audio_sources.name,
+        oald_audio_variants.name,
     }
 )
 
-OXFORD_TABLES = frozenset({"oxford_lexical_entries"})
+OXFORD_TABLES = frozenset({oxford_lexical_entries.name})
 
 
 class SchemaNotMigratedError(RuntimeError):

@@ -26,6 +26,9 @@ test = "scripts.cli:test"
 format = "scripts.cli:format_code"
 lint = "scripts.cli:lint"
 typecheck = "scripts.cli:typecheck"
+oald-import = "scripts.cli:oald_import"
+oald-audio = "scripts.cli:oald_audio"
+oxford-import = "scripts.cli:oxford_import"
 
 [dependency-groups]
 dev = [
@@ -44,7 +47,7 @@ packages = ["tgbot", "scripts"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["scripts/oald", "."]
+pythonpath = ["."]
 asyncio_mode = "auto"
 
 [tool.ruff]

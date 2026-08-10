@@ -1,36 +1,24 @@
-#!/usr/bin/env python3
-"""Incrementally import cached Oxford translation JSON files into PostgreSQL."""
+"""Parse Oxford API cache files and build import rows."""
 
 from __future__ import annotations
 
-import argparse
 import json
 import logging
-import os
 import unicodedata
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Iterator, Mapping
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import insert as pg_insert
+from scripts.oald.oxford_import.models import (
+    DatasetDefinition,
+    OxfordCacheError,
+    OxfordGroup,
+    OxfordRow,
+)
+from tgbot.db.models import Dialect
 
-from tgbot.db.sync import sync_connection
-from tgbot.db.tables import oxford_lexical_entries
-
-try:
-    from .oald_preflight import require_oxford_schema
-except ImportError:  # running as a plain script
-    from oald_preflight import require_oxford_schema  # type: ignore[no-redef]
-
-ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_SOURCE_DIR = ROOT / "source" / "oxford_api" / "translations_en_ru"
-DEFAULT_WORDS_JSON = ROOT / "data" / "enriched" / "words.json"
-
-LOG_LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 LOGGER = logging.getLogger("tgbot.oxford_import")
 
 US_REGION_MARKERS = {
@@ -65,155 +53,6 @@ DATASET_POS_BY_OXFORD_CATEGORY: dict[str, set[str]] = {
     "numeral": {"number", "ordinal number"},
     "other": {"infinitive marker"},
 }
-
-
-class OxfordCacheError(ValueError):
-    """Raised when a cache file cannot be parsed in strict mode."""
-
-
-class OxfordDatabaseError(RuntimeError):
-    """Raised when PostgreSQL setup or import fails."""
-
-
-@dataclass(frozen=True)
-class DatasetDefinition:
-    ordinal: int
-    word: str
-    part_of_speech: str
-    phonetic: str
-    definition: str
-    example: str
-
-
-@dataclass
-class OxfordGroup:
-    source_lexical_key: str
-    lexical_category: str
-    base_words: list[str] = field(default_factory=list)
-    us_variants: list[str] = field(default_factory=list)
-    gb_variants: list[str] = field(default_factory=list)
-    pronunciations_us: list[tuple[str, str]] = field(default_factory=list)
-    pronunciations_gb: list[tuple[str, str]] = field(default_factory=list)
-    translations: list[str] = field(default_factory=list)
-    entry_count: int = 0
-
-
-@dataclass(frozen=True)
-class OxfordRow:
-    source_lexical_key: str
-    word_us: str
-    word_gb: str
-    lexical_category: str
-    ipa_us: list[str]
-    ipa_gb: list[str]
-    definition: str
-    example: str
-    audio_source_us: list[str]
-    audio_source_gb: list[str]
-    translations: list[str]
-
-    def as_parameters(self) -> dict[str, Any]:
-        return {
-            "source_lexical_key": self.source_lexical_key,
-            "word_us": self.word_us,
-            "word_gb": self.word_gb,
-            "lexical_category": self.lexical_category,
-            "ipa_us": self.ipa_us,
-            "ipa_gb": self.ipa_gb,
-            "definition": self.definition,
-            "example": self.example,
-            "audio_source_us": self.audio_source_us,
-            "audio_source_gb": self.audio_source_gb,
-            "translations": self.translations,
-        }
-
-
-def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
-    configure_logging(args.log_level)
-
-    if not args.source_dir.is_dir():
-        LOGGER.error("Oxford cache directory does not exist: %s", args.source_dir)
-        return 2
-    if not args.words_json.is_file():
-        LOGGER.error("Definition JSON does not exist: %s", args.words_json)
-        return 2
-    if not args.dry_run and not args.db_url:
-        LOGGER.error(
-            "PostgreSQL URL is required: use --database-url or set DATABASE_URL"
-        )
-        return 2
-
-    try:
-        LOGGER.info("Reading Oxford cache from %s", args.source_dir)
-        groups, file_stats = parse_cache_files(
-            args.source_dir,
-            limit_files=args.limit_files,
-            strict=args.strict,
-        )
-        definition_index = load_definition_index(args.words_json)
-        rows, row_stats = build_rows(groups, definition_index)
-        log_summary(file_stats, row_stats)
-        if args.dry_run:
-            LOGGER.info("Dry-run complete; no database changes made")
-            return 0
-
-        imported = import_rows(rows, args.db_url, batch_size=args.batch_size)
-        LOGGER.info("Oxford import complete: %s rows processed", f"{imported:,}")
-        return 0
-    except (OxfordCacheError, OxfordDatabaseError) as exc:
-        LOGGER.error("Oxford import failed: %s", exc)
-        return 1
-
-
-def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--source-dir",
-        type=Path,
-        default=DEFAULT_SOURCE_DIR,
-        help=f"Oxford cache directory (default: {DEFAULT_SOURCE_DIR})",
-    )
-    parser.add_argument(
-        "--words-json",
-        type=Path,
-        default=DEFAULT_WORDS_JSON,
-        help=f"Definition source JSON (default: {DEFAULT_WORDS_JSON})",
-    )
-    parser.add_argument(
-        "--database-url",
-        dest="db_url",
-        default=os.environ.get("DATABASE_URL"),
-        help="PostgreSQL URL; defaults to DATABASE_URL",
-    )
-    parser.add_argument(
-        "--batch-size",
-        type=positive_integer,
-        default=500,
-        help="Rows per PostgreSQL batch (default: 500)",
-    )
-    parser.add_argument(
-        "--limit-files",
-        type=positive_integer,
-        help="Process only the first N cache files",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Parse and report without connecting to PostgreSQL",
-    )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Stop on the first malformed cache file",
-    )
-    parser.add_argument(
-        "--log-level",
-        choices=LOG_LEVELS,
-        default="INFO",
-        help="Terminal log verbosity (default: INFO)",
-    )
-    return parser.parse_args(argv)
 
 
 def parse_cache_files(
@@ -367,73 +206,6 @@ def build_rows(
     return rows, stats
 
 
-def import_rows(
-    rows: Iterable[OxfordRow],
-    db_url: str,
-    batch_size: int = 500,
-) -> int:
-    processed = 0
-    try:
-        with sync_connection(db_url) as connection:
-            require_oxford_schema(connection)
-            LOGGER.info("Alembic-managed Oxford cache schema is ready")
-            for batch in iter_batches(rows, batch_size):
-                values = [row.as_parameters() for row in batch]
-                stmt = pg_insert(oxford_lexical_entries).values(values)
-                stmt = stmt.on_conflict_do_update(
-                    index_elements=[oxford_lexical_entries.c.source_lexical_key],
-                    set_={
-                        "word_us": stmt.excluded.word_us,
-                        "word_gb": stmt.excluded.word_gb,
-                        "lexical_category": stmt.excluded.lexical_category,
-                        "ipa_us": stmt.excluded.ipa_us,
-                        "ipa_gb": stmt.excluded.ipa_gb,
-                        "definition": stmt.excluded.definition,
-                        "example": stmt.excluded.example,
-                        "audio_source_us": stmt.excluded.audio_source_us,
-                        "audio_source_gb": stmt.excluded.audio_source_gb,
-                        "translations": stmt.excluded.translations,
-                    },
-                    where=sa.tuple_(
-                        oxford_lexical_entries.c.word_us,
-                        oxford_lexical_entries.c.word_gb,
-                        oxford_lexical_entries.c.lexical_category,
-                        oxford_lexical_entries.c.ipa_us,
-                        oxford_lexical_entries.c.ipa_gb,
-                        oxford_lexical_entries.c.definition,
-                        oxford_lexical_entries.c.example,
-                        oxford_lexical_entries.c.audio_source_us,
-                        oxford_lexical_entries.c.audio_source_gb,
-                        oxford_lexical_entries.c.translations,
-                    ).is_distinct_from(
-                        sa.tuple_(
-                            stmt.excluded.word_us,
-                            stmt.excluded.word_gb,
-                            stmt.excluded.lexical_category,
-                            stmt.excluded.ipa_us,
-                            stmt.excluded.ipa_gb,
-                            stmt.excluded.definition,
-                            stmt.excluded.example,
-                            stmt.excluded.audio_source_us,
-                            stmt.excluded.audio_source_gb,
-                            stmt.excluded.translations,
-                        )
-                    ),
-                )
-                connection.execute(stmt)
-                processed += len(batch)
-                LOGGER.info(
-                    "Upserted batch of %s rows; processed=%s",
-                    f"{len(batch):,}",
-                    f"{processed:,}",
-                )
-    except Exception as exc:
-        raise OxfordDatabaseError(
-            "PostgreSQL import failed; check the server and connection settings"
-        ) from exc
-    return processed
-
-
 def log_summary(file_stats: Counter[str], row_stats: Counter[str]) -> None:
     LOGGER.info(
         "Oxford cache: files=%s, successful=%s, 404=%s, invalid=%s, "
@@ -456,19 +228,6 @@ def log_summary(file_stats: Counter[str], row_stats: Counter[str]) -> None:
         row_stats["definition_ambiguous"],
         row_stats["definition_missing"],
     )
-
-
-def iter_batches(
-    rows: Iterable[OxfordRow], batch_size: int
-) -> Iterator[list[OxfordRow]]:
-    batch: list[OxfordRow] = []
-    for row in rows:
-        batch.append(row)
-        if len(batch) == batch_size:
-            yield batch
-            batch = []
-    if batch:
-        yield batch
 
 
 def process_lexical_entry(
@@ -497,9 +256,9 @@ def process_variant_form(group: OxfordGroup, variant: Mapping[str, Any]) -> None
     regions = regions_from_items(variant.get("regions") or [])
     variant_word = normalize_word(variant.get("text"))
     if variant_word:
-        if "us" in regions:
+        if Dialect.US in regions:
             append_unique(group.us_variants, variant_word)
-        if "gb" in regions:
+        if Dialect.GB in regions:
             append_unique(group.gb_variants, variant_word)
     for pronunciation in variant.get("pronunciations") or []:
         add_pronunciation(group, pronunciation, inherited_regions=regions)
@@ -521,7 +280,7 @@ def add_translations(group: OxfordGroup, senses: Iterable[Mapping[str, Any]]) ->
 def add_pronunciation(
     group: OxfordGroup,
     pronunciation: Mapping[str, Any],
-    inherited_regions: set[str] | None = None,
+    inherited_regions: set[Dialect] | None = None,
 ) -> None:
     notation = normalize_word(pronunciation.get("phoneticNotation"))
     raw_ipa = pronunciation.get("phoneticSpelling")
@@ -534,9 +293,9 @@ def add_pronunciation(
     if not regions:
         regions = set(inherited_regions or ())
     pair = (ipa, audio)
-    if "us" in regions:
+    if Dialect.US in regions:
         append_unique(group.pronunciations_us, pair)
-    if "gb" in regions:
+    if Dialect.GB in regions:
         append_unique(group.pronunciations_gb, pair)
 
 
@@ -659,14 +418,14 @@ def append_unique(values: list[Any], value: Any) -> None:
         values.append(value)
 
 
-def regions_from_items(items: Iterable[Any]) -> set[str]:
-    regions: set[str] = set()
+def regions_from_items(items: Iterable[Any]) -> set[Dialect]:
+    regions: set[Dialect] = set()
     for item in items:
         marker = normalize_marker(item)
         if marker in US_REGION_MARKERS:
-            regions.add("us")
+            regions.add(Dialect.US)
         if marker in GB_REGION_MARKERS:
-            regions.add("gb")
+            regions.add(Dialect.GB)
     return regions
 
 
@@ -674,22 +433,3 @@ def source_key(result_id: str, lexical_category: str) -> str:
     encoded_id = quote(normalize_word(result_id), safe="._-")
     encoded_category = quote(normalize_category(lexical_category), safe="._-")
     return f"oxford:{encoded_id}:{encoded_category}"
-
-
-def configure_logging(level: str) -> None:
-    logging.basicConfig(
-        level=getattr(logging, level),
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-
-
-def positive_integer(value: str) -> int:
-    parsed = int(value)
-    if parsed <= 0:
-        raise argparse.ArgumentTypeError("must be greater than zero")
-    return parsed
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

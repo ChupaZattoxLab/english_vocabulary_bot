@@ -100,7 +100,8 @@ data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts/
 
 Without these parts Postgres still starts; `scripts/restore-oald-seed.sh` skips restore
 and you get an empty schema after migrations. The bot will start, but there will be
-nothing to send until you restore a dump or rebuild via `scripts/oald/`.
+nothing to send until you restore a dump or rebuild card data (see **Rebuild OALD
+content** below).
 
 If the volume was already created without the seed, either add the parts and recreate
 the volume, or restore a dump manually:
@@ -165,20 +166,45 @@ run first; they no longer create tables.
 ## Day-to-day commands
 
 ```powershell
-uv run start      # run the bot (records PID for stop)
-uv run stop       # stop the bot started via start
-uv run migrate    # alembic upgrade head
-uv run check      # metadata matches migrated DB
-uv run test       # pytest
-uv run format     # ruff format
-uv run lint       # ruff check --fix + format check
-uv run typecheck  # pyright on tgbot + scripts/oald
+uv run start         # run the bot (records PID for stop)
+uv run stop          # stop the bot started via start
+uv run migrate       # alembic upgrade head
+uv run check         # metadata matches migrated DB
+uv run test          # pytest
+uv run format        # ruff format
+uv run lint          # ruff check --fix + format check
+uv run typecheck     # pyright on tgbot + scripts/oald
+uv run oald-import   # rebuild oald_entries from data/oald/words.json
+uv run oald-audio    # download / transcode pronunciation audio
+uv run oxford-import # optional: Oxford API cache → staging table
 ```
 
 Set `TEST_OALD_DATABASE_URL` (same `postgresql+psycopg://` form as
 `OALD_DATABASE_URL`) to run PostgreSQL integration tests. The role must be
-allowed to create temporary databases. OALD/Oxford import scripts expect
-`uv run migrate` first (including `oxford_lexical_entries`).
+allowed to create temporary databases.
+
+## Rebuild OALD content
+
+Prefer the seed dump for local/dev. Use these scripts only when rebuilding from
+JSON/cache (or extending the dataset). Always `uv run migrate` first.
+
+| Command | Writes | Needed for the bot? |
+| --- | --- | --- |
+| `uv run oald-import` | `oald_entries` + audio URL links | **Yes** — this is the card catalog |
+| `uv run oald-audio` | `oald_audio_files` / `oald_audio_variants` | **Yes** — Telegram voice messages |
+| `uv run oxford-import` | `oxford_lexical_entries` only | **No** — offline staging; runtime never reads it |
+
+```powershell
+uv run oald-import --dry-run
+uv run oald-import
+uv run oald-audio --limit 10
+# optional tooling:
+uv run oxford-import --dry-run
+```
+
+`oald-import` expects `data/oald/words.json`. `oxford-import` expects an Oxford API
+cache directory plus `data/enriched/words.json` (both are build artifacts, not shipped
+in a lean clone).
 
 ## Database migrations
 

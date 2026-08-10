@@ -162,3 +162,24 @@ def typecheck() -> int:
             "scripts/cli.py",
         ]
     )
+
+
+def oald_import() -> int:
+    """Import OALD entries from words.json into PostgreSQL."""
+    from scripts.oald.import_oald import main
+
+    return main()
+
+
+def oald_audio() -> int:
+    """Download OALD audio and prepare Telegram voice variants."""
+    from scripts.oald.download_audio import main
+
+    return main()
+
+
+def oxford_import() -> int:
+    """Import Oxford API cache into the staging table (optional offline tooling)."""
+    from scripts.oald.import_oxford import main
+
+    return main()

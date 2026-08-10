@@ -5,14 +5,13 @@ import unittest
 import uuid
 from pathlib import Path
 
-from import_oxford_cache import (
+from scripts.oald.import_oxford import (
     OxfordCacheError,
     build_rows,
     import_rows,
     load_definition_index,
     parse_cache_files,
 )
-
 from tgbot.db.sync import sync_connection
 
 

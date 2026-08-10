@@ -6,7 +6,8 @@ Create Date: 2026-08-09 17:00:00.000000
 
 Staging table for Oxford API translation cache imports.
 Compatible with databases that already created the table via the old
-import_oxford_cache runtime DDL.
+Import Oxford API cache staging table (offline tooling; was formerly created by
+import_oxford runtime DDL).
 """
 
 from typing import Sequence, Union

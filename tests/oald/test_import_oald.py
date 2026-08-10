@@ -4,12 +4,11 @@ import unittest
 import uuid
 from pathlib import Path
 
-from import_oald_postgres import (
+from scripts.oald.import_oald import (
     OaldValidationError,
     import_entries,
     load_entries,
 )
-
 from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
 from tgbot.db.sync import sync_connection
 
