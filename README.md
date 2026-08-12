@@ -249,7 +249,8 @@ Repo: `ChupaZattoxLab/english_vocabulary_bot`. Image: `ghcr.io/chupazattoxlab/en
 | **test-and-publish** | manual button | Run **test**, then publish/deploy in the same pipeline |
 
 For manual runs: Actions → select workflow → **Run workflow** → choose the branch
-(Use workflow from) and set `git_ref` to the same branch (usually `main`).
+under **Use workflow from**. That branch is what gets tested/built/deployed (no
+extra `git_ref` field).
 
 ### Branch protection (blocks merge on red tests)
 
@@ -279,11 +280,20 @@ Repo → **Settings** → **Secrets and variables** → **Actions**:
 | `SSH_PRIVATE_KEY` | yes | private key for deploy |
 | `SSH_PORT` | yes | e.g. `22` |
 | `GHCR_READ_TOKEN` | yes | PAT with `read:packages` |
-| `GHCR_USER` | yes | e.g. `chupazattoxlab` |
+| `GHCR_USER` | yes | GitHub username for docker login, e.g. `Zattox` |
 
-Create `GHCR_READ_TOKEN`: GitHub → Settings → Developer settings → Personal access
-tokens → classic or fine-grained with **read:packages** (and SSO if needed). On the
-server, deploy logs into `ghcr.io` with this token before `docker compose pull`.
+### GHCR package permissions (org)
+
+If build fails with `permission_denied: write_package`:
+
+1. Org → **Settings** → **Actions** → **General** → **Workflow permissions**
+   → **Read and write permissions** → Save
+2. After the first package exists:
+   [Packages](https://github.com/orgs/ChupaZattoxLab/packages) →
+   `english_vocabulary_bot` → **Package settings** → **Manage Actions access**
+   → add this repository with **Write**
+3. For server pull, secret `GHCR_USER` should be your GitHub username (e.g. `Zattox`),
+   not the org name; `GHCR_READ_TOKEN` needs `read:packages`.
 
 Deploy **overwrites** `/opt/english_vocabulary_bot/.env` from these secrets. For the
 bot container the DB host is the Compose service name `postgres` (not `127.0.0.1`).

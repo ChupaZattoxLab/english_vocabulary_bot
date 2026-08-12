@@ -2,17 +2,8 @@ name: publish-image
 
 on:
   workflow_dispatch:
-    inputs:
-      git_ref:
-        description: Branch or tag to build and deploy (usually main)
-        required: true
-        default: main
   workflow_call:
     inputs:
-      git_ref:
-        description: Branch or tag to build and deploy
-        required: true
-        type: string
       require_green_test:
         description: Require a successful test workflow for this commit
         required: false
@@ -22,6 +13,8 @@ on:
 permissions:
   contents: read
   packages: write
+  attestations: write
+  id-token: write
   checks: read
   actions: read
 
@@ -34,8 +27,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.git_ref }}
 
       - name: Resolve image tags
         id: meta
@@ -43,7 +34,7 @@ jobs:
           set -euo pipefail
           SHA="$(git rev-parse HEAD)"
           SHORT="${SHA:0:12}"
-          REF_TAG="$(echo '${{ inputs.git_ref }}' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9._-]/-/g')"
+          REF_TAG="$(echo '${{ github.ref_name }}' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9._-]/-/g')"
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           echo "tag=sha-$SHORT" >> "$GITHUB_OUTPUT"
           echo "ref_tag=$REF_TAG" >> "$GITHUB_OUTPUT"
@@ -56,7 +47,6 @@ jobs:
           set -euo pipefail
           SHA="${{ steps.meta.outputs.sha }}"
           echo "Looking for a successful test check at $SHA"
-          # Matches job "test" from workflow test.yml and "test / test" from reusable calls.
           COUNT="$(gh api \
             "repos/${{ github.repository }}/commits/${SHA}/check-runs" \
             --paginate \
@@ -75,7 +65,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
