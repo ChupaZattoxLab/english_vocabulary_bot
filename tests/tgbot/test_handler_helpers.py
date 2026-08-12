@@ -36,9 +36,7 @@ def test_delivery_state_priority_blocked_then_paused() -> None:
         == locale.admin.delivery_blocked
     )
     assert (
-        delivery_state(
-            make_admin_user(is_active=False, paused_at=datetime.now(UTC))
-        )
+        delivery_state(make_admin_user(is_active=False, paused_at=datetime.now(UTC)))
         == locale.admin.delivery_paused
     )
     assert delivery_state(make_admin_user()) == locale.admin.delivery_active

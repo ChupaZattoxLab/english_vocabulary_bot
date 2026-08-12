@@ -1,0 +1,150 @@
+name: publish-image
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      require_green_test:
+        description: Require a successful test workflow for this commit
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+  checks: read
+  actions: read
+
+env:
+  IMAGE_NAME: ghcr.io/chupazattoxlab/english_vocabulary_bot
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve image tags
+        id: meta
+        run: |
+          set -euo pipefail
+          SHA="$(git rev-parse HEAD)"
+          SHORT="${SHA:0:12}"
+          REF_TAG="$(echo '${{ github.ref_name }}' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9._-]/-/g')"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=sha-$SHORT" >> "$GITHUB_OUTPUT"
+          echo "ref_tag=$REF_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Require successful test run for this commit
+        if: ${{ inputs.require_green_test != false }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          SHA="${{ steps.meta.outputs.sha }}"
+          echo "Looking for a successful test check at $SHA"
+          COUNT="$(gh api \
+            "repos/${{ github.repository }}/commits/${SHA}/check-runs" \
+            --paginate \
+            --jq '[.check_runs[] | select((.name == "test" or .name == "test / test") and .conclusion == "success")] | length')"
+          if [[ "$COUNT" -lt 1 ]]; then
+            echo "::error::No successful test check for commit $SHA. Run workflow \"test\" on this ref, or use \"test-and-publish\"."
+            exit 1
+          fi
+          echo "Found $COUNT successful test check(s)."
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+            ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.ref_tag }}
+            ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Make GHCR package private
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            "/orgs/ChupaZattoxLab/packages/container/english_vocabulary_bot/visibility" \
+            -f visibility=private || true
+
+      - name: Write .env for the server
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: |
+          set -euo pipefail
+          : "${TELEGRAM_BOT_TOKEN:?Set repository secret TELEGRAM_BOT_TOKEN}"
+          : "${POSTGRES_DB:?Set repository secret POSTGRES_DB}"
+          : "${POSTGRES_USER:?Set repository secret POSTGRES_USER}"
+          : "${POSTGRES_PASSWORD:?Set repository secret POSTGRES_PASSWORD}"
+          {
+            echo "TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}"
+            echo "POSTGRES_DB=${POSTGRES_DB}"
+            echo "POSTGRES_USER=${POSTGRES_USER}"
+            echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+            echo "OALD_DATABASE_URL=postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+          } > "${GITHUB_WORKSPACE}/deploy.env"
+          # Do not chmod 600 here: appleboy/scp-action runs in Docker and cannot
+          # read owner-only files from the workspace mount. Server install uses 600.
+          chmod 644 "${GITHUB_WORKSPACE}/deploy.env"
+
+      - name: Copy compose and deploy scripts
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "compose.yaml,scripts/deploy/remote_update.sh,scripts/restore-oald-seed.sh,deploy.env"
+          target: /opt/english_vocabulary_bot
+          overwrite: true
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          BOT_IMAGE: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          envs: BOT_IMAGE,GHCR_TOKEN,GHCR_USER
+          script: |
+            set -euo pipefail
+            : "${GHCR_TOKEN:?Set repository secret GHCR_READ_TOKEN}"
+            : "${GHCR_USER:?Set repository secret GHCR_USER}"
+            chmod +x /opt/english_vocabulary_bot/scripts/deploy/remote_update.sh
+            APP_DIR=/opt/english_vocabulary_bot \
+            BOT_IMAGE="$BOT_IMAGE" \
+            DEPLOY_ENV_FILE=/opt/english_vocabulary_bot/deploy.env \
+            GHCR_TOKEN="$GHCR_TOKEN" \
+            GHCR_USER="$GHCR_USER" \
+            /opt/english_vocabulary_bot/scripts/deploy/remote_update.sh
+            rm -f /opt/english_vocabulary_bot/deploy.env

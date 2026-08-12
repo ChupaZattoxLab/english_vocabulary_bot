@@ -43,8 +43,7 @@ def test_classify_delivery_error_categories() -> None:
         == ERROR_TYPE_BOT_BLOCKED
     )
     assert (
-        classify_delivery_error(CardTemplateError("bad"))
-        == ERROR_TYPE_TEMPLATE_ERROR
+        classify_delivery_error(CardTemplateError("bad")) == ERROR_TYPE_TEMPLATE_ERROR
     )
     assert (
         classify_delivery_error(TimeoutError("telegram timeout"))

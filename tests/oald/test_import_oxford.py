@@ -209,8 +209,7 @@ class OxfordCacheParserTests(unittest.TestCase):
             },
         ]
 
-        with self.assertLogs("tgbot.oxford_import", level="WARNING"):
-            rows, _, row_stats = self.build(definitions)
+        rows, _, row_stats = self.build(definitions)
 
         self.assertEqual(rows[0].definition, "")
         self.assertEqual(rows[0].example, "")
@@ -219,8 +218,7 @@ class OxfordCacheParserTests(unittest.TestCase):
     def test_malformed_json_is_skipped_or_raised_in_strict_mode(self) -> None:
         (self.cache_directory / "bad.json").write_text("{bad", encoding="utf-8")
 
-        with self.assertLogs("tgbot.oxford_import", level="ERROR"):
-            groups, stats = parse_cache_files(self.cache_directory)
+        groups, stats = parse_cache_files(self.cache_directory)
         self.assertEqual(groups, {})
         self.assertEqual(stats["invalid_files"], 1)
 

@@ -1,0 +1,23 @@
+name: test-and-publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+  checks: read
+  actions: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  publish:
+    needs: test
+    uses: ./.github/workflows/publish-image.yml
+    with:
+      require_green_test: false
+    secrets: inherit

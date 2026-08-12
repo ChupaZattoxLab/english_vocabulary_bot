@@ -233,29 +233,102 @@ drop if the DB already has equivalent indexes. Then:
 uv run migrate
 ```
 
-On deployment, run `uv run migrate` before restarting the bot service.
+On deployment, migrations run inside the bot container before the process starts
+(`migrate && python -m tgbot`).
 
-### Server notes
+## CI/CD (GitHub Actions + Docker)
 
-If a remote instance keeps coming back after `kill`, systemd is restarting it:
+Repo: `ChupaZattoxLab/english_vocabulary_bot`. Image: `ghcr.io/chupazattoxlab/english_vocabulary_bot`.
+
+### Workflows
+
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| **test** | every pull request + manual button | Ruff, Pyright, Pytest (Postgres service) |
+| **publish-image** | manual button | Build/push image + deploy **only if** this commit already has a green **test** run |
+| **test-and-publish** | manual button | Run **test**, then publish/deploy in the same pipeline |
+
+For manual runs: Actions → select workflow → **Run workflow** → choose the branch
+under **Use workflow from**. That branch is what gets tested/built/deployed (no
+extra `git_ref` field).
+
+### Branch protection (blocks merge on red tests)
+
+This is configured in the **GitHub repo UI**, not in git files:
+
+1. Repo → **Settings** → **Branches** → **Add branch ruleset** / **Branch protection rule**
+2. Branch name pattern: `main`
+3. Enable **Require status checks to pass**
+4. Add required check: **test** / job `test`
+5. Save
+
+Until the first PR has run **test** once, the check name may not appear in the
+dropdown — open a draft PR or run **test** once, then select it.
+
+### GitHub Actions secrets
+
+Repo → **Settings** → **Secrets and variables** → **Actions**:
+
+| Secret | Required | Purpose |
+| --- | --- | --- |
+| `TELEGRAM_BOT_TOKEN` | yes | written into server `.env` on deploy |
+| `POSTGRES_PASSWORD` | yes | Postgres + `OALD_DATABASE_URL` |
+| `POSTGRES_USER` | yes | e.g. `vocab_app` |
+| `POSTGRES_DB` | yes | e.g. `english_vocabulary_oald` |
+| `SSH_HOST` | yes | server hostname/IP |
+| `SSH_USER` | yes | SSH user (often `root`) |
+| `SSH_PRIVATE_KEY` | yes | private key for deploy |
+| `SSH_PORT` | yes | e.g. `22` |
+| `GHCR_READ_TOKEN` | yes | PAT with `read:packages` |
+| `GHCR_USER` | yes | GitHub username for docker login, e.g. `Zattox` |
+
+### GHCR package permissions (org)
+
+If build fails with `permission_denied: write_package`:
+
+1. Org → **Settings** → **Actions** → **General** → **Workflow permissions**
+   → **Read and write permissions** → Save
+2. After the first package exists:
+   [Packages](https://github.com/orgs/ChupaZattoxLab/packages) →
+   `english_vocabulary_bot` → **Package settings** → **Manage Actions access**
+   → add this repository with **Write**
+3. For server pull, secret `GHCR_USER` should be your GitHub username (e.g. `Zattox`),
+   not the org name; `GHCR_READ_TOKEN` needs `read:packages`.
+
+Deploy **overwrites** `/opt/english_vocabulary_bot/.env` from these secrets. For the
+bot container the DB host is the Compose service name `postgres` (not `127.0.0.1`).
+
+### First cutover on the server
+
+Keep the existing Postgres volume (never `docker compose down -v`):
+
+```bash
+cd /opt/english_vocabulary_bot
+docker compose exec postgres psql -U vocab_app -d english_vocabulary_oald \
+  -c 'SELECT COUNT(*) FROM oald_entries;'
+sudo systemctl stop vocabulary-bot
+sudo systemctl disable vocabulary-bot
+```
+
+Then run **test-and-publish** (or **test** then **publish-image**) from GitHub.
+Afterward:
+
+```bash
+docker compose ps
+docker compose logs -f bot
+```
+
+### Server notes (legacy systemd)
+
+If an old host unit still restarts a non-Docker bot:
 
 ```bash
 systemctl list-units --type=service --all | grep -iE 'vocab|bot|telegram'
 sudo systemctl stop vocabulary-bot
 sudo systemctl disable vocabulary-bot
-ps aux | grep tgbot | grep -v grep
 ```
 
-To run on the server again later (after `git pull`, `uv sync`, `uv run migrate`):
-
-```bash
-sudo systemctl enable --now vocabulary-bot
-# or, without systemd:
-cd /opt/english_vocabulary_bot
-uv sync
-uv run migrate
-uv run start
-```
+Preferred production path is Compose service `bot` from GHCR (see CI/CD above).
 
 ## pgAdmin
 

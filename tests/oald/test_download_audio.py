@@ -22,7 +22,7 @@ from scripts.oald.download_audio import (
 )
 from scripts.oald.import_oald import import_entries, load_entries
 from tests.oald.test_import_oald import oald_row, write_rows
-from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
+from tests.support import requires_oald_database, temporary_migrated_database
 from tgbot.db.sync import sync_connection
 
 
@@ -196,7 +196,16 @@ class OaldAudioDownloadTests(unittest.TestCase):
 
 @requires_oald_database
 class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
-    db_url = TEST_OALD_DATABASE_URL
+    db_url: str
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._db = temporary_migrated_database(prefix="oald_audio_")
+        cls.db_url = cls._db.__enter__()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls._db.__exit__(None, None, None)
 
     def test_download_store_skip_and_force(self) -> None:
         suffix = uuid.uuid4().hex
