@@ -119,7 +119,9 @@ jobs:
             echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
             echo "OALD_DATABASE_URL=postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
           } > "${GITHUB_WORKSPACE}/deploy.env"
-          chmod 600 "${GITHUB_WORKSPACE}/deploy.env"
+          # Do not chmod 600 here: appleboy/scp-action runs in Docker and cannot
+          # read owner-only files from the workspace mount. Server install uses 600.
+          chmod 644 "${GITHUB_WORKSPACE}/deploy.env"
 
       - name: Copy compose and deploy scripts
         uses: appleboy/scp-action@v0.1.7
