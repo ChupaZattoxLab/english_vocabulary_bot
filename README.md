@@ -244,7 +244,7 @@ Repo: `ChupaZattoxLab/english_vocabulary_bot`. Image: `ghcr.io/chupazattoxlab/en
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| **test** | every pull request + manual button | Ruff, Pyright, Pytest (Postgres service) |
+| **test** | manual button only | Ruff, Pyright, Pytest (Postgres service) |
 | **publish-image** | manual button | Build/push image + deploy **only if** this commit already has a green **test** run |
 | **test-and-publish** | manual button | Run **test**, then publish/deploy in the same pipeline |
 
@@ -252,18 +252,11 @@ For manual runs: Actions → select workflow → **Run workflow** → choose the
 under **Use workflow from**. That branch is what gets tested/built/deployed (no
 extra `git_ref` field).
 
-### Branch protection (blocks merge on red tests)
+### Branch protection
 
-This is configured in the **GitHub repo UI**, not in git files:
-
-1. Repo → **Settings** → **Branches** → **Add branch ruleset** / **Branch protection rule**
-2. Branch name pattern: `main`
-3. Enable **Require status checks to pass**
-4. Add required check: **test** / job `test`
-5. Save
-
-Until the first PR has run **test** once, the check name may not appear in the
-dropdown — open a draft PR or run **test** once, then select it.
+If you require the **test** status check to merge into `main`, run **test** (or
+**test-and-publish**) on that commit first — tests no longer start automatically
+on every PR push.
 
 ### GitHub Actions secrets
 
