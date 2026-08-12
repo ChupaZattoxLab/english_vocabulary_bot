@@ -2,15 +2,12 @@ name: test-and-publish
 
 on:
   workflow_dispatch:
-    inputs:
-      git_ref:
-        description: Branch or tag to test, build, and deploy (usually main)
-        required: true
-        default: main
 
 permissions:
   contents: read
   packages: write
+  attestations: write
+  id-token: write
   checks: read
   actions: read
 
@@ -22,6 +19,5 @@ jobs:
     needs: test
     uses: ./.github/workflows/publish-image.yml
     with:
-      git_ref: ${{ inputs.git_ref }}
       require_green_test: false
     secrets: inherit
