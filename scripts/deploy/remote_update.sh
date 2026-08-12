@@ -15,9 +15,9 @@ if [[ -z "${DEPLOY_ENV_FILE:-}" || ! -f "$DEPLOY_ENV_FILE" ]]; then
   exit 1
 fi
 
-if [[ -n "${GHCR_TOKEN:-}" ]]; then
-  echo "$GHCR_TOKEN" | docker login ghcr.io -u "${GHCR_USER:-chupazattoxlab}" --password-stdin
-fi
+: "${GHCR_TOKEN:?GHCR_TOKEN is required}"
+: "${GHCR_USER:?GHCR_USER is required}"
+echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
 install -m 600 "$DEPLOY_ENV_FILE" "$APP_DIR/.env"
 export BOT_IMAGE

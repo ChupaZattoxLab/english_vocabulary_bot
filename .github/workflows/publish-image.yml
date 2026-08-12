@@ -109,9 +109,9 @@ jobs:
         run: |
           set -euo pipefail
           : "${TELEGRAM_BOT_TOKEN:?Set repository secret TELEGRAM_BOT_TOKEN}"
+          : "${POSTGRES_DB:?Set repository secret POSTGRES_DB}"
+          : "${POSTGRES_USER:?Set repository secret POSTGRES_USER}"
           : "${POSTGRES_PASSWORD:?Set repository secret POSTGRES_PASSWORD}"
-          POSTGRES_DB="${POSTGRES_DB:-english_vocabulary_oald}"
-          POSTGRES_USER="${POSTGRES_USER:-vocab_app}"
           {
             echo "TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}"
             echo "POSTGRES_DB=${POSTGRES_DB}"
@@ -127,7 +127,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT }}
           source: "compose.yaml,scripts/deploy/remote_update.sh,scripts/restore-oald-seed.sh,deploy.env"
           target: /opt/english_vocabulary_bot
           overwrite: true
@@ -142,15 +142,17 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT }}
           envs: BOT_IMAGE,GHCR_TOKEN,GHCR_USER
           script: |
             set -euo pipefail
+            : "${GHCR_TOKEN:?Set repository secret GHCR_READ_TOKEN}"
+            : "${GHCR_USER:?Set repository secret GHCR_USER}"
             chmod +x /opt/english_vocabulary_bot/scripts/deploy/remote_update.sh
             APP_DIR=/opt/english_vocabulary_bot \
             BOT_IMAGE="$BOT_IMAGE" \
             DEPLOY_ENV_FILE=/opt/english_vocabulary_bot/deploy.env \
             GHCR_TOKEN="$GHCR_TOKEN" \
-            GHCR_USER="${GHCR_USER:-chupazattoxlab}" \
+            GHCR_USER="$GHCR_USER" \
             /opt/english_vocabulary_bot/scripts/deploy/remote_update.sh
             rm -f /opt/english_vocabulary_bot/deploy.env

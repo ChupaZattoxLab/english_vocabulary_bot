@@ -272,14 +272,14 @@ Repo → **Settings** → **Secrets and variables** → **Actions**:
 | --- | --- | --- |
 | `TELEGRAM_BOT_TOKEN` | yes | written into server `.env` on deploy |
 | `POSTGRES_PASSWORD` | yes | Postgres + `OALD_DATABASE_URL` |
-| `POSTGRES_USER` | no | default `vocab_app` |
-| `POSTGRES_DB` | no | default `english_vocabulary_oald` |
+| `POSTGRES_USER` | yes | e.g. `vocab_app` |
+| `POSTGRES_DB` | yes | e.g. `english_vocabulary_oald` |
 | `SSH_HOST` | yes | server hostname/IP |
 | `SSH_USER` | yes | SSH user (often `root`) |
 | `SSH_PRIVATE_KEY` | yes | private key for deploy |
-| `SSH_PORT` | no | default `22` |
-| `GHCR_READ_TOKEN` | yes for private image pull | PAT with `read:packages` |
-| `GHCR_USER` | no | default `chupazattoxlab` |
+| `SSH_PORT` | yes | e.g. `22` |
+| `GHCR_READ_TOKEN` | yes | PAT with `read:packages` |
+| `GHCR_USER` | yes | e.g. `chupazattoxlab` |
 
 Create `GHCR_READ_TOKEN`: GitHub → Settings → Developer settings → Personal access
 tokens → classic or fine-grained with **read:packages** (and SSO if needed). On the
