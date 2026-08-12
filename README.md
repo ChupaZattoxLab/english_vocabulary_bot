@@ -295,8 +295,9 @@ If build fails with `permission_denied: write_package`:
 3. For server pull, secret `GHCR_USER` should be your GitHub username (e.g. `Zattox`),
    not the org name; `GHCR_READ_TOKEN` needs `read:packages`.
 
-Deploy **overwrites** `/opt/english_vocabulary_bot/.env` from these secrets. For the
-bot container the DB host is the Compose service name `postgres` (not `127.0.0.1`).
+Deploy **overwrites** `/opt/english_vocabulary_bot/.env` from these secrets. The bot
+uses `network_mode: host` for Telegram API access and a shared Unix socket
+(`host=/var/run/postgresql`) for Postgres.
 
 ### First cutover on the server
 

@@ -60,11 +60,8 @@ MANAGED_TABLE_COLUMNS = {
     "bot_telegram_audio_cache": {
         "source_url", "send_method", "telegram_file_id", "updated_at",
     },
-    "oxford_lexical_entries": {
-        "source_lexical_key", "word_us", "word_gb", "lexical_category",
-        "ipa_us", "ipa_gb", "definition", "example", "audio_source_us",
-        "audio_source_gb", "translations",
-    },
+    # oxford_lexical_entries is added later (c7d8e9f0a1b2); do not require it
+    # when adopting pre-Alembic seed databases.
 }
 
 
