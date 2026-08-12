@@ -19,6 +19,20 @@ services:
       timeout: 5s
       retries: 10
       start_period: 5s
+    restart: unless-stopped
+
+  bot:
+    image: ${BOT_IMAGE:-ghcr.io/chupazattoxlab/english_vocabulary_bot:latest}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command:
+      - sh
+      - -c
+      - migrate && python -m tgbot
+    restart: unless-stopped
 
 volumes:
   vocabulary_postgres_data:
