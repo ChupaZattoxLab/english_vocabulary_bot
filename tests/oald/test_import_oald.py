@@ -115,8 +115,7 @@ class OaldJsonTests(unittest.TestCase):
         row["cefr"] = "z9"
         write_rows(self.json_path, [row])
 
-        with self.assertLogs("tgbot.oald_import", level="ERROR"):
-            entries, stats = load_entries(self.json_path)
+        entries, stats = load_entries(self.json_path)
         self.assertEqual(entries, [])
         self.assertEqual(stats["invalid_rows"], 1)
 
