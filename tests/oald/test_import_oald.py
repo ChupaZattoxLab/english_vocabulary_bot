@@ -9,7 +9,7 @@ from scripts.oald.import_oald import (
     import_entries,
     load_entries,
 )
-from tests.support import TEST_OALD_DATABASE_URL, requires_oald_database
+from tests.support import requires_oald_database, temporary_migrated_database
 from tgbot.db.sync import sync_connection
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -137,7 +137,16 @@ class OaldJsonTests(unittest.TestCase):
 
 @requires_oald_database
 class OaldPostgreSqlIntegrationTests(unittest.TestCase):
-    db_url = TEST_OALD_DATABASE_URL
+    db_url: str
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._db = temporary_migrated_database(prefix="oald_import_")
+        cls.db_url = cls._db.__enter__()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls._db.__exit__(None, None, None)
 
     def test_repeat_add_update_links_and_preserve_audio_bytes(self) -> None:
         suffix = uuid.uuid4().hex
