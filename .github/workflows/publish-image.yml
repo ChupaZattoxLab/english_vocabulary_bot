@@ -136,6 +136,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          # pull + migrate + health wait can exceed the default SSH timeout
+          command_timeout: 15m
           envs: BOT_IMAGE,GHCR_TOKEN,GHCR_USER
           script: |
             set -euo pipefail

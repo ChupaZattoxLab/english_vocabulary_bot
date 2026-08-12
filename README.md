@@ -297,7 +297,9 @@ If build fails with `permission_denied: write_package`:
 
 Deploy **overwrites** `/opt/english_vocabulary_bot/.env` from these secrets. The bot
 uses `network_mode: host` for Telegram API access and a shared Unix socket
-(`host=/var/run/postgresql`) for Postgres.
+(`host=/var/run/postgresql`) for Postgres. The publish job waits until Postgres is
+healthy and the bot process is up (`docker compose up --wait`), then prunes unused
+`english_vocabulary_bot` images on the server.
 
 ### First cutover on the server
 

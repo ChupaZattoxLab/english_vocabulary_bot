@@ -3,6 +3,8 @@
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-/opt/english_vocabulary_bot}"
+IMAGE_REPO="${IMAGE_REPO:-ghcr.io/chupazattoxlab/english_vocabulary_bot}"
+WAIT_TIMEOUT_SECONDS="${WAIT_TIMEOUT_SECONDS:-300}"
 cd "$APP_DIR"
 
 if [[ -z "${BOT_IMAGE:-}" ]]; then
@@ -29,6 +31,12 @@ if command -v systemctl >/dev/null 2>&1; then
 fi
 
 docker compose pull bot
-docker compose up -d postgres bot
+# Block until postgres is healthy and bot healthcheck passes (migrate + tgbot up).
+docker compose up -d --wait --wait-timeout "$WAIT_TIMEOUT_SECONDS" postgres bot
 docker compose ps
+
+echo "Pruning unused ${IMAGE_REPO} images (keeps the one in use by bot)..."
+docker image prune -af --filter "reference=${IMAGE_REPO}" || true
+docker image prune -f || true
+
 echo "Deploy finished: BOT_IMAGE=$BOT_IMAGE"

@@ -38,6 +38,15 @@ services:
       - sh
       - -c
       - migrate && python -m tgbot
+    # Passes only after migrate finishes and python -m tgbot is running.
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - grep -aq 'python -m tgbot' /proc/*/cmdline
+      interval: 5s
+      timeout: 3s
+      retries: 36
+      start_period: 20s
     restart: unless-stopped
 
 volumes:
