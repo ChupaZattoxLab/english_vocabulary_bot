@@ -17,17 +17,17 @@ class OaldEntry(Base):
     __tablename__ = "oald_entries"  # type: ignore[assignment]
     __table_args__ = (
         sa.Index(
-            "oald_entries_word_us_category_idx",
+            "ix_oald_entries_word_us_category",
             "word_us",
             "lexical_category",
         ),
         sa.Index(
-            "oald_entries_translations_idx",
+            "ix_oald_entries_translations",
             "translations",
             postgresql_using="gin",
         ),
         sa.Index(
-            "oald_entries_active_idx",
+            "ix_oald_entries_active",
             "is_active",
             "cefr",
         ),
@@ -43,7 +43,7 @@ class OaldEntry(Base):
         sa.Text,
         sa.CheckConstraint(
             "btrim(word_us) <> ''",
-            name="oald_entries_word_us_check",
+            name="check_oald_entries_word_us",
         ),
         index=True,
     )
@@ -52,7 +52,7 @@ class OaldEntry(Base):
         sa.Text,
         sa.CheckConstraint(
             "btrim(word_gb) <> ''",
-            name="oald_entries_word_gb_check",
+            name="check_oald_entries_word_gb",
         ),
         index=True,
     )
@@ -61,13 +61,13 @@ class OaldEntry(Base):
         sa.Text,
         sa.CheckConstraint(
             "btrim(lexical_category) <> ''",
-            name="oald_entries_category_check",
+            name="check_oald_entries_category",
         ),
         index=True,
     )
 
     cefr: Mapped[CefrLevel] = mapped_column(
-        varchar_enum(CefrLevel, name="oald_entries_cefr_check"),
+        varchar_enum(CefrLevel, name="check_oald_entries_cefr"),
         index=True,
     )
 
@@ -75,7 +75,7 @@ class OaldEntry(Base):
         sa.Text,
         sa.CheckConstraint(
             "btrim(definition_url_oxford) <> ''",
-            name="oald_entries_definition_url_check",
+            name="check_oald_entries_definition_url",
         ),
         unique=True,
     )

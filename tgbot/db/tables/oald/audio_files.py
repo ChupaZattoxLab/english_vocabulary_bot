@@ -16,7 +16,7 @@ from tgbot.db.types import AudioDownloadStatus
 class OaldAudioFile(Base):
     __table_args__ = (
         sa.Index(
-            "oald_audio_sha256_idx",
+            "ix_oald_audio_sha256",
             "sha256",
             postgresql_where=sa.text("sha256 != ''"),
         ),
@@ -40,7 +40,7 @@ class OaldAudioFile(Base):
         sa.BigInteger,
         sa.CheckConstraint(
             "size_bytes IS NULL OR size_bytes >= 0",
-            name="oald_audio_size_check",
+            name="check_oald_audio_size",
         ),
     )
 
@@ -50,7 +50,7 @@ class OaldAudioFile(Base):
     )
 
     download_status: Mapped[AudioDownloadStatus] = mapped_column(
-        varchar_enum(AudioDownloadStatus, name="oald_audio_status_check"),
+        varchar_enum(AudioDownloadStatus, name="check_oald_audio_status"),
         server_default=sa.text("'pending'"),
     )
 
@@ -65,7 +65,7 @@ class OaldAudioFile(Base):
         sa.Integer,
         sa.CheckConstraint(
             "attempt_count >= 0",
-            name="oald_audio_attempt_count_check",
+            name="check_oald_audio_attempt_count",
         ),
         server_default=sa.text("0"),
     )

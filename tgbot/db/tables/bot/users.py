@@ -16,7 +16,7 @@ from tgbot.db.types import DialectPreference, UserRole
 class BotUser(Base):
     __table_args__ = (
         sa.Index(
-            "bot_users_active_idx",
+            "ix_bot_users_active",
             "is_active",
             "onboarding_completed",
         ),
@@ -34,7 +34,7 @@ class BotUser(Base):
     )
 
     role: Mapped[UserRole] = mapped_column(
-        varchar_enum(UserRole, name="bot_users_role_check"),
+        varchar_enum(UserRole, name="check_bot_users_role"),
         server_default=sa.text("'user'"),
         index=True,
     )
@@ -43,13 +43,13 @@ class BotUser(Base):
         postgresql.ARRAY(sa.Text),
         sa.CheckConstraint(
             "selected_levels <@ ARRAY['a1','a2','b1','b2','c1']::TEXT[]",
-            name="bot_users_levels_check",
+            name="check_bot_users_levels",
         ),
         server_default=sa.text("'{}'::text[]"),
     )
 
     dialect: Mapped[DialectPreference | None] = mapped_column(
-        varchar_enum(DialectPreference, name="bot_users_dialect_check"),
+        varchar_enum(DialectPreference, name="check_bot_users_dialect"),
     )
 
     onboarding_completed: Mapped[bool] = mapped_column(

@@ -19,7 +19,7 @@ class OaldEntryAudioSource(Base):
     )
 
     dialect: Mapped[Dialect] = mapped_column(
-        varchar_enum(Dialect, name="oald_entry_audio_dialect_check"),
+        varchar_enum(Dialect, name="check_oald_entry_audio_dialect"),
         primary_key=True,
         index=True,
     )
@@ -28,7 +28,7 @@ class OaldEntryAudioSource(Base):
         sa.Integer,
         sa.CheckConstraint(
             "source_position >= 0",
-            name="oald_entry_audio_position_check",
+            name="check_oald_entry_audio_position",
         ),
         primary_key=True,
     )

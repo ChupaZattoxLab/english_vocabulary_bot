@@ -33,9 +33,7 @@ def upgrade() -> None:
         """
     )
     op.execute("DELETE FROM oald_entries WHERE cefr = 'c2'")
-    op.execute(
-        "ALTER TABLE bot_users DROP CONSTRAINT IF EXISTS bot_users_levels_check"
-    )
+    op.execute("ALTER TABLE bot_users DROP CONSTRAINT IF EXISTS bot_users_levels_check")
     op.execute(
         """
         ALTER TABLE bot_users
@@ -56,9 +54,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.execute(
-        "ALTER TABLE bot_users DROP CONSTRAINT IF EXISTS bot_users_levels_check"
-    )
+    op.execute("ALTER TABLE bot_users DROP CONSTRAINT IF EXISTS bot_users_levels_check")
     op.execute(
         """
         ALTER TABLE bot_users

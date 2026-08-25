@@ -23,7 +23,7 @@ class BotTelegramAudioCache(Base):
     )
 
     send_method: Mapped[TelegramSendMethod] = mapped_column(
-        varchar_enum(TelegramSendMethod, name="bot_audio_cache_method_check"),
+        varchar_enum(TelegramSendMethod, name="check_bot_audio_cache_method"),
         primary_key=True,
     )
 

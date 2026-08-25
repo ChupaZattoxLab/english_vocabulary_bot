@@ -16,7 +16,7 @@ from tgbot.db.types import AudioConversionStatus, AudioVariantType
 class OaldAudioVariant(Base):
     __table_args__ = (
         sa.Index(
-            "oald_audio_variants_status_idx",
+            "ix_oald_audio_variants_status",
             "variant_type",
             "conversion_status",
         ),
@@ -29,7 +29,7 @@ class OaldAudioVariant(Base):
     )
 
     variant_type: Mapped[AudioVariantType] = mapped_column(
-        varchar_enum(AudioVariantType, name="oald_audio_variants_type_check"),
+        varchar_enum(AudioVariantType, name="check_oald_audio_variants_type"),
         primary_key=True,
     )
 
@@ -54,7 +54,7 @@ class OaldAudioVariant(Base):
         sa.BigInteger,
         sa.CheckConstraint(
             "size_bytes IS NULL OR size_bytes >= 0",
-            name="oald_audio_variants_size_check",
+            name="check_oald_audio_variants_size",
         ),
     )
 
@@ -66,7 +66,7 @@ class OaldAudioVariant(Base):
     conversion_status: Mapped[AudioConversionStatus] = mapped_column(
         varchar_enum(
             AudioConversionStatus,
-            name="oald_audio_variants_status_check",
+            name="check_oald_audio_variants_status",
         ),
         server_default=sa.text("'pending'"),
     )
@@ -80,7 +80,7 @@ class OaldAudioVariant(Base):
         sa.Integer,
         sa.CheckConstraint(
             "attempt_count >= 0",
-            name="oald_audio_variants_attempt_count_check",
+            name="check_oald_audio_variants_attempt_count",
         ),
         server_default=sa.text("0"),
     )

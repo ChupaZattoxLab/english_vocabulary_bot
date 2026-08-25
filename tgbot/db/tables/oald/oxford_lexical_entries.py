@@ -16,14 +16,14 @@ class OxfordLexicalEntry(Base):
     __table_args__ = (
         sa.CheckConstraint(
             "cardinality(ipa_us) = cardinality(audio_source_us)",
-            name="oxford_lexical_entries_us_pronunciation_check",
+            name="check_oxford_lexical_entries_us_pronunciation",
         ),
         sa.CheckConstraint(
             "cardinality(ipa_gb) = cardinality(audio_source_gb)",
-            name="oxford_lexical_entries_gb_pronunciation_check",
+            name="check_oxford_lexical_entries_gb_pronunciation",
         ),
         sa.Index(
-            "oxford_lexical_entries_translations_idx",
+            "ix_oxford_lexical_entries_translations",
             "translations",
             postgresql_using="gin",
         ),

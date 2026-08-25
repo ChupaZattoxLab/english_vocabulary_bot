@@ -221,6 +221,7 @@ uv run migrate
 uv run alembic current
 uv run alembic history
 uv run alembic revision --autogenerate -m "describe schema change"
+uv run ruff format migrations/versions/
 uv run check
 ```
 

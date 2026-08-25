@@ -20,7 +20,7 @@ class BotSchedulerRun(Base):
     )
 
     status: Mapped[SchedulerRunStatus] = mapped_column(
-        varchar_enum(SchedulerRunStatus, name="bot_scheduler_runs_status_check"),
+        varchar_enum(SchedulerRunStatus, name="check_bot_scheduler_runs_status"),
         server_default=sa.text("'running'"),
     )
 

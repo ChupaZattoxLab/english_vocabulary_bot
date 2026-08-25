@@ -16,26 +16,26 @@ from tgbot.db.types import CardStatus, DialectPreference
 class BotUserCard(Base):
     __table_args__ = (
         sa.Index(
-            "bot_user_cards_user_entry_active_uidx",
+            "uix_bot_user_cards_user_entry_active",
             "telegram_user_id",
             "entry_id",
             unique=True,
             postgresql_where=sa.text("status IN ('delivered', 'reserved')"),
         ),
         sa.Index(
-            "bot_user_cards_user_slot_active_uidx",
+            "uix_bot_user_cards_user_slot_active",
             "telegram_user_id",
             "scheduled_slot",
             unique=True,
             postgresql_where=sa.text("status IN ('delivered', 'reserved')"),
         ),
         sa.Index(
-            "bot_user_cards_user_status_idx",
+            "ix_bot_user_cards_user_status",
             "telegram_user_id",
             "status",
         ),
         sa.Index(
-            "bot_user_cards_error_idx",
+            "ix_bot_user_cards_error",
             "status",
             "error_type",
             "created_at",
@@ -60,7 +60,7 @@ class BotUserCard(Base):
     )
 
     dialect: Mapped[DialectPreference] = mapped_column(
-        varchar_enum(DialectPreference, name="bot_user_cards_dialect_check"),
+        varchar_enum(DialectPreference, name="check_bot_user_cards_dialect"),
     )
 
     source_url: Mapped[str] = mapped_column(
@@ -78,7 +78,7 @@ class BotUserCard(Base):
     )
 
     status: Mapped[CardStatus] = mapped_column(
-        varchar_enum(CardStatus, name="bot_user_cards_status_check"),
+        varchar_enum(CardStatus, name="check_bot_user_cards_status"),
         server_default=sa.text("'reserved'"),
     )
 
