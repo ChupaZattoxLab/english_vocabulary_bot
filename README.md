@@ -222,7 +222,6 @@ uv run alembic current
 uv run alembic history
 uv run alembic revision --autogenerate -m "describe schema change"
 uv run ruff format migrations/versions/
-uv run check
 ```
 
 `revision --autogenerate` compares `tgbot/db/tables` metadata to the live database and
@@ -232,6 +231,7 @@ drop if the DB already has equivalent indexes. Then:
 
 ```powershell
 uv run migrate
+uv run check
 ```
 
 On deployment, migrations run inside the bot container before the process starts
