@@ -12,7 +12,7 @@ from aiogram import Bot
 
 from tgbot.bot_config import BotConfig
 from tgbot.db import Database
-from tgbot.db.models import ActiveUser
+from tgbot.db.models import User
 from tgbot.delivery.service import CardDeliveryService
 from tgbot.delivery.types import DeliveryStatus
 
@@ -109,7 +109,7 @@ class CardScheduler:
     async def deliver_to_user(
         self,
         bot: Bot,
-        user: ActiveUser,
+        user: User,
         scheduled_slot: datetime,
         semaphore: asyncio.Semaphore,
     ) -> DeliveryStatus:

@@ -8,10 +8,10 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from tgbot.db.models import (
-    ActiveUser,
     CefrLevel,
     DialectPreference,
-    active_user_from_row,
+    User,
+    user_from_row,
 )
 from tgbot.db.queries.base import DbSession
 from tgbot.db.tables import bot_users
@@ -22,7 +22,7 @@ class UsersQueries(DbSession):
         self,
         telegram_user_id: int,
         username: str,
-    ) -> ActiveUser:
+    ) -> User:
         """Insert on /start, or refresh username and clear blocked_at on return.
 
         If the user had finished onboarding and was not paused, is_active is
@@ -50,13 +50,13 @@ class UsersQueries(DbSession):
             },
         ).returning(*bot_users.c)
 
-        return active_user_from_row(await self.execute_fetch_exactly_one(stmt))
+        return user_from_row(await self.execute_fetch_exactly_one(stmt))
 
-    async def get_user(self, telegram_user_id: int) -> ActiveUser | None:
+    async def get_user(self, telegram_user_id: int) -> User | None:
         row = await self.fetch_first(
             sa.select(bot_users).where(bot_users.c.telegram_user_id == telegram_user_id)
         )
-        return active_user_from_row(row) if row else None
+        return user_from_row(row) if row else None
 
     async def is_admin(self, telegram_user_id: int) -> bool:
         role = await self.fetch_scalar(
@@ -79,7 +79,7 @@ class UsersQueries(DbSession):
         self,
         telegram_user_id: int,
         level: CefrLevel,
-    ) -> ActiveUser:
+    ) -> User:
         """Add or remove one CEFR level in selected_levels (keyboard toggle)."""
         level_value = sa.literal(level)
         stmt = (
@@ -99,13 +99,13 @@ class UsersQueries(DbSession):
             .returning(*bot_users.c)
         )
 
-        return active_user_from_row(await self.execute_fetch_exactly_one(stmt))
+        return user_from_row(await self.execute_fetch_exactly_one(stmt))
 
     async def set_dialect(
         self,
         telegram_user_id: int,
         dialect: DialectPreference,
-    ) -> ActiveUser:
+    ) -> User:
         """Save dialect preference and finish onboarding when levels exist.
 
         is_active becomes true only if levels are set and the user is not
@@ -133,7 +133,7 @@ class UsersQueries(DbSession):
             .returning(*bot_users.c)
         )
 
-        return active_user_from_row(await self.execute_fetch_exactly_one(stmt))
+        return user_from_row(await self.execute_fetch_exactly_one(stmt))
 
     async def clear_blocked_marker(self, telegram_user_id: int) -> None:
         """Clear blocked_at after the user messages again; do not resume schedule."""
@@ -170,7 +170,7 @@ class UsersQueries(DbSession):
 
         return (result.rowcount or 0) > 0
 
-    async def get_active_users(self) -> list[ActiveUser]:
+    async def get_active_users(self) -> list[User]:
         """Users eligible for the scheduler: active, onboarded, levels + dialect."""
         rows = await self.fetch_all(
             sa.select(bot_users)
@@ -183,7 +183,7 @@ class UsersQueries(DbSession):
             .order_by(bot_users.c.telegram_user_id)
         )
 
-        return [active_user_from_row(row) for row in rows]
+        return [user_from_row(row) for row in rows]
 
     async def deactivate_user(self, telegram_user_id: int) -> None:
         """Mark unreachable (bot blocked): stop delivery and set blocked_at."""

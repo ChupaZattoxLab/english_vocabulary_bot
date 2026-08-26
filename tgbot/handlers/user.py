@@ -5,16 +5,17 @@ from __future__ import annotations
 from aiogram import F, Router
 from aiogram.enums import ChatType
 from aiogram.filters import Command, CommandStart
-from aiogram.types import CallbackQuery, Message, User
+from aiogram.types import CallbackQuery, Message
+from aiogram.types import User as AiogramUser
 
 from tgbot.bot_config import BotConfig
 from tgbot.db import Database
 from tgbot.db.models import (
     VALID_DIALECT_PREFERENCES,
     VALID_LEVELS,
-    ActiveUser,
     CefrLevel,
     DialectPreference,
+    User,
 )
 from tgbot.delivery import CardDeliveryService, DeliveryStatus
 from tgbot.handlers.helpers import callback_message, format_levels
@@ -163,7 +164,7 @@ def create_router(
     return router
 
 
-async def register_user(db: Database, telegram_user: User) -> ActiveUser:
+async def register_user(db: Database, telegram_user: AiogramUser) -> User:
     return await db.upsert_user(
         telegram_user_id=telegram_user.id,
         username=telegram_user.username or "",
@@ -182,7 +183,7 @@ async def set_delivery_active(message: Message, db: Database, active: bool) -> N
     await message.answer(text)
 
 
-def user_settings_text(user: ActiveUser, config: BotConfig) -> str:
+def user_settings_text(user: User, config: BotConfig) -> str:
     state = (
         locale.user.delivery_active if user.is_active else locale.user.delivery_paused
     )

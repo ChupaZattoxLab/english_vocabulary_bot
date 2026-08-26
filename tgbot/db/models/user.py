@@ -25,10 +25,6 @@ class User:
     username: str
     role: UserRole
     created_at: datetime
-
-
-@dataclass(frozen=True)
-class ActiveUser(User):
     settings: UserSettings
     is_active: bool
     onboarding_completed: bool
@@ -37,7 +33,7 @@ class ActiveUser(User):
 
 
 @dataclass(frozen=True)
-class AdminUser(ActiveUser):
+class AdminUser(User):
     delivered_cards: int
     last_successful_delivery: datetime | None
 
@@ -52,8 +48,8 @@ class CardDeliveryPrefs:
     onboarding_completed: bool
 
 
-def active_user_from_row(row: object) -> ActiveUser:
-    """Like ravenspedia ``table_to_response_form``: mapping row → ActiveUser."""
+def user_from_row(row: object) -> User:
+    """Like ravenspedia ``table_to_response_form``: mapping row → User."""
     data = dict(cast(Mapping[Any, Any], row))
     role_raw = str(data.get("role") or UserRole.USER).lower()
     try:
@@ -61,7 +57,7 @@ def active_user_from_row(row: object) -> ActiveUser:
     except ValueError as exc:
         raise ValueError(f"unsupported user role {data.get('role')!r}") from exc
 
-    return ActiveUser(
+    return User(
         telegram_user_id=int(data["telegram_user_id"]),
         username=str(data.get("username") or ""),
         role=role,
@@ -76,7 +72,7 @@ def active_user_from_row(row: object) -> ActiveUser:
 
 def admin_user_from_row(row: object) -> AdminUser:
     data = dict(cast(Mapping[Any, Any], row))
-    base = active_user_from_row(data)
+    base = user_from_row(data)
     delivered = data.get("delivered_cards")
 
     return AdminUser(

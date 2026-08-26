@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 
 from tests.tgbot.factories import make_admin_user
 from tgbot.bot_config import BotConfig, ScheduleSettings
-from tgbot.db.models import ActiveUser, DialectPreference, UserRole, UserSettings
+from tgbot.db.models import DialectPreference, User, UserRole, UserSettings
 from tgbot.handlers.admin import delivery_state, local_day_bounds
 from tgbot.handlers.helpers import command_arguments, format_levels, format_number
 from tgbot.handlers.user import user_settings_text
@@ -64,7 +64,7 @@ def test_local_day_bounds_are_timezone_aware() -> None:
 
 
 def test_user_settings_text_includes_levels_and_schedule() -> None:
-    user = ActiveUser(
+    user = User(
         telegram_user_id=1,
         username="u",
         role=UserRole.USER,
