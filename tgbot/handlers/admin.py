@@ -27,7 +27,12 @@ from tgbot.handlers.keyboard import (
     admin_section_keyboard,
     word_categories_keyboard,
 )
-from tgbot.handlers.types import ADMIN_STATS_MONTH_DAYS, ADMIN_STATS_WEEK_DAYS
+from tgbot.handlers.types import (
+    ADMIN_STATS_MONTH_DAYS,
+    ADMIN_STATS_WEEK_DAYS,
+    FULL_TIME_TEMPLATE,
+    SHORT_TIME_TEMPLATE,
+)
 from tgbot.localization import locale
 
 
@@ -74,7 +79,7 @@ def create_admin_router(
         registered = user.created_at.astimezone(timezone)
         last_text = (
             user.last_successful_delivery.astimezone(timezone).strftime(
-                "%d.%m.%Y %H:%M"
+                FULL_TIME_TEMPLATE
             )
             if user.last_successful_delivery
             else locale.admin.never_delivered
@@ -84,13 +89,15 @@ def create_admin_router(
             if user.username
             else locale.admin.placeholder
         )
-        send_times = ", ".join(t.strftime("%H:%M") for t in config.schedule.send_times)
+        send_times = ", ".join(
+            t.strftime(SHORT_TIME_TEMPLATE) for t in config.schedule.send_times
+        )
 
         await message.answer(
             locale.admin.user_detail.format(
                 telegram_user_id=user.telegram_user_id,
                 username=username,
-                registered=registered.strftime("%d.%m.%Y %H:%M"),
+                registered=registered.strftime(FULL_TIME_TEMPLATE),
                 levels=format_levels(
                     user.settings.selected_levels,
                     locale.admin.placeholder,
