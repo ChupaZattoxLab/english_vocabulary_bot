@@ -16,6 +16,7 @@ from tgbot.db.models import (
     card_from_row,
     word_match_from_row,
 )
+from tgbot.db.models.audience_stats import audience_stats_from_row
 from tgbot.db.queries.base import (
     DbSession,
     mapping_all,
@@ -94,21 +95,7 @@ class AdminQueries(DbSession):
                 .order_by(bot_users.c.dialect),
             )
 
-        return AudienceStats(
-            total_users=int(totals["total_users"]),
-            active_users=int(totals["active_users"]),
-            paused_users=int(totals["paused_users"]),
-            blocked_users=int(totals["blocked_users"]),
-            new_today=int(totals["new_today"]),
-            new_week=int(totals["new_week"]),
-            new_month=int(totals["new_month"]),
-            levels={str(row["level"]): int(row["users"]) for row in levels},
-            dialects={
-                str(row["dialect"]): int(row["users"])
-                for row in dialects
-                if row["dialect"]
-            },
-        )
+        return audience_stats_from_row(totals, levels, dialects)
 
     async def get_admin_user(
         self,

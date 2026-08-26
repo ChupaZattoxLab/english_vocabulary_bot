@@ -3,7 +3,7 @@ name = "english-vocabulary-bot"
 version = "0.1.0"
 description = "Telegram bot that sends OALD-backed vocabulary cards from PostgreSQL"
 readme = "README.md"
-requires-python = ">=3.11,<3.15"
+requires-python = ">=3.12,<3.15"
 dependencies = [
     "aiogram>=3.20,<4",
     "imageio-ffmpeg>=0.6,<1",
@@ -52,7 +52,7 @@ asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 88
-target-version = "py311"
+target-version = "py314"
 extend-exclude = ["migrations/versions"]
 
 [tool.ruff.lint]
@@ -71,7 +71,7 @@ exclude = [
     "**/__pycache__",
     "migrations/versions",
 ]
-pythonVersion = "3.11"
+pythonVersion = "3.14"
 typeCheckingMode = "standard"
 venvPath = "."
 venv = ".venv"
