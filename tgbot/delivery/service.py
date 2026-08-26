@@ -76,18 +76,12 @@ class CardDeliveryService:
 
         text_sent = False
         try:
-            await self.send_card_text(
-                bot,
-                telegram_user_id=telegram_user_id,
-                text=self.render_card(card),
-            )
-            text_sent = True
-            message = await self.send_card_voices(
+            await self.send_card(
                 bot,
                 telegram_user_id=telegram_user_id,
                 card=card,
             )
-            await self.finish_ok(card, message.message_id)
+            text_sent = True
             return DeliveryOutcome(status=DeliveryStatus.DELIVERED, card=card)
 
         except TelegramForbiddenError as exc:
@@ -128,17 +122,18 @@ class CardDeliveryService:
         bot: Bot,
         telegram_user_id: int,
         card: Card,
-    ) -> Message:
+    ) -> None:
         await self.send_card_text(
             bot,
             telegram_user_id=telegram_user_id,
             text=self.render_card(card),
         )
-        return await self.send_card_voices(
+        message = await self.send_card_voices(
             bot,
             telegram_user_id=telegram_user_id,
             card=card,
         )
+        await self.finish_ok(card, message.message_id)
 
     def render_card(self, card: Card) -> str:
         template = self.both_template if card.is_both else self.template
