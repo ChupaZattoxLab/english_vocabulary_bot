@@ -327,14 +327,14 @@ def preference_audio_ready(
 ) -> sa.ColumnElement[bool]:
     """WHERE fragment: required dialect(s) have a prepared voice source_url."""
     if preference == DialectPreference.US:
-        return us_audio.c.source_url.is_not(None)
+        return us_audio.c.audio_data.is_not(None)
 
     if preference == DialectPreference.GB:
-        return gb_audio.c.source_url.is_not(None)
+        return gb_audio.c.audio_data.is_not(None)
 
     return sa.and_(
-        us_audio.c.source_url.is_not(None),
-        gb_audio.c.source_url.is_not(None),
+        us_audio.c.audio_data.is_not(None),
+        gb_audio.c.audio_data.is_not(None),
     )
 
 
