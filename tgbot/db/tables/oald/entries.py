@@ -26,11 +26,6 @@ class OaldEntry(Base):
             "translations",
             postgresql_using="gin",
         ),
-        sa.Index(
-            "ix_oald_entries_active",
-            "is_active",
-            "cefr",
-        ),
     )
 
     id: Mapped[int] = mapped_column(
@@ -112,11 +107,6 @@ class OaldEntry(Base):
     translations: Mapped[dict[str, Any]] = mapped_column(
         postgresql.JSONB,
         server_default=sa.text("'{}'::jsonb"),
-    )
-
-    is_active: Mapped[bool] = mapped_column(
-        sa.Boolean,
-        server_default=sa.true(),
     )
 
     created_at: Mapped[datetime] = mapped_column(
