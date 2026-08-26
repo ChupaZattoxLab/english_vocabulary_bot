@@ -16,9 +16,9 @@ from tgbot.db.models import (
     Card,
     Dialect,
     DialectPreference,
-    card_delivery_prefs_from_row,
     card_from_row,
 )
+from tgbot.db.models.user import user_from_row
 from tgbot.db.queries.base import DbSession, mapping_first
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
@@ -82,7 +82,7 @@ class CardsQueries(DbSession):
             )
 
             # Load delivery preferences for this user.
-            user = await mapping_first(
+            user_row = await mapping_first(
                 connection,
                 sa.select(
                     bot_users.c.selected_levels,
@@ -91,19 +91,19 @@ class CardsQueries(DbSession):
                     bot_users.c.onboarding_completed,
                 ).where(bot_users.c.telegram_user_id == telegram_user_id),
             )
-            if not user:
+            if not user_row:
                 return None
 
-            prefs = card_delivery_prefs_from_row(user)
+            user = user_from_row(user_row)
             if (
-                not prefs.onboarding_completed
-                or not prefs.selected_levels
-                or prefs.dialect not in VALID_DIALECT_PREFERENCES
-                or (require_active and not prefs.is_active)
+                not user.onboarding_completed
+                or not user.settings.selected_levels
+                or user.settings.dialect not in VALID_DIALECT_PREFERENCES
+                or (require_active and not user.is_active)
             ):
                 return None
 
-            preference = cast(DialectPreference, prefs.dialect)
+            preference = cast(DialectPreference, user.settings.dialect)
 
             # One occupied card per scheduled slot.
             existing = await mapping_first(
@@ -118,7 +118,7 @@ class CardsQueries(DbSession):
                 return None
 
             # Pick a random unseen entry that has prepared audio for the preference.
-            levels = list(prefs.selected_levels)
+            levels = list(user.settings.selected_levels)
             stmt, us_audio, gb_audio = card_content_select()
             stmt = (
                 stmt.where(

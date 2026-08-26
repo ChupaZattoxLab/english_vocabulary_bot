@@ -38,16 +38,6 @@ class AdminUser(User):
     last_successful_delivery: datetime | None
 
 
-@dataclass(frozen=True)
-class CardDeliveryPrefs:
-    """Subset of bot_users columns checked before reserving a card."""
-
-    selected_levels: tuple[str, ...]
-    dialect: DialectPreference | None
-    is_active: bool
-    onboarding_completed: bool
-
-
 def user_from_row(row: object) -> User:
     """Like ravenspedia ``table_to_response_form``: mapping row → User."""
     data = dict(cast(Mapping[Any, Any], row))
@@ -108,23 +98,4 @@ def user_settings_from_row(row: Mapping[Any, Any]) -> UserSettings:
     return UserSettings(
         selected_levels=tuple(str(level) for level in levels),
         dialect=dialect,
-    )
-
-
-def card_delivery_prefs_from_row(row: object) -> CardDeliveryPrefs:
-    data = dict(cast(Mapping[Any, Any], row))
-    raw_dialect = data.get("dialect")
-    dialect: DialectPreference | None = None
-    if raw_dialect is not None:
-        if isinstance(raw_dialect, DialectPreference):
-            dialect = raw_dialect
-        else:
-            dialect = DialectPreference(str(raw_dialect).lower())
-
-    levels = data.get("selected_levels") or ()
-    return CardDeliveryPrefs(
-        selected_levels=tuple(str(level) for level in levels),
-        dialect=dialect,
-        is_active=bool(data.get("is_active")),
-        onboarding_completed=bool(data.get("onboarding_completed")),
     )

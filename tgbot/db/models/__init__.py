@@ -4,11 +4,9 @@ from tgbot.db.models.audience_stats import AudienceStats
 from tgbot.db.models.card import Card, CardAudio, DialectVariant, card_from_row
 from tgbot.db.models.user import (
     AdminUser,
-    CardDeliveryPrefs,
     User,
     UserSettings,
     admin_user_from_row,
-    card_delivery_prefs_from_row,
     user_from_row,
 )
 from tgbot.db.models.word_match import WordMatch, word_match_from_row
@@ -38,7 +36,6 @@ __all__ = [
     "AudioVariantType",
     "Card",
     "CardAudio",
-    "CardDeliveryPrefs",
     "CardStatus",
     "CefrLevel",
     "Dialect",
@@ -56,7 +53,6 @@ __all__ = [
     "WordMatch",
     "user_from_row",
     "admin_user_from_row",
-    "card_delivery_prefs_from_row",
     "card_from_row",
     "word_match_from_row",
 ]
