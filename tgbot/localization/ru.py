@@ -122,13 +122,14 @@ class admin:
     overview = (
         "<b>🛠 Vocabulary Bot - Admin Panel</b>\n\n"
         "👥 Пользователей: {total_users}\n"
-        "📨 Получают карточки: {active_users}\n\n"
+        "📨 Подписано на рассылку: {active_users}\n\n"
     )
+
     users_panel = (
         "<b>👥 Пользователи</b>\n\n"
         "Всего: {total_users}\n"
-        "Получают карточки: {active_users}\n"
-        "Пауза: {paused_users}\n"
+        "Подписано на рассылку: {active_users}\n"
+        "Приостановили рассылку: {paused_users}\n"
         "Заблокировали бота: {blocked_users}\n\n"
         "<b>Новые</b>\n"
         "Сегодня: {new_today}\n"
