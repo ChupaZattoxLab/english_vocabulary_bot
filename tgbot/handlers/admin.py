@@ -158,7 +158,7 @@ def create_admin_router(
             await callback.answer(locale.admin.panel_unavailable, show_alert=True)
             return
 
-        action = (callback.data or "admin:overview").removeprefix("admin:")
+        action = (callback.data or "admin:refresh").removeprefix("admin:")
         if action.startswith("word:"):
             entry_id = action.removeprefix("word:")
             if not entry_id.isdigit():
