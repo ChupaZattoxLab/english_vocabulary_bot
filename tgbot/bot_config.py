@@ -8,6 +8,7 @@ from typing import Self
 from zoneinfo import ZoneInfo
 
 from pydantic import BaseModel, ConfigDict, ValidationError, field_validator
+from sqlalchemy import make_url
 
 from tgbot.secrets import ConfigError, secrets
 from tgbot.types import (
@@ -63,7 +64,13 @@ class BotConfig(BaseModel):
     def require_db_url(cls, value: str) -> str:
         if not value:
             raise ValueError("OALD_DATABASE_URL is required")
-        return value
+
+        url = make_url(value)
+        if url.host == "localhost":
+            # Avoid IPv6 localhost surprises on Windows.
+            url = url.set(host="127.0.0.1")
+
+        return url.render_as_string()
 
     @classmethod
     def load(cls) -> Self:

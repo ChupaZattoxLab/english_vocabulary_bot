@@ -36,11 +36,6 @@ def sync_engine(
         "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
     }
 
-    url = make_url(db_url)
-    if url.host == "localhost":
-        # Avoid IPv6 localhost surprises on Windows.
-        connect_args["hostaddr"] = "127.0.0.1"
-
     kwargs: dict[str, Any] = {"connect_args": connect_args}
     if autocommit:
         # Catalog DDL (create/drop database) cannot run inside a transaction.

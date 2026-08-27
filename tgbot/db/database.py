@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from urllib.parse import urlparse
 
 import sqlalchemy as sa
 from alembic.config import Config as AlembicConfig
@@ -47,9 +46,6 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
         connect_args: dict[str, object] = {
             "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
         }
-        parsed = urlparse(db_url)
-        if parsed.hostname == "localhost":
-            connect_args["hostaddr"] = "127.0.0.1"
 
         self.engine: AsyncEngine = create_async_engine(
             db_url,
