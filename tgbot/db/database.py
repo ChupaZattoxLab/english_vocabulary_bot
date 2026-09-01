@@ -1,0 +1,135 @@
+"""Async PostgreSQL access for users, delivery history, and OALD cards."""
+
+from __future__ import annotations
+
+from functools import lru_cache
+
+import sqlalchemy as sa
+from alembic.config import Config as AlembicConfig
+from alembic.script import ScriptDirectory
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+
+from tgbot.db.queries import (
+    AdminQueries,
+    CardsQueries,
+    SchedulerQueries,
+    UsersQueries,
+)
+from tgbot.db.tables import MANAGED_TABLES
+from tgbot.db.types import (
+    DB_CONNECT_TIMEOUT_SECONDS,
+    DB_POOL_RECYCLE_SECONDS,
+)
+from tgbot.secrets import PROJECT_ROOT
+
+# Postgres catalog: list of tables in the current database (not app schema).
+information_schema_tables = sa.table(
+    "tables",
+    sa.column("table_schema", sa.Text),
+    sa.column("table_name", sa.Text),
+    schema="information_schema",
+)
+
+# Alembic revision marker table written by migrations.
+alembic_version = sa.table(
+    "alembic_version",
+    sa.column("version_num", sa.Text),
+)
+
+
+class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
+    def __init__(
+        self,
+        db_url: str,
+        pool_size: int,
+    ):
+        connect_args: dict[str, object] = {
+            "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
+        }
+
+        self.engine: AsyncEngine = create_async_engine(
+            db_url,
+            pool_size=pool_size,
+            # Headroom for concurrent deliveries + scheduler bookkeeping.
+            max_overflow=pool_size,
+            pool_pre_ping=True,
+            pool_recycle=DB_POOL_RECYCLE_SECONDS,
+            connect_args=connect_args,
+        )
+
+    async def open(self) -> None:
+        try:
+            await self.verify_schema()
+        except Exception:
+            await self.engine.dispose()
+            raise
+
+    async def close(self) -> None:
+        await self.engine.dispose()
+
+    async def verify_schema(self) -> None:
+        async with self.engine.connect() as connection:
+            rows = (
+                (
+                    await connection.execute(
+                        sa.select(information_schema_tables.c.table_name).where(
+                            information_schema_tables.c.table_schema == "public",
+                            information_schema_tables.c.table_name.in_(
+                                list(MANAGED_TABLES)
+                            ),
+                        )
+                    )
+                )
+                .mappings()
+                .all()
+            )
+            existing = {str(row["table_name"]) for row in rows}
+            missing = MANAGED_TABLES - existing
+
+            if missing:
+                raise RuntimeError(
+                    "Database schema is incomplete; missing tables: "
+                    f"{', '.join(sorted(missing))}. Run "
+                    "`uv run migrate`."
+                )
+
+            version_table = (
+                (
+                    await connection.execute(
+                        sa.select(
+                            sa.func.to_regclass("public.alembic_version").label("name")
+                        )
+                    )
+                )
+                .mappings()
+                .first()
+            )
+            if not version_table or version_table["name"] is None:
+                raise RuntimeError(
+                    "Database is not managed by Alembic. Run `uv run migrate`."
+                )
+
+            version = (
+                (await connection.execute(sa.select(alembic_version.c.version_num)))
+                .mappings()
+                .first()
+            )
+            expected = migration_head()
+            current = str(version["version_num"]) if version else "<none>"
+
+            if current != expected:
+                raise RuntimeError(
+                    f"Database migration is {current}, expected {expected}. "
+                    "Run `uv run migrate`."
+                )
+
+
+@lru_cache(maxsize=1)
+def migration_head() -> str:
+    config = AlembicConfig(str(PROJECT_ROOT / "alembic.ini"))
+    head = ScriptDirectory.from_config(config).get_current_head()
+
+    if head is None:
+        raise RuntimeError("Alembic has no migration head revision")
+
+    return head

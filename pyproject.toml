@@ -1,0 +1,77 @@
+[project]
+name = "english-vocabulary-bot"
+version = "0.1.0"
+description = "Telegram bot that sends OALD-backed vocabulary cards from PostgreSQL"
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    "aiogram>=3.20,<4",
+    "imageio-ffmpeg>=0.6,<1",
+    "psycopg[binary]>=3,<4",
+    "alembic>=1.19.0,<2",
+    "sqlalchemy>=2.0.51,<3",
+    "sqlalchemy-utils>=0.41,<1",
+    "psutil>=7.2.2,<8",
+    "python-dotenv>=1,<2",
+    "pydantic>=2,<3",
+    "pydantic-settings>=2,<3",
+]
+
+[project.scripts]
+start = "scripts.cli:start"
+stop = "scripts.cli:stop"
+migrate = "scripts.cli:migrate"
+check = "scripts.cli:check"
+test = "scripts.cli:test"
+format = "scripts.cli:format_code"
+lint = "scripts.cli:lint"
+typecheck = "scripts.cli:typecheck"
+oald-import = "scripts.cli:oald_import"
+oald-audio = "scripts.cli:oald_audio"
+oxford-import = "scripts.cli:oxford_import"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4,<9",
+    "pytest-asyncio>=0.25,<1",
+    "ruff>=0.16.2",
+    "pyright>=1.1.400",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tgbot", "scripts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+extend-exclude = ["migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"migrations/env.py" = ["E402"]
+
+[tool.ruff.format]
+quote-style = "double"
+skip-magic-trailing-comma = false
+
+[tool.pyright]
+include = ["tgbot", "scripts/oald", "scripts/cli.py"]
+exclude = [
+    "**/__pycache__",
+    "migrations/versions",
+]
+pythonVersion = "3.14"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"

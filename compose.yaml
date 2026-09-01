@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-english_vocabulary_oald}
+      POSTGRES_USER: ${POSTGRES_USER:-vocab_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vocab_dev_password}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - vocabulary_postgres_data:/var/lib/postgresql/data
+      - vocabulary_pg_runtime:/var/run/postgresql
+      - ./scripts/restore-oald-seed.sh:/docker-entrypoint-initdb.d/10-restore-oald-seed.sh:ro
+      - ./data/backups/english_vocabulary_oald_seed_2026-08-01.dump.parts:/database-seed:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  bot:
+    image: ${BOT_IMAGE:-ghcr.io/chupazattoxlab/english_vocabulary_bot:latest}
+    # Host network: reach api.telegram.org (docker-bridge outbound is broken on this VPS).
+    # DB still uses the shared Unix socket volume below.
+    network_mode: host
+    env_file:
+      - .env
+    volumes:
+      - vocabulary_pg_runtime:/var/run/postgresql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command:
+      - sh
+      - -c
+      - migrate && python -m tgbot
+    # Passes only after migrate finishes and python -m tgbot is running.
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - grep -aq 'python -m tgbot' /proc/*/cmdline
+      interval: 5s
+      timeout: 3s
+      retries: 36
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  vocabulary_postgres_data:
+  vocabulary_pg_runtime:
