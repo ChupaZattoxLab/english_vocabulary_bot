@@ -14,11 +14,13 @@ from aiogram.types import BufferedInputFile
 from tests.tgbot.factories import (
     VALID_BOTH_TEMPLATE,
     VALID_SINGLE_TEMPLATE,
+    as_bot,
     fake_bot,
     fake_delivery_db,
     make_audio,
     make_card,
     make_variant,
+    telegram_api_error,
 )
 from tgbot.db.models import Dialect
 from tgbot.delivery import DeliveryStatus
@@ -46,7 +48,7 @@ def _service(db, templates: tuple[Path, Path]) -> CardDeliveryService:
 @pytest.mark.asyncio
 async def test_deliver_skips_when_no_card_reserved(templates) -> None:
     service = _service(fake_delivery_db(), templates)
-    outcome = await service.deliver(fake_bot(), 1)
+    outcome = await service.deliver(as_bot(fake_bot()), 1)
     assert outcome.status == DeliveryStatus.SKIPPED
     assert outcome.card is None
 
@@ -66,7 +68,7 @@ async def test_voice_upload_caches_telegram_file_id(templates) -> None:
     )
     service = _service(db, templates)
 
-    await service.send_card(bot, 123, card)
+    await service.send_card(as_bot(bot), 123, card)
 
     bot.send_message.assert_awaited_once()
     bot.send_voice.assert_awaited_once()
@@ -86,7 +88,7 @@ async def test_cached_file_id_is_cleared_on_bad_request(templates) -> None:
     bot = fake_bot(
         send_voice=AsyncMock(
             side_effect=[
-                TelegramBadRequest(method="sendVoice", message="bad file"),
+                telegram_api_error(TelegramBadRequest, "bad file"),
                 SimpleNamespace(
                     message_id=11,
                     voice=SimpleNamespace(file_id="fresh"),
@@ -97,7 +99,7 @@ async def test_cached_file_id_is_cleared_on_bad_request(templates) -> None:
     )
     service = _service(db, templates)
 
-    await service.send_card(bot, 1, card)
+    await service.send_card(as_bot(bot), 1, card)
 
     db.clear_cached_audio_file_id.assert_awaited_once_with(
         card.primary.audio.source_url
@@ -109,8 +111,8 @@ async def test_cached_file_id_is_cleared_on_bad_request(templates) -> None:
 
 
 @pytest.mark.asyncio
-async def test_partial_send_counts_as_delivered(templates) -> None:
-    """Text succeeded, voice failed → still delivered (card text reached user)."""
+async def test_voice_failure_fails_delivery(templates) -> None:
+    """send_card runs text+voice as one unit; a voice error fails the card."""
     card = make_card()
     db = fake_delivery_db(reserve_card=AsyncMock(return_value=card))
     bot = fake_bot(
@@ -119,10 +121,11 @@ async def test_partial_send_counts_as_delivered(templates) -> None:
     )
     service = _service(db, templates)
 
-    outcome = await service.deliver(bot, 1, datetime.now(UTC))
+    outcome = await service.deliver(as_bot(bot), 1, datetime.now(UTC))
 
-    assert outcome.status == DeliveryStatus.DELIVERED
-    db.finish_delivery.assert_awaited_once_with(card.user_card_id, delivered=True)
+    assert outcome.status == DeliveryStatus.FAILED
+    db.finish_delivery.assert_awaited_once()
+    assert db.finish_delivery.await_args.kwargs["delivered"] is False
 
 
 @pytest.mark.asyncio
@@ -131,15 +134,12 @@ async def test_forbidden_before_text_fails_and_deactivates(templates) -> None:
     db = fake_delivery_db(reserve_card=AsyncMock(return_value=card))
     bot = fake_bot(
         send_message=AsyncMock(
-            side_effect=TelegramForbiddenError(
-                method="sendMessage",
-                message="blocked",
-            )
+            side_effect=telegram_api_error(TelegramForbiddenError, "blocked")
         )
     )
     service = _service(db, templates)
 
-    outcome = await service.deliver(bot, 99)
+    outcome = await service.deliver(as_bot(bot), 99)
 
     assert outcome.status == DeliveryStatus.FAILED
     db.deactivate_user.assert_awaited_once_with(99)
@@ -175,7 +175,7 @@ async def test_both_dialects_send_two_voices(templates) -> None:
     )
     service = _service(db, templates)
 
-    await service.send_card(bot, 1, card)
+    await service.send_card(as_bot(bot), 1, card)
 
     assert bot.send_voice.await_count == 2
     assert bot.send_message.await_count == 1

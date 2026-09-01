@@ -83,3 +83,20 @@ def test_card_from_row_attaches_dialects_by_preference() -> None:
     us_only = card_from_row(row, DialectPreference.US)
     assert us_only.us is not None
     assert us_only.gb is None
+
+
+def test_card_from_row_maps_word_search_fields() -> None:
+    card = card_from_row(
+        {
+            "entry_id": 9,
+            "word_us": "color",
+            "word_gb": "colour",
+            "lexical_category": "noun",
+            "cefr": "b2",
+        }
+    )
+    assert card.entry_id == 9
+    assert card.word_us == "color"
+    assert card.word_gb == "colour"
+    assert card.lexical_category == "noun"
+    assert card.cefr == "B2"

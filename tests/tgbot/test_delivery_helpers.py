@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
-from tests.tgbot.factories import make_card
+from tests.tgbot.factories import make_card, telegram_api_error
 from tgbot.db.models import Dialect
 from tgbot.delivery.card_template import CardTemplateError
 from tgbot.delivery.service import (
@@ -39,7 +39,7 @@ def test_voice_caption_includes_escaped_ipa() -> None:
 
 def test_classify_delivery_error_categories() -> None:
     assert (
-        classify_delivery_error(TelegramForbiddenError(method="m", message="x"))
+        classify_delivery_error(telegram_api_error(TelegramForbiddenError, "x"))
         == ERROR_TYPE_BOT_BLOCKED
     )
     assert (
@@ -54,7 +54,7 @@ def test_classify_delivery_error_categories() -> None:
         == ERROR_TYPE_AUDIO_UNAVAILABLE
     )
     assert (
-        classify_delivery_error(TelegramBadRequest(method="m", message="x"))
+        classify_delivery_error(telegram_api_error(TelegramBadRequest, "x"))
         == ERROR_TYPE_TELEGRAM_ERROR
     )
     assert classify_delivery_error(RuntimeError("boom")) == ERROR_TYPE_TECHNICAL

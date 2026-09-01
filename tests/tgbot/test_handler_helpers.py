@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, time
-from types import SimpleNamespace
 from zoneinfo import ZoneInfo
 
-from tests.tgbot.factories import make_admin_user
+from tests.tgbot.factories import fake_message, make_admin_user, make_card
 from tgbot.bot_config import BotConfig, ScheduleSettings
 from tgbot.db.models import DialectPreference, User, UserRole, UserSettings
 from tgbot.handlers.admin import delivery_state, local_day_bounds
 from tgbot.handlers.helpers import command_arguments, format_levels, format_number
+from tgbot.handlers.keyboard.words import word_categories_keyboard
 from tgbot.handlers.user import user_settings_text
 from tgbot.localization import locale
 
@@ -25,9 +25,9 @@ def test_format_levels_uppercases_or_empty() -> None:
 
 
 def test_command_arguments_takes_rest_of_message() -> None:
-    assert command_arguments(SimpleNamespace(text="/user 123")) == "123"
-    assert command_arguments(SimpleNamespace(text="/user")) == ""
-    assert command_arguments(SimpleNamespace(text=None)) == ""
+    assert command_arguments(fake_message(text="/user 123")) == "123"
+    assert command_arguments(fake_message(text="/user")) == ""
+    assert command_arguments(fake_message(text=None)) == ""
 
 
 def test_delivery_state_priority_blocked_then_paused() -> None:
@@ -96,3 +96,19 @@ def test_user_settings_text_includes_levels_and_schedule() -> None:
     assert "A1" in text
     assert "US" in text
     assert "13:00, 20:00" in text
+
+
+def test_word_categories_keyboard_uses_entry_id() -> None:
+    markup = word_categories_keyboard(
+        (
+            make_card(entry_id=9, include_us=True),
+            make_card(entry_id=10, include_us=True),
+        )
+    )
+    texts = [button.text for row in markup.inline_keyboard for button in row]
+    callbacks = [
+        button.callback_data for row in markup.inline_keyboard for button in row
+    ]
+    assert "noun · B1 · #9" in texts
+    assert "noun · B1 · #10" in texts
+    assert callbacks == ["admin:word:9", "admin:word:10"]

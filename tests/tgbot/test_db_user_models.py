@@ -9,11 +9,10 @@ import pytest
 from tgbot.db.models import (
     DialectPreference,
     UserRole,
-    active_user_from_row,
     admin_user_from_row,
-    card_delivery_prefs_from_row,
+    user_from_row,
 )
-from tgbot.db.models.word_match import word_match_from_row
+from tgbot.db.models.audience_stats import audience_stats_from_row
 
 
 def _user_row(**overrides):
@@ -33,17 +32,17 @@ def _user_row(**overrides):
     return row
 
 
-def test_active_user_from_row_maps_settings_and_role() -> None:
-    user = active_user_from_row(_user_row())
+def test_user_from_row_maps_settings_and_role() -> None:
+    user = user_from_row(_user_row())
     assert user.telegram_user_id == 42
     assert user.role == UserRole.USER
     assert user.settings.selected_levels == ("a1", "b1")
     assert user.settings.dialect == DialectPreference.BOTH
 
 
-def test_active_user_from_row_rejects_unknown_role() -> None:
+def test_user_from_row_rejects_unknown_role() -> None:
     with pytest.raises(ValueError, match="unsupported user role"):
-        active_user_from_row(_user_row(role="superuser"))
+        user_from_row(_user_row(role="superuser"))
 
 
 def test_admin_user_from_row_defaults_delivered_cards() -> None:
@@ -52,24 +51,30 @@ def test_admin_user_from_row_defaults_delivered_cards() -> None:
     assert admin.delivered_cards == 0
 
 
-def test_card_delivery_prefs_from_row() -> None:
-    prefs = card_delivery_prefs_from_row(
+def test_user_from_row_maps_delivery_state() -> None:
+    user = user_from_row(
         _user_row(is_active=False, onboarding_completed=True, dialect="gb")
     )
-    assert prefs.dialect == DialectPreference.GB
-    assert prefs.is_active is False
-    assert prefs.onboarding_completed is True
+    assert user.settings.dialect == DialectPreference.GB
+    assert user.is_active is False
+    assert user.onboarding_completed is True
 
 
-def test_word_match_from_row() -> None:
-    match = word_match_from_row(
+def test_audience_stats_from_row_skips_empty_dialects() -> None:
+    stats = audience_stats_from_row(
         {
-            "id": 9,
-            "word_us": "color",
-            "word_gb": "colour",
-            "lexical_category": "noun",
-            "cefr": "b2",
-        }
+            "total_users": 10,
+            "active_users": 4,
+            "paused_users": 2,
+            "blocked_users": 1,
+            "new_today": 1,
+            "new_week": 3,
+            "new_month": 8,
+        },
+        ({"level": "a1", "users": 5}, {"level": "b1", "users": 2}),
+        ({"dialect": "gb", "users": 3}, {"dialect": None, "users": 1}),
     )
-    assert match.id == 9
-    assert match.cefr == "b2"
+    assert stats.total_users == 10
+    assert stats.active_users == 4
+    assert stats.levels == {"a1": 5, "b1": 2}
+    assert stats.dialects == {"gb": 3}

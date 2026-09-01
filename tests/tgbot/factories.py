@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 from types import SimpleNamespace
+from typing import Any, cast
 from unittest.mock import AsyncMock
+
+from aiogram import Bot
+from aiogram.exceptions import TelegramAPIError
+from aiogram.methods import TelegramMethod
+from aiogram.types import Message
 
 from tgbot.db.models import (
     AdminUser,
@@ -100,6 +106,14 @@ def fake_bot(*, send_voice=None, send_message=None) -> SimpleNamespace:
     )
 
 
+def fake_message(*, text: str | None = None) -> Message:
+    return cast(Message, SimpleNamespace(text=text))
+
+
+def as_bot(bot: SimpleNamespace) -> Bot:
+    return cast(Bot, bot)
+
+
 def fake_delivery_db(**overrides) -> SimpleNamespace:
     defaults = {
         "reserve_card": AsyncMock(return_value=None),
@@ -111,6 +125,14 @@ def fake_delivery_db(**overrides) -> SimpleNamespace:
     }
     defaults.update(overrides)
     return SimpleNamespace(**defaults)
+
+
+def telegram_api_error[E: TelegramAPIError](
+    exc_type: type[E],
+    message: str,
+    method: str = "method",
+) -> E:
+    return exc_type(method=cast(TelegramMethod[Any], method), message=message)
 
 
 VALID_SINGLE_TEMPLATE = (
