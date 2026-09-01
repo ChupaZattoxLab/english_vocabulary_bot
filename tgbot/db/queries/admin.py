@@ -11,10 +11,8 @@ from tgbot.db.models import (
     AudienceStats,
     Card,
     DialectPreference,
-    WordMatch,
     admin_user_from_row,
     card_from_row,
-    word_match_from_row,
 )
 from tgbot.db.models.audience_stats import audience_stats_from_row
 from tgbot.db.queries.base import (
@@ -127,11 +125,11 @@ class AdminQueries(DbSession):
         self,
         word: str,
         limit: int = 10,
-    ) -> tuple[WordMatch, ...]:
+    ) -> tuple[Card, ...]:
         """Exact US/GB spelling hits for /word when several POS/entries exist."""
         rows = await self.fetch_all(
             sa.select(
-                oald_entries.c.id,
+                oald_entries.c.id.label("entry_id"),
                 oald_entries.c.word_us,
                 oald_entries.c.word_gb,
                 oald_entries.c.lexical_category,
@@ -147,12 +145,12 @@ class AdminQueries(DbSession):
             .limit(limit)
         )
 
-        return tuple(word_match_from_row(row) for row in rows)
+        return tuple(card_from_row(row) for row in rows)
 
     async def get_preview_card(self, entry_id: int | None = None) -> Card | None:
         """Card with both US and GB audio for admin QA (no bot_user_cards row).
 
-        With ``entry_id`` — that entry. Without — a random active card, preferring
+        With ``entry_id`` — that entry. Without — a random card, preferring
         spelling differences like color/colour.
         """
         stmt, us_audio, gb_audio = card_content_select()
@@ -165,7 +163,7 @@ class AdminQueries(DbSession):
         if entry_id is not None:
             stmt = stmt.where(oald_entries.c.id == entry_id, both_audio)
         else:
-            stmt = stmt.where(oald_entries.c.is_active.is_(True), both_audio).order_by(
+            stmt = stmt.where(both_audio).order_by(
                 (oald_entries.c.word_us != oald_entries.c.word_gb).desc(),
                 sa.func.random(),
             )

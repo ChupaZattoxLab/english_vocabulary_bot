@@ -9,7 +9,6 @@ from tgbot.db.models.user import (
     admin_user_from_row,
     user_from_row,
 )
-from tgbot.db.models.word_match import WordMatch, word_match_from_row
 from tgbot.db.types import (
     VALID_DIALECT_PREFERENCES,
     VALID_DIALECTS,
@@ -50,9 +49,7 @@ __all__ = [
     "VALID_DIALECTS",
     "VALID_LEVELS",
     "VALID_ROLES",
-    "WordMatch",
     "user_from_row",
     "admin_user_from_row",
     "card_from_row",
-    "word_match_from_row",
 ]

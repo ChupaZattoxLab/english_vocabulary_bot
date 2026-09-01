@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-
-from sqlalchemy.engine import RowMapping
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -22,9 +21,9 @@ class AudienceStats:
 
 
 def audience_stats_from_row(
-    totals: RowMapping,
-    levels: Sequence[RowMapping],
-    dialects: Sequence[RowMapping],
+    totals: Mapping[str, Any],
+    levels: Sequence[Mapping[str, Any]],
+    dialects: Sequence[Mapping[str, Any]],
 ) -> AudienceStats:
     return AudienceStats(
         total_users=int(totals["total_users"]),

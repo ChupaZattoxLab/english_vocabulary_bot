@@ -84,12 +84,9 @@ class CardsQueries(DbSession):
             # Load delivery preferences for this user.
             user_row = await mapping_first(
                 connection,
-                sa.select(
-                    bot_users.c.selected_levels,
-                    bot_users.c.dialect,
-                    bot_users.c.is_active,
-                    bot_users.c.onboarding_completed,
-                ).where(bot_users.c.telegram_user_id == telegram_user_id),
+                sa.select(bot_users).where(
+                    bot_users.c.telegram_user_id == telegram_user_id
+                ),
             )
             if not user_row:
                 return None
@@ -122,7 +119,6 @@ class CardsQueries(DbSession):
             stmt, us_audio, gb_audio = card_content_select()
             stmt = (
                 stmt.where(
-                    oald_entries.c.is_active.is_(True),
                     oald_entries.c.cefr.in_(levels),
                     preference_audio_ready(preference, us_audio, gb_audio),
                     ~sa.exists(

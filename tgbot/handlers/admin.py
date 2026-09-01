@@ -134,7 +134,7 @@ def create_admin_router(
             bot = message.bot
             if bot is None:
                 return
-            if not await send_word_card(bot, message.from_user.id, rows[0].id):
+            if not await send_word_card(bot, message.from_user.id, rows[0].entry_id):
                 await message.answer(locale.admin.word_no_both_audio)
             return
 
