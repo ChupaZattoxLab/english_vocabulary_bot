@@ -37,12 +37,13 @@ services:
     command:
       - sh
       - -c
-      - migrate && python -m tgbot
-    # Passes only after migrate finishes and python -m tgbot is running.
+      - migrate && exec python -m tgbot
+    # PID 1 becomes python only after migrate + exec; the shell cmdline
+    # still contains "python -m tgbot" during migrate, so check /proc/1/comm.
     healthcheck:
       test:
         - CMD-SHELL
-        - grep -aq 'python -m tgbot' /proc/*/cmdline
+        - grep -Eq '^python' /proc/1/comm
       interval: 5s
       timeout: 3s
       retries: 36

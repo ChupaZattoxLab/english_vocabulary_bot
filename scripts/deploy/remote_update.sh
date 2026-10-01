@@ -32,8 +32,23 @@ fi
 
 docker compose pull bot
 # Block until postgres is healthy and bot healthcheck passes (migrate + tgbot up).
-docker compose up -d --wait --wait-timeout "$WAIT_TIMEOUT_SECONDS" postgres bot
+# Healthcheck requires PID 1 = python (after `exec`); migrate failure keeps PID 1 = sh
+# and the container never becomes healthy, so --wait fails and Actions goes red.
+if ! docker compose up -d --wait --wait-timeout "$WAIT_TIMEOUT_SECONDS" postgres bot; then
+  echo "Deploy failed: compose --wait timed out or bot never became healthy" >&2
+  docker compose ps >&2 || true
+  docker compose logs --tail=120 bot >&2 || true
+  exit 1
+fi
 docker compose ps
+
+# Belt-and-suspenders: --wait alone used to pass on a false-positive healthcheck.
+bot_comm="$(docker compose exec -T bot sh -c 'tr -d "\0" </proc/1/comm' 2>/dev/null || true)"
+if ! printf '%s' "$bot_comm" | grep -Eq '^python'; then
+  echo "Deploy failed: bot PID 1 is '${bot_comm:-unknown}', expected python" >&2
+  docker compose logs --tail=120 bot >&2 || true
+  exit 1
+fi
 
 echo "Pruning unused ${IMAGE_REPO} images (keeps the one in use by bot)..."
 docker image prune -af --filter "reference=${IMAGE_REPO}" || true
