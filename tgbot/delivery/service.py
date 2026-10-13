@@ -7,7 +7,6 @@ import html
 import logging
 from collections.abc import Awaitable, Callable
 from datetime import datetime
-from typing import TypeVar
 
 from aiogram import Bot
 from aiogram.exceptions import (
@@ -42,8 +41,6 @@ from tgbot.delivery.types import (
 from tgbot.localization import locale
 
 LOGGER = logging.getLogger("tgbot.delivery")
-
-T = TypeVar("T")
 
 PREVIEW_PREFERENCES = (
     EnglishVarietyPreference.GB,
@@ -289,7 +286,7 @@ def classify_delivery_error(exc: Exception) -> str:
     return ERROR_TYPE_TECHNICAL
 
 
-async def call_with_retry_after(
+async def call_with_retry_after[T](
     operation: Callable[[], Awaitable[T]],
     kind: str,
 ) -> T:
