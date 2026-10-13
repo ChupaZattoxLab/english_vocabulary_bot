@@ -43,12 +43,10 @@ def test_ipa_at_position_uses_matching_index_else_first() -> None:
     assert ipa_at_position("not-a-list", 0) == ""
 
 
-def test_russian_translation_flattens_main_and_also() -> None:
-    assert (
-        russian_translation({"ru": {"main": "цвет", "also": ["окрас", "цвет"]}})
-        == "цвет, окрас"
-    )
+def test_russian_translation_keeps_importance_order() -> None:
+    assert russian_translation(["цвет", "окрас", "цвет"]) == "цвет, окрас"
     assert russian_translation(None) == ""
+    assert russian_translation([]) == ""
 
 
 def test_card_from_row_attaches_english_varieties_by_preference() -> None:
@@ -60,7 +58,7 @@ def test_card_from_row_attaches_english_varieties_by_preference() -> None:
         "cefr": "b1",
         "definition": "def",
         "example": "ex",
-        "translations": {"ru": {"main": "цвет", "also": []}},
+        "translations": ["цвет"],
         "ipa_us": ["/us/"],
         "ipa_gb": ["/gb/"],
         "us_source_position": 0,

@@ -172,15 +172,11 @@ def ipa_at_position(values: object, position: object) -> str:
 
 
 def russian_translation(translations: object) -> str:
-    """Flatten translations.ru.main + also into a comma-separated string."""
-    source = translations if isinstance(translations, Mapping) else {}
-    russian_raw = source.get("ru")
-    russian = russian_raw if isinstance(russian_raw, Mapping) else {}
-
-    values = [str(russian.get("main") or "").strip()]
-    also = russian.get("also") or []
-
-    if isinstance(also, Sequence) and not isinstance(also, (str, bytes)):
-        values.extend(str(value).strip() for value in also)
-
-    return ", ".join(value for value in dict.fromkeys(values) if value)
+    """Join translations in stored order, most important first."""
+    if not isinstance(translations, Sequence) or isinstance(translations, (str, bytes)):
+        return ""
+    return ", ".join(
+        value
+        for value in dict.fromkeys(str(item).strip() for item in translations)
+        if value
+    )

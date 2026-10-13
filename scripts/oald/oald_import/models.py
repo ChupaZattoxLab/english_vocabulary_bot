@@ -31,7 +31,7 @@ class OaldEntry:
     example: str
     audio_source_us: list[str]
     audio_source_gb: list[str]
-    translations: dict[str, Any]
+    translations: list[str]
 
     def values(self) -> dict[str, Any]:
         return {

@@ -174,9 +174,14 @@ def string_list(
     return result
 
 
-def validate_translations(value: Any, row_number: int) -> dict[str, Any]:
+def validate_translations(value: Any, row_number: int) -> list[str]:
+    """Store translations most-important first: ru.main, then ru.also."""
+    if isinstance(value, list):
+        return ordered_translation_strings(value, row_number)
     if not isinstance(value, dict):
-        raise OaldValidationError(f"row {row_number}: translations must be an object")
+        raise OaldValidationError(
+            f"row {row_number}: translations must be an object or an array"
+        )
     ru = value.get("ru")
     if not isinstance(ru, dict):
         raise OaldValidationError(
@@ -192,7 +197,23 @@ def validate_translations(value: Any, row_number: int) -> dict[str, Any]:
         raise OaldValidationError(
             f"row {row_number}: translations.ru.also must be an array of strings"
         )
-    return value
+    return ordered_translation_strings([main, *also], row_number)
+
+
+def ordered_translation_strings(items: list[Any], row_number: int) -> list[str]:
+    result: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        if not isinstance(item, str):
+            raise OaldValidationError(
+                f"row {row_number}: translations must be an array of strings"
+            )
+        normalized = normalize_text(item)
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        result.append(normalized)
+    return result
 
 
 def normalize_text(value: str) -> str:

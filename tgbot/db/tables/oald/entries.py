@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, cast
+from typing import cast
 
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
@@ -104,9 +104,9 @@ class OaldEntry(Base):
         server_default=sa.text("'{}'::text[]"),
     )
 
-    translations: Mapped[dict[str, Any]] = mapped_column(
-        postgresql.JSONB,
-        server_default=sa.text("'{}'::jsonb"),
+    translations: Mapped[list[str]] = mapped_column(
+        postgresql.ARRAY(sa.Text),
+        server_default=sa.text("'{}'::text[]"),
     )
 
     created_at: Mapped[datetime] = mapped_column(

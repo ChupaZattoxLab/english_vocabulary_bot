@@ -37,7 +37,7 @@ class OaldJsonTests(unittest.TestCase):
         self.assertEqual(entries[0].word_gb, "analyse")
         self.assertEqual(
             entries[0].translations,
-            {"ru": {"main": "анализировать", "also": ["проверка"]}},
+            ["анализировать", "проверка"],
         )
         self.assertEqual(stats["valid_rows"], 1)
         self.assertEqual(stats["unique_audio_urls"], 2)

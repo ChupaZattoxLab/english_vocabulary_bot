@@ -12,7 +12,6 @@ import pytest
 import pytest_asyncio
 from alembic import command
 from alembic.config import Config
-from psycopg.types.json import Jsonb
 from sqlalchemy.engine import make_url
 
 from tests.support import TEST_OALD_DATABASE_URL
@@ -94,7 +93,7 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                     ) VALUES (
                         %s, %s, 'noun', 'c1', %s, '',
                         ARRAY['/us/'], ARRAY['/gb/'], %s, %s,
-                        ARRAY[%s], ARRAY[%s], %s
+                        ARRAY[%s], ARRAY[%s], ARRAY[%s]
                     ) RETURNING id
                     """,
                     (
@@ -105,7 +104,7 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                         f"Example {index}",
                         us_audio_urls[index],
                         gb_audio_urls[index],
-                        Jsonb({"ru": {"main": f"перевод {index}", "also": []}}),
+                        f"перевод {index}",
                     ),
                 )
                 entry_id = int(cursor.fetchone()[0])
