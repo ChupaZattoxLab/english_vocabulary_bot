@@ -186,7 +186,7 @@ def download_audio_to_postgres(
                     if fail_fast:
                         raise
         return stats
-    except AudioDownloadError, AudioConversionError:
+    except (AudioDownloadError, AudioConversionError):
         raise
     except Exception as exc:
         raise OaldAudioDatabaseError(

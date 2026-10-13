@@ -21,9 +21,9 @@ class AudienceStats:
 
 
 def audience_stats_from_row(
-    totals: Mapping[str, Any],
-    levels: Sequence[Mapping[str, Any]],
-    english_varieties: Sequence[Mapping[str, Any]],
+    totals: Mapping[Any, Any],
+    levels: Sequence[Mapping[Any, Any]],
+    english_varieties: Sequence[Mapping[Any, Any]],
 ) -> AudienceStats:
     return AudienceStats(
         total_users=int(totals["total_users"]),
