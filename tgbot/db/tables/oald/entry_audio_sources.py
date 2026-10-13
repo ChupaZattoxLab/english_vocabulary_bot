@@ -8,7 +8,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column
 
 from tgbot.db.tables.base import Base, varchar_enum
-from tgbot.db.types import Dialect
+from tgbot.db.types import EnglishVariety
 
 
 class OaldEntryAudioSource(Base):
@@ -18,8 +18,8 @@ class OaldEntryAudioSource(Base):
         primary_key=True,
     )
 
-    dialect: Mapped[Dialect] = mapped_column(
-        varchar_enum(Dialect, name="check_oald_entry_audio_dialect"),
+    english_variety: Mapped[EnglishVariety] = mapped_column(
+        varchar_enum(EnglishVariety, name="check_oald_entry_audio_english_variety"),
         primary_key=True,
         index=True,
     )

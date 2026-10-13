@@ -10,7 +10,7 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
 from tgbot.db.tables.base import Base, varchar_enum
-from tgbot.db.types import CardStatus, DialectPreference
+from tgbot.db.types import CardStatus, EnglishVarietyPreference
 
 
 class BotUserCard(Base):
@@ -59,8 +59,10 @@ class BotUserCard(Base):
         index=True,
     )
 
-    dialect: Mapped[DialectPreference] = mapped_column(
-        varchar_enum(DialectPreference, name="check_bot_user_cards_dialect"),
+    english_variety: Mapped[EnglishVarietyPreference] = mapped_column(
+        varchar_enum(
+            EnglishVarietyPreference, name="check_bot_user_cards_english_variety"
+        ),
     )
 
     source_url: Mapped[str] = mapped_column(

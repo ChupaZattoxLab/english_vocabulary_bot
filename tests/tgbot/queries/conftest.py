@@ -17,7 +17,7 @@ from sqlalchemy.engine import make_url
 
 from tests.support import TEST_OALD_DATABASE_URL
 from tgbot.db import Database
-from tgbot.db.models import CefrLevel, DialectPreference
+from tgbot.db.models import CefrLevel, EnglishVarietyPreference
 from tgbot.db.sync import (
     destroy_database,
     ensure_database_exists,
@@ -110,7 +110,7 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                 )
                 entry_id = int(cursor.fetchone()[0])
                 entry_ids.append(entry_id)
-                for dialect, audio_url in (
+                for english_variety, audio_url in (
                     ("us", us_audio_urls[index]),
                     ("gb", gb_audio_urls[index]),
                 ):
@@ -126,7 +126,7 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                         (
                             audio_url,
                             b"OggS-bot-test",
-                            f"test-{index}-{dialect}.ogg",
+                            f"test-{index}-{english_variety}.ogg",
                             len(b"OggS-bot-test"),
                             "0" * 64,
                         ),
@@ -134,10 +134,10 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                     cursor.execute(
                         """
                         INSERT INTO oald_entry_audio_sources (
-                            entry_id, dialect, source_position, source_url
+                            entry_id, english_variety, source_position, source_url
                         ) VALUES (%s, %s, 0, %s)
                         """,
-                        (entry_id, dialect, audio_url),
+                        (entry_id, english_variety, audio_url),
                     )
                     cursor.execute(
                         """
@@ -154,7 +154,7 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                             audio_url,
                             "0" * 64,
                             b"OggS-OpusHead-bot-test",
-                            f"test-{index}-{dialect}.voice.ogg",
+                            f"test-{index}-{english_variety}.voice.ogg",
                             len(b"OggS-OpusHead-bot-test"),
                             "1" * 64,
                         ),
@@ -162,7 +162,7 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
 
     await db.upsert_user(telegram_user_id=telegram_user_id, username="integration")
     await db.toggle_level(telegram_user_id, CefrLevel.C1)
-    await db.set_dialect(telegram_user_id, DialectPreference.US)
+    await db.set_english_variety(telegram_user_id, EnglishVarietyPreference.US)
 
     ctx = {
         "telegram_user_id": telegram_user_id,

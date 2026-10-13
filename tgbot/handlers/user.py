@@ -11,10 +11,10 @@ from aiogram.types import User as AiogramUser
 from tgbot.bot_config import BotConfig
 from tgbot.db import Database
 from tgbot.db.models import (
-    VALID_DIALECT_PREFERENCES,
+    VALID_ENGLISH_VARIETY_PREFERENCES,
     VALID_LEVELS,
     CefrLevel,
-    DialectPreference,
+    EnglishVarietyPreference,
     User,
 )
 from tgbot.delivery import CardDeliveryService, DeliveryStatus
@@ -96,9 +96,12 @@ def create_router(
             )
         await callback.answer()
 
-    @router.callback_query(F.data.startswith("dialect:"))
-    async def dialect_callback(callback: CallbackQuery) -> None:
-        dialect = (callback.data or "").removeprefix("dialect:")
+    @router.callback_query(
+        F.data.startswith("english_variety:") | F.data.startswith("dialect:")
+    )
+    async def english_variety_callback(callback: CallbackQuery) -> None:
+        # Keyboards already sent still use the dialect: callback prefix.
+        english_variety = (callback.data or "").split(":", 1)[-1]
         user = await db.get_user(callback.from_user.id)
         if not user:
             await callback.answer(locale.user.need_start, show_alert=True)
@@ -106,13 +109,13 @@ def create_router(
         if not user.settings.selected_levels:
             await callback.answer(locale.user.need_level_first, show_alert=True)
             return
-        if dialect not in VALID_DIALECT_PREFERENCES:
+        if english_variety not in VALID_ENGLISH_VARIETY_PREFERENCES:
             await callback.answer()
             return
 
-        user = await db.set_dialect(
+        user = await db.set_english_variety(
             callback.from_user.id,
-            DialectPreference(dialect),
+            EnglishVarietyPreference(english_variety),
         )
         message = callback_message(callback)
         if message is not None:
@@ -189,7 +192,7 @@ def user_settings_text(user: User, config: BotConfig) -> str:
     )
     return locale.user_settings_lines(
         levels=format_levels(user.settings.selected_levels, locale.user.levels_none),
-        pronunciation=locale.pronunciation_short(user.settings.dialect),
+        pronunciation=locale.pronunciation_short(user.settings.english_variety),
         delivery_state=state,
         schedule=config.schedule.text,
     )

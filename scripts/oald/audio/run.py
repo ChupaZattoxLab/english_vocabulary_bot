@@ -32,7 +32,7 @@ from scripts.oald.audio.store import (
 )
 from scripts.oald.audio.transcode import transcode_audio_to_voice
 from scripts.oald.oald_preflight import require_oald_schema
-from tgbot.db.models import AudioVariantType, Dialect
+from tgbot.db.models import AudioVariantType, EnglishVariety
 from tgbot.db.sync import sync_connection
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
@@ -47,7 +47,7 @@ LOGGER = logging.getLogger("tgbot.oald_audio_download")
 
 def download_audio_to_postgres(
     db_url: str,
-    dialects: list[str] | None = None,
+    english_varieties: list[str] | None = None,
     limit: int | None = None,
     force: bool = False,
     request_delay: float = 0.5,
@@ -61,7 +61,10 @@ def download_audio_to_postgres(
     transcode_voice: Callable[..., VoiceAudio] = transcode_audio_to_voice,
     sleep: Callable[[float], None] = time.sleep,
 ) -> DownloadStats:
-    selected_dialects = dialects or [Dialect.US, Dialect.GB]
+    selected_english_varieties = english_varieties or [
+        EnglishVariety.US,
+        EnglishVariety.GB,
+    ]
     stats = DownloadStats()
     try:
         with sync_connection(
@@ -74,16 +77,16 @@ def download_audio_to_postgres(
             )
             candidates = load_candidates(
                 connection,
-                dialects=selected_dialects,
+                english_varieties=selected_english_varieties,
                 force=force,
                 limit=limit,
                 source_urls=source_urls,
             )
             stats.candidates = len(candidates)
             LOGGER.info(
-                "Audio candidates=%s dialects=%s force=%s",
+                "Audio candidates=%s english_varieties=%s force=%s",
                 f"{stats.candidates:,}",
-                ",".join(selected_dialects),
+                ",".join(selected_english_varieties),
                 force,
             )
 
@@ -95,7 +98,7 @@ def download_audio_to_postgres(
                     f"{position:,}",
                     f"{stats.candidates:,}",
                     candidate.example_word,
-                    ",".join(candidate.dialects),
+                    ",".join(candidate.english_varieties),
                     candidate.source_url,
                 )
                 try:
@@ -157,7 +160,7 @@ def download_audio_to_postgres(
                         LOGGER.error(
                             "Voice conversion failed for %s (%s): %s",
                             candidate.example_word,
-                            ",".join(candidate.dialects),
+                            ",".join(candidate.english_varieties),
                             exc,
                         )
                         if fail_fast:
@@ -177,13 +180,13 @@ def download_audio_to_postgres(
                     LOGGER.error(
                         "Audio download failed for %s (%s): %s",
                         candidate.example_word,
-                        ",".join(candidate.dialects),
+                        ",".join(candidate.english_varieties),
                         exc,
                     )
                     if fail_fast:
                         raise
         return stats
-    except (AudioDownloadError, AudioConversionError):
+    except AudioDownloadError, AudioConversionError:
         raise
     except Exception as exc:
         raise OaldAudioDatabaseError(
@@ -194,7 +197,7 @@ def download_audio_to_postgres(
 
 def load_candidates(
     connection: Connection,
-    dialects: list[str],
+    english_varieties: list[str],
     force: bool,
     limit: int | None,
     source_urls: list[str] | None = None,
@@ -214,9 +217,9 @@ def load_candidates(
         sa.select(
             oald_audio_files.c.source_url,
             sa.func.min(oald_entries.c.word_us).label("example_word"),
-            sa.func.array_agg(sa.distinct(oald_entry_audio_sources.c.dialect)).label(
-                "dialects"
-            ),
+            sa.func.array_agg(
+                sa.distinct(oald_entry_audio_sources.c.english_variety)
+            ).label("english_varieties"),
             oald_audio_files.c.audio_data.is_not(None).label("has_original"),
         )
         .select_from(
@@ -238,7 +241,7 @@ def load_candidates(
             )
         )
         .where(
-            oald_entry_audio_sources.c.dialect.in_(dialects),
+            oald_entry_audio_sources.c.english_variety.in_(english_varieties),
             needs_work,
             url_filter,
         )
@@ -254,7 +257,7 @@ def load_candidates(
         AudioCandidate(
             source_url=str(row.source_url),
             example_word=str(row.example_word),
-            dialects=tuple(row.dialects or ()),
+            english_varieties=tuple(row.english_varieties or ()),
             has_original=bool(row.has_original),
         )
         for row in rows

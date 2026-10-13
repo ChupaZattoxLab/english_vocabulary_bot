@@ -29,7 +29,7 @@ from scripts.oald.cli_utils import (
     positive_integer,
     resolve_db_url,
 )
-from tgbot.db.models import Dialect
+from tgbot.db.models import EnglishVariety
 
 LOGGER = logging.getLogger("tgbot.oald_audio_download")
 
@@ -62,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         stats = download_audio_to_postgres(
             args.db_url,
-            dialects=args.dialects,
+            english_varieties=args.english_varieties,
             limit=args.limit,
             force=args.force,
             request_delay=args.request_delay,
@@ -101,11 +101,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="OALD PostgreSQL URL; defaults to OALD_DATABASE_URL",
     )
     parser.add_argument(
-        "--dialects",
+        "--english-varieties",
         nargs="+",
-        choices=tuple(Dialect),
-        default=[Dialect.US, Dialect.GB],
-        help="Audio dialects to download (default: us gb)",
+        choices=tuple(EnglishVariety),
+        default=[EnglishVariety.US, EnglishVariety.GB],
+        help="English varieties to download (default: us gb)",
     )
     parser.add_argument(
         "--limit",

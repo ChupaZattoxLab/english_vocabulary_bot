@@ -248,7 +248,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 import_entries(entries, self.db_url)
                 first = download_audio_to_postgres(
                     self.db_url,
-                    dialects=["us"],
+                    english_varieties=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
                     retries=0,
@@ -266,7 +266,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                         )
                 backfill = download_audio_to_postgres(
                     self.db_url,
-                    dialects=["us"],
+                    english_varieties=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
                     retries=0,
@@ -276,7 +276,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 )
                 second = download_audio_to_postgres(
                     self.db_url,
-                    dialects=["us"],
+                    english_varieties=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
                     retries=0,
@@ -286,7 +286,7 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 )
                 forced = download_audio_to_postgres(
                     self.db_url,
-                    dialects=["us"],
+                    english_varieties=["us"],
                     source_urls=[audio_url],
                     request_delay=0,
                     retries=0,

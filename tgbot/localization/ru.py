@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from tgbot.db.models import Dialect
+from tgbot.db.models import EnglishVariety
 
 
 class user:
@@ -95,12 +95,12 @@ class labels:
     }
     pronunciation_admin_unknown = "не выбран"
 
-    dialect_flags = {
+    english_variety_flags = {
         "us": "🇺🇸",
         "gb": "🇬🇧",
         "both": "🇺🇸 + 🇬🇧",
     }
-    dialect_captions = {
+    english_variety_captions = {
         "us": "🇺🇸 US",
         "gb": "🇬🇧 GB",
     }
@@ -136,7 +136,7 @@ class admin:
         "За {week_days} дней: {new_week}\n"
         "За {month_days} дней: {new_month}\n\n"
         "<b>По уровням</b>\n{levels}\n\n"
-        "<b>По произношению</b>\n{dialects}"
+        "<b>По произношению</b>\n{english_varieties}"
     )
 
     user_usage = "Использование: <code>/user TELEGRAM_ID</code>"
@@ -183,13 +183,13 @@ def pronunciation_admin(value: str | None) -> str:
     )
 
 
-def dialect_flag(dialect: Dialect | str) -> str:
-    return labels.dialect_flags.get(str(dialect).lower(), "")
+def english_variety_flag(english_variety: EnglishVariety | str) -> str:
+    return labels.english_variety_flags.get(str(english_variety).lower(), "")
 
 
-def dialect_caption(dialect: Dialect | str) -> str:
-    normalized = str(dialect).lower()
-    return labels.dialect_captions.get(normalized, normalized)
+def english_variety_caption(english_variety: EnglishVariety | str) -> str:
+    normalized = str(english_variety).lower()
+    return labels.english_variety_captions.get(normalized, normalized)
 
 
 def user_settings_lines(

@@ -21,9 +21,9 @@ from pydantic import BaseModel, ConfigDict
 from tgbot.db import Database
 from tgbot.db.models import (
     Card,
-    Dialect,
-    DialectPreference,
-    DialectVariant,
+    EnglishVariety,
+    EnglishVarietyPreference,
+    EnglishVarietyVariant,
     TelegramSendMethod,
 )
 from tgbot.delivery.card_template import CardTemplate, CardTemplateError
@@ -46,9 +46,9 @@ LOGGER = logging.getLogger("tgbot.delivery")
 T = TypeVar("T")
 
 PREVIEW_PREFERENCES = (
-    DialectPreference.GB,
-    DialectPreference.US,
-    DialectPreference.BOTH,
+    EnglishVarietyPreference.GB,
+    EnglishVarietyPreference.US,
+    EnglishVarietyPreference.BOTH,
 )
 
 
@@ -164,18 +164,18 @@ class CardDeliveryService:
                 variant=variant,
             )
         if message is None:
-            raise RuntimeError("card has no dialect variants to send")
+            raise RuntimeError("card has no English variety variants to send")
         return message
 
     async def send_voice_attachment(
         self,
         bot: Bot,
         telegram_user_id: int,
-        variant: DialectVariant,
+        variant: EnglishVarietyVariant,
     ) -> Message:
         audio = variant.audio
         filename = audio.filename or f"{variant.word}.voice.ogg"
-        caption = voice_caption(variant.dialect, variant.ipa)
+        caption = voice_caption(variant.english_variety, variant.ipa)
 
         async def send(file_reference: str | BufferedInputFile) -> Message:
             return await call_with_retry_after(
@@ -252,19 +252,19 @@ def card_template_values(card: Card) -> dict[str, str]:
         "translation": card.translation,
     }
     display = {
-        "dialect": str(primary.dialect),
-        "dialect_flag": locale.dialect_flag(primary.dialect),
+        "english_variety": str(primary.english_variety),
+        "english_variety_flag": locale.english_variety_flag(primary.english_variety),
         "heading_definition": labels.card_heading_definition,
         "heading_example": labels.card_heading_example,
         "heading_translation": labels.card_heading_translation,
-        "flag_us": locale.dialect_flag(Dialect.US),
-        "flag_gb": locale.dialect_flag(Dialect.GB),
+        "flag_us": locale.english_variety_flag(EnglishVariety.US),
+        "flag_gb": locale.english_variety_flag(EnglishVariety.GB),
     }
     return words | ipa | required | display
 
 
-def voice_caption(dialect: Dialect, ipa: str) -> str:
-    label = locale.dialect_caption(dialect)
+def voice_caption(english_variety: EnglishVariety, ipa: str) -> str:
+    label = locale.english_variety_caption(english_variety)
     transcription = ipa.strip()
     if not transcription:
         return label

@@ -16,8 +16,8 @@ from tgbot.db.models import (
     AdminUser,
     Card,
     CardAudio,
-    Dialect,
-    DialectVariant,
+    EnglishVariety,
+    EnglishVarietyVariant,
     UserRole,
     UserSettings,
 )
@@ -37,16 +37,16 @@ def make_audio(
 
 
 def make_variant(
-    dialect: Dialect = Dialect.US,
+    english_variety: EnglishVariety = EnglishVariety.US,
     word: str = "color",
     ipa: str = "/ˈkʌlər/",
     audio: CardAudio | None = None,
-) -> DialectVariant:
-    return DialectVariant(
-        dialect=dialect,
+) -> EnglishVarietyVariant:
+    return EnglishVarietyVariant(
+        english_variety=english_variety,
         word=word,
         ipa=ipa,
-        audio=audio or make_audio(f"https://audio.example/{dialect}"),
+        audio=audio or make_audio(f"https://audio.example/{english_variety}"),
     )
 
 
@@ -55,15 +55,15 @@ def make_card(
     entry_id: int = 10,
     word_us: str = "color",
     word_gb: str = "colour",
-    us: DialectVariant | None = None,
-    gb: DialectVariant | None = None,
+    us: EnglishVarietyVariant | None = None,
+    gb: EnglishVarietyVariant | None = None,
     include_us: bool = True,
     include_gb: bool = False,
 ) -> Card:
     if include_us and us is None:
-        us = make_variant(Dialect.US, word_us, "/us/")
+        us = make_variant(EnglishVariety.US, word_us, "/us/")
     if include_gb and gb is None:
-        gb = make_variant(Dialect.GB, word_gb, "/gb/")
+        gb = make_variant(EnglishVariety.GB, word_gb, "/gb/")
     return Card(
         user_card_id=user_card_id,
         entry_id=entry_id,
@@ -89,7 +89,7 @@ def make_admin_user(
         username="admin",
         role=UserRole.ADMIN,
         created_at=datetime(2026, 1, 1, tzinfo=UTC),
-        settings=UserSettings(selected_levels=("b1",), dialect=None),
+        settings=UserSettings(selected_levels=("b1",), english_variety=None),
         is_active=is_active,
         onboarding_completed=True,
         paused_at=paused_at,
@@ -137,7 +137,7 @@ def telegram_api_error[E: TelegramAPIError](
 
 VALID_SINGLE_TEMPLATE = (
     "<b>{word}</b> {lexical_category} {cefr} "
-    "{definition} {ipa} {example} {translation} {dialect}"
+    "{definition} {ipa} {example} {translation} {english_variety}"
 )
 
 VALID_BOTH_TEMPLATE = (

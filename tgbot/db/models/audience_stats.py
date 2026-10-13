@@ -17,13 +17,13 @@ class AudienceStats:
     new_week: int
     new_month: int
     levels: dict[str, int]
-    dialects: dict[str, int]
+    english_varieties: dict[str, int]
 
 
 def audience_stats_from_row(
     totals: Mapping[str, Any],
     levels: Sequence[Mapping[str, Any]],
-    dialects: Sequence[Mapping[str, Any]],
+    english_varieties: Sequence[Mapping[str, Any]],
 ) -> AudienceStats:
     return AudienceStats(
         total_users=int(totals["total_users"]),
@@ -34,7 +34,9 @@ def audience_stats_from_row(
         new_week=int(totals["new_week"]),
         new_month=int(totals["new_month"]),
         levels={str(row["level"]): int(row["users"]) for row in levels},
-        dialects={
-            str(row["dialect"]): int(row["users"]) for row in dialects if row["dialect"]
+        english_varieties={
+            str(row["english_variety"]): int(row["users"])
+            for row in english_varieties
+            if row["english_variety"]
         },
     )

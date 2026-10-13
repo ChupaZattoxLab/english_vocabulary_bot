@@ -9,7 +9,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from tgbot.db.models import (
     CefrLevel,
-    DialectPreference,
+    EnglishVarietyPreference,
     User,
     user_from_row,
 )
@@ -101,12 +101,12 @@ class UsersQueries(DbSession):
 
         return user_from_row(await self.execute_fetch_exactly_one(stmt))
 
-    async def set_dialect(
+    async def set_english_variety(
         self,
         telegram_user_id: int,
-        dialect: DialectPreference,
+        english_variety: EnglishVarietyPreference,
     ) -> User:
-        """Save dialect preference and finish onboarding when levels exist.
+        """Save the English variety preference and finish onboarding when levels exist.
 
         is_active becomes true only if levels are set and the user is not
         paused/blocked; otherwise stays inactive.
@@ -117,7 +117,7 @@ class UsersQueries(DbSession):
             sa.update(bot_users)
             .where(bot_users.c.telegram_user_id == telegram_user_id)
             .values(
-                dialect=dialect,
+                english_variety=english_variety,
                 onboarding_completed=has_levels,
                 is_active=sa.case(
                     (
@@ -171,14 +171,14 @@ class UsersQueries(DbSession):
         return (result.rowcount or 0) > 0
 
     async def get_active_users(self) -> list[User]:
-        """Users eligible for the scheduler: active, onboarded, levels + dialect."""
+        """Scheduler users: active, onboarded, with levels and an English variety."""
         rows = await self.fetch_all(
             sa.select(bot_users)
             .where(
                 bot_users.c.is_active.is_(True),
                 bot_users.c.onboarding_completed.is_(True),
                 sa.func.cardinality(bot_users.c.selected_levels) > 0,
-                bot_users.c.dialect.is_not(None),
+                bot_users.c.english_variety.is_not(None),
             )
             .order_by(bot_users.c.telegram_user_id)
         )

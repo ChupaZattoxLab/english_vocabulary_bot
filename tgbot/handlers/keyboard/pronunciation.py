@@ -1,4 +1,4 @@
-"""Pronunciation / dialect preference keyboard."""
+"""Keyboard for choosing an English variety preference."""
 
 from __future__ import annotations
 
@@ -13,17 +13,17 @@ def pronunciation_keyboard() -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text=locale.keyboard.pronunciation_us,
-                    callback_data="dialect:us",
+                    callback_data="english_variety:us",
                 ),
                 InlineKeyboardButton(
                     text=locale.keyboard.pronunciation_gb,
-                    callback_data="dialect:gb",
+                    callback_data="english_variety:gb",
                 ),
             ],
             [
                 InlineKeyboardButton(
                     text=locale.keyboard.pronunciation_both,
-                    callback_data="dialect:both",
+                    callback_data="english_variety:both",
                 )
             ],
         ]

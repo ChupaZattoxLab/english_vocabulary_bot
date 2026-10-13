@@ -330,11 +330,11 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
 
 def pronunciation(
     ipa: str,
-    dialect: str,
+    english_variety: str,
     audio: str = "",
 ) -> dict:
     value = {
-        "dialects": [dialect],
+        "dialects": [english_variety],
         "phoneticNotation": "IPA",
         "phoneticSpelling": ipa,
     }

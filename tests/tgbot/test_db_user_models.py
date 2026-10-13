@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 import pytest
 
 from tgbot.db.models import (
-    DialectPreference,
+    EnglishVarietyPreference,
     UserRole,
     admin_user_from_row,
     user_from_row,
@@ -22,7 +22,7 @@ def _user_row(**overrides):
         "role": "user",
         "created_at": datetime(2026, 1, 1, tzinfo=UTC),
         "selected_levels": ("a1", "b1"),
-        "dialect": "both",
+        "english_variety": "both",
         "is_active": True,
         "onboarding_completed": True,
         "paused_at": None,
@@ -37,7 +37,7 @@ def test_user_from_row_maps_settings_and_role() -> None:
     assert user.telegram_user_id == 42
     assert user.role == UserRole.USER
     assert user.settings.selected_levels == ("a1", "b1")
-    assert user.settings.dialect == DialectPreference.BOTH
+    assert user.settings.english_variety == EnglishVarietyPreference.BOTH
 
 
 def test_user_from_row_rejects_unknown_role() -> None:
@@ -53,14 +53,14 @@ def test_admin_user_from_row_defaults_delivered_cards() -> None:
 
 def test_user_from_row_maps_delivery_state() -> None:
     user = user_from_row(
-        _user_row(is_active=False, onboarding_completed=True, dialect="gb")
+        _user_row(is_active=False, onboarding_completed=True, english_variety="gb")
     )
-    assert user.settings.dialect == DialectPreference.GB
+    assert user.settings.english_variety == EnglishVarietyPreference.GB
     assert user.is_active is False
     assert user.onboarding_completed is True
 
 
-def test_audience_stats_from_row_skips_empty_dialects() -> None:
+def test_audience_stats_from_row_skips_empty_english_varieties() -> None:
     stats = audience_stats_from_row(
         {
             "total_users": 10,
@@ -72,9 +72,9 @@ def test_audience_stats_from_row_skips_empty_dialects() -> None:
             "new_month": 8,
         },
         ({"level": "a1", "users": 5}, {"level": "b1", "users": 2}),
-        ({"dialect": "gb", "users": 3}, {"dialect": None, "users": 1}),
+        ({"english_variety": "gb", "users": 3}, {"english_variety": None, "users": 1}),
     )
     assert stats.total_users == 10
     assert stats.active_users == 4
     assert stats.levels == {"a1": 5, "b1": 2}
-    assert stats.dialects == {"gb": 3}
+    assert stats.english_varieties == {"gb": 3}

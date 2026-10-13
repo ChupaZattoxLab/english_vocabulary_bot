@@ -9,7 +9,7 @@ from dataclasses import dataclass
 class AudioCandidate:
     source_url: str
     example_word: str
-    dialects: tuple[str, ...]
+    english_varieties: tuple[str, ...]
     has_original: bool
 
 

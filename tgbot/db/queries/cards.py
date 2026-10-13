@@ -12,10 +12,10 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncConnection
 
 from tgbot.db.models import (
-    VALID_DIALECT_PREFERENCES,
+    VALID_ENGLISH_VARIETY_PREFERENCES,
     Card,
-    Dialect,
-    DialectPreference,
+    EnglishVariety,
+    EnglishVarietyPreference,
     card_from_row,
 )
 from tgbot.db.models.user import user_from_row
@@ -95,12 +95,13 @@ class CardsQueries(DbSession):
             if (
                 not user.onboarding_completed
                 or not user.settings.selected_levels
-                or user.settings.dialect not in VALID_DIALECT_PREFERENCES
+                or user.settings.english_variety
+                not in VALID_ENGLISH_VARIETY_PREFERENCES
                 or (require_active and not user.is_active)
             ):
                 return None
 
-            preference = cast(DialectPreference, user.settings.dialect)
+            preference = cast(EnglishVarietyPreference, user.settings.english_variety)
 
             # One occupied card per scheduled slot.
             existing = await mapping_first(
@@ -137,18 +138,18 @@ class CardsQueries(DbSession):
             if not row:
                 return None
 
-            # Load voice blobs only for the dialects we will send.
+            # Load voice blobs only for the English varieties we will send.
             card_row = dict(row)
             await hydrate_card_audio(connection, card_row, preference)
 
             source_url = card_row[
                 "gb_source_url"
-                if preference == DialectPreference.GB
+                if preference == EnglishVarietyPreference.GB
                 else "us_source_url"
             ]
             source_url_gb = (
                 card_row["gb_source_url"]
-                if preference == DialectPreference.BOTH
+                if preference == EnglishVarietyPreference.BOTH
                 else None
             )
 
@@ -159,7 +160,7 @@ class CardsQueries(DbSession):
                 .values(
                     telegram_user_id=telegram_user_id,
                     entry_id=int(card_row["entry_id"]),
-                    dialect=preference,
+                    english_variety=preference,
                     source_url=source_url,
                     source_url_gb=source_url_gb,
                     scheduled_slot=slot,
@@ -247,8 +248,8 @@ def card_content_select() -> tuple[Select[Any], FromClause, FromClause]:
     lateral aliases, then load bytes via hydrate_card_audio so random picks do
     not drag large audio_data through ORDER BY random().
     """
-    us_audio = prepared_audio_lateral(Dialect.US)
-    gb_audio = prepared_audio_lateral(Dialect.GB)
+    us_audio = prepared_audio_lateral(EnglishVariety.US)
+    gb_audio = prepared_audio_lateral(EnglishVariety.GB)
 
     statement = sa.select(
         oald_entries.c.id.label("entry_id"),
@@ -275,16 +276,16 @@ def card_content_select() -> tuple[Select[Any], FromClause, FromClause]:
     return statement, us_audio, gb_audio
 
 
-def prepared_audio_lateral(dialect: Dialect) -> FromClause:
-    """First prepared telegram-voice row for one dialect of the outer entry.
+def prepared_audio_lateral(english_variety: EnglishVariety) -> FromClause:
+    """First prepared telegram-voice row for one English variety of the outer entry.
 
     LATERAL + LIMIT 1: an entry may have several source URLs; we take the
     earliest by source_position among prepared opus variants. Correlated to
     oald_entries.id via the WHERE on links.entry_id.
     """
-    links = oald_entry_audio_sources.alias(f"{dialect}_links")
-    files = oald_audio_files.alias(f"{dialect}_files")
-    voice = oald_audio_variants.alias(f"{dialect}_voice")
+    links = oald_entry_audio_sources.alias(f"{english_variety}_links")
+    files = oald_audio_files.alias(f"{english_variety}_files")
+    voice = oald_audio_variants.alias(f"{english_variety}_voice")
 
     return (
         sa.select(
@@ -306,26 +307,26 @@ def prepared_audio_lateral(dialect: Dialect) -> FromClause:
         )
         .where(
             links.c.entry_id == oald_entries.c.id,
-            links.c.dialect == dialect,
+            links.c.english_variety == english_variety,
             voice.c.audio_data.is_not(None),
         )
         .order_by(links.c.source_position)
         .limit(1)
         .lateral()
-        .alias(f"{dialect}_audio")
+        .alias(f"{english_variety}_audio")
     )
 
 
 def preference_audio_ready(
-    preference: DialectPreference,
+    preference: EnglishVarietyPreference,
     us_audio: FromClause,
     gb_audio: FromClause,
 ) -> sa.ColumnElement[bool]:
-    """WHERE fragment: required dialect(s) have a prepared voice row."""
-    if preference == DialectPreference.US:
+    """WHERE fragment: the required English varieties have a prepared voice row."""
+    if preference == EnglishVarietyPreference.US:
         return us_audio.c.source_url.is_not(None)
 
-    if preference == DialectPreference.GB:
+    if preference == EnglishVarietyPreference.GB:
         return gb_audio.c.source_url.is_not(None)
 
     return sa.and_(
@@ -337,18 +338,18 @@ def preference_audio_ready(
 async def hydrate_card_audio(
     connection: AsyncConnection,
     card_row: MutableMapping[str, object],
-    preference: DialectPreference,
+    preference: EnglishVarietyPreference,
 ) -> None:
     """Fetch voice blobs only for the chosen entry after metadata selection.
 
     Separated from card_content_select so candidate scans stay light; we load
     audio_data for the final source_url(s) only.
     """
-    prefixes: list[Dialect] = []
-    if preference in {DialectPreference.US, DialectPreference.BOTH}:
-        prefixes.append(Dialect.US)
-    if preference in {DialectPreference.GB, DialectPreference.BOTH}:
-        prefixes.append(Dialect.GB)
+    prefixes: list[EnglishVariety] = []
+    if preference in {EnglishVarietyPreference.US, EnglishVarietyPreference.BOTH}:
+        prefixes.append(EnglishVariety.US)
+    if preference in {EnglishVarietyPreference.GB, EnglishVarietyPreference.BOTH}:
+        prefixes.append(EnglishVariety.GB)
 
     for prefix in prefixes:
         source_url = card_row.get(f"{prefix}_source_url")

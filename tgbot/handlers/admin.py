@@ -102,7 +102,7 @@ def create_admin_router(
                     user.settings.selected_levels,
                     locale.admin.placeholder,
                 ),
-                pronunciation=locale.pronunciation_admin(user.settings.dialect),
+                pronunciation=locale.pronunciation_admin(user.settings.english_variety),
                 cards_per_day=len(config.schedule.send_times),
                 send_times=send_times,
                 timezone=html.escape(timezone.key),
@@ -233,10 +233,10 @@ async def render_users(db: Database, config: BotConfig) -> str:
         f"{level.upper()}: {format_number(stats.levels.get(level, 0))}"
         for level in VALID_LEVELS
     )
-    dialects = (
+    english_varieties = (
         ", ".join(
             f"{key.upper()}: {format_number(value)}"
-            for key, value in sorted(stats.dialects.items())
+            for key, value in sorted(stats.english_varieties.items())
         )
         or locale.admin.none
     )
@@ -251,7 +251,7 @@ async def render_users(db: Database, config: BotConfig) -> str:
         week_days=ADMIN_STATS_WEEK_DAYS,
         month_days=ADMIN_STATS_MONTH_DAYS,
         levels=levels,
-        dialects=dialects,
+        english_varieties=english_varieties,
     )
 
 

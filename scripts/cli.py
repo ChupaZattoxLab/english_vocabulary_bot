@@ -60,7 +60,7 @@ def stop() -> int:
         except psutil.TimeoutExpired:
             process.kill()
             process.wait(timeout=5)
-    except (psutil.NoSuchProcess, psutil.ZombieProcess):
+    except psutil.NoSuchProcess, psutil.ZombieProcess:
         pass
     except psutil.AccessDenied:
         print(f"Cannot stop bot process {pid}: access denied.")

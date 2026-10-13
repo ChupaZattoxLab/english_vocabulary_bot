@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 from tests.tgbot.factories import fake_message, make_admin_user, make_card
 from tgbot.bot_config import BotConfig, ScheduleSettings
-from tgbot.db.models import DialectPreference, User, UserRole, UserSettings
+from tgbot.db.models import EnglishVarietyPreference, User, UserRole, UserSettings
 from tgbot.handlers.admin import delivery_state, local_day_bounds
 from tgbot.handlers.helpers import command_arguments, format_levels, format_number
 from tgbot.handlers.keyboard.words import word_categories_keyboard
@@ -71,7 +71,7 @@ def test_user_settings_text_includes_levels_and_schedule() -> None:
         created_at=datetime.now(UTC),
         settings=UserSettings(
             selected_levels=("a1",),
-            dialect=DialectPreference.US,
+            english_variety=EnglishVarietyPreference.US,
         ),
         is_active=True,
         onboarding_completed=True,

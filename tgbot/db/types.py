@@ -6,12 +6,16 @@ from enum import StrEnum
 from typing import Final
 
 
-class Dialect(StrEnum):
+class EnglishVariety(StrEnum):
+    """American (us) or British (gb) English."""
+
     US = "us"
     GB = "gb"
 
 
-class DialectPreference(StrEnum):
+class EnglishVarietyPreference(StrEnum):
+    """Which English variety a user wants to hear: us, gb, or both."""
+
     US = "us"
     GB = "gb"
     BOTH = "both"
@@ -65,9 +69,9 @@ class TelegramSendMethod(StrEnum):
 
 
 VALID_LEVELS: Final[tuple[CefrLevel, ...]] = tuple(CefrLevel)
-VALID_DIALECTS: Final[tuple[Dialect, ...]] = tuple(Dialect)
-VALID_DIALECT_PREFERENCES: Final[tuple[DialectPreference, ...]] = tuple(
-    DialectPreference
+VALID_ENGLISH_VARIETIES: Final[tuple[EnglishVariety, ...]] = tuple(EnglishVariety)
+VALID_ENGLISH_VARIETY_PREFERENCES: Final[tuple[EnglishVarietyPreference, ...]] = tuple(
+    EnglishVarietyPreference
 )
 VALID_ROLES: Final[tuple[UserRole, ...]] = tuple(UserRole)
 

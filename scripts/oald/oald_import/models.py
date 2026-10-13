@@ -6,7 +6,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
 
-from tgbot.db.models import CefrLevel, Dialect
+from tgbot.db.models import CefrLevel, EnglishVariety
 
 
 class OaldValidationError(ValueError):
@@ -50,13 +50,13 @@ class OaldEntry:
             "translations": self.translations,
         }
 
-    def audio_references(self) -> Iterator[tuple[Dialect, int, str]]:
-        for dialect, urls in (
-            (Dialect.US, self.audio_source_us),
-            (Dialect.GB, self.audio_source_gb),
+    def audio_references(self) -> Iterator[tuple[EnglishVariety, int, str]]:
+        for english_variety, urls in (
+            (EnglishVariety.US, self.audio_source_us),
+            (EnglishVariety.GB, self.audio_source_gb),
         ):
             for position, source_url in enumerate(urls):
-                yield dialect, position, source_url
+                yield english_variety, position, source_url
 
 
 @dataclass(frozen=True)

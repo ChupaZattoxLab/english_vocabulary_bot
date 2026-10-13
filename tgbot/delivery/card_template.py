@@ -24,8 +24,8 @@ REQUIRED_FIELDS = frozenset(
 )
 DISPLAY_FIELDS = frozenset(
     {
-        "dialect",
-        "dialect_flag",
+        "english_variety",
+        "english_variety_flag",
         "heading_definition",
         "heading_example",
         "heading_translation",

@@ -62,11 +62,15 @@ def import_entries(
                     ).returning(oald_entries.c.id)
                     entry_id = connection.execute(stmt).scalar_one()
                     imported_ids.append(int(entry_id))
-                    for dialect, position, source_url in entry.audio_references():
+                    for (
+                        english_variety,
+                        position,
+                        source_url,
+                    ) in entry.audio_references():
                         links.append(
                             {
                                 "entry_id": entry_id,
-                                "dialect": dialect,
+                                "english_variety": english_variety,
                                 "source_position": position,
                                 "source_url": source_url,
                             }

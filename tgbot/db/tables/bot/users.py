@@ -10,7 +10,7 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
 from tgbot.db.tables.base import Base, varchar_enum
-from tgbot.db.types import DialectPreference, UserRole
+from tgbot.db.types import EnglishVarietyPreference, UserRole
 
 
 class BotUser(Base):
@@ -48,8 +48,8 @@ class BotUser(Base):
         server_default=sa.text("'{}'::text[]"),
     )
 
-    dialect: Mapped[DialectPreference | None] = mapped_column(
-        varchar_enum(DialectPreference, name="check_bot_users_dialect"),
+    english_variety: Mapped[EnglishVarietyPreference | None] = mapped_column(
+        varchar_enum(EnglishVarietyPreference, name="check_bot_users_english_variety"),
     )
 
     onboarding_completed: Mapped[bool] = mapped_column(

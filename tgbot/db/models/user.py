@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import Any, cast
 
 from tgbot.db.types import (
-    DialectPreference,
+    EnglishVarietyPreference,
     UserRole,
 )
 
@@ -16,7 +16,7 @@ from tgbot.db.types import (
 @dataclass(frozen=True)
 class UserSettings:
     selected_levels: tuple[str, ...]
-    dialect: DialectPreference | None
+    english_variety: EnglishVarietyPreference | None
 
 
 @dataclass(frozen=True)
@@ -81,21 +81,23 @@ def admin_user_from_row(row: object) -> AdminUser:
 
 
 def user_settings_from_row(row: Mapping[Any, Any]) -> UserSettings:
-    raw_dialect = row.get("dialect")
-    dialect: DialectPreference | None = None
-    if raw_dialect is not None:
-        if isinstance(raw_dialect, DialectPreference):
-            dialect = raw_dialect
+    raw_english_variety = row.get("english_variety")
+    english_variety: EnglishVarietyPreference | None = None
+    if raw_english_variety is not None:
+        if isinstance(raw_english_variety, EnglishVarietyPreference):
+            english_variety = raw_english_variety
         else:
             try:
-                dialect = DialectPreference(str(raw_dialect).lower())
+                english_variety = EnglishVarietyPreference(
+                    str(raw_english_variety).lower()
+                )
             except ValueError as exc:
                 raise ValueError(
-                    f"unsupported dialect preference {raw_dialect!r}"
+                    f"unsupported English variety preference {raw_english_variety!r}"
                 ) from exc
 
     levels = row.get("selected_levels") or ()
     return UserSettings(
         selected_levels=tuple(str(level) for level in levels),
-        dialect=dialect,
+        english_variety=english_variety,
     )

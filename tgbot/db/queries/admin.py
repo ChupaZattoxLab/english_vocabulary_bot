@@ -10,7 +10,7 @@ from tgbot.db.models import (
     AdminUser,
     AudienceStats,
     Card,
-    DialectPreference,
+    EnglishVarietyPreference,
     admin_user_from_row,
     card_from_row,
 )
@@ -33,7 +33,7 @@ class AdminQueries(DbSession):
         week_start: datetime,
         month_start: datetime,
     ) -> AudienceStats:
-        """Admin overview: totals, new users, and level/dialect breakdowns."""
+        """Admin overview: totals, signups, levels, and English varieties."""
         async with self.connect() as connection:
             # Totals: audience size, activity, and recent signups.
             totals = await mapping_exactly_one(
@@ -81,19 +81,19 @@ class AdminQueries(DbSession):
                 .order_by(level),
             )
 
-            # Dialect preference breakdown among onboarded users.
-            dialects = await mapping_all(
+            # English variety preference breakdown among onboarded users.
+            english_varieties = await mapping_all(
                 connection,
                 sa.select(
-                    bot_users.c.dialect,
+                    bot_users.c.english_variety,
                     sa.func.count().label("users"),
                 )
                 .where(bot_users.c.onboarding_completed.is_(True))
-                .group_by(bot_users.c.dialect)
-                .order_by(bot_users.c.dialect),
+                .group_by(bot_users.c.english_variety)
+                .order_by(bot_users.c.english_variety),
             )
 
-        return audience_stats_from_row(totals, levels, dialects)
+        return audience_stats_from_row(totals, levels, english_varieties)
 
     async def get_admin_user(
         self,
@@ -175,8 +175,8 @@ class AdminQueries(DbSession):
             if not row:
                 return None
 
-            # Fetch voice blobs for both dialects after the metadata row is chosen.
+            # Fetch voice blobs for both English varieties after the row is chosen.
             data = dict(row)
-            await hydrate_card_audio(connection, data, DialectPreference.BOTH)
+            await hydrate_card_audio(connection, data, EnglishVarietyPreference.BOTH)
 
         return card_from_row(data)

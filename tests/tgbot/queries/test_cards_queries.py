@@ -8,7 +8,7 @@ import pytest
 
 from tests.support import requires_oald_database
 from tgbot.db import Database
-from tgbot.db.models import DialectPreference
+from tgbot.db.models import EnglishVarietyPreference
 
 
 @requires_oald_database
@@ -84,7 +84,7 @@ async def test_both_preference_hydrates_two_voices(
     onboarded_user: dict,
 ) -> None:
     user_id = onboarded_user["telegram_user_id"]
-    await db.set_dialect(user_id, DialectPreference.BOTH)
+    await db.set_english_variety(user_id, EnglishVarietyPreference.BOTH)
 
     card = await db.reserve_card(user_id, datetime.now(UTC))
 

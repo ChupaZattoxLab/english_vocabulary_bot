@@ -22,7 +22,7 @@ from tests.tgbot.factories import (
     make_variant,
     telegram_api_error,
 )
-from tgbot.db.models import Dialect
+from tgbot.db.models import EnglishVariety
 from tgbot.delivery import DeliveryStatus
 from tgbot.delivery.service import CardDeliveryService
 
@@ -146,18 +146,18 @@ async def test_forbidden_before_text_fails_and_deactivates(templates) -> None:
 
 
 @pytest.mark.asyncio
-async def test_both_dialects_send_two_voices(templates) -> None:
+async def test_both_english_varieties_send_two_voices(templates) -> None:
     card = make_card(
         include_us=True,
         include_gb=True,
         us=make_variant(
-            Dialect.US,
+            EnglishVariety.US,
             "color",
             "/us/",
             make_audio("https://a/us", filename="us.voice.ogg"),
         ),
         gb=make_variant(
-            Dialect.GB,
+            EnglishVariety.GB,
             "colour",
             "/gb/",
             make_audio("https://a/gb", filename="gb.voice.ogg"),

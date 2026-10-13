@@ -1,7 +1,7 @@
 """Domain models returned by database queries."""
 
 from tgbot.db.models.audience_stats import AudienceStats
-from tgbot.db.models.card import Card, CardAudio, DialectVariant, card_from_row
+from tgbot.db.models.card import Card, CardAudio, EnglishVarietyVariant, card_from_row
 from tgbot.db.models.user import (
     AdminUser,
     User,
@@ -10,8 +10,8 @@ from tgbot.db.models.user import (
     user_from_row,
 )
 from tgbot.db.types import (
-    VALID_DIALECT_PREFERENCES,
-    VALID_DIALECTS,
+    VALID_ENGLISH_VARIETIES,
+    VALID_ENGLISH_VARIETY_PREFERENCES,
     VALID_LEVELS,
     VALID_ROLES,
     AudioConversionStatus,
@@ -19,8 +19,8 @@ from tgbot.db.types import (
     AudioVariantType,
     CardStatus,
     CefrLevel,
-    Dialect,
-    DialectPreference,
+    EnglishVariety,
+    EnglishVarietyPreference,
     SchedulerRunStatus,
     TelegramSendMethod,
     UserRole,
@@ -37,16 +37,16 @@ __all__ = [
     "CardAudio",
     "CardStatus",
     "CefrLevel",
-    "Dialect",
-    "DialectPreference",
-    "DialectVariant",
+    "EnglishVariety",
+    "EnglishVarietyPreference",
+    "EnglishVarietyVariant",
     "SchedulerRunStatus",
     "TelegramSendMethod",
     "User",
     "UserRole",
     "UserSettings",
-    "VALID_DIALECT_PREFERENCES",
-    "VALID_DIALECTS",
+    "VALID_ENGLISH_VARIETY_PREFERENCES",
+    "VALID_ENGLISH_VARIETIES",
     "VALID_LEVELS",
     "VALID_ROLES",
     "user_from_row",

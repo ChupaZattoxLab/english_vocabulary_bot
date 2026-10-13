@@ -17,7 +17,7 @@ from scripts.oald.oxford_import.models import (
     OxfordGroup,
     OxfordRow,
 )
-from tgbot.db.models import Dialect
+from tgbot.db.models import EnglishVariety
 
 LOGGER = logging.getLogger("tgbot.oxford_import")
 
@@ -256,9 +256,9 @@ def process_variant_form(group: OxfordGroup, variant: Mapping[str, Any]) -> None
     regions = regions_from_items(variant.get("regions") or [])
     variant_word = normalize_word(variant.get("text"))
     if variant_word:
-        if Dialect.US in regions:
+        if EnglishVariety.US in regions:
             append_unique(group.us_variants, variant_word)
-        if Dialect.GB in regions:
+        if EnglishVariety.GB in regions:
             append_unique(group.gb_variants, variant_word)
     for pronunciation in variant.get("pronunciations") or []:
         add_pronunciation(group, pronunciation, inherited_regions=regions)
@@ -280,7 +280,7 @@ def add_translations(group: OxfordGroup, senses: Iterable[Mapping[str, Any]]) ->
 def add_pronunciation(
     group: OxfordGroup,
     pronunciation: Mapping[str, Any],
-    inherited_regions: set[Dialect] | None = None,
+    inherited_regions: set[EnglishVariety] | None = None,
 ) -> None:
     notation = normalize_word(pronunciation.get("phoneticNotation"))
     raw_ipa = pronunciation.get("phoneticSpelling")
@@ -293,9 +293,9 @@ def add_pronunciation(
     if not regions:
         regions = set(inherited_regions or ())
     pair = (ipa, audio)
-    if Dialect.US in regions:
+    if EnglishVariety.US in regions:
         append_unique(group.pronunciations_us, pair)
-    if Dialect.GB in regions:
+    if EnglishVariety.GB in regions:
         append_unique(group.pronunciations_gb, pair)
 
 
@@ -418,14 +418,14 @@ def append_unique(values: list[Any], value: Any) -> None:
         values.append(value)
 
 
-def regions_from_items(items: Iterable[Any]) -> set[Dialect]:
-    regions: set[Dialect] = set()
+def regions_from_items(items: Iterable[Any]) -> set[EnglishVariety]:
+    regions: set[EnglishVariety] = set()
     for item in items:
         marker = normalize_marker(item)
         if marker in US_REGION_MARKERS:
-            regions.add(Dialect.US)
+            regions.add(EnglishVariety.US)
         if marker in GB_REGION_MARKERS:
-            regions.add(Dialect.GB)
+            regions.add(EnglishVariety.GB)
     return regions
 
 
