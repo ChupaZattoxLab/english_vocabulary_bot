@@ -328,7 +328,6 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                                    attempt_count
                             FROM oald_audio_variants
                             WHERE source_url = %s
-                              AND variant_type = 'telegram_voice_opus'
                             """,
                             (audio_url,),
                         )

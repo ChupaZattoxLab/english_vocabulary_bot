@@ -36,9 +36,7 @@ from tgbot.db.types import (
     ERROR_TYPE_MAX_LEN,
     ERROR_TYPE_STALE_RESERVATION,
     AudioConversionStatus,
-    AudioVariantType,
     CardStatus,
-    TelegramSendMethod,
 )
 
 
@@ -198,11 +196,10 @@ class CardsQueries(DbSession):
         )
 
     async def get_cached_audio_file_id(self, source_url: str) -> str | None:
-        """Telegram voice file_id for this source_url, if we uploaded it before."""
+        """Telegram audio file_id for this source_url, if we uploaded it before."""
         row = await self.fetch_first(
             sa.select(bot_telegram_audio_cache.c.telegram_file_id).where(
                 bot_telegram_audio_cache.c.source_url == source_url,
-                bot_telegram_audio_cache.c.send_method == TelegramSendMethod.VOICE,
             )
         )
         return str(row["telegram_file_id"]) if row else None
@@ -212,17 +209,13 @@ class CardsQueries(DbSession):
         source_url: str,
         telegram_file_id: str,
     ) -> None:
-        """Remember Telegram file_id after a successful voice upload."""
+        """Remember Telegram file_id after a successful audio upload."""
         stmt = pg_insert(bot_telegram_audio_cache).values(
             source_url=source_url,
-            send_method=TelegramSendMethod.VOICE,
             telegram_file_id=telegram_file_id,
         )
         stmt = stmt.on_conflict_do_update(
-            index_elements=[
-                bot_telegram_audio_cache.c.source_url,
-                bot_telegram_audio_cache.c.send_method,
-            ],
+            index_elements=[bot_telegram_audio_cache.c.source_url],
             set_={
                 "telegram_file_id": stmt.excluded.telegram_file_id,
                 "updated_at": sa.func.current_timestamp(),
@@ -235,7 +228,6 @@ class CardsQueries(DbSession):
         await self.execute(
             sa.delete(bot_telegram_audio_cache).where(
                 bot_telegram_audio_cache.c.source_url == source_url,
-                bot_telegram_audio_cache.c.send_method == TelegramSendMethod.VOICE,
             )
         )
 
@@ -299,7 +291,6 @@ def prepared_audio_lateral(english_variety: EnglishVariety) -> FromClause:
                 voice,
                 sa.and_(
                     voice.c.source_url == files.c.source_url,
-                    voice.c.variant_type == AudioVariantType.TELEGRAM_VOICE_OPUS,
                     voice.c.conversion_status == AudioConversionStatus.PREPARED,
                     voice.c.source_sha256 == files.c.sha256,
                 ),
@@ -364,8 +355,6 @@ async def hydrate_card_audio(
                 oald_audio_variants.c.filename,
             ).where(
                 oald_audio_variants.c.source_url == source_url,
-                oald_audio_variants.c.variant_type
-                == AudioVariantType.TELEGRAM_VOICE_OPUS,
                 oald_audio_variants.c.conversion_status
                 == AudioConversionStatus.PREPARED,
                 oald_audio_variants.c.audio_data.is_not(None),

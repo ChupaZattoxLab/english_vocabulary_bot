@@ -8,9 +8,9 @@ from tests.tgbot.factories import make_card, telegram_api_error
 from tgbot.db.models import EnglishVariety
 from tgbot.delivery.card_template import CardTemplateError
 from tgbot.delivery.service import (
+    audio_caption,
     card_template_values,
     classify_delivery_error,
-    voice_caption,
 )
 from tgbot.delivery.types import (
     ERROR_TYPE_AUDIO_UNAVAILABLE,
@@ -32,9 +32,9 @@ def test_card_template_values_uppercases_words_and_cefr() -> None:
     assert "flag_us" in values and "flag_gb" in values
 
 
-def test_voice_caption_includes_escaped_ipa() -> None:
-    assert voice_caption(EnglishVariety.US, "") == "🇺🇸 US"
-    assert "<code>/a&amp;b/</code>" in voice_caption(EnglishVariety.GB, "/a&b/")
+def test_audio_caption_includes_escaped_ipa() -> None:
+    assert audio_caption(EnglishVariety.US, "") == "🇺🇸 US"
+    assert "<code>/a&amp;b/</code>" in audio_caption(EnglishVariety.GB, "/a&b/")
 
 
 def test_classify_delivery_error_categories() -> None:

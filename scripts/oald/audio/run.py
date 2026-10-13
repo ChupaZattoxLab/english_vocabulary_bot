@@ -32,7 +32,7 @@ from scripts.oald.audio.store import (
 )
 from scripts.oald.audio.transcode import transcode_audio_to_voice
 from scripts.oald.oald_preflight import require_oald_schema
-from tgbot.db.models import AudioVariantType, EnglishVariety
+from tgbot.db.models import EnglishVariety
 from tgbot.db.sync import sync_connection
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
@@ -233,11 +233,7 @@ def load_candidates(
             )
             .outerjoin(
                 oald_audio_variants,
-                sa.and_(
-                    oald_audio_variants.c.source_url == oald_audio_files.c.source_url,
-                    oald_audio_variants.c.variant_type
-                    == AudioVariantType.TELEGRAM_VOICE_OPUS,
-                ),
+                oald_audio_variants.c.source_url == oald_audio_files.c.source_url,
             )
         )
         .where(

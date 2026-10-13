@@ -10,14 +10,13 @@ from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
 from tgbot.db.tables.base import Base, varchar_enum
-from tgbot.db.types import AudioConversionStatus, AudioVariantType
+from tgbot.db.types import AudioConversionStatus
 
 
 class OaldAudioVariant(Base):
     __table_args__ = (
         sa.Index(
             "ix_oald_audio_variants_status",
-            "variant_type",
             "conversion_status",
         ),
     )
@@ -25,11 +24,6 @@ class OaldAudioVariant(Base):
     source_url: Mapped[str] = mapped_column(
         sa.Text,
         sa.ForeignKey("oald_audio_files.source_url", ondelete="CASCADE"),
-        primary_key=True,
-    )
-
-    variant_type: Mapped[AudioVariantType] = mapped_column(
-        varchar_enum(AudioVariantType, name="check_oald_audio_variants_type"),
         primary_key=True,
     )
 

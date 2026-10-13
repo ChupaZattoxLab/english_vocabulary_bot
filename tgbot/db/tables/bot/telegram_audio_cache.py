@@ -9,8 +9,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.tables.base import Base, varchar_enum
-from tgbot.db.types import TelegramSendMethod
+from tgbot.db.tables.base import Base
 
 
 class BotTelegramAudioCache(Base):
@@ -19,11 +18,6 @@ class BotTelegramAudioCache(Base):
     source_url: Mapped[str] = mapped_column(
         sa.Text,
         sa.ForeignKey("oald_audio_files.source_url"),
-        primary_key=True,
-    )
-
-    send_method: Mapped[TelegramSendMethod] = mapped_column(
-        varchar_enum(TelegramSendMethod, name="check_bot_audio_cache_method"),
         primary_key=True,
     )
 

@@ -24,7 +24,6 @@ from tgbot.db.models import (
     EnglishVariety,
     EnglishVarietyPreference,
     EnglishVarietyVariant,
-    TelegramSendMethod,
 )
 from tgbot.delivery.card_template import CardTemplate, CardTemplateError
 from tgbot.delivery.types import (
@@ -36,6 +35,7 @@ from tgbot.delivery.types import (
     ERROR_TYPE_TELEGRAM_ERROR,
     ERROR_TYPE_TELEGRAM_TIMEOUT,
     ERROR_TYPE_TEMPLATE_ERROR,
+    SEND_KIND_AUDIO,
     SEND_KIND_TEXT,
     DeliveryStatus,
 )
@@ -128,7 +128,7 @@ class CardDeliveryService:
             telegram_user_id=telegram_user_id,
             text=self.render_card(card),
         )
-        message = await self.send_card_voices(
+        message = await self.send_card_audio(
             bot,
             telegram_user_id=telegram_user_id,
             card=card,
@@ -150,7 +150,7 @@ class CardDeliveryService:
             kind=SEND_KIND_TEXT,
         )
 
-    async def send_card_voices(
+    async def send_card_audio(
         self,
         bot: Bot,
         telegram_user_id: int,
@@ -158,7 +158,7 @@ class CardDeliveryService:
     ) -> Message:
         message: Message | None = None
         for variant in card.variants():
-            message = await self.send_voice_attachment(
+            message = await self.send_audio_attachment(
                 bot,
                 telegram_user_id=telegram_user_id,
                 variant=variant,
@@ -167,24 +167,24 @@ class CardDeliveryService:
             raise RuntimeError("card has no English variety variants to send")
         return message
 
-    async def send_voice_attachment(
+    async def send_audio_attachment(
         self,
         bot: Bot,
         telegram_user_id: int,
         variant: EnglishVarietyVariant,
     ) -> Message:
         audio = variant.audio
-        filename = audio.filename or f"{variant.word}.voice.ogg"
-        caption = voice_caption(variant.english_variety, variant.ipa)
+        filename = audio.filename or f"{variant.word}.ogg"
+        caption = audio_caption(variant.english_variety, variant.ipa)
 
         async def send(file_reference: str | BufferedInputFile) -> Message:
             return await call_with_retry_after(
-                lambda: bot.send_voice(
+                lambda: bot.send_audio(
                     chat_id=telegram_user_id,
-                    voice=file_reference,
+                    audio=file_reference,
                     caption=caption,
                 ),
-                kind=TelegramSendMethod.VOICE,
+                kind=SEND_KIND_AUDIO,
             )
 
         cached_file_id = await self.db.get_cached_audio_file_id(audio.source_url)
@@ -199,10 +199,10 @@ class CardDeliveryService:
                 await self.db.clear_cached_audio_file_id(audio.source_url)
 
         message = await send(BufferedInputFile(audio.audio_data, filename=filename))
-        if message.voice:
+        if message.audio:
             await self.db.set_cached_audio_file_id(
                 audio.source_url,
-                message.voice.file_id,
+                message.audio.file_id,
             )
         return message
 
@@ -263,7 +263,7 @@ def card_template_values(card: Card) -> dict[str, str]:
     return words | ipa | required | display
 
 
-def voice_caption(english_variety: EnglishVariety, ipa: str) -> str:
+def audio_caption(english_variety: EnglishVariety, ipa: str) -> str:
     label = locale.english_variety_caption(english_variety)
     transcription = ipa.strip()
     if not transcription:

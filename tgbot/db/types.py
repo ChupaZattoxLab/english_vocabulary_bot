@@ -58,16 +58,6 @@ class AudioConversionStatus(StrEnum):
     FAILED = "failed"
 
 
-class AudioVariantType(StrEnum):
-    TELEGRAM_VOICE_OPUS = "telegram_voice_opus"
-
-
-class TelegramSendMethod(StrEnum):
-    VOICE = "voice"
-    AUDIO = "audio"
-    DOCUMENT = "document"
-
-
 VALID_LEVELS: Final[tuple[CefrLevel, ...]] = tuple(CefrLevel)
 VALID_ENGLISH_VARIETIES: Final[tuple[EnglishVariety, ...]] = tuple(EnglishVariety)
 VALID_ENGLISH_VARIETY_PREFERENCES: Final[tuple[EnglishVarietyPreference, ...]] = tuple(

@@ -141,11 +141,11 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                     cursor.execute(
                         """
                         INSERT INTO oald_audio_variants (
-                            source_url, variant_type, source_sha256,
+                            source_url, source_sha256,
                             audio_data, content_type, filename, size_bytes,
                             sha256, conversion_status
                         ) VALUES (
-                            %s, 'telegram_voice_opus', %s,
+                            %s, %s,
                             %s, 'audio/ogg', %s, %s, %s, 'prepared'
                         )
                         """,

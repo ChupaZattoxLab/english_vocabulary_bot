@@ -15,8 +15,6 @@ from scripts.oald.audio.models import AudioCandidate, DownloadedAudio, VoiceAudi
 from tgbot.db.models import (
     AudioConversionStatus,
     AudioDownloadStatus,
-    AudioVariantType,
-    TelegramSendMethod,
 )
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
@@ -86,7 +84,6 @@ def store_voice_success(
 ) -> None:
     stmt = pg_insert(oald_audio_variants).values(
         source_url=candidate.source_url,
-        variant_type=AudioVariantType.TELEGRAM_VOICE_OPUS,
         source_sha256=original.sha256,
         audio_data=voice.data,
         content_type="audio/ogg",
@@ -99,10 +96,7 @@ def store_voice_success(
         converted_at=sa.func.current_timestamp(),
     )
     stmt = stmt.on_conflict_do_update(
-        index_elements=[
-            oald_audio_variants.c.source_url,
-            oald_audio_variants.c.variant_type,
-        ],
+        index_elements=[oald_audio_variants.c.source_url],
         set_={
             "source_sha256": stmt.excluded.source_sha256,
             "audio_data": stmt.excluded.audio_data,
@@ -122,7 +116,6 @@ def store_voice_success(
         connection.execute(
             sa.delete(bot_telegram_audio_cache).where(
                 bot_telegram_audio_cache.c.source_url == candidate.source_url,
-                bot_telegram_audio_cache.c.send_method == TelegramSendMethod.VOICE,
             )
         )
 
@@ -135,7 +128,6 @@ def store_voice_failure(
 ) -> None:
     stmt = pg_insert(oald_audio_variants).values(
         source_url=candidate.source_url,
-        variant_type=AudioVariantType.TELEGRAM_VOICE_OPUS,
         source_sha256=original.sha256,
         conversion_status=AudioConversionStatus.FAILED,
         last_error=str(error)[:2000],
@@ -143,10 +135,7 @@ def store_voice_failure(
     )
     same_sha = oald_audio_variants.c.source_sha256 == stmt.excluded.source_sha256
     stmt = stmt.on_conflict_do_update(
-        index_elements=[
-            oald_audio_variants.c.source_url,
-            oald_audio_variants.c.variant_type,
-        ],
+        index_elements=[oald_audio_variants.c.source_url],
         set_={
             "source_sha256": sa.case(
                 (same_sha, oald_audio_variants.c.source_sha256),
