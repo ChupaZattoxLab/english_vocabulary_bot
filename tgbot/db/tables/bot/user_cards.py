@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 from typing import cast
 
@@ -42,9 +43,8 @@ class BotUserCard(Base):
         ),
     )
 
-    id: Mapped[int] = mapped_column(
-        sa.BigInteger,
-        sa.Identity(always=True),
+    id: Mapped[uuid.UUID] = mapped_column(
+        postgresql.UUID(as_uuid=True),
         primary_key=True,
     )
 
@@ -53,8 +53,8 @@ class BotUserCard(Base):
         sa.ForeignKey("bot_users.telegram_user_id", ondelete="CASCADE"),
     )
 
-    entry_id: Mapped[int] = mapped_column(
-        sa.BigInteger,
+    entry_id: Mapped[uuid.UUID] = mapped_column(
+        postgresql.UUID(as_uuid=True),
         sa.ForeignKey("oald_entries.id"),
         index=True,
     )

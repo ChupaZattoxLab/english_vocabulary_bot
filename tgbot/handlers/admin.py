@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import uuid
 from contextlib import suppress
 from datetime import UTC, datetime, time, timedelta
 
@@ -112,7 +113,9 @@ def create_admin_router(
             )
         )
 
-    async def send_word_card(bot: Bot, telegram_user_id: int, entry_id: int) -> bool:
+    async def send_word_card(
+        bot: Bot, telegram_user_id: int, entry_id: uuid.UUID
+    ) -> bool:
         card = await db.get_preview_card(entry_id)
         if not card:
             return False
@@ -160,8 +163,10 @@ def create_admin_router(
 
         action = (callback.data or "admin:refresh").removeprefix("admin:")
         if action.startswith("word:"):
-            entry_id = action.removeprefix("word:")
-            if not entry_id.isdigit():
+            raw_entry_id = action.removeprefix("word:")
+            try:
+                entry_id = uuid.UUID(raw_entry_id)
+            except ValueError:
                 await callback.answer(locale.admin.bad_choice, show_alert=True)
                 return
 
@@ -172,7 +177,7 @@ def create_admin_router(
             if not await send_word_card(
                 bot,
                 callback.from_user.id,
-                int(entry_id),
+                entry_id,
             ):
                 await panel_message.answer(locale.admin.word_entry_no_both_audio)
                 return

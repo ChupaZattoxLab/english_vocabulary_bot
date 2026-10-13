@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 
 import sqlalchemy as sa
@@ -147,7 +148,7 @@ class AdminQueries(DbSession):
 
         return tuple(card_from_row(row) for row in rows)
 
-    async def get_preview_card(self, entry_id: int | None = None) -> Card | None:
+    async def get_preview_card(self, entry_id: uuid.UUID | None = None) -> Card | None:
         """Card with both US and GB audio for admin QA (no bot_user_cards row).
 
         With ``entry_id`` — that entry. Without — a random card, preferring

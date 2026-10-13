@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import cast
 
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
 from tgbot.db.tables.base import Base, varchar_enum
@@ -12,8 +14,8 @@ from tgbot.db.types import EnglishVariety
 
 
 class OaldEntryAudioSource(Base):
-    entry_id: Mapped[int] = mapped_column(
-        sa.BigInteger,
+    entry_id: Mapped[uuid.UUID] = mapped_column(
+        postgresql.UUID(as_uuid=True),
         sa.ForeignKey("oald_entries.id", ondelete="CASCADE"),
         primary_key=True,
     )

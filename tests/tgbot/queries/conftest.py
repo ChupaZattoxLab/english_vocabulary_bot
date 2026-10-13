@@ -22,6 +22,7 @@ from tgbot.db.sync import (
     ensure_database_exists,
     sync_connection,
 )
+from tgbot.db.types import new_id
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 GRACE_MINUTES = 60
@@ -76,27 +77,29 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
         f"https://audio.example/bot/{suffix}/two-gb.ogg",
     ]
     audio_urls = [*us_audio_urls, *gb_audio_urls]
-    entry_ids: list[int] = []
+    entry_ids: list[uuid.UUID] = []
 
     with sync_connection(migrated_db_url) as connection:
         raw = connection.connection.driver_connection
         assert raw is not None
         with raw.cursor() as cursor:
             for index in range(2):
+                entry_id = new_id()
                 cursor.execute(
                     """
                     INSERT INTO oald_entries (
-                        word_us, word_gb, lexical_category, cefr,
+                        id, word_us, word_gb, lexical_category, cefr,
                         definition_url_oxford, definition_url_cambridge,
                         ipa_us, ipa_gb, definition, example,
                         audio_source_us, audio_source_gb, translations
                     ) VALUES (
-                        %s, %s, 'noun', 'c1', %s, '',
+                        %s, %s, %s, 'noun', 'c1', %s, '',
                         ARRAY['/us/'], ARRAY['/gb/'], %s, %s,
                         ARRAY[%s], ARRAY[%s], ARRAY[%s]
-                    ) RETURNING id
+                    )
                     """,
                     (
+                        entry_id,
                         f"bot-test-{suffix}-{index}",
                         f"bot-test-{suffix}-{index}",
                         definition_urls[index],
@@ -107,7 +110,6 @@ async def onboarded_user(db: Database, migrated_db_url: str) -> AsyncIterator[di
                         f"перевод {index}",
                     ),
                 )
-                entry_id = int(cursor.fetchone()[0])
                 entry_ids.append(entry_id)
                 for english_variety, audio_url in (
                     ("us", us_audio_urls[index]),

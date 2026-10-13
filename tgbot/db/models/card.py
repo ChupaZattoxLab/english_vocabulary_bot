@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import uuid
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 from typing import Any, cast
 
 from tgbot.db.types import EnglishVariety, EnglishVarietyPreference
+
+PREVIEW_USER_CARD_ID = uuid.UUID(int=0)
 
 
 @dataclass(frozen=True)
@@ -27,8 +30,8 @@ class EnglishVarietyVariant:
 
 @dataclass(frozen=True)
 class Card:
-    user_card_id: int
-    entry_id: int
+    user_card_id: uuid.UUID
+    entry_id: uuid.UUID
     word_us: str
     word_gb: str
     lexical_category: str
@@ -86,7 +89,7 @@ class Card:
 def card_from_row(
     row: object,
     preference: EnglishVarietyPreference = EnglishVarietyPreference.BOTH,
-    user_card_id: int = 0,
+    user_card_id: uuid.UUID = PREVIEW_USER_CARD_ID,
 ) -> Card:
     """Build a Card from an oald entry + audio mapping row.
 
@@ -107,7 +110,7 @@ def card_from_row(
 
     return Card(
         user_card_id=user_card_id,
-        entry_id=int(data["entry_id"]),
+        entry_id=as_uuid(data["entry_id"]),
         word_us=word_us,
         word_gb=word_gb,
         lexical_category=str(data["lexical_category"]),
@@ -142,6 +145,12 @@ def card_from_row(
             else None
         ),
     )
+
+
+def as_uuid(value: object) -> uuid.UUID:
+    if isinstance(value, uuid.UUID):
+        return value
+    return uuid.UUID(str(value))
 
 
 def card_audio_from_row(data: Mapping[Any, Any], *, prefix: str) -> CardAudio:

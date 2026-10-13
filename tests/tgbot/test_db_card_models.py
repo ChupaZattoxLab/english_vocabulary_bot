@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import uuid
+
 import pytest
 
 from tests.tgbot.factories import make_card
@@ -51,7 +53,7 @@ def test_russian_translation_keeps_importance_order() -> None:
 
 def test_card_from_row_attaches_english_varieties_by_preference() -> None:
     row = {
-        "entry_id": 7,
+        "entry_id": uuid.UUID(int=7),
         "word_us": "color",
         "word_gb": "colour",
         "lexical_category": "noun",
@@ -72,8 +74,9 @@ def test_card_from_row_attaches_english_varieties_by_preference() -> None:
         "gb_content_type": "audio/ogg",
         "gb_filename": "gb.ogg",
     }
-    both = card_from_row(row, EnglishVarietyPreference.BOTH, user_card_id=3)
-    assert both.user_card_id == 3
+    user_card_id = uuid.UUID(int=3)
+    both = card_from_row(row, EnglishVarietyPreference.BOTH, user_card_id=user_card_id)
+    assert both.user_card_id == user_card_id
     assert both.is_both
     assert both.us is not None and both.us.word == "color"
     assert both.gb is not None and both.gb.word == "colour"
@@ -86,14 +89,14 @@ def test_card_from_row_attaches_english_varieties_by_preference() -> None:
 def test_card_from_row_maps_word_search_fields() -> None:
     card = card_from_row(
         {
-            "entry_id": 9,
+            "entry_id": uuid.UUID(int=9),
             "word_us": "color",
             "word_gb": "colour",
             "lexical_category": "noun",
             "cefr": "b2",
         }
     )
-    assert card.entry_id == 9
+    assert card.entry_id == uuid.UUID(int=9)
     assert card.word_us == "color"
     assert card.word_gb == "colour"
     assert card.lexical_category == "noun"

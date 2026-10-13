@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from collections.abc import MutableMapping
 from datetime import UTC, datetime, timedelta
 from typing import Any, cast
@@ -18,6 +19,7 @@ from tgbot.db.models import (
     EnglishVarietyPreference,
     card_from_row,
 )
+from tgbot.db.models.card import as_uuid
 from tgbot.db.models.user import user_from_row
 from tgbot.db.queries.base import DbSession, mapping_first
 from tgbot.db.tables import (
@@ -37,6 +39,7 @@ from tgbot.db.types import (
     ERROR_TYPE_STALE_RESERVATION,
     AudioConversionStatus,
     CardStatus,
+    new_id,
 )
 
 
@@ -156,8 +159,9 @@ class CardsQueries(DbSession):
                 connection,
                 sa.insert(bot_user_cards)
                 .values(
+                    id=new_id(),
                     telegram_user_id=telegram_user_id,
-                    entry_id=int(card_row["entry_id"]),
+                    entry_id=card_row["entry_id"],
                     english_variety=preference,
                     source_url=source_url,
                     source_url_gb=source_url_gb,
@@ -171,12 +175,12 @@ class CardsQueries(DbSession):
             return card_from_row(
                 card_row,
                 preference=preference,
-                user_card_id=int(user_card["id"]),
+                user_card_id=as_uuid(user_card["id"]),
             )
 
     async def finish_delivery(
         self,
-        user_card_id: int,
+        user_card_id: uuid.UUID,
         delivered: bool,
         telegram_message_id: int | None = None,
         error_type: str = "",

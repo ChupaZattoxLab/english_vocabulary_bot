@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import uuid
 from collections.abc import Iterable, Iterator
 from typing import Any
 
@@ -17,6 +18,7 @@ from tgbot.db.tables import (
     oald_entries,
     oald_entry_audio_sources,
 )
+from tgbot.db.types import new_id
 
 LOGGER = logging.getLogger("tgbot.oald_import")
 
@@ -34,12 +36,15 @@ def import_entries(
             require_oald_schema(connection)
             LOGGER.info("Alembic-managed OALD schema is ready")
             for batch in iter_batches(entries, batch_size):
-                imported_ids: list[int] = []
+                imported_ids: list[uuid.UUID] = []
                 links: list[dict[str, Any]] = []
                 batch_urls: set[str] = set()
 
                 for entry in batch:
-                    stmt = pg_insert(oald_entries).values(**entry.values())
+                    stmt = pg_insert(oald_entries).values(
+                        id=new_id(),
+                        **entry.values(),
+                    )
                     stmt = stmt.on_conflict_do_update(
                         index_elements=[oald_entries.c.definition_url_oxford],
                         set_={
@@ -60,8 +65,8 @@ def import_entries(
                             "updated_at": sa.func.current_timestamp(),
                         },
                     ).returning(oald_entries.c.id)
-                    entry_id = connection.execute(stmt).scalar_one()
-                    imported_ids.append(int(entry_id))
+                    entry_id = uuid.UUID(str(connection.execute(stmt).scalar_one()))
+                    imported_ids.append(entry_id)
                     for (
                         english_variety,
                         position,

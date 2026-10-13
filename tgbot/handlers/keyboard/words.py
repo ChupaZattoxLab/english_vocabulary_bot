@@ -21,7 +21,7 @@ def word_categories_keyboard(rows: Sequence[Card]) -> InlineKeyboardMarkup:
     for row in rows:
         category = row.lexical_category
         text = (
-            f"{category} · {row.cefr.upper()} · #{row.entry_id}"
+            f"{category} · {row.cefr.upper()}"
             if category_counts[category] > 1
             else category
         )

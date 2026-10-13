@@ -2,8 +2,14 @@
 
 from __future__ import annotations
 
+import uuid
 from enum import StrEnum
 from typing import Final
+
+
+def new_id() -> uuid.UUID:
+    """UUID for a row this process is inserting."""
+    return uuid.uuid7()
 
 
 class EnglishVariety(StrEnum):

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import UTC, datetime, time
 from zoneinfo import ZoneInfo
 
@@ -99,16 +100,27 @@ def test_user_settings_text_includes_levels_and_schedule() -> None:
 
 
 def test_word_categories_keyboard_uses_entry_id() -> None:
+    first = uuid.UUID(int=9)
+    second = uuid.UUID(int=10)
+    third = uuid.UUID(int=11)
     markup = word_categories_keyboard(
         (
-            make_card(entry_id=9, include_us=True),
-            make_card(entry_id=10, include_us=True),
+            make_card(entry_id=first, include_us=True, cefr="A1"),
+            make_card(entry_id=second, include_us=True, cefr="B1"),
+            make_card(
+                entry_id=third,
+                include_us=True,
+                lexical_category="verb",
+            ),
         )
     )
     texts = [button.text for row in markup.inline_keyboard for button in row]
     callbacks = [
         button.callback_data for row in markup.inline_keyboard for button in row
     ]
-    assert "noun · B1 · #9" in texts
-    assert "noun · B1 · #10" in texts
-    assert callbacks == ["admin:word:9", "admin:word:10"]
+    assert texts == ["noun · A1", "noun · B1", "verb"]
+    assert callbacks == [
+        f"admin:word:{first}",
+        f"admin:word:{second}",
+        f"admin:word:{third}",
+    ]

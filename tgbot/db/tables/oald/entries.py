@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 from typing import cast
 
@@ -28,9 +29,8 @@ class OaldEntry(Base):
         ),
     )
 
-    id: Mapped[int] = mapped_column(
-        sa.BigInteger,
-        sa.Identity(always=True),
+    id: Mapped[uuid.UUID] = mapped_column(
+        postgresql.UUID(as_uuid=True),
         primary_key=True,
     )
 

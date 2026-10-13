@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from datetime import UTC, datetime
 from types import SimpleNamespace
 from typing import Any, cast
@@ -21,6 +22,9 @@ from tgbot.db.models import (
     UserRole,
     UserSettings,
 )
+
+DEFAULT_USER_CARD_ID = uuid.UUID(int=1)
+DEFAULT_ENTRY_ID = uuid.UUID(int=10)
 
 
 def make_audio(
@@ -51,10 +55,13 @@ def make_variant(
 
 
 def make_card(
-    user_card_id: int = 1,
-    entry_id: int = 10,
+    user_card_id: uuid.UUID = DEFAULT_USER_CARD_ID,
+    entry_id: uuid.UUID = DEFAULT_ENTRY_ID,
     word_us: str = "color",
     word_gb: str = "colour",
+    lexical_category: str = "noun",
+    cefr: str = "B1",
+    example: str = "a bright color",
     us: EnglishVarietyVariant | None = None,
     gb: EnglishVarietyVariant | None = None,
     include_us: bool = True,
@@ -69,10 +76,10 @@ def make_card(
         entry_id=entry_id,
         word_us=word_us,
         word_gb=word_gb,
-        lexical_category="noun",
-        cefr="B1",
+        lexical_category=lexical_category,
+        cefr=cefr,
         definition="a shade",
-        example="a bright color",
+        example=example,
         translation="цвет",
         us=us,
         gb=gb,
