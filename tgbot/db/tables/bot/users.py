@@ -9,8 +9,10 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column
 
-from tgbot.db.tables.base import Base, varchar_enum
-from tgbot.db.types import EnglishVarietyPreference, UserRole
+from tgbot.db.tables.base import Base, CefrLevelText, varchar_enum
+from tgbot.db.types import CefrLevel, EnglishVarietyPreference, UserRole
+
+allowed_levels = ", ".join(f"'{level.value}'" for level in CefrLevel)
 
 
 class BotUser(Base):
@@ -39,10 +41,10 @@ class BotUser(Base):
         index=True,
     )
 
-    selected_levels: Mapped[list[str]] = mapped_column(
-        postgresql.ARRAY(sa.Text),
+    selected_levels: Mapped[list[CefrLevel]] = mapped_column(
+        postgresql.ARRAY(CefrLevelText()),
         sa.CheckConstraint(
-            "selected_levels <@ ARRAY['a1','a2','b1','b2','c1']::TEXT[]",
+            f"selected_levels <@ ARRAY[{allowed_levels}]::TEXT[]",
             name="check_bot_users_levels",
         ),
         server_default=sa.text("'{}'::text[]"),

@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Any, cast
 
 from tgbot.db.types import (
+    CefrLevel,
     EnglishVarietyPreference,
     UserRole,
 )
@@ -15,7 +16,7 @@ from tgbot.db.types import (
 
 @dataclass(frozen=True)
 class UserSettings:
-    selected_levels: tuple[str, ...]
+    selected_levels: tuple[CefrLevel, ...]
     english_variety: EnglishVarietyPreference | None
 
 
@@ -98,6 +99,6 @@ def user_settings_from_row(row: Mapping[Any, Any]) -> UserSettings:
 
     levels = row.get("selected_levels") or ()
     return UserSettings(
-        selected_levels=tuple(str(level) for level in levels),
+        selected_levels=tuple(CefrLevel(level) for level in levels),
         english_variety=english_variety,
     )

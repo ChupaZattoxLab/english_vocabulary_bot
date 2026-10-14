@@ -6,7 +6,28 @@ import re
 from enum import Enum as PyEnum
 
 import sqlalchemy as sa
+from sqlalchemy.engine import Dialect
 from sqlalchemy.orm import DeclarativeBase, declared_attr
+from sqlalchemy.types import TypeDecorator
+
+from tgbot.db.types import CefrLevel
+
+
+class CefrLevelText(TypeDecorator[CefrLevel]):
+    """Store CEFR enum values as TEXT and restore enums when reading."""
+
+    impl = sa.Text
+    cache_ok = True
+
+    def process_bind_param(
+        self, value: CefrLevel | str | None, dialect: Dialect
+    ) -> str | None:
+        return None if value is None else CefrLevel(value).value
+
+    def process_result_value(
+        self, value: str | None, dialect: Dialect
+    ) -> CefrLevel | None:
+        return None if value is None else CefrLevel(value)
 
 
 def camel_to_snake(name: str) -> str:
