@@ -6,6 +6,9 @@ from tgbot.db.models import EnglishVariety
 
 
 class user:
+    settings_choose_levels = "Выберите уровни. Можно отметить несколько:"
+    settings_choose_pronunciation = "Выберите произношение для карточек:"
+    need_pronunciation = "Выберите произношение"
     settings_title = "<b>Ваши настройки</b>"
     levels_none = "не выбраны"
     delivery_active = "активна"
@@ -55,6 +58,10 @@ class user:
 
 
 class keyboard:
+    settings_levels = "Уровень языка"
+    settings_pronunciation = "Произношение"
+    confirm_button = "Подтвердить"
+    back_button = "Назад"
     continue_button = "Продолжить"
     pronunciation_us = "🇺🇸 American (US)"
     pronunciation_gb = "🇬🇧 British (GB)"

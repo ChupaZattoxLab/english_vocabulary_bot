@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from aiogram import F, Router
 from aiogram.enums import ChatType
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message
 from aiogram.types import User as AiogramUser
@@ -19,7 +20,13 @@ from tgbot.db.models import (
 )
 from tgbot.delivery import CardDeliveryService, DeliveryStatus
 from tgbot.handlers.helpers import callback_message, format_levels
-from tgbot.handlers.keyboard import levels_keyboard, pronunciation_keyboard
+from tgbot.handlers.keyboard import (
+    levels_keyboard,
+    pronunciation_keyboard,
+    settings_keyboard,
+    settings_levels_keyboard,
+    settings_pronunciation_keyboard,
+)
 from tgbot.localization import locale
 
 
@@ -60,9 +67,107 @@ def create_router(
 
         user = await register_user(db, message.from_user)
         await message.answer(
-            user_settings_text(user, config) + locale.user.settings_pick_levels,
-            reply_markup=levels_keyboard(user.settings.selected_levels),
+            user_settings_text(user, config),
+            reply_markup=settings_keyboard(),
         )
+
+    @router.callback_query(F.data.startswith("settings:"))
+    async def settings_callback(callback: CallbackQuery) -> None:
+        user = await db.get_user(callback.from_user.id)
+        if not user:
+            await callback.answer(locale.user.need_start, show_alert=True)
+            return
+
+        message = callback_message(callback)
+        if message is None:
+            await callback.answer()
+            return
+
+        _, action, *values = (callback.data or "").split(":", 2)
+        value = values[0] if values else ""
+        saved = False
+        if action in {"open_levels", "levels", "save_levels"}:
+            levels = (
+                user.settings.selected_levels
+                if action == "open_levels"
+                else tuple(filter(None, value.split(",")))
+            )
+            if any(level not in VALID_LEVELS for level in levels):
+                await callback.answer()
+                return
+            levels = tuple(level for level in VALID_LEVELS if level in levels)
+            if action == "save_levels":
+                if not levels:
+                    await callback.answer(locale.user.need_one_level, show_alert=True)
+                    return
+                user = await db.set_levels(
+                    callback.from_user.id, tuple(CefrLevel(level) for level in levels)
+                )
+                saved = True
+            else:
+                await message.edit_text(
+                    locale.user.settings_choose_levels,
+                    reply_markup=settings_levels_keyboard(levels),
+                )
+                await callback.answer()
+                return
+        elif action in {"open_pronunciation", "pronunciation", "save_pronunciation"}:
+            selected = (
+                user.settings.english_variety
+                if action == "open_pronunciation"
+                else value
+            )
+            if selected and selected not in VALID_ENGLISH_VARIETY_PREFERENCES:
+                await callback.answer()
+                return
+            if action == "save_pronunciation":
+                if not selected:
+                    await callback.answer(
+                        locale.user.need_pronunciation, show_alert=True
+                    )
+                    return
+                if not user.settings.selected_levels:
+                    await callback.answer(locale.user.need_level_first, show_alert=True)
+                    return
+                user = await db.set_english_variety(
+                    callback.from_user.id, EnglishVarietyPreference(selected)
+                )
+                saved = True
+            else:
+                current_selection = {
+                    button.callback_data
+                    for row in (
+                        message.reply_markup.inline_keyboard
+                        if message.reply_markup is not None
+                        else []
+                    )
+                    for button in row
+                }
+                if (
+                    action == "pronunciation"
+                    and f"settings:save_pronunciation:{selected}" in current_selection
+                ):
+                    await callback.answer()
+                    return
+                try:
+                    await message.edit_text(
+                        locale.user.settings_choose_pronunciation,
+                        reply_markup=settings_pronunciation_keyboard(selected),
+                    )
+                except TelegramBadRequest as exc:
+                    # Repeated clicks can arrive before the previous edit finishes.
+                    if "message is not modified" not in exc.message:
+                        raise
+                await callback.answer()
+                return
+        elif action != "back":
+            await callback.answer()
+            return
+
+        await message.edit_text(
+            user_settings_text(user, config), reply_markup=settings_keyboard()
+        )
+        await callback.answer(locale.user.settings_saved if saved else None)
 
     @router.callback_query(F.data.startswith("level:"))
     async def level_callback(callback: CallbackQuery) -> None:

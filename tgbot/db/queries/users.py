@@ -101,6 +101,20 @@ class UsersQueries(DbSession):
 
         return user_from_row(await self.execute_fetch_exactly_one(stmt))
 
+    async def set_levels(
+        self,
+        telegram_user_id: int,
+        levels: tuple[CefrLevel, ...],
+    ) -> User:
+        """Save confirmed CEFR levels in one update."""
+        stmt = (
+            sa.update(bot_users)
+            .where(bot_users.c.telegram_user_id == telegram_user_id)
+            .values(selected_levels=list(levels))
+            .returning(*bot_users.c)
+        )
+        return user_from_row(await self.execute_fetch_exactly_one(stmt))
+
     async def set_english_variety(
         self,
         telegram_user_id: int,
