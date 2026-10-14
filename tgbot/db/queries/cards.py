@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from collections.abc import MutableMapping
+from collections.abc import Mapping, MutableMapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any, cast
 
@@ -19,9 +19,14 @@ from tgbot.db.models import (
     EnglishVarietyPreference,
     card_from_row,
 )
-from tgbot.db.models.card import as_uuid
+from tgbot.db.models.card import as_uuid, choose_preference_tracks, ipa_at_position
 from tgbot.db.models.user import user_from_row
-from tgbot.db.queries.base import DbSession, mapping_first
+from tgbot.db.queries.base import (
+    DbSession,
+    mapping_all,
+    mapping_exactly_one,
+    mapping_first,
+)
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
     bot_user_cards,
@@ -139,23 +144,27 @@ class CardsQueries(DbSession):
             if not row:
                 return None
 
-            # Load voice blobs only for the English varieties we will send.
+            # One variety is the earliest prepared track from the scan above.
+            # "Both" picks its pair here, then loads only those voice blobs.
             card_row = dict(row)
-            await hydrate_card_audio(connection, card_row, preference)
+            pair_ready = preference == EnglishVarietyPreference.BOTH and (
+                await select_card_audio(connection, card_row, preference)
+            )
+            if not pair_ready:
+                await hydrate_card_audio(connection, card_row, preference)
 
-            source_url = card_row[
-                "gb_source_url"
-                if preference == EnglishVarietyPreference.GB
-                else "us_source_url"
-            ]
+            if preference == EnglishVarietyPreference.GB:
+                source_url = reserved_source_url(card_row, EnglishVariety.GB)
+            else:
+                source_url = reserved_source_url(card_row, EnglishVariety.US)
             source_url_gb = (
-                card_row["gb_source_url"]
+                reserved_source_url(card_row, EnglishVariety.GB)
                 if preference == EnglishVarietyPreference.BOTH
                 else None
             )
 
             # Persist the reservation before returning the card payload.
-            user_card = await mapping_first(
+            user_card = await mapping_exactly_one(
                 connection,
                 sa.insert(bot_user_cards)
                 .values(
@@ -169,8 +178,6 @@ class CardsQueries(DbSession):
                 )
                 .returning(bot_user_cards.c.id),
             )
-            if user_card is None:
-                return None
 
             return card_from_row(
                 card_row,
@@ -273,11 +280,11 @@ def card_content_select() -> tuple[Select[Any], FromClause, FromClause]:
 
 
 def prepared_audio_lateral(english_variety: EnglishVariety) -> FromClause:
-    """First prepared telegram-voice row for one English variety of the outer entry.
+    """Earliest prepared voice for one variety of the outer entry.
 
-    LATERAL + LIMIT 1: an entry may have several source URLs; we take the
-    earliest by source_position among prepared opus variants. Correlated to
-    oald_entries.id via the WHERE on links.entry_id.
+    LATERAL + LIMIT 1 keeps the random-card scan to one index lookup: it only
+    checks that the variety has a prepared track. The pronunciations we send
+    are chosen after a single entry is picked.
     """
     links = oald_entry_audio_sources.alias(f"{english_variety}_links")
     files = oald_audio_files.alias(f"{english_variety}_files")
@@ -370,3 +377,189 @@ async def hydrate_card_audio(
         card_row[f"{prefix}_audio_data"] = audio["audio_data"]
         card_row[f"{prefix}_content_type"] = audio["content_type"]
         card_row[f"{prefix}_filename"] = audio["filename"]
+
+
+async def select_card_audio(
+    connection: AsyncConnection,
+    card_row: MutableMapping[str, object],
+    preference: EnglishVarietyPreference,
+    *,
+    all_prepared: bool = False,
+) -> bool:
+    """Attach pronunciations for this one entry.
+
+    ``all_prepared`` keeps every prepared track in source order so
+    ``Card.for_preference`` can choose. Otherwise only the tracks this
+    preference sends are loaded. Returns False when a required variety has
+    no voice; the caller then uses the lateral fallback.
+    """
+    varieties = varieties_for(preference)
+    rows = await mapping_all(
+        connection,
+        sa.select(
+            oald_entry_audio_sources.c.english_variety,
+            oald_entry_audio_sources.c.source_position,
+            oald_entry_audio_sources.c.source_url,
+        )
+        .select_from(
+            oald_entry_audio_sources.join(
+                oald_audio_files,
+                oald_audio_files.c.source_url == oald_entry_audio_sources.c.source_url,
+            ).join(
+                oald_audio_variants,
+                sa.and_(
+                    oald_audio_variants.c.source_url == oald_audio_files.c.source_url,
+                    oald_audio_variants.c.conversion_status
+                    == AudioConversionStatus.PREPARED,
+                    oald_audio_variants.c.source_sha256 == oald_audio_files.c.sha256,
+                    oald_audio_variants.c.audio_data.is_not(None),
+                ),
+            )
+        )
+        .where(
+            oald_entry_audio_sources.c.entry_id == as_uuid(card_row["entry_id"]),
+            oald_entry_audio_sources.c.english_variety.in_(varieties),
+        )
+        .order_by(oald_entry_audio_sources.c.source_position),
+    )
+    chosen = chosen_tracks(
+        group_tracks(card_row, rows), preference, all_prepared=all_prepared
+    )
+    if chosen is None or not selection_ready(preference, chosen):
+        return False
+
+    urls = [url for tracks in chosen.values() for _position, _ipa, url in tracks]
+    blobs = await mapping_all(
+        connection,
+        sa.select(
+            oald_audio_variants.c.source_url,
+            oald_audio_variants.c.audio_data,
+            oald_audio_variants.c.content_type,
+            oald_audio_variants.c.filename,
+        ).where(
+            oald_audio_variants.c.source_url.in_(urls),
+            oald_audio_variants.c.conversion_status == AudioConversionStatus.PREPARED,
+            oald_audio_variants.c.audio_data.is_not(None),
+        ),
+    )
+    by_url = {str(row["source_url"]): row for row in blobs}
+    selected = {
+        variety: audio_payload(tracks, by_url) for variety, tracks in chosen.items()
+    }
+    if not selection_ready(preference, selected):
+        return False
+
+    card_row["selected_us"] = selected[EnglishVariety.US]
+    card_row["selected_gb"] = selected[EnglishVariety.GB]
+    return True
+
+
+def reserved_source_url(
+    card_row: Mapping[str, object],
+    variety: EnglishVariety,
+) -> str | None:
+    """Source URL stored on the reservation: the first track we will send."""
+    selected = card_row.get(f"selected_{variety}")
+    if isinstance(selected, list) and selected:
+        first = selected[0]
+        if isinstance(first, Mapping):
+            url = first.get("source_url")
+            if url:
+                return str(url)
+
+    url = card_row.get(f"{variety}_source_url")
+    return str(url) if url else None
+
+
+def varieties_for(
+    preference: EnglishVarietyPreference,
+) -> tuple[EnglishVariety, ...]:
+    if preference == EnglishVarietyPreference.US:
+        return (EnglishVariety.US,)
+    if preference == EnglishVarietyPreference.GB:
+        return (EnglishVariety.GB,)
+    return (EnglishVariety.US, EnglishVariety.GB)
+
+
+def group_tracks(
+    card_row: Mapping[str, object],
+    rows: Sequence[Mapping[Any, Any]],
+) -> dict[EnglishVariety, list[tuple[int, str, str]]]:
+    grouped: dict[EnglishVariety, list[tuple[int, str, str]]] = {
+        EnglishVariety.US: [],
+        EnglishVariety.GB: [],
+    }
+    for row in rows:
+        variety = EnglishVariety(str(row["english_variety"]))
+        position = int(row["source_position"])
+        ipa_key = "ipa_us" if variety == EnglishVariety.US else "ipa_gb"
+        grouped[variety].append(
+            (
+                position,
+                ipa_at_position(card_row.get(ipa_key), position),
+                str(row["source_url"]),
+            )
+        )
+    for tracks in grouped.values():
+        tracks.sort(key=lambda track: track[0])
+    return grouped
+
+
+def chosen_tracks(
+    grouped: dict[EnglishVariety, list[tuple[int, str, str]]],
+    preference: EnglishVarietyPreference,
+    *,
+    all_prepared: bool,
+) -> dict[EnglishVariety, list[tuple[int, str, str]]] | None:
+    if all_prepared:
+        return grouped
+
+    us_tracks = grouped[EnglishVariety.US]
+    gb_tracks = grouped[EnglishVariety.GB]
+    chosen = choose_preference_tracks(
+        preference,
+        [ipa for _position, ipa, _url in us_tracks],
+        [ipa for _position, ipa, _url in gb_tracks],
+    )
+    if chosen is None:
+        return None
+
+    us_index, gb_index = chosen
+    return {
+        EnglishVariety.US: [] if us_index is None else [us_tracks[us_index]],
+        EnglishVariety.GB: [] if gb_index is None else [gb_tracks[gb_index]],
+    }
+
+
+def selection_ready(
+    preference: EnglishVarietyPreference,
+    chosen: Mapping[EnglishVariety, Sequence[object]],
+) -> bool:
+    has_us = bool(chosen[EnglishVariety.US])
+    has_gb = bool(chosen[EnglishVariety.GB])
+    if preference == EnglishVarietyPreference.US:
+        return has_us
+    if preference == EnglishVarietyPreference.GB:
+        return has_gb
+    return has_us and has_gb
+
+
+def audio_payload(
+    tracks: Sequence[tuple[int, str, str]],
+    by_url: Mapping[str, Any],
+) -> list[dict[str, object]]:
+    payload: list[dict[str, object]] = []
+    for _position, ipa, url in tracks:
+        audio = by_url.get(url)
+        if audio is None:
+            continue
+        payload.append(
+            {
+                "ipa": ipa,
+                "source_url": url,
+                "audio_data": audio["audio_data"],
+                "content_type": audio["content_type"],
+                "filename": audio["filename"],
+            }
+        )
+    return payload

@@ -66,6 +66,8 @@ def make_card(
     gb: EnglishVarietyVariant | None = None,
     include_us: bool = True,
     include_gb: bool = False,
+    us_more: tuple[EnglishVarietyVariant, ...] = (),
+    gb_more: tuple[EnglishVarietyVariant, ...] = (),
 ) -> Card:
     if include_us and us is None:
         us = make_variant(EnglishVariety.US, word_us, "/us/")
@@ -83,6 +85,8 @@ def make_card(
         translation="цвет",
         us=us,
         gb=gb,
+        us_more=us_more,
+        gb_more=gb_more,
     )
 
 

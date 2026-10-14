@@ -191,8 +191,6 @@ class CardDeliveryService:
             except Exception as exc:
                 last_error = exc
         if last_error is None:
-            if message is None:
-                raise RuntimeError("card has no English variety variants to send")
             return message
         if voice_messages_forbidden(last_error):
             LOGGER.warning(

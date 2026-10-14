@@ -22,7 +22,11 @@ from tgbot.db.queries.base import (
     mapping_exactly_one,
     mapping_first,
 )
-from tgbot.db.queries.cards import card_content_select, hydrate_card_audio
+from tgbot.db.queries.cards import (
+    card_content_select,
+    hydrate_card_audio,
+    select_card_audio,
+)
 from tgbot.db.tables import bot_user_cards, bot_users, oald_entries
 from tgbot.db.types import CardStatus
 
@@ -176,8 +180,16 @@ class AdminQueries(DbSession):
             if not row:
                 return None
 
-            # Fetch voice blobs for both English varieties after the row is chosen.
+            # Every prepared track; send_preview chooses per preference.
             data = dict(row)
-            await hydrate_card_audio(connection, data, EnglishVarietyPreference.BOTH)
+            if not await select_card_audio(
+                connection,
+                data,
+                EnglishVarietyPreference.BOTH,
+                all_prepared=True,
+            ):
+                await hydrate_card_audio(
+                    connection, data, EnglishVarietyPreference.BOTH
+                )
 
         return card_from_row(data)
