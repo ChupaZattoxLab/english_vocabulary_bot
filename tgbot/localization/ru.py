@@ -6,6 +6,7 @@ from tgbot.db.models import EnglishVariety
 
 
 class user:
+    levels_use_settings = "Измените уровни через /settings."
     settings_choose_levels = "Выберите уровни. Можно отметить несколько:"
     settings_choose_pronunciation = "Выберите произношение для карточек:"
     need_pronunciation = "Выберите произношение"

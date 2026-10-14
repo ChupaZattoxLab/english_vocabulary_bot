@@ -79,12 +79,15 @@ class UsersQueries(DbSession):
         self,
         telegram_user_id: int,
         level: CefrLevel,
-    ) -> User:
-        """Add or remove one CEFR level in selected_levels (keyboard toggle)."""
+    ) -> User | None:
+        """Toggle an onboarding level; None if missing or already onboarded."""
         level_value = sa.literal(level)
         stmt = (
             sa.update(bot_users)
-            .where(bot_users.c.telegram_user_id == telegram_user_id)
+            .where(
+                bot_users.c.telegram_user_id == telegram_user_id,
+                bot_users.c.onboarding_completed.is_(False),
+            )
             .values(
                 selected_levels=sa.case(
                     (
@@ -99,7 +102,8 @@ class UsersQueries(DbSession):
             .returning(*bot_users.c)
         )
 
-        return user_from_row(await self.execute_fetch_exactly_one(stmt))
+        row = await self.execute_fetch_first(stmt)
+        return user_from_row(row) if row else None
 
     async def set_levels(
         self,
@@ -107,6 +111,8 @@ class UsersQueries(DbSession):
         levels: tuple[CefrLevel, ...],
     ) -> User:
         """Save confirmed CEFR levels in one update."""
+        if not levels:
+            raise ValueError("at least one CEFR level is required")
         stmt = (
             sa.update(bot_users)
             .where(bot_users.c.telegram_user_id == telegram_user_id)
@@ -185,14 +191,12 @@ class UsersQueries(DbSession):
         return (result.rowcount or 0) > 0
 
     async def get_active_users(self) -> list[User]:
-        """Scheduler users: active, onboarded, with levels and an English variety."""
+        """Scheduler users: active and onboarded (settings guaranteed by CHECK)."""
         rows = await self.fetch_all(
             sa.select(bot_users)
             .where(
                 bot_users.c.is_active.is_(True),
                 bot_users.c.onboarding_completed.is_(True),
-                sa.func.cardinality(bot_users.c.selected_levels) > 0,
-                bot_users.c.english_variety.is_not(None),
             )
             .order_by(bot_users.c.telegram_user_id)
         )

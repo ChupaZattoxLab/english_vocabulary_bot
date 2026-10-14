@@ -17,6 +17,11 @@ allowed_levels = ", ".join(f"'{level.value}'" for level in CefrLevel)
 
 class BotUser(Base):
     __table_args__ = (
+        sa.CheckConstraint(
+            "NOT onboarding_completed OR "
+            "(cardinality(selected_levels) > 0 AND english_variety IS NOT NULL)",
+            name="check_bot_users_onboarding_settings",
+        ),
         sa.Index(
             "ix_bot_users_active",
             "is_active",

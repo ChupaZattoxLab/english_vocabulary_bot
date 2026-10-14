@@ -177,6 +177,10 @@ def create_router(
             await callback.answer(locale.user.need_start, show_alert=True)
             return
 
+        if user.onboarding_completed:
+            await callback.answer(locale.user.levels_use_settings, show_alert=True)
+            return
+
         message = callback_message(callback)
         if action == "done":
             if not user.settings.selected_levels:
@@ -195,6 +199,9 @@ def create_router(
             return
 
         user = await db.toggle_level(callback.from_user.id, CefrLevel(action))
+        if user is None:
+            await callback.answer(locale.user.levels_use_settings, show_alert=True)
+            return
         if message is not None:
             await message.edit_reply_markup(
                 reply_markup=levels_keyboard(user.settings.selected_levels)
