@@ -152,8 +152,7 @@ def create_admin_router(
 
     @router.callback_query(F.data.startswith("admin:"))
     async def admin_panel_callback(callback: CallbackQuery) -> None:
-        if not await db.is_admin(callback.from_user.id):
-            await callback.answer(locale.admin.no_access, show_alert=True)
+        if not await require_admin(callback, db):
             return
 
         panel_message = callback_message(callback)
@@ -206,10 +205,13 @@ def create_admin_router(
     return router
 
 
-async def require_admin(message: Message, db: Database) -> bool:
-    if message.from_user and await db.is_admin(message.from_user.id):
+async def require_admin(event: Message | CallbackQuery, db: Database) -> bool:
+    if event.from_user and await db.is_admin(event.from_user.id):
         return True
-    await message.answer(locale.admin.no_access)
+    if isinstance(event, CallbackQuery):
+        await event.answer(locale.admin.no_access, show_alert=True)
+    else:
+        await event.answer(locale.admin.no_access)
     return False
 
 
