@@ -1,4 +1,4 @@
-"""Reserve and deliver vocabulary cards with Telegram audio-file caching."""
+"""Reserve and deliver vocabulary cards with Telegram voice-file caching."""
 
 from __future__ import annotations
 
@@ -34,8 +34,8 @@ from tgbot.delivery.types import (
     ERROR_TYPE_TELEGRAM_ERROR,
     ERROR_TYPE_TELEGRAM_TIMEOUT,
     ERROR_TYPE_TEMPLATE_ERROR,
-    SEND_KIND_AUDIO,
     SEND_KIND_TEXT,
+    SEND_KIND_VOICE,
     DeliveryStatus,
 )
 from tgbot.localization import locale
@@ -120,17 +120,36 @@ class CardDeliveryService:
         telegram_user_id: int,
         card: Card,
     ) -> None:
-        await self.send_card_text(
+        text_message = await self.send_card_text(
             bot,
             telegram_user_id=telegram_user_id,
             text=self.render_card(card),
         )
-        message = await self.send_card_audio(
-            bot,
-            telegram_user_id=telegram_user_id,
-            card=card,
+        try:
+            voice_message = await self.send_card_voice(
+                bot,
+                telegram_user_id=telegram_user_id,
+                card=card,
+            )
+        except TelegramForbiddenError as exc:
+            await self.finish_after_error(card, text_sent=True, exc=exc)
+            await self.db.deactivate_user(telegram_user_id)
+            LOGGER.info("Deactivated unreachable Telegram user %s", telegram_user_id)
+            return
+        except Exception as exc:
+            await self.finish_after_error(card, text_sent=True, exc=exc)
+            LOGGER.exception(
+                "Card voice delivery failed after text for user %s; "
+                "counting as delivered",
+                telegram_user_id,
+            )
+            return
+        message_id = (
+            voice_message.message_id
+            if voice_message is not None
+            else text_message.message_id
         )
-        await self.finish_ok(card, message.message_id)
+        await self.finish_ok(card, message_id)
 
     def render_card(self, card: Card) -> str:
         template = self.both_template if card.is_both else self.template
@@ -141,30 +160,59 @@ class CardDeliveryService:
         bot: Bot,
         telegram_user_id: int,
         text: str,
-    ) -> None:
-        await call_with_retry_after(
+    ) -> Message:
+        return await call_with_retry_after(
             lambda: bot.send_message(chat_id=telegram_user_id, text=text),
             kind=SEND_KIND_TEXT,
         )
 
-    async def send_card_audio(
+    async def send_card_voice(
         self,
         bot: Bot,
         telegram_user_id: int,
         card: Card,
-    ) -> Message:
+    ) -> Message | None:
+        """Send each pronunciation as a voice message.
+
+        A failed voice does not undo the text card. The user gets one note
+        that the audio could not be sent.
+        """
         message: Message | None = None
+        last_error: Exception | None = None
         for variant in card.variants():
-            message = await self.send_audio_attachment(
-                bot,
-                telegram_user_id=telegram_user_id,
-                variant=variant,
+            try:
+                message = await self.send_voice_attachment(
+                    bot,
+                    telegram_user_id=telegram_user_id,
+                    variant=variant,
+                )
+            except TelegramForbiddenError:
+                raise
+            except Exception as exc:
+                last_error = exc
+        if last_error is None:
+            if message is None:
+                raise RuntimeError("card has no English variety variants to send")
+            return message
+        if voice_messages_forbidden(last_error):
+            LOGGER.warning(
+                "Voice messages forbidden for user %s",
+                telegram_user_id,
             )
-        if message is None:
-            raise RuntimeError("card has no English variety variants to send")
+        else:
+            LOGGER.error(
+                "Voice delivery failed for user %s",
+                telegram_user_id,
+                exc_info=last_error,
+            )
+        await self.send_card_text(
+            bot,
+            telegram_user_id=telegram_user_id,
+            text=locale.user.audio_send_failed,
+        )
         return message
 
-    async def send_audio_attachment(
+    async def send_voice_attachment(
         self,
         bot: Bot,
         telegram_user_id: int,
@@ -176,19 +224,21 @@ class CardDeliveryService:
 
         async def send(file_reference: str | BufferedInputFile) -> Message:
             return await call_with_retry_after(
-                lambda: bot.send_audio(
+                lambda: bot.send_voice(
                     chat_id=telegram_user_id,
-                    audio=file_reference,
+                    voice=file_reference,
                     caption=caption,
                 ),
-                kind=SEND_KIND_AUDIO,
+                kind=SEND_KIND_VOICE,
             )
 
         cached_file_id = await self.db.get_cached_audio_file_id(audio.source_url)
         if cached_file_id:
             try:
                 return await send(cached_file_id)
-            except TelegramBadRequest:
+            except TelegramBadRequest as exc:
+                if voice_messages_forbidden(exc):
+                    raise
                 LOGGER.warning(
                     "Telegram rejected cached file_id for %s; uploading bytes again",
                     audio.source_url,
@@ -196,10 +246,10 @@ class CardDeliveryService:
                 await self.db.clear_cached_audio_file_id(audio.source_url)
 
         message = await send(BufferedInputFile(audio.audio_data, filename=filename))
-        if message.audio:
+        if message.voice:
             await self.db.set_cached_audio_file_id(
                 audio.source_url,
-                message.audio.file_id,
+                message.voice.file_id,
             )
         return message
 
@@ -258,6 +308,13 @@ def card_template_values(card: Card) -> dict[str, str]:
         "flag_gb": locale.english_variety_flag(EnglishVariety.GB),
     }
     return words | ipa | required | display
+
+
+def voice_messages_forbidden(exc: BaseException) -> bool:
+    """Telegram privacy setting that rejects voice messages from this bot."""
+    return isinstance(exc, TelegramBadRequest) and "VOICE_MESSAGES_FORBIDDEN" in str(
+        exc
+    )
 
 
 def audio_caption(english_variety: EnglishVariety, ipa: str) -> str:

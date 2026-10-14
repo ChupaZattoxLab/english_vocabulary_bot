@@ -106,10 +106,11 @@ def make_admin_user(
     )
 
 
-def fake_bot(*, send_audio=None, send_message=None) -> SimpleNamespace:
+def fake_bot(*, send_voice=None, send_message=None) -> SimpleNamespace:
     return SimpleNamespace(
-        send_audio=send_audio or AsyncMock(),
-        send_message=send_message or AsyncMock(),
+        send_voice=send_voice or AsyncMock(),
+        send_message=send_message
+        or AsyncMock(return_value=SimpleNamespace(message_id=1)),
     )
 
 

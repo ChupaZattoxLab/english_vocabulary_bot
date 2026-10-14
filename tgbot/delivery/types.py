@@ -12,7 +12,7 @@ BOTH_CARD_TEMPLATE_PATH = TEMPLATES_DIR / "card_template_both.html"
 TELEGRAM_MESSAGE_MAX_LEN = 4096
 
 SEND_KIND_TEXT = "text"
-SEND_KIND_AUDIO = "audio"
+SEND_KIND_VOICE = "voice"
 
 
 class DeliveryStatus(StrEnum):

@@ -200,7 +200,7 @@ class CardsQueries(DbSession):
         )
 
     async def get_cached_audio_file_id(self, source_url: str) -> str | None:
-        """Telegram audio file_id for this source_url, if we uploaded it before."""
+        """Telegram voice file_id for this source_url, if we uploaded it before."""
         row = await self.fetch_first(
             sa.select(bot_telegram_audio_cache.c.telegram_file_id).where(
                 bot_telegram_audio_cache.c.source_url == source_url,
@@ -213,7 +213,7 @@ class CardsQueries(DbSession):
         source_url: str,
         telegram_file_id: str,
     ) -> None:
-        """Remember Telegram file_id after a successful audio upload."""
+        """Remember Telegram file_id after a successful voice upload."""
         stmt = pg_insert(bot_telegram_audio_cache).values(
             source_url=source_url,
             telegram_file_id=telegram_file_id,

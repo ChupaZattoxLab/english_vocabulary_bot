@@ -54,27 +54,26 @@ async def test_deliver_skips_when_no_card_reserved(templates) -> None:
 
 
 @pytest.mark.asyncio
-async def test_audio_upload_caches_telegram_file_id(templates) -> None:
+async def test_voice_upload_caches_telegram_file_id(templates) -> None:
     card = make_card()
     db = fake_delivery_db()
     bot = fake_bot(
-        send_audio=AsyncMock(
+        send_voice=AsyncMock(
             return_value=SimpleNamespace(
                 message_id=10,
-                audio=SimpleNamespace(file_id="tg-file"),
+                voice=SimpleNamespace(file_id="tg-file"),
             )
         ),
-        send_message=AsyncMock(),
     )
     service = _service(db, templates)
 
     await service.send_card(as_bot(bot), 123, card)
 
     bot.send_message.assert_awaited_once()
-    bot.send_audio.assert_awaited_once()
-    audio_arg = bot.send_audio.await_args.kwargs["audio"]
-    assert isinstance(audio_arg, BufferedInputFile)
-    assert audio_arg.filename == card.primary.audio.filename
+    bot.send_voice.assert_awaited_once()
+    voice_arg = bot.send_voice.await_args.kwargs["voice"]
+    assert isinstance(voice_arg, BufferedInputFile)
+    assert voice_arg.filename == card.primary.audio.filename
     db.set_cached_audio_file_id.assert_awaited_once_with(
         card.primary.audio.source_url,
         "tg-file",
@@ -86,16 +85,15 @@ async def test_cached_file_id_is_cleared_on_bad_request(templates) -> None:
     card = make_card()
     db = fake_delivery_db(get_cached_audio_file_id=AsyncMock(return_value="stale"))
     bot = fake_bot(
-        send_audio=AsyncMock(
+        send_voice=AsyncMock(
             side_effect=[
                 telegram_api_error(TelegramBadRequest, "bad file"),
                 SimpleNamespace(
                     message_id=11,
-                    audio=SimpleNamespace(file_id="fresh"),
+                    voice=SimpleNamespace(file_id="fresh"),
                 ),
             ]
         ),
-        send_message=AsyncMock(),
     )
     service = _service(db, templates)
 
@@ -111,21 +109,37 @@ async def test_cached_file_id_is_cleared_on_bad_request(templates) -> None:
 
 
 @pytest.mark.asyncio
-async def test_audio_failure_fails_delivery(templates) -> None:
-    """send_card runs text and audio as one unit; an audio error fails the card."""
+async def test_voice_failure_keeps_card_and_explains(templates) -> None:
+    """The text card stays delivered when Telegram rejects the voice."""
     card = make_card()
-    db = fake_delivery_db(reserve_card=AsyncMock(return_value=card))
+    db = fake_delivery_db(
+        reserve_card=AsyncMock(return_value=card),
+        get_cached_audio_file_id=AsyncMock(return_value="cached-voice"),
+    )
     bot = fake_bot(
-        send_message=AsyncMock(),
-        send_audio=AsyncMock(side_effect=RuntimeError("audio failed")),
+        send_message=AsyncMock(return_value=SimpleNamespace(message_id=5)),
+        send_voice=AsyncMock(
+            side_effect=telegram_api_error(
+                TelegramBadRequest,
+                "Bad Request: VOICE_MESSAGES_FORBIDDEN",
+            )
+        ),
     )
     service = _service(db, templates)
 
     outcome = await service.deliver(as_bot(bot), 1, datetime.now(UTC))
 
-    assert outcome.status == DeliveryStatus.FAILED
+    assert outcome.status == DeliveryStatus.DELIVERED
     db.finish_delivery.assert_awaited_once()
-    assert db.finish_delivery.await_args.kwargs["delivered"] is False
+    assert db.finish_delivery.await_args.kwargs["delivered"] is True
+    assert db.finish_delivery.await_args.kwargs["telegram_message_id"] == 5
+    assert bot.send_voice.await_count == 1
+    assert bot.send_voice.await_args.kwargs["voice"] == "cached-voice"
+    db.clear_cached_audio_file_id.assert_not_awaited()
+    texts = [call.kwargs["text"] for call in bot.send_message.await_args_list]
+    assert texts[-1] == (
+        "Не удалось отправить аудио, возможно из-за настроек приватности."
+    )
 
 
 @pytest.mark.asyncio
@@ -146,7 +160,7 @@ async def test_forbidden_before_text_fails_and_deactivates(templates) -> None:
 
 
 @pytest.mark.asyncio
-async def test_both_english_varieties_send_two_audio_files(templates) -> None:
+async def test_both_english_varieties_send_two_voice_files(templates) -> None:
     card = make_card(
         include_us=True,
         include_gb=True,
@@ -165,17 +179,16 @@ async def test_both_english_varieties_send_two_audio_files(templates) -> None:
     )
     db = fake_delivery_db()
     bot = fake_bot(
-        send_audio=AsyncMock(
+        send_voice=AsyncMock(
             side_effect=[
-                SimpleNamespace(message_id=1, audio=SimpleNamespace(file_id="us-id")),
-                SimpleNamespace(message_id=2, audio=SimpleNamespace(file_id="gb-id")),
+                SimpleNamespace(message_id=1, voice=SimpleNamespace(file_id="us-id")),
+                SimpleNamespace(message_id=2, voice=SimpleNamespace(file_id="gb-id")),
             ]
         ),
-        send_message=AsyncMock(),
     )
     service = _service(db, templates)
 
     await service.send_card(as_bot(bot), 1, card)
 
-    assert bot.send_audio.await_count == 2
+    assert bot.send_voice.await_count == 2
     assert bot.send_message.await_count == 1
