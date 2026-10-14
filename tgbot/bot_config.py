@@ -70,7 +70,7 @@ class BotConfig(BaseModel):
             # Avoid IPv6 localhost surprises on Windows.
             url = url.set(host="127.0.0.1")
 
-        return url.render_as_string()
+        return url.render_as_string(hide_password=False)
 
     @classmethod
     def load(cls) -> Self:
