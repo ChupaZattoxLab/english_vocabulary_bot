@@ -7,7 +7,7 @@ import time
 from collections.abc import Callable
 
 import sqlalchemy as sa
-from sqlalchemy.engine import Connection
+from sqlalchemy.ext.asyncio import AsyncConnection
 
 from scripts.oald.audio.constants import DEFAULT_MAX_AUDIO_BYTES
 from scripts.oald.audio.download import download_audio_file, download_with_retries
@@ -33,7 +33,7 @@ from scripts.oald.audio.store import (
 from scripts.oald.audio.transcode import transcode_audio_to_voice
 from scripts.oald.oald_preflight import require_oald_schema
 from tgbot.db.models import EnglishVariety
-from tgbot.db.sync import sync_connection
+from tgbot.db.postgres import async_engine, missing_public_tables
 from tgbot.db.tables import (
     bot_telegram_audio_cache,
     oald_audio_files,
@@ -45,7 +45,7 @@ from tgbot.db.tables import (
 LOGGER = logging.getLogger("tgbot.oald_audio_download")
 
 
-def download_audio_to_postgres(
+async def download_audio_to_postgres(
     db_url: str,
     english_varieties: list[str] | None = None,
     limit: int | None = None,
@@ -66,125 +66,130 @@ def download_audio_to_postgres(
         EnglishVariety.GB,
     ]
     stats = DownloadStats()
+    engine = async_engine(db_url, autocommit=True)
     try:
-        with sync_connection(
-            db_url,
-            autocommit=True,
-        ) as connection:
-            require_oald_schema(connection)
-            clear_telegram_cache = sa.inspect(connection).has_table(
-                bot_telegram_audio_cache.name
+        async with engine.connect() as connection:
+            await require_oald_schema(connection)
+            clear_telegram_cache = not await missing_public_tables(
+                connection,
+                [bot_telegram_audio_cache.name],
             )
-            candidates = load_candidates(
+            candidates = await load_candidates(
                 connection,
                 english_varieties=selected_english_varieties,
                 force=force,
                 limit=limit,
                 source_urls=source_urls,
             )
-            stats.candidates = len(candidates)
+        stats.candidates = len(candidates)
+        LOGGER.info(
+            "Audio candidates=%s english_varieties=%s force=%s",
+            f"{stats.candidates:,}",
+            ",".join(selected_english_varieties),
+            force,
+        )
+
+        network_requests = 0
+        for position, candidate in enumerate(candidates, start=1):
+            needs_download = force or not candidate.has_original
             LOGGER.info(
-                "Audio candidates=%s english_varieties=%s force=%s",
+                "[%s/%s] Preparing %s (%s): %s",
+                f"{position:,}",
                 f"{stats.candidates:,}",
-                ",".join(selected_english_varieties),
-                force,
+                candidate.example_word,
+                ",".join(candidate.english_varieties),
+                candidate.source_url,
             )
+            try:
+                if needs_download:
+                    if network_requests and request_delay:
+                        sleep(request_delay)
+                    network_requests += 1
+                    audio, attempts = download_with_retries(
+                        candidate.source_url,
+                        timeout=timeout,
+                        max_bytes=max_audio_bytes,
+                        retries=retries,
+                        retry_backoff=retry_backoff,
+                        fetch_audio=fetch_audio,
+                        sleep=sleep,
+                    )
+                    async with engine.connect() as connection:
+                        await store_success(connection, candidate, audio, attempts)
+                    stats.downloaded += 1
+                    stats.stored_bytes += len(audio.data)
+                    LOGGER.info(
+                        "Stored original %s: filename=%s bytes=%s type=%s",
+                        candidate.example_word,
+                        audio.filename,
+                        f"{len(audio.data):,}",
+                        audio.content_type,
+                    )
+                else:
+                    async with engine.connect() as connection:
+                        audio = await load_stored_audio(connection, candidate)
+                    stats.reused_originals += 1
+                    LOGGER.info(
+                        "Using stored original for %s; no HTTP request",
+                        candidate.example_word,
+                    )
 
-            network_requests = 0
-            for position, candidate in enumerate(candidates, start=1):
-                needs_download = force or not candidate.has_original
-                LOGGER.info(
-                    "[%s/%s] Preparing %s (%s): %s",
-                    f"{position:,}",
-                    f"{stats.candidates:,}",
-                    candidate.example_word,
-                    ",".join(candidate.english_varieties),
-                    candidate.source_url,
-                )
                 try:
-                    if needs_download:
-                        if network_requests and request_delay:
-                            sleep(request_delay)
-                        network_requests += 1
-                        audio, attempts = download_with_retries(
-                            candidate.source_url,
-                            timeout=timeout,
-                            max_bytes=max_audio_bytes,
-                            retries=retries,
-                            retry_backoff=retry_backoff,
-                            fetch_audio=fetch_audio,
-                            sleep=sleep,
-                        )
-                        store_success(connection, candidate, audio, attempts)
-                        stats.downloaded += 1
-                        stats.stored_bytes += len(audio.data)
-                        LOGGER.info(
-                            "Stored original %s: filename=%s bytes=%s type=%s",
-                            candidate.example_word,
-                            audio.filename,
-                            f"{len(audio.data):,}",
-                            audio.content_type,
-                        )
-                    else:
-                        audio = load_stored_audio(connection, candidate)
-                        stats.reused_originals += 1
-                        LOGGER.info(
-                            "Using stored original for %s; no HTTP request",
-                            candidate.example_word,
-                        )
-
-                    try:
-                        voice = transcode_voice(
-                            audio,
-                            timeout=timeout,
-                            max_bytes=max_audio_bytes,
-                        )
-                        store_voice_success(
+                    voice = transcode_voice(
+                        audio,
+                        timeout=timeout,
+                        max_bytes=max_audio_bytes,
+                    )
+                    async with engine.connect() as connection:
+                        await store_voice_success(
                             connection,
                             candidate,
                             audio,
                             voice,
                             clear_telegram_cache=clear_telegram_cache,
                         )
-                        stats.voices_prepared += 1
-                        stats.voice_bytes += len(voice.data)
-                        LOGGER.info(
-                            "Stored Telegram voice for %s: filename=%s bytes=%s",
-                            candidate.example_word,
-                            voice.filename,
-                            f"{len(voice.data):,}",
-                        )
-                    except AudioConversionError as exc:
-                        store_voice_failure(connection, candidate, audio, exc)
-                        stats.conversion_failed += 1
-                        LOGGER.error(
-                            "Voice conversion failed for %s (%s): %s",
-                            candidate.example_word,
-                            ",".join(candidate.english_varieties),
-                            exc,
-                        )
-                        if fail_fast:
-                            raise
-                except AudioRateLimitError as exc:
-                    store_failure(connection, candidate, exc, keep_pending=True)
-                    stats.rate_limited = True
-                    LOGGER.error(
-                        "OALD rate limit reached for %s. The run stopped "
-                        "without waiting; rerun the same command later.",
+                    stats.voices_prepared += 1
+                    stats.voice_bytes += len(voice.data)
+                    LOGGER.info(
+                        "Stored Telegram voice for %s: filename=%s bytes=%s",
                         candidate.example_word,
+                        voice.filename,
+                        f"{len(voice.data):,}",
                     )
-                    break
-                except AudioDownloadError as exc:
-                    store_failure(connection, candidate, exc)
-                    stats.failed += 1
+                except AudioConversionError as exc:
+                    async with engine.connect() as connection:
+                        await store_voice_failure(connection, candidate, audio, exc)
+                    stats.conversion_failed += 1
                     LOGGER.error(
-                        "Audio download failed for %s (%s): %s",
+                        "Voice conversion failed for %s (%s): %s",
                         candidate.example_word,
                         ",".join(candidate.english_varieties),
                         exc,
                     )
                     if fail_fast:
                         raise
+            except AudioRateLimitError as exc:
+                async with engine.connect() as connection:
+                    await store_failure(connection, candidate, exc, keep_pending=True)
+                stats.rate_limited = True
+                LOGGER.error(
+                    "OALD rate limit reached for %s. The run stopped "
+                    "without waiting; rerun the same command later.",
+                    candidate.example_word,
+                )
+                break
+            except AudioDownloadError as exc:
+                async with engine.connect() as connection:
+                    await store_failure(connection, candidate, exc)
+                stats.failed += 1
+                LOGGER.error(
+                    "Audio download failed for %s (%s): %s",
+                    candidate.example_word,
+                    ",".join(candidate.english_varieties),
+                    exc,
+                )
+                if fail_fast:
+                    raise
         return stats
     except AudioDownloadError, AudioConversionError:
         raise
@@ -193,10 +198,12 @@ def download_audio_to_postgres(
             "PostgreSQL audio operation failed; verify the database URL and "
             "run `uv run oald-import` first"
         ) from exc
+    finally:
+        await engine.dispose()
 
 
-def load_candidates(
-    connection: Connection,
+async def load_candidates(
+    connection: AsyncConnection,
     english_varieties: list[str],
     force: bool,
     limit: int | None,
@@ -248,7 +255,7 @@ def load_candidates(
         .order_by(oald_audio_files.c.source_url)
         .limit(sql_limit)
     )
-    rows = connection.execute(stmt).all()
+    rows = (await connection.execute(stmt)).all()
     return [
         AudioCandidate(
             source_url=str(row.source_url),

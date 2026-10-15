@@ -1,9 +1,12 @@
+import asyncio
 import json
 import os
 import tempfile
 import unittest
 import uuid
 from pathlib import Path
+
+import sqlalchemy as sa
 
 from scripts.oald.import_oxford import (
     OxfordCacheError,
@@ -12,7 +15,8 @@ from scripts.oald.import_oxford import (
     load_definition_index,
     parse_cache_files,
 )
-from tgbot.db.sync import sync_connection
+from tests.support import run_db
+from tgbot.db.tables import oxford_lexical_entries
 
 
 class OxfordCacheParserTests(unittest.TestCase):
@@ -270,8 +274,12 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                 return rows
 
             try:
-                self.assertEqual(import_rows(current_rows(), self.db_url), 1)
-                self.assertEqual(import_rows(current_rows(), self.db_url), 1)
+                self.assertEqual(
+                    asyncio.run(import_rows(current_rows(), self.db_url)), 1
+                )
+                self.assertEqual(
+                    asyncio.run(import_rows(current_rows(), self.db_url)), 1
+                )
 
                 second_entry = {
                     "pronunciations": [pronunciation("new", "British English")],
@@ -284,7 +292,9 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                         [lexical_entry(second_word, "adjective", [second_entry])],
                     ),
                 )
-                self.assertEqual(import_rows(current_rows(), self.db_url), 2)
+                self.assertEqual(
+                    asyncio.run(import_rows(current_rows(), self.db_url)), 2
+                )
 
                 first_entry["senses"][0]["translations"].append(
                     translation("обновлённый")
@@ -296,36 +306,38 @@ class OxfordPostgreSqlIntegrationTests(unittest.TestCase):
                         [lexical_entry(first_word, "noun", [first_entry])],
                     ),
                 )
-                self.assertEqual(import_rows(current_rows(), self.db_url), 2)
+                self.assertEqual(
+                    asyncio.run(import_rows(current_rows(), self.db_url)), 2
+                )
 
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            """
-                            SELECT source_lexical_key, translations
-                            FROM oxford_lexical_entries
-                            WHERE source_lexical_key = ANY(%s)
-                            ORDER BY source_lexical_key
-                            """,
-                            (keys,),
+                async def read_rows(connection) -> None:
+                    stored = (
+                        await connection.execute(
+                            sa.select(
+                                oxford_lexical_entries.c.source_lexical_key,
+                                oxford_lexical_entries.c.translations,
+                            )
+                            .where(
+                                oxford_lexical_entries.c.source_lexical_key.in_(keys)
+                            )
+                            .order_by(oxford_lexical_entries.c.source_lexical_key)
                         )
-                        stored = cursor.fetchall()
+                    ).all()
+                    self.assertEqual(len(stored), 2)
+                    first_stored = next(row for row in stored if row[0] == keys[0])
+                    self.assertEqual(list(first_stored[1]), ["первый", "обновлённый"])
 
-                self.assertEqual(len(stored), 2)
-                first_stored = next(row for row in stored if row[0] == keys[0])
-                self.assertEqual(first_stored[1], ["первый", "обновлённый"])
+                run_db(self.db_url, read_rows)
             finally:
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            "DELETE FROM oxford_lexical_entries "
-                            "WHERE source_lexical_key = ANY(%s)",
-                            (keys,),
+
+                async def cleanup(connection) -> None:
+                    await connection.execute(
+                        sa.delete(oxford_lexical_entries).where(
+                            oxford_lexical_entries.c.source_lexical_key.in_(keys)
                         )
+                    )
+
+                run_db(self.db_url, cleanup)
 
 
 def pronunciation(

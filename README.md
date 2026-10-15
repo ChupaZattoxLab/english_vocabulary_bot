@@ -19,7 +19,7 @@ tgbot/                 # runtime bot package
     queries/           # users, cards, scheduler, admin queries
     tables/            # declarative Mapped models (bot/ + oald/)
       base.py          # DeclarativeBase, tablename helper, varchar_enum
-    sync.py            # blocking SQLAlchemy helpers for scripts/tests
+    postgres.py        # the async engine (bot, scripts, tests, Alembic)
   delivery/            # card templates, send logic, scheduler
     types.py           # template paths, DeliveryStatus (delivery/ only)
   handlers/            # Telegram user/admin commands

@@ -10,21 +10,21 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from scripts.oald.oald_preflight import require_oxford_schema
 from scripts.oald.oxford_import.models import OxfordDatabaseError, OxfordRow
-from tgbot.db.sync import sync_connection
+from tgbot.db.postgres import async_connection
 from tgbot.db.tables import oxford_lexical_entries
 
 LOGGER = logging.getLogger("tgbot.oxford_import")
 
 
-def import_rows(
+async def import_rows(
     rows: Iterable[OxfordRow],
     db_url: str,
     batch_size: int = 500,
 ) -> int:
     processed = 0
     try:
-        with sync_connection(db_url) as connection:
-            require_oxford_schema(connection)
+        async with async_connection(db_url) as connection:
+            await require_oxford_schema(connection)
             LOGGER.info("Alembic-managed Oxford cache schema is ready")
             for batch in iter_batches(rows, batch_size):
                 values = [row.as_parameters() for row in batch]
@@ -69,7 +69,7 @@ def import_rows(
                         )
                     ),
                 )
-                connection.execute(stmt)
+                await connection.execute(stmt)
                 processed += len(batch)
                 LOGGER.info(
                     "Upserted batch of %s rows; processed=%s",

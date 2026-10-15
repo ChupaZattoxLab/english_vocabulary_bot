@@ -11,7 +11,6 @@ import sqlalchemy as sa
 from tests.support import requires_oald_database
 from tgbot.db import Database
 from tgbot.db.models import EnglishVariety, EnglishVarietyPreference
-from tgbot.db.sync import sync_connection
 from tgbot.db.tables import (
     oald_audio_files,
     oald_audio_variants,
@@ -113,8 +112,8 @@ async def test_pronunciation_choice_uses_later_tracks(
     db: Database,
     onboarded_user: dict,
 ) -> None:
-    add_second_pronunciations(
-        onboarded_user["db_url"],
+    await add_second_pronunciations(
+        db,
         onboarded_user["entry_ids"],
         onboarded_user["audio_urls"],
     )
@@ -153,15 +152,15 @@ async def test_pronunciation_choice_uses_later_tracks(
     assert both_view.gb is not None and both_view.gb.ipa == "/same/"
 
 
-def add_second_pronunciations(
-    db_url: str,
+async def add_second_pronunciations(
+    db: Database,
     entry_ids: list[uuid.UUID],
     audio_urls: list[str],
 ) -> None:
     """Position 0 stays /same/ on both varieties; position 1 US differs."""
-    with sync_connection(db_url) as connection:
+    async with db.begin() as connection:
         for entry_id in entry_ids:
-            connection.execute(
+            await connection.execute(
                 sa.update(oald_entries)
                 .where(oald_entries.c.id == entry_id)
                 .values(
@@ -175,7 +174,7 @@ def add_second_pronunciations(
             ):
                 source_url = f"https://audio.example/bot/alt/{entry_id}/{variety}.ogg"
                 audio_urls.append(source_url)
-                connection.execute(
+                await connection.execute(
                     sa.insert(oald_audio_files).values(
                         source_url=source_url,
                         audio_data=blob,
@@ -186,7 +185,7 @@ def add_second_pronunciations(
                         download_status=AudioDownloadStatus.DOWNLOADED,
                     )
                 )
-                connection.execute(
+                await connection.execute(
                     sa.insert(oald_entry_audio_sources).values(
                         entry_id=entry_id,
                         english_variety=variety,
@@ -194,7 +193,7 @@ def add_second_pronunciations(
                         source_url=source_url,
                     )
                 )
-                connection.execute(
+                await connection.execute(
                     sa.insert(oald_audio_variants).values(
                         source_url=source_url,
                         source_sha256="2" * 64,

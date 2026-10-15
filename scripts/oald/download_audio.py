@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import asyncio
 import logging
 
 from scripts.oald.audio import (
@@ -60,17 +61,19 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     try:
-        stats = download_audio_to_postgres(
-            args.db_url,
-            english_varieties=args.english_varieties,
-            limit=args.limit,
-            force=args.force,
-            request_delay=args.request_delay,
-            timeout=args.timeout,
-            retries=args.retries,
-            retry_backoff=args.retry_backoff,
-            max_audio_bytes=args.max_audio_bytes,
-            fail_fast=args.fail_fast,
+        stats = asyncio.run(
+            download_audio_to_postgres(
+                args.db_url,
+                english_varieties=args.english_varieties,
+                limit=args.limit,
+                force=args.force,
+                request_delay=args.request_delay,
+                timeout=args.timeout,
+                retries=args.retries,
+                retry_backoff=args.retry_backoff,
+                max_audio_bytes=args.max_audio_bytes,
+                fail_fast=args.fail_fast,
+            )
         )
         LOGGER.info(
             "Audio run complete: candidates=%s downloaded=%s reused=%s "

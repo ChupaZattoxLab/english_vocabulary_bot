@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from sqlalchemy.engine import Connection
+from sqlalchemy.ext.asyncio import AsyncConnection
 
 from scripts.oald.audio.errors import (
     AudioConversionError,
@@ -23,13 +23,13 @@ from tgbot.db.tables import (
 )
 
 
-def store_success(
-    connection: Connection,
+async def store_success(
+    connection: AsyncConnection,
     candidate: AudioCandidate,
     audio: DownloadedAudio,
     attempts: int,
 ) -> None:
-    connection.execute(
+    await connection.execute(
         sa.update(oald_audio_files)
         .where(oald_audio_files.c.source_url == candidate.source_url)
         .values(
@@ -49,8 +49,8 @@ def store_success(
     )
 
 
-def store_failure(
-    connection: Connection,
+async def store_failure(
+    connection: AsyncConnection,
     candidate: AudioCandidate,
     error: AudioDownloadError,
     keep_pending: bool = False,
@@ -58,7 +58,7 @@ def store_failure(
     pending_or_failed = (
         AudioDownloadStatus.PENDING if keep_pending else AudioDownloadStatus.FAILED
     )
-    connection.execute(
+    await connection.execute(
         sa.update(oald_audio_files)
         .where(oald_audio_files.c.source_url == candidate.source_url)
         .values(
@@ -75,8 +75,8 @@ def store_failure(
     )
 
 
-def store_voice_success(
-    connection: Connection,
+async def store_voice_success(
+    connection: AsyncConnection,
     candidate: AudioCandidate,
     original: DownloadedAudio,
     voice: VoiceAudio,
@@ -111,17 +111,17 @@ def store_voice_success(
             "updated_at": sa.func.current_timestamp(),
         },
     )
-    connection.execute(stmt)
+    await connection.execute(stmt)
     if clear_telegram_cache:
-        connection.execute(
+        await connection.execute(
             sa.delete(bot_telegram_audio_cache).where(
                 bot_telegram_audio_cache.c.source_url == candidate.source_url,
             )
         )
 
 
-def store_voice_failure(
-    connection: Connection,
+async def store_voice_failure(
+    connection: AsyncConnection,
     candidate: AudioCandidate,
     original: DownloadedAudio,
     error: AudioConversionError,
@@ -177,23 +177,25 @@ def store_voice_failure(
             "updated_at": sa.func.current_timestamp(),
         },
     )
-    connection.execute(stmt)
+    await connection.execute(stmt)
 
 
-def load_stored_audio(
-    connection: Connection,
+async def load_stored_audio(
+    connection: AsyncConnection,
     candidate: AudioCandidate,
 ) -> DownloadedAudio:
-    row = connection.execute(
-        sa.select(
-            oald_audio_files.c.audio_data,
-            oald_audio_files.c.content_type,
-            oald_audio_files.c.filename,
-            oald_audio_files.c.sha256,
-            oald_audio_files.c.last_http_status,
-        ).where(
-            oald_audio_files.c.source_url == candidate.source_url,
-            oald_audio_files.c.audio_data.is_not(None),
+    row = (
+        await connection.execute(
+            sa.select(
+                oald_audio_files.c.audio_data,
+                oald_audio_files.c.content_type,
+                oald_audio_files.c.filename,
+                oald_audio_files.c.sha256,
+                oald_audio_files.c.last_http_status,
+            ).where(
+                oald_audio_files.c.source_url == candidate.source_url,
+                oald_audio_files.c.audio_data.is_not(None),
+            )
         )
     ).first()
     if row is None:

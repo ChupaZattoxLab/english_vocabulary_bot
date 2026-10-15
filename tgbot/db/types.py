@@ -71,7 +71,7 @@ VALID_ENGLISH_VARIETY_PREFERENCES: Final[tuple[EnglishVarietyPreference, ...]] =
 )
 VALID_ROLES: Final[tuple[UserRole, ...]] = tuple(UserRole)
 
-# Connection pool (Database / sync helpers).
+# Connection pool.
 DB_CONNECT_TIMEOUT_SECONDS = 10
 DB_POOL_RECYCLE_SECONDS = 1800
 

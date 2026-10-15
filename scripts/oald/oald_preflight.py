@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-import sqlalchemy as sa
-from sqlalchemy.engine import Connection
+from sqlalchemy.ext.asyncio import AsyncConnection
 
+from tgbot.db.postgres import missing_public_tables
 from tgbot.db.tables import (
     oald_audio_files,
     oald_audio_variants,
@@ -31,19 +31,19 @@ class SchemaNotMigratedError(RuntimeError):
     """Raised when a build script runs before Alembic migrations."""
 
 
-def require_oald_schema(connection: Connection) -> None:
-    require_tables(connection, OALD_TABLES)
+async def require_oald_schema(connection: AsyncConnection) -> None:
+    await require_tables(connection, OALD_TABLES)
 
 
-def require_oxford_schema(connection: Connection) -> None:
-    require_tables(connection, OXFORD_TABLES)
+async def require_oxford_schema(connection: AsyncConnection) -> None:
+    await require_tables(connection, OXFORD_TABLES)
 
 
-def require_tables(connection: Connection, table_names: Iterable[str]) -> None:
-    expected = set(table_names)
-    inspector = sa.inspect(connection)
-    existing = {name for name in expected if inspector.has_table(name)}
-    missing = expected - existing
+async def require_tables(
+    connection: AsyncConnection,
+    table_names: Iterable[str],
+) -> None:
+    missing = await missing_public_tables(connection, table_names)
     if missing:
         raise SchemaNotMigratedError(
             "Database schema is incomplete; missing tables: "

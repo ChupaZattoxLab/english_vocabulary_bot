@@ -7,8 +7,9 @@ from functools import lru_cache
 import sqlalchemy as sa
 from alembic.config import Config as AlembicConfig
 from alembic.script import ScriptDirectory
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine
 
+from tgbot.db.postgres import async_engine, missing_public_tables
 from tgbot.db.queries import (
     AdminQueries,
     CardsQueries,
@@ -16,19 +17,7 @@ from tgbot.db.queries import (
     UsersQueries,
 )
 from tgbot.db.tables import MANAGED_TABLES
-from tgbot.db.types import (
-    DB_CONNECT_TIMEOUT_SECONDS,
-    DB_POOL_RECYCLE_SECONDS,
-)
 from tgbot.secrets import PROJECT_ROOT
-
-# Postgres catalog: list of tables in the current database (not app schema).
-information_schema_tables = sa.table(
-    "tables",
-    sa.column("table_schema", sa.Text),
-    sa.column("table_name", sa.Text),
-    schema="information_schema",
-)
 
 # Alembic revision marker table written by migrations.
 alembic_version = sa.table(
@@ -43,19 +32,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
         db_url: str,
         pool_size: int,
     ):
-        connect_args: dict[str, object] = {
-            "connect_timeout": DB_CONNECT_TIMEOUT_SECONDS,
-        }
-
-        self.engine: AsyncEngine = create_async_engine(
-            db_url,
-            pool_size=pool_size,
-            # Headroom for concurrent deliveries + scheduler bookkeeping.
-            max_overflow=pool_size,
-            pool_pre_ping=True,
-            pool_recycle=DB_POOL_RECYCLE_SECONDS,
-            connect_args=connect_args,
-        )
+        self.engine: AsyncEngine = async_engine(db_url, pool_size=pool_size)
 
     async def open(self) -> None:
         try:
@@ -69,22 +46,7 @@ class Database(UsersQueries, CardsQueries, SchedulerQueries, AdminQueries):
 
     async def verify_schema(self) -> None:
         async with self.engine.connect() as connection:
-            rows = (
-                (
-                    await connection.execute(
-                        sa.select(information_schema_tables.c.table_name).where(
-                            information_schema_tables.c.table_schema == "public",
-                            information_schema_tables.c.table_name.in_(
-                                list(MANAGED_TABLES)
-                            ),
-                        )
-                    )
-                )
-                .mappings()
-                .all()
-            )
-            existing = {str(row["table_name"]) for row in rows}
-            missing = MANAGED_TABLES - existing
+            missing = await missing_public_tables(connection, MANAGED_TABLES)
 
             if missing:
                 raise RuntimeError(

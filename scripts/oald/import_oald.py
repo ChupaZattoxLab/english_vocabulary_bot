@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import asyncio
 import logging
 from pathlib import Path
 
@@ -23,7 +24,7 @@ from scripts.oald.oald_import import (
     load_entries,
 )
 from scripts.oald.oald_import.parse import log_input_summary
-from tgbot.db.sync import ensure_database_exists
+from tgbot.db.postgres import ensure_database_exists
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_JSON_PATH = ROOT / "data" / "oald" / "words.json"
@@ -64,9 +65,11 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
         try:
-            created = ensure_database_exists(
-                args.db_url,
-                admin_db_url=args.admin_db_url,
+            created = asyncio.run(
+                ensure_database_exists(
+                    args.db_url,
+                    admin_db_url=args.admin_db_url,
+                )
             )
         except ValueError as exc:
             raise OaldDatabaseError(str(exc)) from exc
@@ -78,10 +81,12 @@ def main(argv: list[str] | None = None) -> int:
             ) from exc
         if created:
             LOGGER.info("Created target OALD PostgreSQL database")
-        result = import_entries(
-            entries,
-            args.db_url,
-            batch_size=args.batch_size,
+        result = asyncio.run(
+            import_entries(
+                entries,
+                args.db_url,
+                batch_size=args.batch_size,
+            )
         )
         LOGGER.info(
             "OALD import complete: entries=%s audio_references=%s unique_audio_urls=%s",

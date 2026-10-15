@@ -1,16 +1,20 @@
+import asyncio
 import json
 import tempfile
 import unittest
 import uuid
 from pathlib import Path
 
+import sqlalchemy as sa
+
 from scripts.oald.import_oald import (
     OaldValidationError,
     import_entries,
     load_entries,
 )
-from tests.support import requires_oald_database, temporary_migrated_database
-from tgbot.db.sync import sync_connection
+from tests.support import requires_oald_database, run_db, temporary_migrated_database
+from tgbot.db.tables import oald_audio_files, oald_entries, oald_entry_audio_sources
+from tgbot.db.types import AudioDownloadStatus
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -181,28 +185,26 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                 write_rows(json_path, rows)
                 entries, _ = load_entries(json_path, strict=True)
                 self.assertEqual(
-                    import_entries(entries, self.db_url).entries,
+                    asyncio.run(import_entries(entries, self.db_url)).entries,
                     2,
                 )
                 self.assertEqual(
-                    import_entries(entries, self.db_url).entries,
+                    asyncio.run(import_entries(entries, self.db_url)).entries,
                     2,
                 )
 
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            """
-                            UPDATE oald_audio_files
-                            SET audio_data = %s,
-                                download_status = 'downloaded',
-                                size_bytes = %s
-                            WHERE source_url = %s
-                            """,
-                            (b"OggS-stored", len(b"OggS-stored"), first_audio_url),
+                async def mark_downloaded(connection) -> None:
+                    await connection.execute(
+                        sa.update(oald_audio_files)
+                        .where(oald_audio_files.c.source_url == first_audio_url)
+                        .values(
+                            audio_data=b"OggS-stored",
+                            download_status=AudioDownloadStatus.DOWNLOADED,
+                            size_bytes=len(b"OggS-stored"),
                         )
+                    )
+
+                run_db(self.db_url, mark_downloaded)
 
                 first["definition"] = "An updated definition."
                 first["audio_source_us"] = [changed_audio_url]
@@ -217,72 +219,65 @@ class OaldPostgreSqlIntegrationTests(unittest.TestCase):
                 )
                 write_rows(json_path, rows)
                 updated_entries, _ = load_entries(json_path, strict=True)
-                result = import_entries(updated_entries, self.db_url)
+                result = asyncio.run(import_entries(updated_entries, self.db_url))
                 self.assertEqual(result.entries, 3)
                 self.assertEqual(result.unique_audio_urls, 2)
 
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            """
-                            SELECT definition
-                            FROM oald_entries
-                            WHERE definition_url_oxford = %s
-                            """,
-                            (first_definition_url,),
+                async def read_import(connection) -> None:
+                    definition = (
+                        await connection.execute(
+                            sa.select(oald_entries.c.definition).where(
+                                oald_entries.c.definition_url_oxford
+                                == first_definition_url
+                            )
                         )
-                        self.assertEqual(
-                            cursor.fetchone()[0],
-                            "An updated definition.",
+                    ).scalar_one()
+                    self.assertEqual(definition, "An updated definition.")
+                    stored_count = (
+                        await connection.execute(
+                            sa.select(sa.func.count())
+                            .select_from(oald_entries)
+                            .where(
+                                oald_entries.c.definition_url_oxford.in_(
+                                    all_definition_urls
+                                )
+                            )
                         )
-                        cursor.execute(
-                            """
-                            SELECT count(*)
-                            FROM oald_entries
-                            WHERE definition_url_oxford = ANY(%s)
-                            """,
-                            (all_definition_urls,),
+                    ).scalar_one()
+                    self.assertEqual(stored_count, 3)
+                    audio_data = (
+                        await connection.execute(
+                            sa.select(oald_audio_files.c.audio_data).where(
+                                oald_audio_files.c.source_url == first_audio_url
+                            )
                         )
-                        self.assertEqual(cursor.fetchone()[0], 3)
-                        cursor.execute(
-                            """
-                            SELECT audio_data
-                            FROM oald_audio_files
-                            WHERE source_url = %s
-                            """,
-                            (first_audio_url,),
-                        )
-                        self.assertEqual(
-                            bytes(cursor.fetchone()[0]),
-                            b"OggS-stored",
-                        )
+                    ).scalar_one()
+                    self.assertEqual(bytes(audio_data), b"OggS-stored")
+
+                run_db(self.db_url, read_import)
             finally:
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            """
-                            DELETE FROM oald_entries
-                            WHERE definition_url_oxford = ANY(%s)
-                            """,
-                            (all_definition_urls,),
+
+                async def cleanup(connection) -> None:
+                    await connection.execute(
+                        sa.delete(oald_entries).where(
+                            oald_entries.c.definition_url_oxford.in_(
+                                all_definition_urls
+                            )
                         )
-                        cursor.execute(
-                            """
-                            DELETE FROM oald_audio_files
-                            WHERE source_url = ANY(%s)
-                              AND NOT EXISTS (
-                                  SELECT 1
-                                  FROM oald_entry_audio_sources
-                                  WHERE oald_entry_audio_sources.source_url =
-                                        oald_audio_files.source_url
-                              )
-                            """,
-                            (all_audio_urls,),
+                    )
+                    await connection.execute(
+                        sa.delete(oald_audio_files).where(
+                            oald_audio_files.c.source_url.in_(all_audio_urls),
+                            ~sa.exists(
+                                sa.select(sa.literal(1)).where(
+                                    oald_entry_audio_sources.c.source_url
+                                    == oald_audio_files.c.source_url
+                                )
+                            ),
                         )
+                    )
+
+                run_db(self.db_url, cleanup)
 
 
 def oald_row(

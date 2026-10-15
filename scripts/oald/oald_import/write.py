@@ -12,7 +12,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from scripts.oald.oald_import.models import ImportResult, OaldDatabaseError, OaldEntry
 from scripts.oald.oald_preflight import require_oald_schema
-from tgbot.db.sync import sync_connection
+from tgbot.db.postgres import async_connection
 from tgbot.db.tables import (
     oald_audio_files,
     oald_entries,
@@ -23,7 +23,7 @@ from tgbot.db.types import new_id
 LOGGER = logging.getLogger("tgbot.oald_import")
 
 
-def import_entries(
+async def import_entries(
     entries: Iterable[OaldEntry],
     db_url: str,
     batch_size: int = 500,
@@ -32,8 +32,8 @@ def import_entries(
         entry_count = 0
         audio_reference_count = 0
         unique_audio_urls: set[str] = set()
-        with sync_connection(db_url) as connection:
-            require_oald_schema(connection)
+        async with async_connection(db_url) as connection:
+            await require_oald_schema(connection)
             LOGGER.info("Alembic-managed OALD schema is ready")
             for batch in iter_batches(entries, batch_size):
                 imported_ids: list[uuid.UUID] = []
@@ -65,7 +65,9 @@ def import_entries(
                             "updated_at": sa.func.current_timestamp(),
                         },
                     ).returning(oald_entries.c.id)
-                    entry_id = uuid.UUID(str(connection.execute(stmt).scalar_one()))
+                    entry_id = uuid.UUID(
+                        str((await connection.execute(stmt)).scalar_one())
+                    )
                     imported_ids.append(entry_id)
                     for (
                         english_variety,
@@ -83,13 +85,13 @@ def import_entries(
                         batch_urls.add(source_url)
 
                 if imported_ids:
-                    connection.execute(
+                    await connection.execute(
                         sa.delete(oald_entry_audio_sources).where(
                             oald_entry_audio_sources.c.entry_id.in_(imported_ids)
                         )
                     )
                 if batch_urls:
-                    connection.execute(
+                    await connection.execute(
                         pg_insert(oald_audio_files)
                         .values(
                             [
@@ -102,7 +104,7 @@ def import_entries(
                         )
                     )
                 if links:
-                    connection.execute(sa.insert(oald_entry_audio_sources), links)
+                    await connection.execute(sa.insert(oald_entry_audio_sources), links)
 
                 entry_count += len(batch)
                 audio_reference_count += len(links)

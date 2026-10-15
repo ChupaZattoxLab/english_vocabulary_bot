@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import os
 import uuid
-from collections.abc import Iterator
+from collections.abc import Awaitable, Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
@@ -13,8 +14,13 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from sqlalchemy.engine import make_url
+from sqlalchemy.ext.asyncio import AsyncConnection
 
-from tgbot.db.sync import destroy_database, ensure_database_exists
+from tgbot.db.postgres import (
+    async_connection,
+    destroy_database,
+    ensure_database_exists,
+)
 
 TEST_OALD_DATABASE_URL = os.environ.get("TEST_OALD_DATABASE_URL", "")
 
@@ -24,6 +30,19 @@ requires_oald_database = pytest.mark.skipif(
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def run_db[T](
+    db_url: str,
+    work: Callable[[AsyncConnection], Awaitable[T]],
+) -> T:
+    """Run one async transaction from a synchronous test."""
+
+    async def run() -> T:
+        async with async_connection(db_url) as connection:
+            return await work(connection)
+
+    return asyncio.run(run())
 
 
 @contextmanager
@@ -42,7 +61,7 @@ def temporary_migrated_database(
         make_url(source_url).set(database=db_name).render_as_string(hide_password=False)
     )
 
-    ensure_database_exists(db_url)
+    asyncio.run(ensure_database_exists(db_url))
     config = Config(str(PROJECT_ROOT / "alembic.ini"))
     with patch.dict(os.environ, {"OALD_DATABASE_URL": db_url}):
         import tgbot.secrets as app_secrets
@@ -53,4 +72,4 @@ def temporary_migrated_database(
     try:
         yield db_url
     finally:
-        destroy_database(db_url)
+        asyncio.run(destroy_database(db_url))

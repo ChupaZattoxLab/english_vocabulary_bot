@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import io
 import tempfile
@@ -7,6 +8,8 @@ import uuid
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
+
+import sqlalchemy as sa
 
 from scripts.oald.download_audio import (
     AudioConversionError,
@@ -22,8 +25,13 @@ from scripts.oald.download_audio import (
 )
 from scripts.oald.import_oald import import_entries, load_entries
 from tests.oald.test_import_oald import oald_row, write_rows
-from tests.support import requires_oald_database, temporary_migrated_database
-from tgbot.db.sync import sync_connection
+from tests.support import requires_oald_database, run_db, temporary_migrated_database
+from tgbot.db.tables import (
+    oald_audio_files,
+    oald_audio_variants,
+    oald_entries,
+    oald_entry_audio_sources,
+)
 
 
 class OaldAudioDownloadTests(unittest.TestCase):
@@ -245,56 +253,65 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
             entries, _ = load_entries(json_path, strict=True)
 
             try:
-                import_entries(entries, self.db_url)
-                first = download_audio_to_postgres(
-                    self.db_url,
-                    english_varieties=["us"],
-                    source_urls=[audio_url],
-                    request_delay=0,
-                    retries=0,
-                    fetch_audio=fetch,
-                    transcode_voice=transcode,
-                    sleep=lambda _: None,
+                asyncio.run(import_entries(entries, self.db_url))
+                first = asyncio.run(
+                    download_audio_to_postgres(
+                        self.db_url,
+                        english_varieties=["us"],
+                        source_urls=[audio_url],
+                        request_delay=0,
+                        retries=0,
+                        fetch_audio=fetch,
+                        transcode_voice=transcode,
+                        sleep=lambda _: None,
+                    )
                 )
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            "DELETE FROM oald_audio_variants WHERE source_url = %s",
-                            (audio_url,),
+
+                async def drop_voice(connection) -> None:
+                    await connection.execute(
+                        sa.delete(oald_audio_variants).where(
+                            oald_audio_variants.c.source_url == audio_url
                         )
-                backfill = download_audio_to_postgres(
-                    self.db_url,
-                    english_varieties=["us"],
-                    source_urls=[audio_url],
-                    request_delay=0,
-                    retries=0,
-                    fetch_audio=fetch,
-                    transcode_voice=transcode,
-                    sleep=lambda _: None,
+                    )
+
+                run_db(self.db_url, drop_voice)
+                backfill = asyncio.run(
+                    download_audio_to_postgres(
+                        self.db_url,
+                        english_varieties=["us"],
+                        source_urls=[audio_url],
+                        request_delay=0,
+                        retries=0,
+                        fetch_audio=fetch,
+                        transcode_voice=transcode,
+                        sleep=lambda _: None,
+                    )
                 )
-                second = download_audio_to_postgres(
-                    self.db_url,
-                    english_varieties=["us"],
-                    source_urls=[audio_url],
-                    request_delay=0,
-                    retries=0,
-                    fetch_audio=fetch,
-                    transcode_voice=transcode,
-                    sleep=lambda _: None,
+                second = asyncio.run(
+                    download_audio_to_postgres(
+                        self.db_url,
+                        english_varieties=["us"],
+                        source_urls=[audio_url],
+                        request_delay=0,
+                        retries=0,
+                        fetch_audio=fetch,
+                        transcode_voice=transcode,
+                        sleep=lambda _: None,
+                    )
                 )
-                forced = download_audio_to_postgres(
-                    self.db_url,
-                    english_varieties=["us"],
-                    source_urls=[audio_url],
-                    request_delay=0,
-                    retries=0,
-                    force=True,
-                    limit=1,
-                    fetch_audio=fetch,
-                    transcode_voice=transcode,
-                    sleep=lambda _: None,
+                forced = asyncio.run(
+                    download_audio_to_postgres(
+                        self.db_url,
+                        english_varieties=["us"],
+                        source_urls=[audio_url],
+                        request_delay=0,
+                        retries=0,
+                        force=True,
+                        limit=1,
+                        fetch_audio=fetch,
+                        transcode_voice=transcode,
+                        sleep=lambda _: None,
+                    )
                 )
 
                 self.assertEqual(first.downloaded, 1)
@@ -307,31 +324,37 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(fetch.call_count, 2)
                 self.assertEqual(transcode.call_count, 3)
 
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            """
-                            SELECT audio_data, content_type, filename, size_bytes,
-                                   sha256, download_status, attempt_count
-                            FROM oald_audio_files
-                            WHERE source_url = %s
-                            """,
-                            (audio_url,),
+                async def read_audio(connection) -> tuple:
+                    stored = (
+                        await connection.execute(
+                            sa.select(
+                                oald_audio_files.c.audio_data,
+                                oald_audio_files.c.content_type,
+                                oald_audio_files.c.filename,
+                                oald_audio_files.c.size_bytes,
+                                oald_audio_files.c.sha256,
+                                oald_audio_files.c.download_status,
+                                oald_audio_files.c.attempt_count,
+                            ).where(oald_audio_files.c.source_url == audio_url)
                         )
-                        stored = cursor.fetchone()
-                        cursor.execute(
-                            """
-                            SELECT audio_data, content_type, filename, size_bytes,
-                                   sha256, source_sha256, conversion_status,
-                                   attempt_count
-                            FROM oald_audio_variants
-                            WHERE source_url = %s
-                            """,
-                            (audio_url,),
+                    ).one()
+                    stored_voice = (
+                        await connection.execute(
+                            sa.select(
+                                oald_audio_variants.c.audio_data,
+                                oald_audio_variants.c.content_type,
+                                oald_audio_variants.c.filename,
+                                oald_audio_variants.c.size_bytes,
+                                oald_audio_variants.c.sha256,
+                                oald_audio_variants.c.source_sha256,
+                                oald_audio_variants.c.conversion_status,
+                                oald_audio_variants.c.attempt_count,
+                            ).where(oald_audio_variants.c.source_url == audio_url)
                         )
-                        stored_voice = cursor.fetchone()
+                    ).one()
+                    return stored, stored_voice
+
+                stored, stored_voice = run_db(self.db_url, read_audio)
 
                 self.assertEqual(bytes(stored[0]), payload)
                 self.assertEqual(stored[1], "audio/ogg")
@@ -349,30 +372,26 @@ class OaldAudioPostgreSqlIntegrationTests(unittest.TestCase):
                 self.assertEqual(stored_voice[6], "prepared")
                 self.assertEqual(stored_voice[7], 2)
             finally:
-                with sync_connection(self.db_url) as connection:
-                    raw = connection.connection.driver_connection
-                    assert raw is not None
-                    with raw.cursor() as cursor:
-                        cursor.execute(
-                            """
-                            DELETE FROM oald_entries
-                            WHERE definition_url_oxford = %s
-                            """,
-                            (definition_url,),
+
+                async def cleanup(connection) -> None:
+                    await connection.execute(
+                        sa.delete(oald_entries).where(
+                            oald_entries.c.definition_url_oxford == definition_url
                         )
-                        cursor.execute(
-                            """
-                            DELETE FROM oald_audio_files
-                            WHERE source_url = %s
-                              AND NOT EXISTS (
-                                  SELECT 1
-                                  FROM oald_entry_audio_sources
-                                  WHERE oald_entry_audio_sources.source_url =
-                                        oald_audio_files.source_url
-                              )
-                            """,
-                            (audio_url,),
+                    )
+                    await connection.execute(
+                        sa.delete(oald_audio_files).where(
+                            oald_audio_files.c.source_url == audio_url,
+                            ~sa.exists(
+                                sa.select(sa.literal(1)).where(
+                                    oald_entry_audio_sources.c.source_url
+                                    == oald_audio_files.c.source_url
+                                )
+                            ),
                         )
+                    )
+
+                run_db(self.db_url, cleanup)
 
 
 class FakeHeaders:

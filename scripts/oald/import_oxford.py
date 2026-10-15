@@ -9,6 +9,7 @@ Oxford cache dumps. Day-to-day card content comes from ``oald_entries`` via
 from __future__ import annotations
 
 import argparse
+import asyncio
 import logging
 from pathlib import Path
 
@@ -76,7 +77,9 @@ def main(argv: list[str] | None = None) -> int:
             LOGGER.info("Dry-run complete; no database changes made")
             return 0
 
-        imported = import_rows(rows, args.db_url, batch_size=args.batch_size)
+        imported = asyncio.run(
+            import_rows(rows, args.db_url, batch_size=args.batch_size)
+        )
         LOGGER.info("Oxford import complete: %s rows processed", f"{imported:,}")
         return 0
     except (OxfordCacheError, OxfordDatabaseError) as exc:
