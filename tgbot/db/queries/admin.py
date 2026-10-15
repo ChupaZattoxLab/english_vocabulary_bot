@@ -126,11 +126,7 @@ class AdminQueries(DbSession):
 
         return admin_user_from_row(row) if row else None
 
-    async def get_word_matches(
-        self,
-        word: str,
-        limit: int = 10,
-    ) -> tuple[Card, ...]:
+    async def get_word_matches(self, word: str) -> tuple[Card, ...]:
         """Exact US/GB spelling hits for /word when several POS/entries exist."""
         rows = await self.fetch_all(
             sa.select(
@@ -147,33 +143,18 @@ class AdminQueries(DbSession):
                 )
             )
             .order_by(oald_entries.c.lexical_category, oald_entries.c.id)
-            .limit(limit)
         )
 
         return tuple(card_from_row(row) for row in rows)
 
-    async def get_preview_card(self, entry_id: uuid.UUID | None = None) -> Card | None:
-        """Card with both US and GB audio for admin QA (no bot_user_cards row).
-
-        With ``entry_id`` — that entry. Without — a random card, preferring
-        spelling differences like color/colour.
-        """
+    async def get_preview_card(self, entry_id: uuid.UUID) -> Card | None:
+        """Card with both US and GB audio for admin QA (no bot_user_cards row)."""
         stmt, us_audio, gb_audio = card_content_select()
         both_audio = sa.and_(
             us_audio.c.source_url.is_not(None),
             gb_audio.c.source_url.is_not(None),
         )
-
-        # Specific oald_entries.id, or a random complex spelling pair.
-        if entry_id is not None:
-            stmt = stmt.where(oald_entries.c.id == entry_id, both_audio)
-        else:
-            stmt = stmt.where(both_audio).order_by(
-                (oald_entries.c.word_us != oald_entries.c.word_gb).desc(),
-                sa.func.random(),
-            )
-
-        stmt = stmt.limit(1)
+        stmt = stmt.where(oald_entries.c.id == entry_id, both_audio).limit(1)
 
         async with self.connect() as connection:
             row = await mapping_first(connection, stmt)

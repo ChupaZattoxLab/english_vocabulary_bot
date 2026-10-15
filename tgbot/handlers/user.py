@@ -44,7 +44,7 @@ def create_router(
         if not message.from_user:
             return
 
-        user = await register_user(db, message.from_user)
+        user = await ensure_user(db, message.from_user)
         if user.onboarding_completed:
             await message.answer(
                 locale.user.welcome_back.format(
@@ -65,7 +65,7 @@ def create_router(
         if not message.from_user:
             return
 
-        user = await register_user(db, message.from_user)
+        user = await ensure_user(db, message.from_user)
         await message.answer(
             user_settings_text(user, config),
             reply_markup=settings_keyboard(),
@@ -279,7 +279,7 @@ def create_router(
     return router
 
 
-async def register_user(db: Database, telegram_user: AiogramUser) -> User:
+async def ensure_user(db: Database, telegram_user: AiogramUser) -> User:
     return await db.upsert_user(
         telegram_user_id=telegram_user.id,
         username=telegram_user.username or "",
