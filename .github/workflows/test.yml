@@ -2,6 +2,7 @@ name: test
 
 on:
   pull_request:
+    types: [labeled]
   workflow_dispatch:
   workflow_call:
 
@@ -35,6 +36,12 @@ jobs:
       OALD_DATABASE_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/postgres
 
     steps:
+      - name: Require the run-tests label
+        if: github.event_name == 'pull_request' && github.event.label.name != 'run-tests'
+        run: |
+          echo "Add the run-tests label to run this check."
+          exit 1
+
       - name: Check out repository
         uses: actions/checkout@v4
 
@@ -44,7 +51,7 @@ jobs:
           enable-cache: true
 
       - name: Set up Python
-        run: uv python install 3.12
+        run: uv python install 3.14
 
       - name: Install dependencies
         run: uv sync --frozen
