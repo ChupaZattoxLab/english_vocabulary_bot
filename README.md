@@ -245,7 +245,7 @@ Repo: `ChupaZattoxLab/english_vocabulary_bot`. Image: `ghcr.io/chupazattoxlab/en
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| **test** | manual button only | Ruff, Pyright, Pytest (Postgres service) |
+| **test** | pull request label `run-tests`, or a manual button | Ruff, Pyright, Pytest (Postgres service) |
 | **publish-image** | manual button | Build/push image + deploy **only if** this commit already has a green **test** run |
 | **test-and-publish** | manual button | Run **test**, then publish/deploy in the same pipeline |
 
@@ -255,9 +255,11 @@ extra `git_ref` field).
 
 ### Branch protection
 
-If you require the **test** status check to merge into `main`, run **test** (or
-**test-and-publish**) on that commit first — tests no longer start automatically
-on every PR push.
+Merging into `main` requires the **test** check on the latest pull request commit.
+Add the `run-tests` label to run Ruff, Pyright, and Pytest on that commit. After
+a new commit, remove the label and add it again. Any other label fails the check.
+The manual **Run workflow** button still runs the suite on a chosen branch, and
+**test-and-publish** calls the same job.
 
 ### GitHub Actions secrets
 
