@@ -17,7 +17,8 @@ hand work to another skill in this pack now say so under
 `verification-before-completion` by that name. The other procedures are
 unchanged.
 
-Copyright and source for each copy are listed below. The skills are MIT.
+Copyright and source for each copy are listed below. The skills are MIT,
+except `agents-md`, which is Apache-2.0.
 
 ## Addy Osmani — agent-skills
 
@@ -49,6 +50,7 @@ Skills:
 - `skills/source-driven-development`
 - `skills/spec-driven-development`
 - `skills/test-driven-development` (includes `references/testing-patterns.md` and `references/writing-good-tests.md`)
+- `skills/using-agent-skills` (the map of which skill to open; adjusted so it does not name skills missing from this pack)
 
 ## Jesse Vincent — superpowers
 
@@ -87,3 +89,14 @@ Copyright (c) 2025 Claude Skills Maintainers
 Skills:
 
 - `skills/ml-model-training` (includes `references/pytorch-training.md` and `references/tensorflow-keras.md`)
+
+## Sentry — skills (Apache-2.0)
+
+Copyright 2025 Functional Software, Inc. dba Sentry
+
+- Source: https://github.com/getsentry/skills (`skills/agents-md`)
+- License: Apache License 2.0
+
+Skills:
+
+- `skills/agents-md` (rewritten for this repository: assemble from the tree, interview for future orientation, write the draft into the file)
