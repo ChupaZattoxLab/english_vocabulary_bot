@@ -47,6 +47,13 @@ class user:
     )
     resume_hint = "Чтобы снова получать по расписанию - /resume"
 
+    need_subscription = (
+        "Бот доступен только подписчикам канала <b>eng with hanna!</b>.\n"
+        "Подпишитесь и нажмите «Я подписался»."
+    )
+    subscription_alert = "Сначала подпишитесь на канал eng with hanna!"
+    subscription_check_failed = "Не удалось проверить подписку. Попробуйте позже."
+
     help = (
         "<b>Команды</b>\n"
         "/start - регистрация\n"
@@ -54,7 +61,8 @@ class user:
         "/card - получить карточку сейчас\n"
         "/pause - приостановить рассылку\n"
         "/resume - продолжить рассылку\n"
-        "/help - эта справка"
+        "/help - эта справка\n\n"
+        "Бот доступен только подписчикам канала eng with hanna!"
     )
 
 
@@ -64,6 +72,8 @@ class keyboard:
     confirm_button = "Подтвердить"
     back_button = "Назад"
     continue_button = "Продолжить"
+    subscribe = "Подписаться"
+    subscribed = "Я подписался"
     pronunciation_us = "🇺🇸 American (US)"
     pronunciation_gb = "🇬🇧 British (GB)"
     pronunciation_both = "🇺🇸 + 🇬🇧 Оба варианта"

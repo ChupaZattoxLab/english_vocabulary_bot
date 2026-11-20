@@ -8,6 +8,7 @@ data/
 source/
 
 # Local scratch / keystores
+tasks/
 _check_db.py
 *.jks
 

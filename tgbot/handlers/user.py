@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 from aiogram import F, Router
+from aiogram.dispatcher.event.bases import MiddlewareType
 from aiogram.enums import ChatType
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, CommandStart
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, TelegramObject
 from aiogram.types import User as AiogramUser
 
 from tgbot.bot_config import BotConfig
@@ -27,6 +30,7 @@ from tgbot.handlers.keyboard import (
     settings_levels_keyboard,
     settings_pronunciation_keyboard,
 )
+from tgbot.handlers.subscription import gate_callback, gate_message
 from tgbot.localization import locale
 
 
@@ -38,6 +42,10 @@ def create_router(
     router = Router(name="tgbot")
     router.message.filter(F.chat.type == ChatType.PRIVATE)
     router.callback_query.filter(F.message.chat.type == ChatType.PRIVATE)
+    router.message.outer_middleware(cast(MiddlewareType[TelegramObject], gate_message))
+    router.callback_query.outer_middleware(
+        cast(MiddlewareType[TelegramObject], gate_callback)
+    )
 
     @router.message(CommandStart())
     async def start_handler(message: Message) -> None:
@@ -45,20 +53,19 @@ def create_router(
             return
 
         user = await ensure_user(db, message.from_user)
-        if user.onboarding_completed:
-            await message.answer(
-                locale.user.welcome_back.format(
-                    settings=user_settings_text(user, config)
-                )
-            )
+        await send_welcome(message, user, config)
+
+    @router.callback_query(F.data == "subscription:check")
+    async def subscription_check(callback: CallbackQuery) -> None:
+        if not callback.from_user:
+            await callback.answer()
             return
 
-        await message.answer(
-            locale.user.welcome_new.format(
-                cards_per_day=len(config.schedule.send_times)
-            ),
-            reply_markup=levels_keyboard(user.settings.selected_levels),
-        )
+        user = await ensure_user(db, callback.from_user)
+        message = callback_message(callback)
+        if message is not None:
+            await send_welcome(message, user, config)
+        await callback.answer()
 
     @router.message(Command("settings"))
     async def settings_handler(message: Message) -> None:
@@ -277,6 +284,19 @@ def create_router(
         await message.answer(locale.user.help)
 
     return router
+
+
+async def send_welcome(message: Message, user: User, config: BotConfig) -> None:
+    if user.onboarding_completed:
+        await message.answer(
+            locale.user.welcome_back.format(settings=user_settings_text(user, config))
+        )
+        return
+
+    await message.answer(
+        locale.user.welcome_new.format(cards_per_day=len(config.schedule.send_times)),
+        reply_markup=levels_keyboard(user.settings.selected_levels),
+    )
 
 
 async def ensure_user(db: Database, telegram_user: AiogramUser) -> User:

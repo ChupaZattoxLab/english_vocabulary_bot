@@ -8,6 +8,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import BotCommand, BotCommandScopeChat
 
 from tgbot.bot_config import BotConfig
@@ -100,7 +101,16 @@ async def configure_commands(bot: Bot, db: Database) -> None:
     await bot.set_my_commands(list(USER_COMMANDS))
 
     for admin_id in await db.get_admin_user_ids():
-        await bot.set_my_commands(
-            [*USER_COMMANDS, *ADMIN_COMMANDS],
-            scope=BotCommandScopeChat(chat_id=admin_id),
-        )
+        try:
+            await bot.set_my_commands(
+                [*USER_COMMANDS, *ADMIN_COMMANDS],
+                scope=BotCommandScopeChat(chat_id=admin_id),
+            )
+        except TelegramBadRequest as exc:
+            if "chat not found" not in exc.message.casefold():
+                raise
+            LOGGER.warning(
+                "Skipping admin commands for chat %s: %s",
+                admin_id,
+                exc.message,
+            )
