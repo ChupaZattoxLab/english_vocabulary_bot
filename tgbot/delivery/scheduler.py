@@ -11,10 +11,12 @@ from zoneinfo import ZoneInfo
 from aiogram import Bot
 
 from tgbot.bot_config import BotConfig
+from tgbot.channel_membership import TelegramMembership, telegram_membership
 from tgbot.db import Database
 from tgbot.db.models import User
 from tgbot.delivery.service import CardDeliveryService
 from tgbot.delivery.types import DeliveryStatus
+from tgbot.types import REQUIRED_CHANNEL
 
 LOGGER = logging.getLogger("tgbot.scheduler")
 
@@ -115,6 +117,13 @@ class CardScheduler:
     ) -> DeliveryStatus:
         async with semaphore:
             try:
+                membership = await telegram_membership(
+                    bot,
+                    REQUIRED_CHANNEL,
+                    user.telegram_user_id,
+                )
+                if membership is not TelegramMembership.MEMBER:
+                    return DeliveryStatus.SKIPPED
                 outcome = await self.delivery.deliver(
                     bot,
                     telegram_user_id=user.telegram_user_id,

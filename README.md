@@ -68,7 +68,7 @@ TELEGRAM_BOT_TOKEN=...your token...
 OALD_DATABASE_URL=postgresql+psycopg://vocab_app:vocab_dev_password@127.0.0.1:5432/english_vocabulary_oald
 ```
 
-Schedule defaults live in `tgbot/types.py`; template paths in
+Schedule defaults and the required channel `@engwithhanna` live in `tgbot/types.py`; template paths in
 `tgbot/delivery/types.py`; DB pool timeouts in `tgbot/db/types.py` (not `.env`).
 Each `types.py` is package-private (imported only inside its folder).
 Admins are stored in `bot_users.role`, not in `.env`.

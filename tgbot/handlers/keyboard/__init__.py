@@ -8,6 +8,7 @@ from tgbot.handlers.keyboard.settings import (
     settings_levels_keyboard,
     settings_pronunciation_keyboard,
 )
+from tgbot.handlers.keyboard.subscription import subscription_keyboard
 from tgbot.handlers.keyboard.words import word_categories_keyboard
 
 __all__ = [
@@ -18,5 +19,6 @@ __all__ = [
     "settings_keyboard",
     "settings_levels_keyboard",
     "settings_pronunciation_keyboard",
+    "subscription_keyboard",
     "word_categories_keyboard",
 ]

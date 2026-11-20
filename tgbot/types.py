@@ -1,4 +1,4 @@
-"""Root package types and schedule defaults (used only by tgbot root modules)."""
+"""Root package types and schedule defaults."""
 
 from __future__ import annotations
 
@@ -11,3 +11,7 @@ SCHEDULE_GRACE_MINUTES = 60
 
 # Passed into Database via BotConfig.db_pool_size.
 DB_POOL_SIZE = 5
+
+# Channel the bot requires. The bot account must be an administrator there.
+REQUIRED_CHANNEL = "@engwithhanna"
+CHANNEL_URL = "https://t.me/engwithhanna"
