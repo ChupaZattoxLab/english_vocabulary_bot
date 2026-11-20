@@ -181,7 +181,7 @@ Honesty about what you couldn't verify is more valuable than false confidence.
 ## Interaction with Other Skills
 
 - **`doubt-driven-development`**: this skill checks that a framework fact matches current official docs. Doubt-driven checks the reasoning about this repository's code.
-- **`api-and-interface-design`** and **`microservices-architect`**: when the fact is a contract you are about to publish, design it there. This skill still verifies the library calls against the docs.
+- **`api-and-interface-design`**: when the fact is a contract you are about to publish, design it there. This skill still verifies the library calls against the docs.
 
 ## Common Rationalizations
 

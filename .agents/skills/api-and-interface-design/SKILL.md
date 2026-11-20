@@ -324,7 +324,6 @@ function getTask(id: TaskId): Promise<Task> { ... }
 
 - **`spec-driven-development`**: the contract belongs in the spec of the module that provides it.
 - **`deprecation-and-migration`**: removing or changing a behavior callers rely on.
-- **`microservices-architect`**: when the interface is between deployable services rather than modules in one process.
 - **`source-driven-development`**: library and protocol details come from current official docs.
 
 ## Common Rationalizations

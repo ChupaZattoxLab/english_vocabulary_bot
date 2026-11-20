@@ -205,7 +205,6 @@ Zombie code is code that nobody owns but everybody depends on. It's not actively
 
 - **`api-and-interface-design`**: whether the change breaks a caller. A break gets a migration window here.
 - **`documentation-and-adrs`**: the deprecation and the migration path are written down in the same change.
-- **`microservices-architect`**: a shared database or a cross-service call is a contract. Expand, then contract.
 - **`git-workflow-and-versioning`**: a published contract gets a major version when versioning is on. The bot image stays SHA-tagged until then.
 
 ## Common Rationalizations

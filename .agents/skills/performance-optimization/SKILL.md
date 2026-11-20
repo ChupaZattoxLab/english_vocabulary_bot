@@ -212,8 +212,7 @@ npx lhci autorun
 ## Interaction with Other Skills
 
 - **`observability-and-instrumentation`**: the measurement this skill refuses to skip. Optimize a number you can re-read.
-- **`code-review-and-quality`**: calls this skill when a diff may be slow.
-- **`browser-testing-with-devtools`**: the profiling path for a page in Chrome. Query and pool advice in this skill applies to the bot without that page.
+- **`code-review-and-quality`**: calls this skill when a diff may be slow. Query and pool advice in this skill applies to the bot.
 
 ## See Also
 

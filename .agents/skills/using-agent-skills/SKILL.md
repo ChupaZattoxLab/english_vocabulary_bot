@@ -20,8 +20,6 @@ These skills are in this pack and are not on the upstream map below:
 - `verification-before-completion` — claim a pass only after the command output is read
 - `systematic-debugging` — extra root-cause notes; `debugging-and-error-recovery` wins if they disagree
 - `receiving-code-review` — answering review comments
-- `microservices-architect` — service boundaries; this repository keeps one PostgreSQL database until a service truly owns data nothing else writes
-- `ml-model-training` — training the assessment model
 - `agents-md` — assemble or refresh root `AGENTS.md` from the repo plus a future-orientation block; write the draft into the file
 
 ## Skill Discovery
@@ -36,14 +34,11 @@ Task arrives
     ├── New project/feature/change? ──→ spec-driven-development
     ├── Have a spec, need tasks? ──────→ planning-and-task-breakdown
     ├── Implementing code? ────────────→ incremental-implementation
-    │   ├── UI work? ─────────────────→ frontend-ui-engineering
     │   ├── API work? ────────────────→ api-and-interface-design
-    │   ├── Service boundaries? ──────→ microservices-architect
     │   ├── Need better context? ─────→ context-engineering
     │   ├── Need doc-verified code? ───→ source-driven-development
     │   └── Stakes high / unfamiliar code? ──→ doubt-driven-development
     ├── Writing/running tests? ────────→ test-driven-development
-    │   └── Browser-based? ───────────→ browser-testing-with-devtools
     ├── Something broke? ──────────────→ debugging-and-error-recovery
     ├── Reviewing code? ───────────────→ code-review-and-quality
     │   ├── Too complex? ─────────────→ code-simplification
@@ -56,8 +51,7 @@ Task arrives
     ├── Deprecating/migrating? ────────→ deprecation-and-migration
     ├── Writing docs/ADRs? ───────────→ documentation-and-adrs
     ├── Writing AGENTS.md? ───────────→ agents-md
-    ├── Adding logs/metrics/alerts? ───→ observability-and-instrumentation
-    └── Training the assessment model? → ml-model-training
+    └── Adding logs/metrics/alerts? ───→ observability-and-instrumentation
 ```
 
 ## Core Operating Behaviors
@@ -192,12 +186,9 @@ Not every task needs every skill. A bug fix might only need: `debugging-and-erro
 | Build | source-driven-development | Verify against official docs before implementing |
 | Build | doubt-driven-development | Adversarial fresh-context review of every non-trivial decision |
 | Build | context-engineering | Right context at the right time |
-| Build | frontend-ui-engineering | Production-quality UI with accessibility |
 | Build | api-and-interface-design | Stable interfaces with clear contracts |
-| Build | microservices-architect | Service boundaries around one shared database |
 | Verify | test-driven-development | Failing test first, then make it pass |
 | Verify | verification-before-completion | Read the command output before claiming a pass |
-| Verify | browser-testing-with-devtools | Chrome DevTools MCP for runtime verification |
 | Verify | debugging-and-error-recovery | Reproduce → localize → fix → guard |
 | Review | code-review-and-quality | Five-axis review with quality gates |
 | Review | receiving-code-review | Answer review comments with evidence |
@@ -209,7 +200,6 @@ Not every task needs every skill. A bug fix might only need: `debugging-and-erro
 | Ship | deprecation-and-migration | Remove old systems and migrate users safely |
 | Ship | documentation-and-adrs | Document the why, not just the what |
 | Ship | observability-and-instrumentation | Structured logs, RED metrics, traces, symptom-based alerts |
-| Model | ml-model-training | Train and evaluate the assessment model |
 
 ## Interaction with Other Skills
 

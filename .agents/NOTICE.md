@@ -29,7 +29,6 @@ Copyright (c) 2025 Addy Osmani
 Skills:
 
 - `skills/api-and-interface-design`
-- `skills/browser-testing-with-devtools`
 - `skills/ci-cd-and-automation`
 - `skills/code-review-and-quality`
 - `skills/code-simplification`
@@ -38,7 +37,6 @@ Skills:
 - `skills/deprecation-and-migration`
 - `skills/documentation-and-adrs`
 - `skills/doubt-driven-development` (includes `references/orchestration-patterns.md`)
-- `skills/frontend-ui-engineering` (includes `references/accessibility-checklist.md`)
 - `skills/git-workflow-and-versioning` (adapted for this repository)
 - `skills/idea-refine` (includes `references/examples.md`, `references/frameworks.md`, `references/refinement-criteria.md`, `references/idea-refine.sh`)
 - `skills/incremental-implementation`
@@ -67,28 +65,6 @@ Skills:
 `writing-good-tests.md` from this pack now lives at `skills/test-driven-development/references/writing-good-tests.md`. The rest of that skill repeated the Osmani test loop and is not included. `systematic-debugging` points at `test-driven-development`.
 
 `CREATION-LOG.md` and the `test-*.md` files from `systematic-debugging` are not included. They test the skill text itself and are not part of the debugging procedure.
-
-## Jeffallan — claude-skills
-
-Copyright (c) 2025
-
-- Source: https://github.com/Jeffallan/claude-skills (`skills/microservices-architect`)
-
-Skills:
-
-- `skills/microservices-architect` (includes `references/communication.md`, `references/data.md`, `references/decomposition.md`, `references/observability.md`, `references/patterns.md`)
-
-The frontmatter names `devops-engineer`, `kubernetes-specialist`, `graphql-architect`, `architecture-designer`, and `monitoring-expert`. Those skills are not in this copy.
-
-## Claude Skills Maintainers — claude-skills
-
-Copyright (c) 2025 Claude Skills Maintainers
-
-- Source: https://github.com/secondsky/claude-skills (`plugins/ml-model-training`)
-
-Skills:
-
-- `skills/ml-model-training` (includes `references/pytorch-training.md` and `references/tensorflow-keras.md`)
 
 ## Sentry — skills (Apache-2.0)
 
